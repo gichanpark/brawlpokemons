@@ -203,6 +203,16 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .amail{background:#2a2140;border:3px solid #111;padding:8px;margin-bottom:8px;font-size:11px}.amail b{font-weight:400;color:#fde047}
 .arow{display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap}.minput.sm2{font-size:11px;padding:5px 7px;width:120px}
 select.minput{width:auto}
+#sel{overflow:hidden}
+.selwrap{flex:1;min-height:0;align-items:stretch}
+.grid{grid-template-columns:repeat(3,1fr);flex:1.05;overflow-y:auto;min-height:0;padding:0 4px 6px 0;touch-action:none;gap:6px;scrollbar-width:thin;scrollbar-color:#facc15 #1c1530}
+.detail{overflow-y:auto;min-height:0;touch-action:none;scrollbar-width:thin;scrollbar-color:#facc15 #1c1530}
+.grid .card{padding:6px 4px 4px}
+.grid .card img.por{width:54px;height:54px;margin:12px 0 2px}
+.grid .card .n{font-size:11px}
+.card .lvb{top:3px;right:4px}.card .lk{top:3px;right:4px}
+.card.lock{filter:none;opacity:1}.card.lock img,.card.lock .n{filter:grayscale(1) brightness(.55)}
+.card.lock .tr{color:#a1a1aa}
 </style>
 </head>
 <body>
@@ -302,28 +312,28 @@ const EL={elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃'
  rock:{nm:'바위',c:['#a8a29e','#e7e5e4','#57534e']},steel:{nm:'강철',c:['#cbd5e1','#ffffff','#64748b']},fairy:{nm:'페어리',c:['#f9a8d4','#ffffff','#ec4899']},
  flying:{nm:'비행',c:['#bae6fd','#ffffff','#38bdf8']},dark:{nm:'악',c:['#57534e','#d6d3d1','#1c1917']}};
 const CH=[
- {k:'pikachu',id:25,nm:'피카츄',role:'연사 · 원거리',el:'elec',gr:'r',col:'#facc15',hp:3200,spd:1.08,rl:1.3,charge:3000,
+ {k:'pikachu',id:25,nm:'피카츄',role:'연사 · 원거리',el:'elec',gr:'r',col:'#facc15',hp:3200,spd:1.13,rl:1.3,charge:3000,
   atk:{nm:'전기쇼크',ds:'전기 구슬 3연사 · 35% 확률로 마비(둔화)',ty:'shot',fx:'spark',burst:3,gap:.09,range:8,speed:15,dmg:400,r:9,col:'#fde047',slow:{c:.35,t:1,m:.6}},
   sup:{nm:'10만볼트',ds:'적 사이를 튀는 번개 (최대 4명) · 마비',ty:'shot',fx:'bolt',chain:3,range:8.5,speed:16,dmg:1300,r:14,col:'#fef9c3',slow:{t:1.5,m:.55}}},
  {k:'charizard',id:6,nm:'리자몽',role:'근거리 · 화염',el:'fire',gr:'e',col:'#fb923c',hp:4600,spd:1.0,rl:1.1,charge:3300,
   atk:{nm:'화염방사',ds:'짧은 부채꼴 불꽃 (관통) · 화상',ty:'shot',fx:'flame',count:5,spread:.55,range:4,speed:11,dmg:230,r:13,pierce:1,col:'#f97316',burn:{dps:220,t:2}},
   sup:{nm:'불대문자',ds:'大자 모양으로 터지는 불덩이 · 강한 화상',ty:'shot',fx:'fireball',boom:'dai',range:7,speed:11,dmg:1600,r:20,aoe:2.2,col:'#ef4444',burn:{dps:350,t:3}}},
- {k:'blastoise',id:9,nm:'거북왕',role:'원거리 · 관통',el:'water',gr:'s',col:'#60a5fa',hp:4400,spd:.95,rl:1.6,charge:3200,
+ {k:'blastoise',id:9,nm:'거북왕',role:'원거리 · 관통',el:'water',gr:'s',col:'#60a5fa',hp:4400,spd:0.9,rl:1.6,charge:3200,
   atk:{nm:'하이드로펌프',ds:'관통 물대포 · 맞으면 주변에 물보라(40% 피해)',ty:'shot',fx:'stream',range:9,speed:17,dmg:1150,r:11,pierce:1,splash:1.2,col:'#38bdf8'},
   sup:{nm:'파도타기',ds:'넓은 파도로 적을 밀쳐냄 (관통)',ty:'shot',fx:'wave',range:7,speed:10,dmg:1000,r:42,pierce:1,kb:3,col:'#7dd3fc'}},
- {k:'venusaur',id:3,nm:'이상해꽃',role:'투척 · 지원',el:'grass',gr:'s',col:'#4ade80',hp:3800,spd:.95,rl:1.5,charge:2600,
+ {k:'venusaur',id:3,nm:'이상해꽃',role:'투척 · 지원',el:'grass',gr:'s',col:'#4ade80',hp:3800,spd:0.9,rl:1.5,charge:2600,
   atk:{nm:'씨폭탄',ds:'벽 너머로 던지는 씨앗 · 착지점에 독가루',ty:'lob',fx:'seed',boom:'pop',range:7,dmg:900,aoe:1.3,fl:.6,col:'#84cc16',pool:{r:1.3,dps:500,t:1.6}},
   sup:{nm:'광합성',ds:'햇빛 꽃밭: 아군 회복 + 적 피해 (4초)',ty:'zone',zk:'sun',range:6,fl:.5,zr:2.6,heal:800,zdmg:350,zt:4,col:'#fde047'}},
  {k:'lucario',id:448,nm:'루카리오',role:'근접 · 돌격',el:'fight',gr:'e',col:'#3b82f6',hp:4800,spd:1.15,rl:1.0,charge:2600,
   atk:{nm:'파동탄',ds:'적을 따라가는 유도 파동 구슬 2연타',ty:'shot',fx:'aura',burst:2,gap:.12,range:5,speed:12,dmg:620,r:11,home:3.5,col:'#60a5fa'},
   sup:{nm:'신속',ds:'눈에 안 보이는 속도로 돌진하며 피해',ty:'dash',fx:'speed',range:5.5,speed:24,dmg:1500,kb:1.5,col:'#ffffff'}},
- {k:'gengar',id:94,nm:'팬텀',role:'중거리 · 흡혈',el:'ghost',gr:'e',col:'#a855f7',hp:3400,spd:1.08,rl:1.5,charge:3000,
+ {k:'gengar',id:94,nm:'팬텀',role:'중거리 · 흡혈',el:'ghost',gr:'e',col:'#a855f7',hp:3400,spd:1.05,rl:1.5,charge:3000,
   atk:{nm:'섀도볼',ds:'느린 관통 구체 · 준 피해의 35% 흡수',ty:'shot',fx:'shadow',range:7,speed:8,dmg:1100,r:18,pierce:1,ls:.35,col:'#7e22ce'},
   sup:{nm:'고스트다이브',ds:'그림자로 숨었다 벽 너머에서 튀어나와 폭발',ty:'tele',boom:'ghost',range:7,dmg:1300,aoe:2,col:'#c084fc'}},
- {k:'snorlax',id:143,nm:'잠만보',role:'탱커 · 산탄',el:'normal',gr:'r',col:'#94a3b8',hp:7200,spd:.9,rl:1.4,charge:3200,regen:2,pv:'먹보: 체력 회복 속도 2배',
+ {k:'snorlax',id:143,nm:'잠만보',role:'탱커 · 산탄',el:'normal',gr:'r',col:'#94a3b8',hp:7200,spd:0.78,rl:1.4,charge:3200,regen:2,pv:'먹보: 체력 회복 속도 2배',
   atk:{nm:'몸통박치기',ds:'짧은 사거리 충격파 5발 · 살짝 밀쳐냄',ty:'shot',fx:'impact',count:5,spread:.6,range:3.5,speed:13,dmg:360,r:10,kb:.35,col:'#f5f5f4'},
   sup:{nm:'누르기',ds:'점프해 내려찍기 · 기절 + 벽 파괴',ty:'leap',boom:'quake',range:6,dmg:1600,aoe:2.2,stun:1,brk:1,col:'#d6d3d1'}},
- {k:'greninja',id:658,nm:'개굴닌자',role:'중거리 · 기동',el:'water',gr:'e',col:'#2563eb',hp:3100,spd:1.2,rl:1.2,charge:3000,
+ {k:'greninja',id:658,nm:'개굴닌자',role:'중거리 · 기동',el:'water',gr:'e',col:'#2563eb',hp:3100,spd:1.28,rl:1.2,charge:3000,
   atk:{nm:'물수리검',ds:'되돌아오는 수리검 3개 (갈 때·올 때 두 번 타격)',ty:'shot',fx:'shuriken',count:3,spread:.3,range:6,speed:15,dmg:340,r:9,boomer:1,col:'#60a5fa'},
   sup:{nm:'하이드로캐논',ds:'거대한 물 포탄 · 터지며 적을 날려버림',ty:'shot',fx:'cannon',boom:'splash',range:7,speed:12,dmg:1600,r:24,aoe:2,kb:2.5,col:'#1d4ed8'}},
  {k:'dragonite',id:149,nm:'망나뇽',role:'브루저 · 돌진',el:'dragon',gr:'m',col:'#f59e0b',hp:5600,spd:1.0,rl:1.3,charge:3000,
@@ -332,34 +342,34 @@ const CH=[
  {k:'mewtwo',id:150,nm:'뮤츠',role:'저격수',el:'psychic',gr:'l',col:'#c4b5fd',hp:2900,spd:1.0,rl:2.0,charge:2800,
   atk:{nm:'사이코커터',ds:'초승달 칼날 · 멀리 맞힐수록 강해짐 (최대 2배)',ty:'shot',fx:'blade',range:10,speed:22,dmg:700,dsc:2,r:10,col:'#f472b6'},
   sup:{nm:'사이코키네시스',ds:'벽을 통과하는 염동 구체 · 폭발 + 기절',ty:'shot',fx:'psyorb',boom:'psy',range:8,speed:9,dmg:1600,r:22,aoe:2.4,stun:.8,thru:1,col:'#e879f9'}},
- {k:'gyarados',id:130,nm:'갸라도스',role:'탱커 · 중거리',el:'water',gr:'e',col:'#38bdf8',hp:6000,spd:.95,rl:1.4,charge:3200,
+ {k:'gyarados',id:130,nm:'갸라도스',role:'탱커 · 중거리',el:'water',gr:'e',col:'#38bdf8',hp:6000,spd:0.92,rl:1.4,charge:3200,
   atk:{nm:'아쿠아테일',ds:'물줄기 3갈래 · 맞은 적은 젖어서 둔화',ty:'shot',fx:'tail',count:3,spread:.35,range:5,speed:12,dmg:480,r:12,col:'#38bdf8',slow:{t:.8,m:.7}},
   sup:{nm:'파괴광선',ds:'초고속 관통 광선',ty:'shot',fx:'beam',range:10,speed:30,dmg:2200,r:18,pierce:1,col:'#fde68a'}},
- {k:'tyranitar',id:248,nm:'마기라스',role:'탱커 · 범위',el:'rock',gr:'m',col:'#84cc16',hp:6800,spd:.9,rl:1.5,charge:3200,
+ {k:'tyranitar',id:248,nm:'마기라스',role:'탱커 · 범위',el:'rock',gr:'m',col:'#84cc16',hp:6800,spd:0.82,rl:1.5,charge:3200,
   atk:{nm:'스톤엣지',ds:'뾰족한 바위 3개 · 벽이나 사거리 끝에서 파편으로 쪼개짐',ty:'shot',fx:'rock',count:3,spread:.25,range:5.5,speed:12,dmg:500,r:12,shatter:1,col:'#a8a29e'},
   sup:{nm:'지진',ds:'주변 땅을 갈라 피해 + 기절 + 벽 파괴',ty:'nova',boom:'quake',aoe:3.2,dmg:1500,stun:.6,brk:1,col:'#a16207'}},
- {k:'garchomp',id:445,nm:'한카리아스',role:'근접 · 암살',el:'dragon',gr:'m',col:'#3b82f6',hp:4600,spd:1.2,rl:1.0,charge:2600,bers:1,pv:'광폭화: 체력 50% 이하일 때 공격력·속도 +25%',
+ {k:'garchomp',id:445,nm:'한카리아스',role:'근접 · 암살',el:'dragon',gr:'m',col:'#3b82f6',hp:4600,spd:1.25,rl:1.0,charge:2600,bers:1,pv:'광폭화: 체력 50% 이하일 때 공격력·속도 +25%',
   atk:{nm:'드래곤크루',ds:'세 줄로 할퀴는 관통 발톱',ty:'shot',fx:'claw',count:3,spread:.9,range:3,speed:14,dmg:420,r:12,pierce:1,col:'#818cf8'},
   sup:{nm:'드래곤다이브',ds:'멀리 뛰어들어 내려찍기 · 기절',ty:'leap',boom:'dragon',range:7,dmg:1500,aoe:2,stun:.5,col:'#6366f1'}},
- {k:'metagross',id:376,nm:'메타그로스',role:'탱커 · 근접',el:'steel',gr:'m',col:'#94a3b8',hp:6200,spd:.9,rl:1.3,charge:3000,
+ {k:'metagross',id:376,nm:'메타그로스',role:'탱커 · 근접',el:'steel',gr:'m',col:'#94a3b8',hp:6200,spd:0.82,rl:1.3,charge:3000,
   atk:{nm:'코멧펀치',ds:'유성 같은 강철 주먹 · 25% 확률로 급소(2배)',ty:'shot',fx:'fist',range:4,speed:13,dmg:1050,r:16,kb:.8,crit:.25,col:'#cbd5e1'},
   sup:{nm:'메탈버스트',ds:'강철 파동으로 주변 적에게 피해 + 멀리 밀쳐냄',ty:'nova',boom:'metal',aoe:2.6,dmg:1700,kb:2.5,col:'#e2e8f0'}},
  {k:'sylveon',id:700,nm:'님피아',role:'지원 · 원거리',el:'fairy',gr:'s',col:'#f9a8d4',hp:3500,spd:1.0,rl:1.3,charge:2600,
   atk:{nm:'요정의바람',ds:'관통 바람 2연발 · 지나간 아군도 회복',ty:'shot',fx:'fairy',burst:2,gap:.12,range:7,speed:12,dmg:520,r:12,pierce:1,hAlly:.6,col:'#f9a8d4'},
   sup:{nm:'미스트필드',ds:'분홍 안개: 아군 회복 + 적 피해 (5초)',ty:'zone',zk:'mist',range:5,fl:.5,zr:3,heal:900,zdmg:250,zt:5,col:'#fbcfe8'}},
- {k:'gardevoir',id:282,nm:'가디안',role:'투척 · 견제',el:'psychic',gr:'s',col:'#e879f9',hp:3200,spd:1.0,rl:1.6,charge:2800,
+ {k:'gardevoir',id:282,nm:'가디안',role:'투척 · 견제',el:'psychic',gr:'s',col:'#e879f9',hp:3200,spd:0.97,rl:1.6,charge:2800,
   atk:{nm:'문포스',ds:'벽 너머로 떨어지는 달빛 · 맞은 적 둔화',ty:'lob',fx:'moon',boom:'moon',range:7.5,dmg:1100,aoe:1.5,fl:.7,col:'#f0abfc',slow:{t:1.2,m:.6}},
   sup:{nm:'순간이동',ds:'벽 너머로 이동 후 폭발 + 기절',ty:'tele',boom:'tele',range:8,dmg:1400,aoe:2.2,stun:.5,col:'#e879f9'}},
- {k:'lycanroc',id:745,nm:'루가루암',role:'근접 · 마무리',el:'rock',gr:'r',col:'#fb923c',hp:4400,spd:1.15,rl:.9,charge:2500,
+ {k:'lycanroc',id:745,nm:'루가루암',role:'근접 · 마무리',el:'rock',gr:'r',col:'#fb923c',hp:4400,spd:1.25,rl:.9,charge:2500,
   atk:{nm:'깨물어부수기',ds:'빠른 2연속 물기 · 체력 50% 이하 적에게 1.6배',ty:'shot',fx:'jaw',burst:2,gap:.1,range:3.5,speed:15,dmg:650,r:13,exec:1.6,col:'#e7e5e4'},
   sup:{nm:'엑셀록',ds:'바위를 두르고 번개처럼 돌진',ty:'dash',fx:'rockdash',range:6,speed:24,dmg:1600,kb:2,col:'#a8a29e'}},
- {k:'mimikyu',id:778,nm:'따라큐',role:'근접 · 생존',el:'ghost',gr:'s',col:'#fde047',hp:4800,spd:1.05,rl:1.3,charge:3000,
+ {k:'mimikyu',id:778,nm:'따라큐',role:'근접 · 생존',el:'ghost',gr:'s',col:'#fde047',hp:4800,spd:1.1,rl:1.3,charge:3000,
   atk:{nm:'섀도클로',ds:'그림자 발톱 2개 · 맞은 적을 끌어당김',ty:'shot',fx:'claw',count:2,spread:.4,range:4.5,speed:13,dmg:580,r:12,pierce:1,pull:1.1,col:'#7e22ce'},
   sup:{nm:'탈',ds:'(특성) 탈을 써서 2.5초 무적 + 이동속도 증가',ty:'disguise',dur:2.5,col:'#fde047'}},
- {k:'scizor',id:212,nm:'핫삼',role:'근접 · 딜러',el:'steel',gr:'s',col:'#ef4444',hp:4200,spd:1.1,rl:.8,charge:2400,
+ {k:'scizor',id:212,nm:'핫삼',role:'근접 · 딜러',el:'steel',gr:'s',col:'#ef4444',hp:4200,spd:1.12,rl:.8,charge:2400,
   atk:{nm:'불릿펀치',ds:'빠른 강철 주먹 · 3번째 적중마다 2배 콤보',ty:'shot',fx:'fist',range:3.8,speed:18,dmg:700,r:12,combo:1,col:'#ef4444'},
   sup:{nm:'칼춤',ds:'칼을 휘두르며 4초간 공격력 1.5배 + 속도 증가 + 탄약 충전',ty:'buff',dur:4,col:'#fca5a5'}},
- {k:'rayquaza',id:384,nm:'레쿠쟈',role:'원거리 · 범위',el:'dragon',gr:'l',col:'#22c55e',hp:3600,spd:1.05,rl:1.6,charge:3000,
+ {k:'rayquaza',id:384,nm:'레쿠쟈',role:'원거리 · 범위',el:'dragon',gr:'l',col:'#22c55e',hp:3600,spd:1.06,rl:1.6,charge:3000,
   atk:{nm:'에어슬래시',ds:'관통하는 공기 칼날 2개',ty:'shot',fx:'blade',el:'flying',count:2,spread:.16,range:8.5,speed:16,dmg:520,r:12,pierce:1,col:'#bae6fd'},
   sup:{nm:'용성군',ds:'유성 5개가 목표 지점에 쏟아짐',ty:'meteor',boom:'fire',range:8,n:5,area:2,dmg:900,aoe:1.2,fl:.8,col:'#f97316'}}
 ];
@@ -396,6 +406,7 @@ function dropNew(ch){if(Math.random()>=ch)return null;const pool=CH.filter(c=>!o
 
 /* ---------- 메뉴 ---------- */
 function showScr(id){document.querySelectorAll('.scr').forEach(s=>s.classList.toggle('on',s.id===id));}
+const spdNm=v=>v<.85?'매우 느림':v<.95?'느림':v<1.08?'보통':v<1.2?'빠름':'매우 빠름';
 let viewK=null;
 function buildGrid(){
   const g=$('#grid');g.innerHTML='';
@@ -407,14 +418,20 @@ function buildGrid(){
     g.appendChild(d);
   });
   const c=chOf(viewK||SAVE.sel),own=owns(c.k);
-  const bar=(l,v,m)=>`<div class="stat"><em>${l}</em><div class="bar"><i style="width:${Math.min(100,v/m*100)}%"></i></div><span>${l==='체력'?Math.round(c.hp*(1+.06*(lv(c.k)-1))):''}</span></div>`;
+  const bar=(l,v,m)=>`<div class="stat"><em>${l}</em><div class="bar"><i style="width:${Math.min(100,v/m*100)}%"></i></div><span>${l==='속도'?spdNm(c.spd):l==='체력'?Math.round(c.hp*(1+.06*(lv(c.k)-1))):''}</span></div>`;
   const dps=c.atk.dmg*(c.atk.count||1)*(c.atk.burst||1)*(c.atk.dsc?1.5:1);
   $('#detail').innerHTML=`<img class="dpor" src="${POR[c.id]}"><h3>${c.nm} <span class="gd" style="display:inline-block;background:${GRADE[c.gr].c}">${GRADE[c.gr].nm}</span> <span class="ty" style="color:${EL[c.el].c[0]}">${EL[c.el].nm}</span></h3><div style="opacity:.75">${c.role}</div>${own?'':`<div class="pw"><button class="upbtn" id="bUnlock" ${(SAVE.gems||0)<UNLOCK_GEM[c.gr]?'disabled':''}>혜성조각 ${UNLOCK_GEM[c.gr]}개로 영입</button><span style="opacity:.7">보유 ${SAVE.gems||0} · 상자에서도 나와요</span></div>`}<div class="pw"${own?'':' style="display:none"'}><span class="lbv">파워 ${lv(c.k)}</span>${lv(c.k)<11?`<button class="upbtn" id="bUp" ${SAVE.coins<upCost(lv(c.k))?'disabled':''}>강화 · 금구슬 ${upCost(lv(c.k))}</button>`:'<span>최대 레벨</span>'}<span style="opacity:.7">보유 금구슬 ${SAVE.coins}</span></div>`+
-    bar('체력',c.hp*(1+.06*(lv(c.k)-1)),7200)+bar('공격력',dps,2000)+bar('사거리',c.atk.range,10)+bar('속도',c.spd,1.2)+bar('장전',1/c.rl,1)+
+    bar('체력',c.hp*(1+.06*(lv(c.k)-1)),7200)+bar('공격력',dps,2000)+bar('사거리',c.atk.range,10)+bar('속도',c.spd,1.3)+bar('장전',1/c.rl,1)+
     `<div class="sk"><b>공격 · ${c.atk.nm}</b> <span style="color:${EL[c.atk.el].c[0]}">[${EL[c.atk.el].nm}]</span><br>${c.atk.ds}</div><div class="sk"><b>★ 필살기 · ${c.sup.nm}</b> <span style="color:${EL[c.sup.el].c[0]}">[${EL[c.sup.el].nm}]</span><br>${c.sup.ds}</div>`+(c.pv?`<div class="sk"><b>패시브</b><br>${c.pv}</div>`:'');
   const ul=$('#bUnlock');if(ul)ul.onclick=()=>{const p=UNLOCK_GEM[c.gr];if((SAVE.gems||0)<p)return;SAVE.gems-=p;unlockPk(c.k);SAVE.sel=c.k;save();sfx('win');buildGrid();};
   const up=$('#bUp');if(up)up.onclick=()=>{const l=lv(c.k),cost=upCost(l);if(SAVE.coins<cost||l>=11)return;SAVE.coins-=cost;SAVE.lv[c.k]=l+1;save();buildGrid();};
 }
+function dragScroll(el){let st=null;
+  el.addEventListener('pointerdown',e=>{const p=pt(e);st={y:p.y,top:el.scrollTop,moved:false,id:e.pointerId};});
+  el.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;const p=pt(e),dy=p.y-st.y;if(!st.moved&&Math.abs(dy)>6){st.moved=true;try{el.setPointerCapture(st.id);}catch(_){}}if(st.moved)el.scrollTop=st.top-dy;});
+  const end=()=>{if(st&&st.moved)el._drag=Date.now();st=null;};el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
+  el.addEventListener('click',e=>{if(el._drag&&Date.now()-el._drag<120){e.stopPropagation();e.preventDefault();}},true);}
+dragScroll($('#grid'));dragScroll($('#detail'));
 $('#bBrawlers').onclick=()=>{viewK=null;buildGrid();showScr('sel');};
 $('#bBack').onclick=()=>{if(NET.on){refreshMeta();showRoom();return;}refreshMenu();showScr('menu');};
 $('#bMenu').onclick=()=>{if(NET.on){netLeave();return;}G=null;refreshMenu();showScr('menu');};
