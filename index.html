@@ -176,6 +176,14 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .bt{font-size:22px}
 .rws{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}.rw{display:flex;flex-direction:column;align-items:center;background:#2a2140;border:3px solid #111;padding:8px 12px;animation:pop .35s steps(4)}
 .rw b{font-size:22px;font-weight:400;color:#fde047}.rw span{font-size:11px}.por2{border:3px solid #111}
+.card.lock{filter:grayscale(1);opacity:.6}.card .lk{position:absolute;top:44px;right:3px;font-size:11px}
+.rpk{display:block;width:34px;height:34px;margin:3px auto;image-rendering:pixelated;border:2px solid #111}
+.rw.newpk{border-color:#facc15}
+#starter{justify-content:center}.st-h{font-size:22px;font-weight:400;color:#fde047;margin:0}.st-sub{font-size:11px;opacity:.75;margin:6px 0 12px}
+.st-cards{display:flex;gap:14px}
+.stc{width:200px;background:#1c1530;border:3px solid #111;border-top:8px solid var(--tc);box-shadow:inset 0 3px 0 #3b2d63,0 5px 0 #111;padding:10px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font-size:11px}
+.stc:hover{transform:translateY(-4px)}.stc img{width:96px;height:96px;image-rendering:pixelated;border:3px solid #111}.stc b{font-size:22px;font-weight:400}.stc .stt{color:var(--tc)}
+.stc span{opacity:.85}.stc .btn{margin-top:6px}
 </style>
 </head>
 <body>
@@ -238,6 +246,11 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
     <div class="lg-btns"><button class="btn sm" id="lgIn">로그인</button><button class="btn b2 sm" id="lgUp">회원가입</button></div>
     <div class="lg-err" id="lgErr">아이디는 영문 소문자·숫자·_ 3~12자, 비밀번호는 4자 이상</div>
   </div>
+</div>
+<div id="starter" class="scr">
+  <h2 class="st-h">함께할 첫 포켓몬을 골라 주세요!</h2>
+  <div class="st-sub">나머지 포켓몬은 트로피 로드·상점·상자에서 모을 수 있어요</div>
+  <div class="st-cards" id="stCards"></div>
 </div>
 <div id="room" class="scr">
   <div class="top"><button class="btn b2 sm" id="bRLeave">← 나가기</button><div class="pill">멀티 · 젬 그랩 3대3</div></div>
@@ -348,26 +361,34 @@ function save(){try{localStorage.setItem('pokebrawl1',JSON.stringify(SAVE))}catc
 const tro=k=>SAVE.tro[k]||0;
 const totTro=()=>CH.reduce((a,c)=>a+tro(c.k),0);
 const chOf=k=>CH.find(c=>c.k===k)||CH[0];
+const STARTERS=['venusaur','charizard','blastoise'];
+const owns=k=>!SAVE.own||SAVE.own.includes(k);
+const UNLOCK_GEM={r:25,s:50,e:100,m:180,l:300};
+function unlockPk(k){if(!SAVE.own)SAVE.own=[];if(!SAVE.own.includes(k))SAVE.own.push(k);}
+function dropNew(ch){if(Math.random()>=ch)return null;const pool=CH.filter(c=>!owns(c.k));if(!pool.length)return null;const w={r:40,s:30,e:18,m:9,l:3};let tot=pool.reduce((a,c)=>a+w[c.gr],0),x=Math.random()*tot;for(const c of pool){x-=w[c.gr];if(x<=0){unlockPk(c.k);return c;}}return null;}
 
 /* ---------- 메뉴 ---------- */
 function showScr(id){document.querySelectorAll('.scr').forEach(s=>s.classList.toggle('on',s.id===id));}
+let viewK=null;
 function buildGrid(){
   const g=$('#grid');g.innerHTML='';
   CH.slice().sort((a,b)=>GRADE[a.gr].o-GRADE[b.gr].o).forEach(c=>{
     const d=document.createElement('div');d.className='card'+(c.k===SAVE.sel?' sel':'');d.style.borderBottomColor=GRADE[c.gr].c;
-    d.innerHTML=`<div class="tr">★${tro(c.k)}</div><div class="lvb">Lv${lv(c.k)}</div><img class="por" src="${POR[c.id]}"><div class="n">${c.nm}</div><div class="gd" style="background:${GRADE[c.gr].c}">${GRADE[c.gr].nm}</div>`;
-    d.onclick=()=>{SAVE.sel=c.k;save();buildGrid();};
+    d.innerHTML=`<div class="tr">${owns(c.k)?"★"+tro(c.k):"잠김"}</div>${owns(c.k)?`<div class="lvb">Lv${lv(c.k)}</div>`:`<div class="lk">🔒</div>`}<img class="por" src="${POR[c.id]}"><div class="n">${c.nm}</div><div class="gd" style="background:${GRADE[c.gr].c}">${GRADE[c.gr].nm}</div>`;
+    if(!owns(c.k))d.classList.add('lock');
+    d.onclick=()=>{viewK=c.k;if(owns(c.k)){SAVE.sel=c.k;save();}buildGrid();};
     g.appendChild(d);
   });
-  const c=chOf(SAVE.sel);
+  const c=chOf(viewK||SAVE.sel),own=owns(c.k);
   const bar=(l,v,m)=>`<div class="stat"><em>${l}</em><div class="bar"><i style="width:${Math.min(100,v/m*100)}%"></i></div><span>${l==='체력'?Math.round(c.hp*(1+.06*(lv(c.k)-1))):''}</span></div>`;
   const dps=c.atk.dmg*(c.atk.count||1)*(c.atk.burst||1)*(c.atk.dsc?1.5:1);
-  $('#detail').innerHTML=`<img class="dpor" src="${POR[c.id]}"><h3>${c.nm} <span class="gd" style="display:inline-block;background:${GRADE[c.gr].c}">${GRADE[c.gr].nm}</span> <span class="ty" style="color:${EL[c.el].c[0]}">${EL[c.el].nm}</span></h3><div style="opacity:.75">${c.role}</div><div class="pw"><span class="lbv">파워 ${lv(c.k)}</span>${lv(c.k)<11?`<button class="upbtn" id="bUp" ${SAVE.coins<upCost(lv(c.k))?'disabled':''}>강화 · 금구슬 ${upCost(lv(c.k))}</button>`:'<span>최대 레벨</span>'}<span style="opacity:.7">보유 금구슬 ${SAVE.coins}</span></div>`+
+  $('#detail').innerHTML=`<img class="dpor" src="${POR[c.id]}"><h3>${c.nm} <span class="gd" style="display:inline-block;background:${GRADE[c.gr].c}">${GRADE[c.gr].nm}</span> <span class="ty" style="color:${EL[c.el].c[0]}">${EL[c.el].nm}</span></h3><div style="opacity:.75">${c.role}</div>${own?'':`<div class="pw"><button class="upbtn" id="bUnlock" ${(SAVE.gems||0)<UNLOCK_GEM[c.gr]?'disabled':''}>혜성조각 ${UNLOCK_GEM[c.gr]}개로 영입</button><span style="opacity:.7">보유 ${SAVE.gems||0} · 상자에서도 나와요</span></div>`}<div class="pw"${own?'':' style="display:none"'}><span class="lbv">파워 ${lv(c.k)}</span>${lv(c.k)<11?`<button class="upbtn" id="bUp" ${SAVE.coins<upCost(lv(c.k))?'disabled':''}>강화 · 금구슬 ${upCost(lv(c.k))}</button>`:'<span>최대 레벨</span>'}<span style="opacity:.7">보유 금구슬 ${SAVE.coins}</span></div>`+
     bar('체력',c.hp*(1+.06*(lv(c.k)-1)),7200)+bar('공격력',dps,2000)+bar('사거리',c.atk.range,10)+bar('속도',c.spd,1.2)+bar('장전',1/c.rl,1)+
     `<div class="sk"><b>공격 · ${c.atk.nm}</b> <span style="color:${EL[c.atk.el].c[0]}">[${EL[c.atk.el].nm}]</span><br>${c.atk.ds}</div><div class="sk"><b>★ 필살기 · ${c.sup.nm}</b> <span style="color:${EL[c.sup.el].c[0]}">[${EL[c.sup.el].nm}]</span><br>${c.sup.ds}</div>`+(c.pv?`<div class="sk"><b>패시브</b><br>${c.pv}</div>`:'');
+  const ul=$('#bUnlock');if(ul)ul.onclick=()=>{const p=UNLOCK_GEM[c.gr];if((SAVE.gems||0)<p)return;SAVE.gems-=p;unlockPk(c.k);SAVE.sel=c.k;save();sfx('win');buildGrid();};
   const up=$('#bUp');if(up)up.onclick=()=>{const l=lv(c.k),cost=upCost(l);if(SAVE.coins<cost||l>=11)return;SAVE.coins-=cost;SAVE.lv[c.k]=l+1;save();buildGrid();};
 }
-$('#bBrawlers').onclick=()=>{buildGrid();showScr('sel');};
+$('#bBrawlers').onclick=()=>{viewK=null;buildGrid();showScr('sel');};
 $('#bBack').onclick=()=>{if(NET.on){refreshMeta();showRoom();return;}refreshMenu();showScr('menu');};
 $('#bMenu').onclick=()=>{if(NET.on){netLeave();return;}G=null;refreshMenu();showScr('menu');};
 
@@ -823,7 +844,7 @@ function endMatch(mode,res){
   else{const tbl=[0,10,8,7,6,4,2,0,-1,-2,-3];d=tbl[res]||0;big=res===1?'1등!':res+'등';sub=res===1?'최후의 생존자!':'10명 중 '+res+'등';}
   const k=P.ch.k;SAVE.tro[k]=Math.max(0,tro(k)+d);
   let coin=mode==='gem'?(res==='win'?30:res==='draw'?15:10):([0,40,32,28,24,18,14,10,8,6,4][res]||4);
-  const road=[];while(SAVE.road<ROAD.length&&totTro()>=ROAD[SAVE.road].t){road.push(ROAD[SAVE.road]);coin+=ROAD[SAVE.road].c;SAVE.road++;}
+  const road=[];while(SAVE.road<ROAD.length&&totTro()>=ROAD[SAVE.road].t){const rr=Object.assign({},ROAD[SAVE.road]);if(rr.pk){const k=rr.pk==='starter'?STARTERS.find(x=>!owns(x)):rr.pk;if(k&&!owns(k)){unlockPk(k);rr.got=chOf(k).nm;}}road.push(rr);coin+=rr.c;SAVE.road++;}
   let gem=(mode==='gem'&&res==='win')||(mode==='sd'&&res<=3)?2:0;gem+=road.length*5;
   SAVE.coins=(SAVE.coins||0)+coin;SAVE.gems=(SAVE.gems||0)+gem;save();
   G.result={big,sub,d,coin,road,gem};
@@ -834,7 +855,7 @@ function showResult(){
   $('#rTro').textContent='트로피 '+(r.d>=0?'+':'')+r.d+'  (현재 '+tro(P.ch.k)+')';
   $('#rBig').style.color=r.d>0?'#fde047':r.d<0?'#93c5fd':'#fff';
   $('#rCoin').innerHTML=`<img class="ico" src="${ICO.coin}"> +${r.coin} 금구슬`+(r.gem?` &nbsp; <img class="ico" src="${ICO.gemc}"> +${r.gem} 혜성조각`:'');
-  $('#rRoad').textContent=r.road.length?'트로피 로드 보상! '+r.road.map(x=>x.t+'트로피').join(', ')+' 달성':'';
+  $('#rRoad').textContent=r.road.length?'트로피 로드 보상! '+r.road.map(x=>x.t+'트로피'+(x.got?' · '+x.got+' 획득':'')).join(', '):'';
   showScr('res');
 }
 
@@ -1475,7 +1496,7 @@ const ICO={};for(const k in ICON_ROWS)ICO[k]=iconURI(k,4);
 document.querySelectorAll('img[data-ico]').forEach(im=>im.src=ICO[im.dataset.ico]);
 $('#ldBall').src=ICO.ball;
 
-const ROAD=[{t:10,c:50},{t:30,c:80},{t:60,c:120},{t:100,c:160},{t:150,c:200},{t:200,c:250},{t:300,c:300},{t:400,c:400},{t:500,c:500},{t:750,c:700},{t:1000,c:1000}];
+const ROAD=[{t:10,c:50,pk:'pikachu'},{t:30,c:80,pk:'starter'},{t:60,c:120,pk:'snorlax'},{t:100,c:160,pk:'starter'},{t:150,c:200,pk:'lycanroc'},{t:200,c:250},{t:300,c:300},{t:400,c:400},{t:500,c:500},{t:750,c:700},{t:1000,c:1000}];
 const lv=k=>(SAVE.lv&&SAVE.lv[k])||1;
 const upCost=l=>l*25;
 const MODES={gem:{nm:'젬 그랩',ds:'3대3 · 보석 10개 들고 15초',ico:'gem',col:'#7e22ce',long:'광산에서 나오는 보석을 모으세요. 팀이 10개 이상을 들고 15초를 버티면 승리! 쓰러지면 들고 있던 보석을 떨어뜨려요.'},
@@ -1504,7 +1525,7 @@ $('#bMode').onclick=()=>{
 };
 $('#bRoad').onclick=()=>{
   const tt=totTro();
-  modal(`<h2>트로피 로드 · 현재 ${tt}</h2><div class="road">`+ROAD.map((r,i)=>`<div class="rn${i<SAVE.road?' done':''}"><img class="ico" src="${ICO.trophy}"> ${r.t}<b>${r.c}</b>금구슬<br>+5 혜성조각<br>${i<SAVE.road?'받음 ✓':tt>=r.t?'곧 받음':'잠김'}</div>`).join('')+`</div><div style="font-size:11px;opacity:.7">트로피를 모으면 보상을 자동으로 받아요. 금구슬로 포켓몬 파워를 올릴 수 있어요.</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);
+  modal(`<h2>트로피 로드 · 현재 ${tt}</h2><div class="road">`+ROAD.map((r,i)=>`<div class="rn${i<SAVE.road?' done':''}"><img class="ico" src="${ICO.trophy}"> ${r.t}${r.pk?`<img class="rpk" src="${POR[chOf(r.pk==='starter'?(STARTERS.find(x=>!owns(x))||'blastoise'):r.pk).id]}">`:''}<b>${r.c}</b>금구슬<br>+5 혜성조각<br>${i<SAVE.road?'받음 ✓':tt>=r.t?'곧 받음':'잠김'}</div>`).join('')+`</div><div style="font-size:11px;opacity:.7">트로피를 모으면 보상을 자동으로 받아요. 금구슬로 포켓몬 파워를 올릴 수 있어요.</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);
 };
 
 /* 매치메이킹 + VS 화면 */
@@ -1750,7 +1771,7 @@ function clientUpdate(dt){
 
 $('#bRLeave').onclick=()=>netLeave();
 $('#bRTeam').onclick=()=>switchTeam();
-$('#bRChar').onclick=()=>{buildGrid();showScr('sel');};
+$('#bRChar').onclick=()=>{viewK=null;buildGrid();showScr('sel');};
 $('#bRStart').onclick=()=>{if(NET.host)hostStart();};
 $('#bRCopy').onclick=()=>{try{navigator.clipboard.writeText(NET.code).catch(()=>{});}catch(e){}$('#bRCopy').textContent='복사됨';setTimeout(()=>$('#bRCopy').textContent='복사',1200);};
 /* ---------- 상점 ---------- */
@@ -1760,14 +1781,14 @@ const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+
 const cIco=`<img class="ico" src="${ICO.coin}">`,gIco=`<img class="ico" src="${ICO.gemc}">`;
 const SHOP=[
  {id:'daily',nm:'오늘의 무료 선물',ds:'하루에 한 번 무료!',cost:0,cur:'free',ball:'#22c55e'},
- {id:'poke',nm:'몬스터볼 상자',ds:'금구슬 또는 파워 업',cost:120,cur:'coin',ball:'#ef4444'},
- {id:'great',nm:'슈퍼볼 상자',ds:'더 많은 보상',cost:20,cur:'gem',ball:'#3b82f6'},
- {id:'ultra',nm:'하이퍼볼 상자',ds:'파워 업 확정 2개',cost:45,cur:'gem',ball:'#facc15'},
- {id:'master',nm:'마스터볼 상자',ds:'파워 업 확정 4개 + 대량 금구슬',cost:90,cur:'gem',ball:'#a855f7'},
+ {id:'poke',nm:'몬스터볼 상자',ds:'금구슬·파워 업·가끔 새 포켓몬',cost:120,cur:'coin',ball:'#ef4444'},
+ {id:'great',nm:'슈퍼볼 상자',ds:'새 포켓몬 20% 확률',cost:20,cur:'gem',ball:'#3b82f6'},
+ {id:'ultra',nm:'하이퍼볼 상자',ds:'파워 업 2개 · 새 포켓몬 35%',cost:45,cur:'gem',ball:'#facc15'},
+ {id:'master',nm:'마스터볼 상자',ds:'파워 업 4개 · 새 포켓몬 60%',cost:90,cur:'gem',ball:'#a855f7'},
  {id:'c1',nm:'금구슬 꾸러미',ds:'금구슬 150개',cost:10,cur:'gem',give:{coin:150}},
  {id:'c2',nm:'금구슬 상자',ds:'금구슬 900개',cost:50,cur:'gem',give:{coin:900}},
 ];
-function randPow(n){const out=[];for(let i=0;i<n;i++){const can=CH.filter(c=>lv(c.k)<11);if(!can.length)break;const c=pick(can);SAVE.lv[c.k]=lv(c.k)+1;out.push(c);}return out;}
+function randPow(n){const out=[];for(let i=0;i<n;i++){const can=CH.filter(c=>owns(c.k)&&lv(c.k)<11);if(!can.length)break;const c=pick(can);SAVE.lv[c.k]=lv(c.k)+1;out.push(c);}return out;}
 function openBox(id){
   const R={coin:0,gem:0,pow:[]};const r=Math.random();
   if(id==='daily'){R.coin=30+Math.floor(Math.random()*6)*10;if(Math.random()<.35)R.gem=2+Math.floor(Math.random()*3);}
@@ -1775,6 +1796,7 @@ function openBox(id){
   else if(id==='great'){R.coin=150+Math.floor(Math.random()*16)*10;R.pow=randPow(1);if(Math.random()<.3)R.gem=5;}
   else if(id==='ultra'){R.coin=250+Math.floor(Math.random()*20)*10;R.pow=randPow(2);}
   else if(id==='master'){R.coin=600+Math.floor(Math.random()*40)*10;R.pow=randPow(4);R.gem=10;}
+  const dc={daily:0,poke:.08,great:.2,ultra:.35,master:.6}[id]||0;R.pk=dropNew(dc);
   SAVE.coins+=R.coin;SAVE.gems=(SAVE.gems||0)+R.gem;return R;
 }
 function shopHTML(){
@@ -1801,11 +1823,21 @@ function boxAnim(it,R){
   setTimeout(()=>{sfx('win');
     const items=[];if(R.coin)items.push(`<div class="rw">${`<img class="sbig" src="${ICO.coin}">`}<b>+${R.coin}</b><span>금구슬</span></div>`);
     if(R.gem)items.push(`<div class="rw"><img class="sbig" src="${ICO.gemc}"><b>+${R.gem}</b><span>혜성조각</span></div>`);
+    if(R.pk)items.unshift(`<div class="rw newpk"><img class="sbig por2" src="${POR[R.pk.id]}"><b>새 포켓몬!</b><span>${R.pk.nm} · ${GRADE[R.pk.gr].nm}</span></div>`);
     R.pow.forEach(c=>items.push(`<div class="rw"><img class="sbig por2" src="${POR[c.id]}"><b>파워 업!</b><span>${c.nm} → ${lv(c.k)}</span></div>`));
     modal(`<h2>획득!</h2><div class="rws">${items.join('')}</div><div class="mrow"><button class="btn b2 sm" id="bShopBack">상점으로</button><button class="btn sm" onclick="closeModal()">확인</button></div>`);
     $('#bShopBack').onclick=openShop;},1100);
 }
 
+/* ---------- 스타팅 포켓몬 ---------- */
+function showStarter(){
+  $('#stCards').innerHTML=STARTERS.map(k=>{const c=chOf(k);return `<div class="stc" data-k="${k}" style="--tc:${EL[c.el].c[0]}"><img src="${POR[c.id]}"><b>${c.nm}</b><span class="stt">${EL[c.el].nm} 타입 · ${c.role}</span><span>공격 · ${c.atk.nm}</span><span>필살기 · ${c.sup.nm}</span><button class="btn sm">이 포켓몬으로!</button></div>`;}).join('');
+  document.querySelectorAll('.stc').forEach(el=>el.onclick=()=>{
+    const k=el.dataset.k;SAVE.own=[k,...Object.keys(SAVE.tro||{}).filter(x=>x!==k&&(SAVE.tro[x]||0)>0)];SAVE.sel=k;save();sfx('win');
+    modal(`<h2>${chOf(k).nm}, 너로 정했다!</h2><div class="rws"><div class="rw"><img class="sbig por2" src="${POR[chOf(k).id]}" style="width:88px;height:88px"><b>${chOf(k).nm}</b></div></div><div class="mrow"><button class="btn sm" onclick="closeModal()">시작하기</button></div>`);
+    refreshMenu();showScr('menu');});
+  showScr('starter');
+}
 /* ---------- 계정 ---------- */
 const ACC={user:null,token:null,admin:false};
 const API='https://fidocivflebjwpjndlue.supabase.co/rest/v1/rpc/',APIKEY='sb_publishable_hLKLyBTK5sDp4TlYlCosFg_9WoOgX9X';
@@ -1821,6 +1853,8 @@ function applyAccount(r,carry){
   if(sv)SAVE=Object.assign(DEF_SAVE(),sv);else if(!carry)SAVE=DEF_SAVE();
   if(!SAVE.lv)SAVE.lv={};if(!SAVE.tro)SAVE.tro={};
   SAVE.name=ACC.user;applyGrant(r);save();
+  if(!SAVE.own){showStarter();return;}
+  if(!owns(SAVE.sel))SAVE.sel=SAVE.own[0];
   refreshMenu();showScr('menu');
 }
 function loginErr(t){$('#lgErr').textContent=t;}
