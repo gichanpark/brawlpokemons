@@ -3006,7 +3006,7 @@ async function adminPanel(target){
     if(take&&!$('#atGo').dataset.ok2){$('#atGo').dataset.ok2=1;$('#atGo').textContent='정말 차감?';return;}
     if(to==='*'&&!$('#atGo').dataset.ok){$('#atGo').dataset.ok=1;$('#atGo').textContent='전체에게? 한 번 더';return;}
     $('#atGo').disabled=true;$('#atRes').textContent='처리 중...';
-    try{const q=await rpc('pb_admin_tro',{p_token:ACC.token,p_target:to,p_pk:k,p_amt:n});$('#atRes').textContent=q.ok?`${q.n}명 · ${k==='__all'?'모든 포켓몬':chOf(k).nm} 트로피 ${all?'전부 차감':(n>0?'+':'')+n}`:({no_user:'없는 아이디예요',bad_amount:'수치를 확인해 주세요'}[q.err]||'실패했어요');
+    try{const q=await rpc('pb_admin_tro',{p_token:ACC.token,p_target:to,p_pk:k,p_amt:n,p_keys:CH.map(c=>c.k)});$('#atRes').textContent=q.ok?`${q.n}명 · ${k==='__all'?'모든 포켓몬':chOf(k).nm} 트로피 ${all?'전부 차감':(n>0?'+':'')+n}`:({no_user:'없는 아이디예요',bad_amount:'수치를 확인해 주세요'}[q.err]||'실패했어요');
       if(q.ok&&(to===ACC.user||to==='*'))serverSave();}catch(e){$('#atRes').textContent='연결 실패';}
     $('#atGo').disabled=false;delete $('#atGo').dataset.ok;delete $('#atGo').dataset.ok2;atSync();};
   $('#amSend').onclick=async()=>{
