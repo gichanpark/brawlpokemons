@@ -1342,9 +1342,11 @@ addEventListener('keyup',e=>{IN.keys[e.code]=false;});
 
 /* ---------- 효과음 (8비트 합성) ---------- */
 let AC=null,MG=null,NB=null;
+function VOL(){if(!SAVE.vol){SAVE.vol={s:SAVE.snd===0?0:80,m:SAVE.snd===0||SAVE.mus===0?0:70};}return SAVE.vol;}
+function applyVol(){if(MG)MG.gain.value=.4*VOL().s/100;if(MUS.gain&&MUS.cur&&AC){const g=MUS.gain.gain,t=AC.currentTime;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);g.linearRampToValueAtTime(1.5*VOL().m/100,t+.1);}MUS.want='x';musWant();}
 function audioInit(){
   if(AC){if(AC.state==='suspended')AC.resume();return;}
-  try{AC=new (window.AudioContext||window.webkitAudioContext)();MG=AC.createGain();MG.gain.value=.32;MG.connect(AC.destination);
+  try{AC=new (window.AudioContext||window.webkitAudioContext)();MG=AC.createGain();MG.gain.value=.4*VOL().s/100;MG.connect(AC.destination);
     NB=AC.createBuffer(1,AC.sampleRate,AC.sampleRate);const d=NB.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;}catch(e){AC=null;}
 }
 addEventListener('pointerdown',audioInit,true);
@@ -1396,9 +1398,9 @@ function musTick(){if(!AC||!MUS.cur)return;const tr=TRACKS[MUS.cur],sp=60/tr.bpm
   if(MUS.next<AC.currentTime-.2)MUS.next=AC.currentTime+.05;
   while(MUS.next<AC.currentTime+.18){mStep(tr,MUS.step,MUS.next,sp);MUS.step++;MUS.next+=sp;}}
 function musPlay(name){if(!AC)return;if(!MUS.gain){MUS.gain=AC.createGain();MUS.gain.gain.value=0;const cp=AC.createDynamicsCompressor();cp.threshold.value=-16;cp.knee.value=8;cp.ratio.value=5;cp.attack.value=.004;cp.release.value=.2;MUS.gain.connect(cp);cp.connect(AC.destination);MUS.timer=setInterval(musTick,40);}
-  const on=SAVE.snd!==0&&SAVE.mus!==0;if(!on)name=null;if(name===MUS.cur)return;
+  const on=VOL().m>0;if(!on)name=null;if(name===MUS.cur)return;
   const g=MUS.gain.gain,t=AC.currentTime;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);g.linearRampToValueAtTime(0,t+.25);
-  clearTimeout(MUS.tk);MUS.tk=setTimeout(()=>{MUS.cur=name;MUS.step=0;MUS.next=AC.currentTime+.05;if(name){const t2=AC.currentTime;g.cancelScheduledValues(t2);g.setValueAtTime(0,t2);g.linearRampToValueAtTime(1.05,t2+.4);}},name&&MUS.cur?260:20);
+  clearTimeout(MUS.tk);MUS.tk=setTimeout(()=>{MUS.cur=name;MUS.step=0;MUS.next=AC.currentTime+.05;if(name){const t2=AC.currentTime;g.cancelScheduledValues(t2);g.setValueAtTime(0,t2);g.linearRampToValueAtTime(1.5*VOL().m/100,t2+.4);}},name&&MUS.cur?260:20);
   if(!MUS.cur)MUS.cur=null;}
 function musWant(){if(!AC||AC.state!=='running')return;let w='lobby';
   if(G&&!G.over){const m=G.mode;w=m==='sd'?'sd':m==='ko'?'ko':m==='train'?'lobby':'battle';
@@ -1407,7 +1409,7 @@ function musWant(){if(!AC||AC.state!=='running')return;let w='lobby';
   if(MUS.want!==w){MUS.want=w;musPlay(w);}}
 setInterval(musWant,300);
 /* 기술별 추가 효과음 */
-function fxSnd(s,x,y){if(!AC||SAVE.snd===0||!s)return;let v=1;if(x!=null&&G&&P){const d=Math.hypot(x-P.x,y-P.y);v=clamp(1.1-d/(T*11),0,1);if(v<.08)return;}
+function fxSnd(s,x,y){if(!AC||VOL().s<=0||!s)return;let v=1;if(x!=null&&G&&P){const d=Math.hypot(x-P.x,y-P.y);v=clamp(1.1-d/(T*11),0,1);if(v<.08)return;}
   const k='fx'+s.fx,now=performance.now();if(SLAST[k]&&now-SLAST[k]<60)return;SLAST[k]=now;
   try{switch(s.fx){
     case 'blade':case 'claw':nz(.09,.16*v,9000,2500,'highpass');osc('triangle',1800,600,.07,.05*v);break;
@@ -1428,7 +1430,7 @@ function fxSnd(s,x,y){if(!AC||SAVE.snd===0||!s)return;let v=1;if(x!=null&&G&&P){
     case 'seed':osc('sine',400,800,.08,.12*v);break;
     case 'speed':case 'rage':case 'rockdash':nz(.3,.2*v,400,3500,'bandpass');break;
   }}catch(e){}}
-function boomSnd(s,x,y,rad){if(!AC||SAVE.snd===0||!s)return;let v=1;if(x!=null&&G&&P){const d=Math.hypot(x-P.x,y-P.y);v=clamp(1.2-d/(T*12),0,1);if(v<.08)return;}
+function boomSnd(s,x,y,rad){if(!AC||VOL().s<=0||!s)return;let v=1;if(x!=null&&G&&P){const d=Math.hypot(x-P.x,y-P.y);v=clamp(1.2-d/(T*12),0,1);if(v<.08)return;}
   try{switch(s.boom){
     case 'quake':nz(.7,.3*v,300,60);osc('sine',60,30,.6,.3*v);break;
     case 'splash':nz(.4,.22*v,2200,500,'bandpass');osc('sine',900,300,.2,.08*v);break;
@@ -1442,7 +1444,7 @@ function boomSnd(s,x,y,rad){if(!AC||SAVE.snd===0||!s)return;let v=1;if(x!=null&&
   }}catch(e){}}
 
 function sfx(name,x,y,el){
-  if(!AC||SAVE.snd===0)return;
+  if(!AC||VOL().s<=0)return;
   const now=performance.now(),key=name+(el||'');if(SLAST[key]&&now-SLAST[key]<(name==='hit'?55:35))return;SLAST[key]=now;
   let v=1;if(x!=null&&G&&P){const d=Math.hypot(x-P.x,y-P.y);v=clamp(1.15-d/(T*11),0,1);if(v<.06)return;}
   try{switch(name){
@@ -2100,7 +2102,7 @@ function refreshMenu(){
   $('#lbName').innerHTML=esc(SAVE.nick||ACC.user||SAVE.name)+(ACC.admin?' <span class="adm">관리자</span>':'');$('#lbAva').src=avaSrc();{const w=$('#lbAvaW');w.className='ava fr-'+(SAVE.frm||'basic')+(SAVE.ava&&(SAVE.ava.t==='img'&&PIMG[SAVE.ava.i]||SAVE.ava.t==='por'&&owns(SAVE.ava.k))?' ph':'');}$('#lbSqImg').src=POR[c.id];
   const nx=ROAD[SAVE.road],pv=SAVE.road?ROAD[SAVE.road-1].t:0;
   $('#lbRoad').style.width=nx?Math.min(100,(tt-pv)/(nx.t-pv)*100)+'%':'100%';
-  $('#bSnd').textContent=SAVE.snd===0?'소리 끔':SAVE.mus===0?'음악 끔':'소리 켬';
+  $('#bSnd').textContent='⚙ 설정';
   if(typeof checkMail==='function')checkMail();
   if(typeof loadRank==='function'){loadRank();const on=evOn();$('#rkEv').style.display=on?'':'none';}
   const m=MODES[SAVE.mode];$('#modeName').textContent=m.nm;$('#modeDesc').textContent=m.ds;
@@ -2159,7 +2161,13 @@ $('#bMulti').onclick=()=>{
   $('#mkKO').onclick=()=>openRoom(genCode(),true,'ko');
   $('#joinRoom').onclick=()=>{const c=$('#codeIn').value.trim().toUpperCase();if(c.length===4)openRoom(c,false);};
 };
-$('#bSnd').onclick=()=>{if(SAVE.snd===0){SAVE.snd=1;SAVE.mus=1;}else if(SAVE.mus!==0)SAVE.mus=0;else SAVE.snd=0;save();refreshMenu();MUS.want='x';musWant();};
+$('#bSnd').onclick=()=>{const v=VOL();
+  modal(`<h2>설정</h2><div class="amail" style="min-width:320px">
+    <div class="arow"><span style="width:70px">효과음</span><input type="range" id="vS" min="0" max="100" value="${v.s}" style="flex:1"><b id="vSn" style="width:36px;text-align:right">${v.s}</b></div>
+    <div class="arow"><span style="width:70px">배경음악</span><input type="range" id="vM" min="0" max="100" value="${v.m}" style="flex:1"><b id="vMn" style="width:36px;text-align:right">${v.m}</b></div>
+    <div style="font-size:11px;opacity:.75">0으로 내리면 꺼져요</div></div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);
+  const up=()=>{v.s=+$('#vS').value;v.m=+$('#vM').value;$('#vSn').textContent=v.s;$('#vMn').textContent=v.m;applyVol();};
+  $('#vS').oninput=up;$('#vM').oninput=up;$('#vS').onchange=()=>{save();sfx('gem');};$('#vM').onchange=()=>save();};
 $('#bAgain').onclick=()=>{if(NET.on){NET.started=false;if(NET.kind==='ko'&&NET.host)betReset();showRoom();return;}startMatch();};
 
 /* 로딩 */
