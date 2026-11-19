@@ -76,13 +76,18 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .ld-bar i{display:block;height:100%;width:0;background:#facc15;box-shadow:inset 0 3px 0 #fef08a,inset 0 -3px 0 #d97706;transition:width .15s steps(4)}
 .ld-pct{font-size:11px;margin-top:8px}
 .ld-ev{margin-top:14px;font-size:11px;background:#7c2d12;border:3px solid #111;box-shadow:inset 0 3px 0 #f97316,0 4px 0 #111;padding:6px 12px;animation:evp .8s steps(2) infinite}.ld-ev b{color:#fde047;margin-right:6px}.ld-ev i{font-style:normal;color:#93c5fd}@keyframes evp{50%{transform:scale(1.04)}}
-.lb-rank{position:absolute;right:12px;top:100px;bottom:112px;width:206px;background:rgba(28,21,48,.92);border:3px solid #111;box-shadow:inset 0 3px 0 #3b2d63,0 4px 0 #111;padding:6px 8px;font-size:11px;display:flex;flex-direction:column;gap:3px;overflow:hidden}
+.lb-rank{position:absolute;right:12px;top:96px;bottom:108px;width:262px;background:rgba(28,21,48,.92);border:3px solid #111;box-shadow:inset 0 3px 0 #3b2d63,0 4px 0 #111;padding:6px 8px;font-size:11px;display:flex;flex-direction:column;gap:3px;overflow:hidden}
 .lb-rank h4{margin:0;font-weight:400;color:#fde047;display:flex;align-items:center;gap:4px;font-size:11px}.lb-rank .ev{color:#fdba74;font-size:11px;margin-bottom:2px}
 .lb-rank .rl{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
-.rk{display:flex;align-items:center;gap:5px;padding:1px 3px}.rk.me{background:#3b2d63}.rk .no{width:18px;text-align:right;color:#c4b5fd}.rk.r1 .no{color:#fde047}.rk .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rk .tt{color:#fde047}
-.rk .ava{--s:22px!important;border-width:2px}.rk .ava:after{display:none}
+.rk{display:flex;align-items:center;gap:7px;padding:3px 5px;cursor:pointer;border:2px solid transparent}.rk:hover{border-color:#fde047;background:#2a2140}.rk.me{background:#3b2d63}.rk .no{width:18px;text-align:right;color:#c4b5fd}.rk.r1 .no{color:#fde047}.rk .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rk .tt{color:#fde047}
+.rk .ava{--s:30px!important;border-width:2px}.rk .ava:after{display:none}
 .lb-rank .mine{border-top:2px solid #3b2d63;padding-top:3px;color:#a5f3fc}
 @media (max-height:340px){.lb-rank{display:none}}
+.pp-top{display:flex;gap:14px;align-items:center}.pp-on{display:inline-block;width:10px;height:10px;border:2px solid #111;margin-right:4px}
+.pp-pk{display:flex;gap:8px;margin:8px 0}.pp-pk div{background:#2a2140;border:3px solid #111;padding:4px 6px;text-align:center;font-size:11px;min-width:92px}.pp-pk img{width:40px;height:40px;image-rendering:pixelated;border:2px solid #111;display:block;margin:0 auto 3px}
+.fr-row{display:flex;align-items:center;gap:8px;background:#2a2140;border:2px solid #111;padding:4px 6px;font-size:11px}.fr-row .nm{flex:1}.fr-list{display:flex;flex-direction:column;gap:4px;max-height:170px;overflow-y:auto;min-width:430px}
+.lb-fr{position:absolute;right:196px;top:62px;font-family:inherit;font-size:11px;color:#fff;background:#1c1530;border:3px solid #111;box-shadow:inset 0 3px 0 #3b2d63,0 3px 0 #111;padding:4px 8px;cursor:pointer}.lb-fr i{font-style:normal;background:#dc2626;border:2px solid #111;padding:0 5px;position:absolute;right:-8px;top:-10px}
+#invToast{position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:30;background:#1c1530;border:3px solid #fde047;box-shadow:0 5px 0 #111;padding:8px 12px;font-size:11px;display:none;gap:8px;align-items:center}#invToast.on{display:flex;animation:pop .3s steps(4)}
 .ld-tip{font-size:11px;opacity:.75;margin-top:14px;max-width:70%;text-align:center}
 /* 로비 */
 .lobby{padding:0}
@@ -303,6 +308,7 @@ select.minput{width:auto}
   <div class="lb-prof" id="lbProf"><div id="lbAvaW" class="ava fr-basic" style="--s:52px"><img id="lbAva" class="px" alt=""></div><div><div class="lb-name" id="lbName"></div><div class="lb-tro"><img class="ico px" data-ico="trophy" alt=""><span id="totTro">0</span></div><div class="lb-road"><i id="lbRoad"></i></div></div></div>
   <div class="lb-cur"><img class="ico px" data-ico="coin" alt=""><span id="lbCoin">0</span><img class="ico px" data-ico="gemc" alt="" style="margin-left:10px"><span id="lbGem">0</span></div>
   <button class="lb-snd" id="bSnd">소리 켬</button>
+  <button class="lb-fr" id="bFriend">친구<i id="frBadge" style="display:none">0</i></button>
   <button class="lb-mail" id="bMail"><img class="px" data-ico="mail" alt=""><span>우편함</span><i id="mailBadge" style="display:none">0</i></button>
   <div class="lb-side">
     <button class="lb-sq" id="bBrawlers"><img id="lbSqImg" class="px" alt=""><span>포켓몬</span></button>
@@ -370,6 +376,7 @@ select.minput{width:auto}
   <div class="row"><button class="btn b2 sm" id="bRTeam">팀 바꾸기</button><button class="btn b2 sm" id="bRChar">포켓몬 변경</button><button class="btn" id="bRStart">게임 시작</button></div>
 </div>
 <div id="mm" class="scr"><div id="mmIn"></div></div>
+<div id="invToast"></div>
 <div id="modal" class="modal"><div class="mbox" id="mbox"></div></div>
 </div>
 <script>
@@ -2104,6 +2111,7 @@ function refreshMenu(){
   $('#lbRoad').style.width=nx?Math.min(100,(tt-pv)/(nx.t-pv)*100)+'%':'100%';
   $('#bSnd').textContent='⚙ 설정';
   if(typeof checkMail==='function')checkMail();
+  if(typeof pingNow==='function'&&ACC.token&&!window._pg){window._pg=1;pingNow();setTimeout(()=>window._pg=0,5000);}
   if(typeof loadRank==='function'){loadRank();const on=evOn();$('#rkEv').style.display=on?'':'none';}
   const m=MODES[SAVE.mode];$('#modeName').textContent=m.nm;$('#modeDesc').textContent=m.ds;
 }
@@ -2925,8 +2933,70 @@ function otherAva(a,sel){try{if(a&&a.t==='img'&&PIMG[a.i])return [PIMG[a.i],1];i
 let rankT=0;
 async function loadRank(force){if(!force&&Date.now()-rankT<20000)return;rankT=Date.now();
   try{const r=await rpc('pb_rank',{p_token:ACC.token||null});if(!r||!r.ok)return;
-    $('#rkList').innerHTML=r.top.length?r.top.map((x,i)=>{const [src,ph]=otherAva(x.a,x.s);return `<div class="rk${x.me?' me':''}${i===0?' r1':''}"><span class="no">${i+1}</span><div class="ava fr-${/^[a-z]+$/.test(x.f||'')?x.f:'basic'}${ph?' ph':''}" style="--s:22px"><img src="${src}"></div><span class="nm">${esc(x.n)}</span><span class="tt">${x.t}</span></div>`;}).join(''):'아직 기록이 없어요';
+    $('#rkList').innerHTML=r.top.length?r.top.map((x,i)=>{const [src,ph]=otherAva(x.a,x.s);return `<div class="rk${x.me?' me':''}${i===0?' r1':''}" data-u="${esc(x.u||'')}"><span class="no">${i+1}</span><div class="ava fr-${/^[a-z]+$/.test(x.f||'')?x.f:'basic'}${ph?' ph':''}" style="--s:22px"><img src="${src}"></div><span class="nm">${esc(x.n)}</span><span class="tt">${x.t}</span></div>`;}).join(''):'아직 기록이 없어요';
+    document.querySelectorAll('#rkList .rk').forEach(el=>el.onclick=()=>{if(el.dataset.u)openPlayer(el.dataset.u);});
     $('#rkMine').textContent=r.admin?'관리자 계정은 랭킹에서 빠져요':r.my?`내 순위 ${r.my}위 · 트로피 ${r.mt}`:'';}catch(e){}}
+/* ---------- 플레이어 정보 · 친구 · 초대 ---------- */
+async function openPlayer(u){modal(`<h2>트레이너 정보</h2><div style="font-size:11px">불러오는 중...</div>`);
+  let r;try{r=await rpc('pb_profile',{p_token:ACC.token||null,p_user:u});}catch(e){}
+  if(!r||!r.ok){modal(`<h2>트레이너 정보</h2><div style="font-size:11px">정보를 찾을 수 없어요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
+  const [src,ph]=otherAva(r.ava,r.sel),fr=/^[a-z]+$/.test(r.frm||'')?r.frm:'basic';
+  const top=Object.entries(r.tro||{}).filter(([k,v])=>CH.find(c=>c.k===k)&&v>0).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const fav=top.length?top:(r.sel&&CH.find(c=>c.k===r.sel)?[[r.sel,0]]:[]);
+  const d=new Date(r.since),since=`${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}`;
+  let btn='';
+  if(r.me)btn=`<button class="btn sm" id="ppEdit">내 프로필 꾸미기</button>`;
+  else if(!ACC.token)btn='';
+  else if(r.fs==='f')btn=`<button class="btn sm" id="ppKO" style="background:#dc2626;color:#fff">친선전 초대</button><button class="btn sm" id="ppGem">젬 그랩 같이하기</button><button class="btn b2 sm" id="ppDel">친구 삭제</button>`;
+  else if(r.fs==='out')btn=`<button class="btn b2 sm" disabled>친구 요청 보냄</button>`;
+  else if(r.fs==='in')btn=`<button class="btn sm" id="ppAcc">친구 요청 수락</button>`;
+  else btn=`<button class="btn sm" id="ppAdd">친구 추가</button>`;
+  modal(`<h2>트레이너 정보</h2><div class="pp-top"><div class="ava fr-${fr}${ph?' ph':''}" style="--s:84px"><img src="${src}"></div><div>
+    <div style="font-size:22px">${esc(r.n)}${r.admin?' <span class="adm">관리자</span>':''}</div><div style="font-size:11px;opacity:.8">@${esc(r.u)} · <span class="pp-on" style="background:${r.on?'#22c55e':'#52525b'}"></span>${r.on?'접속 중':'오프라인'}</div>
+    <div style="font-size:11px;margin-top:4px"><img class="ico" src="${ICO.trophy}"> 총 트로피 <b style="color:#fde047">${r.t}</b>${r.rank?` · 랭킹 ${r.rank}위`:''} · 포켓몬 ${r.own==null?CH.length:r.own}/${CH.length} · ${since} 가입</div></div></div>
+    <div class="pf-sec">주력 포켓몬</div><div class="pp-pk">${fav.map(([k,v])=>{const c=chOf(k);return `<div><img src="${POR[c.id]}">${c.nm}<br><span style="color:#fde047">★${v}</span> · 파워 ${(r.lv&&r.lv[k])||1}</div>`;}).join('')||'<span style="font-size:11px;opacity:.7">아직 기록이 없어요</span>'}</div>
+    <div class="mrow">${btn}<button class="btn b2 sm" onclick="closeModal()">닫기</button></div><div class="lg-err" id="ppMsg"></div>`);
+  const b=id=>$(id);if(b('#ppEdit'))b('#ppEdit').onclick=()=>openProfile();
+  if(b('#ppAdd'))b('#ppAdd').onclick=async()=>{const q=await rpc('pb_friend_req',{p_token:ACC.token,p_target:r.u}).catch(()=>null);if(q&&q.ok){sfx('found');openPlayer(u);}else $('#ppMsg').textContent='요청에 실패했어요';};
+  if(b('#ppAcc'))b('#ppAcc').onclick=async()=>{await rpc('pb_friend_resp',{p_token:ACC.token,p_from:r.u,p_ok:true}).catch(()=>{});sfx('found');openPlayer(u);pingNow();};
+  if(b('#ppDel'))b('#ppDel').onclick=async()=>{if(!b('#ppDel').dataset.ok){b('#ppDel').dataset.ok=1;b('#ppDel').textContent='정말 삭제?';return;}await rpc('pb_friend_del',{p_token:ACC.token,p_other:r.u}).catch(()=>{});openPlayer(u);};
+  if(b('#ppKO'))b('#ppKO').onclick=()=>inviteFriend(r.u,r.n,'ko');
+  if(b('#ppGem'))b('#ppGem').onclick=()=>inviteFriend(r.u,r.n,'gem');}
+async function inviteFriend(u,n,kind){
+  let code=NET.on&&NET.host&&NET.kind===kind&&!NET.started?NET.code:null;
+  if(!code){if(NET.on)netLeave();code=genCode();openRoom(code,true,kind);}
+  setTimeout(async()=>{let q;try{q=await rpc('pb_invite',{p_token:ACC.token,p_to:u,p_code:code,p_kind:kind});}catch(e){}
+    if(q&&q.ok)toast(`${esc(n)}님에게 ${kind==='ko'?'친선전':'젬 그랩'} 초대를 보냈어요`);else toast('초대를 보내지 못했어요 (친구만 초대할 수 있어요)');},1600);}
+function toast(h,btns){const t=$('#invToast');t.innerHTML=`<span>${h}</span>${btns||''}`;t.classList.add('on');clearTimeout(t._t);if(!btns)t._t=setTimeout(()=>t.classList.remove('on'),3500);return t;}
+const SEENINV=new Set();let pingT=null;
+async function pingNow(){if(!ACC.token)return;let r;try{r=await rpc('pb_ping',{p_token:ACC.token});}catch(e){return;}if(!r||!r.ok)return;
+  const bd=$('#frBadge');if(bd){bd.textContent=r.freq;bd.style.display=r.freq?'':'none';}
+  const busy=G&&!G.over;
+  for(const v of r.inv){if(SEENINV.has(v.id)||busy)continue;SEENINV.add(v.id);sfx('found');
+    const t=toast(`<b style="color:#fde047">${esc(v.n)}</b>님이 ${v.kind==='ko'?'1대1 친선전':'젬 그랩'}에 초대했어요!`,`<button class="btn sm" id="ivY">수락</button><button class="btn b2 sm" id="ivN">거절</button>`);
+    const hide=()=>t.classList.remove('on');clearTimeout(t._t);t._t=setTimeout(hide,60000);
+    $('#ivN').onclick=()=>{hide();rpc('pb_invite_resp',{p_token:ACC.token,p_id:v.id,p_ok:false}).catch(()=>{});};
+    $('#ivY').onclick=async()=>{hide();let q;try{q=await rpc('pb_invite_resp',{p_token:ACC.token,p_id:v.id,p_ok:true});}catch(e){}
+      if(!q||!q.ok||!q.fresh){toast('초대가 만료됐어요');return;}if(NET.on)netLeave();closeModal();openRoom(q.code,false);};
+    break;}}
+setInterval(()=>{if(ACC.token&&!document.hidden)pingNow();},7000);
+async function openFriends(){modal(`<h2>친구</h2><div style="font-size:11px">불러오는 중...</div>`);let r;try{r=await rpc('pb_friend_list',{p_token:ACC.token});}catch(e){}
+  if(!r||!r.ok){modal(`<h2>친구</h2><div style="font-size:11px">로그인이 필요해요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
+  const av=x=>{const [src,ph]=otherAva(x.ava,x.sel);return `<div class="ava fr-${/^[a-z]+$/.test(x.frm||'')?x.frm:'basic'}${ph?' ph':''}" style="--s:30px"><img src="${src}"></div>`;};
+  modal(`<h2>친구 <span class="cur">${r.fr.length}명 · 접속 중 ${r.fr.filter(x=>x.on).length}명</span></h2>
+    ${r.in.length?`<div class="pf-sec">받은 친구 요청</div><div class="fr-list">${r.in.map(x=>`<div class="fr-row"><span class="nm"><b>${esc(x.n)}</b> @${esc(x.u)}</span><button class="upbtn" data-acc="${esc(x.u)}">수락</button><button class="upbtn" data-rej="${esc(x.u)}" style="background:#52525b">거절</button></div>`).join('')}</div>`:''}
+    <div class="pf-sec">친구 목록</div><div class="fr-list">${r.fr.length?r.fr.map(x=>`<div class="fr-row">${av(x)}<span class="nm"><span class="pp-on" style="background:${x.on?'#22c55e':'#52525b'}"></span><b>${esc(x.n)}</b> @${esc(x.u)} · ★${x.t}</span>${x.on?`<button class="upbtn" data-inv="${esc(x.u)}" data-n="${esc(x.n)}" style="background:#dc2626;color:#fff">친선전 초대</button>`:''}<button class="upbtn" data-info="${esc(x.u)}" style="background:#3b82f6;color:#fff">정보</button></div>`).join(''):'<span style="font-size:11px;opacity:.7">아직 친구가 없어요. 랭킹에서 트레이너를 누르거나 아래에 아이디를 넣어 친구를 추가해 보세요</span>'}</div>
+    ${r.out.length?`<div style="font-size:11px;opacity:.7;margin-top:4px">보낸 요청: ${r.out.map(x=>esc(x.n)).join(', ')}</div>`:''}
+    <div class="pf-sec">아이디로 친구 추가</div><div style="display:flex;gap:6px"><input class="minput" id="frId" maxlength="12" placeholder="상대 아이디" style="width:160px"><button class="btn sm" id="frAdd">요청</button><span class="lg-err" id="frMsg"></span></div>
+    <div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`);
+  $('#mbox').classList.add('wide');
+  document.querySelectorAll('[data-acc]').forEach(b=>b.onclick=async()=>{await rpc('pb_friend_resp',{p_token:ACC.token,p_from:b.dataset.acc,p_ok:true}).catch(()=>{});sfx('found');openFriends();pingNow();});
+  document.querySelectorAll('[data-rej]').forEach(b=>b.onclick=async()=>{await rpc('pb_friend_resp',{p_token:ACC.token,p_from:b.dataset.rej,p_ok:false}).catch(()=>{});openFriends();pingNow();});
+  document.querySelectorAll('[data-inv]').forEach(b=>b.onclick=()=>{closeModal();inviteFriend(b.dataset.inv,b.dataset.n,'ko');});
+  document.querySelectorAll('[data-info]').forEach(b=>b.onclick=()=>openPlayer(b.dataset.info));
+  $('#frAdd').onclick=async()=>{const id=$('#frId').value.trim().toLowerCase();if(!id)return;const q=await rpc('pb_friend_req',{p_token:ACC.token,p_target:id}).catch(()=>null);
+    $('#frMsg').textContent=q&&q.ok?(q.st==='f'?'친구가 됐어요!':'요청을 보냈어요'):({no_user:'없는 아이디예요',self:'자기 자신이에요',full:'친구가 너무 많아요'}[q&&q.err]||'실패했어요');if(q&&q.ok&&q.st==='f')openFriends();};}
+$('#bFriend').onclick=()=>openFriends();
 function openProfile(tab){
   const tt=totTro(),own=sortCH(CH.filter(c=>owns(c.k))),cur=SAVE.ava||{t:'pk',k:SAVE.sel};
   const isOn=a=>cur.t===a.t&&(a.t==='img'?cur.i===a.i:cur.k===a.k&&(cur.f||0)===(a.f||0));
