@@ -1465,6 +1465,7 @@ function render(){
   // 위쪽 이펙트 (저해상도)
   beginWorldFx(fxT);
   for(const p of G.projs)drawProj(p);
+  drawAimArc();
   for(const p of G.parts)drawPart(p);
   ctx.globalAlpha=1;
   for(const e of G.ents)if(e.alive&&e.buffT>0&&visibleTo(e,P.team)){for(let i=0;i<3;i++){const an=G.t*6+i*2.094,sx=e.x+Math.cos(an)*36,sy=e.y-30+Math.sin(an)*14;
@@ -1606,6 +1607,14 @@ function stick(bx,by,x,y,fill,knob,R){
   ctx.fillStyle='#111';ctx.beginPath();ctx.arc(bx+dx,by+dy,R*.42+3,0,7);ctx.fill();
   ctx.fillStyle=knob;ctx.beginPath();ctx.arc(bx+dx,by+dy,R*.42,0,7);ctx.fill();
 }
+function drawAimArc(){
+  const a=G.aimArc;G.aimArc=null;if(!a)return;
+  const col=a.sup?'#fde047':'#ffffff',d=Math.hypot(a.x1-a.x0,a.y1-a.y0);
+  if(a.met){for(let i=0;i<5;i++){const k=((G.t*1.2+i/5)%1);const x=a.x1+70-70*k,y=a.y1-260+260*k;ctx.globalAlpha=.25+.6*k;ctx.fillStyle=col;ctx.fillRect(Math.round(x/3)*3-4,Math.round(y/3)*3-4,9,9);}ctx.globalAlpha=1;return;}
+  const h=40+d*.35,n=Math.max(8,Math.round(d/18)),off=(G.t*2.5)%1;
+  for(let i=0;i<=n;i++){const t=(i+off)/n;if(t>1)continue;const x=a.x0+(a.x1-a.x0)*t,y=a.y0+(a.y1-a.y0)*t-h*4*t*(1-t);
+    const sz=t>.92?9:12;ctx.fillStyle='rgba(0,0,0,.45)';ctx.fillRect(Math.round(x/3)*3-sz/2-3,Math.round(y/3)*3-sz/2-3,sz+6,sz+6);ctx.fillStyle=col;ctx.fillRect(Math.round(x/3)*3-sz/2,Math.round(y/3)*3-sz/2,sz,sz);}
+}
 function drawAim(){
   if(!P.alive)return;
   let st=null,sup=false;
@@ -1621,8 +1630,10 @@ function drawAim(){
   if(s.ty==='nova'){ctx.beginPath();ctx.arc(P.x,P.y,s.aoe*T,0,7);ctx.fill();ctx.stroke();return;}
   if(s.ty==='lob'||s.ty==='zone'||s.ty==='leap'||s.ty==='tele'||s.ty==='meteor'){
     const tx=P.x+Math.cos(ang)*R*f,ty=P.y+Math.sin(ang)*R*f,rad=((s.area?s.area+s.aoe:0)||s.aoe||s.zr||1)*T;
-    ctx.setLineDash([10,8]);ctx.beginPath();ctx.moveTo(P.x,P.y);ctx.lineTo(tx,ty);ctx.stroke();ctx.setLineDash([]);
-    ctx.beginPath();ctx.arc(tx,ty,rad,0,7);ctx.fill();ctx.stroke();return;}
+    if(s.ty==='tele'){ctx.setLineDash([10,8]);ctx.beginPath();ctx.moveTo(P.x,P.y);ctx.lineTo(tx,ty);ctx.stroke();ctx.setLineDash([]);}
+    else G.aimArc={x0:P.x,y0:P.y-18,x1:tx,y1:ty,sup,met:s.ty==='meteor'};
+    ctx.beginPath();ctx.arc(tx,ty,rad,0,7);ctx.fill();ctx.stroke();
+    ctx.globalAlpha=.5+.3*Math.sin(G.t*8);ctx.beginPath();ctx.arc(tx,ty,rad*.35,0,7);ctx.stroke();ctx.globalAlpha=1;return;}
   ctx.save();ctx.translate(P.x,P.y);ctx.rotate(ang);
   if((s.count||1)>1&&s.spread>.2){ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,R,-s.spread/2-.05,s.spread/2+.05);ctx.closePath();ctx.fill();ctx.stroke();}
   else{const w=s.ty==='dash'?P.r*2:Math.max(14,(s.r||10)*2);rr(0,-w/2,R,w,w/2);ctx.fill();ctx.stroke();}
