@@ -485,7 +485,7 @@ const CH=[
   atk:{nm:'해머암',ds:'거대한 망치 휘두르기 · 넓게 3방향 + 밀쳐냄',ty:'shot',fx:'impact',count:3,spread:.75,range:3,speed:14,dmg:540,r:14,kb:.7,col:'#f9a8d4'},
   sup:{nm:'거인의망치',ds:'뛰어올라 망치로 내려찍기 · 벽 파괴 + 기절',ty:'leap',boom:'quake',el:'steel',range:5.5,dmg:2000,aoe:2.3,stun:.8,brk:1,col:'#fbcfe8'}},
  {k:'kleavor',id:900,nm:'사마자르',role:'근접 · 함정',el:'rock',gr:'e',col:'#a8a29e',hp:4600,spd:1.1,rl:1.1,charge:2700,
-  atk:{nm:'바위도끼',ds:'돌도끼 2갈래 (관통) · 맞힌 자리에 35% 확률로 바위 함정',ty:'shot',fx:'claw',count:2,spread:.5,range:4,speed:14,dmg:600,r:12,pierce:1,trap:.35,col:'#a8a29e'},
+  atk:{nm:'바위도끼',ds:'나란히 날아가는 돌도끼 2개 (관통) · 맞힌 자리에 35% 확률로 바위 함정',ty:'shot',fx:'claw',count:2,spread:0,par:34,range:4,speed:14,dmg:600,r:12,pierce:1,trap:.35,col:'#a8a29e'},
   sup:{nm:'시저크로스',ds:'X자로 베며 돌진 · 기절',ty:'dash',fx:'rockdash',el:'bug',range:6,speed:24,dmg:1800,kb:1.5,stun:.5,col:'#84cc16'}},
  {k:'ogerpon',id:1017,nm:'오거폰',fnm:'벽록의가면',role:'가면 체인지 · 만능',el:'grass',gr:'m',col:'#22c55e',hp:4800,spd:1.12,rl:1.2,charge:2800,
   atk:{nm:'덩굴채찍',ds:'덩굴 2갈래 휘두르기',ty:'shot',fx:'claw',count:2,spread:.4,range:5,speed:14,dmg:500,r:12,col:'#22c55e'},
@@ -837,8 +837,8 @@ function spawnShots(e,s,ang,d,sup){
   }
   const cnt=s.count||1;
   for(let i=0;i<cnt;i++){
-    const a=ang+(cnt>1?-s.spread/2+s.spread*i/(cnt-1):0)+(s.flame?(Math.random()-.5)*.08:0);
-    G.projs.push({x:e.x+Math.cos(a)*e.r*.7,y:e.y+Math.sin(a)*e.r*.7,vx:Math.cos(a)*s.speed*T,vy:Math.sin(a)*s.speed*T,
+    const a=s.par?ang:ang+(cnt>1?-s.spread/2+s.spread*i/(cnt-1):0)+(s.flame?(Math.random()-.5)*.08:0),po=s.par&&cnt>1?(-s.par/2+s.par*i/(cnt-1)):0;
+    G.projs.push({x:e.x+Math.cos(a)*e.r*.7-Math.sin(a)*po,y:e.y+Math.sin(a)*e.r*.7+Math.cos(a)*po,vx:Math.cos(a)*s.speed*T,vy:Math.sin(a)*s.speed*T,
       tr:0,maxD:s.range*T,r:s.r,o:e,team:e.team,s,sup,hit:new Set(),chain:s.chain||0,rot:0});
   }
 }
@@ -1895,7 +1895,7 @@ function drawAim(){
     ctx.strokeStyle=AC;ctx.lineWidth=4;ctx.globalAlpha=.5+.3*Math.sin(G.t*8);ctx.beginPath();ctx.arc(tx,ty,rad*.35,0,7);ctx.stroke();ctx.globalAlpha=1;return;}
   ctx.save();ctx.translate(P.x,P.y);ctx.rotate(ang);
   if((s.count||1)>1&&s.spread>.2){ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,R,-s.spread/2-.05,s.spread/2+.05);ctx.closePath();ctx.fill();bs();}
-  else{const w=s.ty==='dash'?P.r*2:Math.max(14,(s.r||10)*2);rr(0,-w/2,R,w,w/2);ctx.fill();bs();}
+  else{const w=s.ty==='dash'?P.r*2:Math.max(14,(s.r||10)*2+(s.par||0));rr(0,-w/2,R,w,w/2);ctx.fill();bs();}
   ctx.restore();
 }
 /* ---------- 로비 / 로딩 / 매치메이킹 ---------- */
