@@ -85,7 +85,7 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .lb-prof{position:absolute;left:12px;top:10px;display:flex;gap:8px;align-items:center;background:#1c1530;border:3px solid #111;box-shadow:inset 0 3px 0 #3b2d63,0 4px 0 #111;padding:5px 12px 5px 5px;cursor:pointer}
 #lbAva{border:0;background:none}
 .ava{position:relative;z-index:0;width:var(--s);height:var(--s);display:inline-flex;align-items:center;justify-content:center;background:#0d0a1f;border:3px solid #111;box-sizing:border-box;flex:none}
-.ava>img{max-width:90%;max-height:90%;image-rendering:pixelated}.ava.ph>img{width:100%;height:100%;max-width:none;max-height:none;object-fit:cover}
+.ava>img{max-width:90%;max-height:90%;image-rendering:pixelated}.ava.ph>img{width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;image-rendering:pixelated}
 .fr-ball{border:5px solid;border-image:linear-gradient(#ef4444 50%,#f8fafc 50%) 1;box-shadow:0 0 0 2px #111}
 .fr-gold{border:5px solid #facc15;box-shadow:0 0 0 2px #111,inset 0 0 0 2px #a16207}
 .fr-fire{border:5px solid;border-image:linear-gradient(0deg,#dc2626,#f97316,#fde047) 1;box-shadow:0 0 0 2px #111,0 -4px 10px #f97316;animation:frfl .5s steps(2) infinite}@keyframes frfl{50%{box-shadow:0 0 0 2px #111,0 -6px 14px #dc2626}}
@@ -1872,7 +1872,7 @@ function refreshMenu(){
   $('#heroRole').textContent=GRADE[c.gr].nm+' · '+EL[c.el].nm+' 타입 · '+c.role;
   $('#selTro').textContent=tro(c.k);
   const tt=totTro();$('#totTro').textContent=tt;$('#lbCoin').textContent=SAVE.coins;$('#lbGem').textContent=SAVE.gems||0;
-  $('#lbName').innerHTML=esc(SAVE.nick||ACC.user||SAVE.name)+(ACC.admin?' <span class="adm">관리자</span>':'');$('#lbAva').src=avaSrc();{const w=$('#lbAvaW');w.className='ava fr-'+(SAVE.frm||'basic')+(SAVE.ava&&SAVE.ava.t==='img'&&PIMG[SAVE.ava.i]?' ph':'');}$('#lbSqImg').src=POR[c.id];
+  $('#lbName').innerHTML=esc(SAVE.nick||ACC.user||SAVE.name)+(ACC.admin?' <span class="adm">관리자</span>':'');$('#lbAva').src=avaSrc();{const w=$('#lbAvaW');w.className='ava fr-'+(SAVE.frm||'basic')+(SAVE.ava&&(SAVE.ava.t==='img'&&PIMG[SAVE.ava.i]||SAVE.ava.t==='por'&&owns(SAVE.ava.k))?' ph':'');}$('#lbSqImg').src=POR[c.id];
   const nx=ROAD[SAVE.road],pv=SAVE.road?ROAD[SAVE.road-1].t:0;
   $('#lbRoad').style.width=nx?Math.min(100,(tt-pv)/(nx.t-pv)*100)+'%':'100%';
   $('#bSnd').textContent=SAVE.snd===0?'소리 끔':'소리 켬';
@@ -2536,8 +2536,8 @@ function esc(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;',
 const PIMG=[/*PIMG*/];
 const FRAMES=[{id:'basic',nm:'기본',t:0},{id:'ball',nm:'몬스터볼',t:0},{id:'gold',nm:'금테',t:100},{id:'fire',nm:'불꽃',t:200},{id:'ice',nm:'얼음',t:200},{id:'rbw',nm:'무지개',t:500},{id:'leg',nm:'전설',t:1000}];
 const okNick=n=>/^[가-힣a-zA-Z0-9_ ]{2,10}$/.test(n)&&n.trim().length>=2;
-function avaSrc(a){a=a||SAVE.ava;if(a&&a.t==='img'&&PIMG[a.i])return PIMG[a.i];const k=a&&a.t==='pk'&&owns(a.k)?a.k:SAVE.sel;return SPR[chOf(k).id];}
-function avaHTML(sz,a,fr){a=a||SAVE.ava;fr=fr||SAVE.frm||'basic';return `<div class="ava fr-${fr}${a&&a.t==='img'?' ph':''}" style="--s:${sz}px"><img src="${avaSrc(a)}"></div>`;}
+function avaSrc(a){a=a||SAVE.ava;if(a&&a.t==='img'&&PIMG[a.i])return PIMG[a.i];if(a&&a.t==='por'&&owns(a.k))return a.f?POR['kyurem'+a.f]:POR[chOf(a.k).id];const k=a&&a.t==='pk'&&owns(a.k)?a.k:SAVE.sel;return SPR[chOf(k).id];}
+function avaHTML(sz,a,fr){a=a||SAVE.ava;fr=fr||SAVE.frm||'basic';return `<div class="ava fr-${fr}${a&&(a.t==='img'||a.t==='por')?' ph':''}" style="--s:${sz}px"><img src="${avaSrc(a)}"></div>`;}
 function nickPrompt(cb){window.MLOCK=1;
   modal(`<h2>닉네임을 정해 주세요</h2><div style="font-size:11px;opacity:.8;margin-bottom:8px">다른 트레이너에게 보이는 이름이에요 · 아이디와는 따로예요 · 나중에 프로필에서 바꿀 수 있어요</div>
   <input class="minput" id="nkIn" maxlength="10" placeholder="한글·영문·숫자 2~10자" value="${esc(SAVE.nick||'')}"><div class="lg-err" id="nkErr"></div><div class="mrow"><button class="btn sm" id="nkGo">정하기</button></div>`);
@@ -2545,16 +2545,18 @@ function nickPrompt(cb){window.MLOCK=1;
   $('#nkGo').onclick=go;$('#nkIn').addEventListener('keydown',e=>{if(e.key==='Enter')go();});setTimeout(()=>{try{$('#nkIn').focus()}catch(e){}},50);}
 function openProfile(tab){
   const tt=totTro(),own=CH.filter(c=>owns(c.k)),cur=SAVE.ava||{t:'pk',k:SAVE.sel};
-  const isOn=a=>cur.t===a.t&&(a.t==='img'?cur.i===a.i:cur.k===a.k);
+  const isOn=a=>cur.t===a.t&&(a.t==='img'?cur.i===a.i:cur.k===a.k&&(cur.f||0)===(a.f||0));
+  const pors=[];own.forEach(c=>{pors.push({t:'por',k:c.k});if(c.k==='kyurem'){pors.push({t:'por',k:'kyurem',f:1});pors.push({t:'por',k:'kyurem',f:2});}});
   modal(`<h2>프로필</h2><div class="pf-top">${avaHTML(78)}<div style="flex:1">
     <div style="display:flex;gap:6px;align-items:center"><input class="minput" id="pfNick" maxlength="10" value="${esc(SAVE.nick||'')}" style="width:150px"><button class="btn sm" id="pfNickGo">닉네임 변경</button></div>
     <div style="font-size:11px;opacity:.8;margin-top:4px">아이디 ${esc(ACC.user||'-')}${ACC.admin?' <span class="adm">관리자</span>':''} · 총 트로피 ${tt} · 금구슬 ${SAVE.coins} · 혜성조각 ${SAVE.gems||0}</div><div class="lg-err" id="pfErr" style="text-align:left"></div></div></div>
     ${PIMG.length?`<div class="pf-sec">프로필 사진</div><div class="pf-grid">${PIMG.map((u,i)=>`<div class="pfa" data-t="img" data-i="${i}">${avaHTML(48,{t:'img',i},'basic').replace('class="ava','class="ava'+(isOn({t:'img',i})?' on':''))}</div>`).join('')}</div>`:''}
-    <div class="pf-sec">내 포켓몬 (${own.length})</div><div class="pf-grid">${own.map(c=>`<div class="pfa" data-t="pk" data-k="${c.k}">${avaHTML(48,{t:'pk',k:c.k},'basic').replace('class="ava','class="ava'+(isOn({t:'pk',k:c.k})?' on':''))}</div>`).join('')}</div>
+    <div class="pf-sec">미스터리 던전 초상화 (${pors.length})</div><div class="pf-grid">${pors.map(a=>`<div class="pfa" data-t="por" data-k="${a.k}" data-f="${a.f||0}">${avaHTML(48,a,'basic').replace('class="ava','class="ava'+(isOn(a)?' on':''))}</div>`).join('')}</div>
+    <div class="pf-sec">박스 스프라이트 (${own.length})</div><div class="pf-grid">${own.map(c=>`<div class="pfa" data-t="pk" data-k="${c.k}">${avaHTML(48,{t:'pk',k:c.k},'basic').replace('class="ava','class="ava'+(isOn({t:'pk',k:c.k})?' on':''))}</div>`).join('')}</div>
     <div class="pf-sec">프레임 · 총 트로피로 열려요</div><div class="pf-grid" style="max-height:none">${FRAMES.map(f=>`<div class="pf-fr" data-f="${f.id}">${avaHTML(44,null,f.id).replace('class="ava','class="ava'+(SAVE.frm===f.id||(!SAVE.frm&&f.id==='basic')?' on':'')+(tt<f.t?' lockf':''))}<span>${tt<f.t?'🔒 '+f.t:f.nm}</span></div>`).join('')}</div>
     <div class="mrow">${ACC.admin?'<button class="btn sm" id="bAdmin">관리자 메뉴</button>':''}<button class="btn b2 sm" id="bLogout">로그아웃</button><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`);
   $('#mbox').classList.add('wide');
-  document.querySelectorAll('.pfa').forEach(el=>el.onclick=()=>{SAVE.ava=el.dataset.t==='img'?{t:'img',i:+el.dataset.i}:{t:'pk',k:el.dataset.k};save();refreshMenu();sfx('ui');openProfile();});
+  document.querySelectorAll('.pfa').forEach(el=>el.onclick=()=>{SAVE.ava=el.dataset.t==='img'?{t:'img',i:+el.dataset.i}:el.dataset.t==='por'?{t:'por',k:el.dataset.k,f:+el.dataset.f||0}:{t:'pk',k:el.dataset.k};save();refreshMenu();sfx('ui');openProfile();});
   document.querySelectorAll('.pf-fr').forEach(el=>el.onclick=()=>{const f=FRAMES.find(x=>x.id===el.dataset.f);if(tt<f.t)return;SAVE.frm=f.id;save();refreshMenu();sfx('ui');openProfile();});
   $('#pfNickGo').onclick=()=>{const n=$('#pfNick').value.trim();if(!okNick(n)){$('#pfErr').textContent='한글·영문·숫자·_ 로 2~10자로 정해 주세요';return;}SAVE.nick=n;SAVE.name=n;save();refreshMenu();sfx('found');$('#pfErr').textContent='닉네임을 바꿨어요!';};
   $('#bLogout').onclick=logout;if(ACC.admin)$('#bAdmin').onclick=adminPanel;
