@@ -624,7 +624,7 @@ const KO_L=["...........",".BB.....###",".BB........",".....#.....","..##.#..BBB
 function buildKOMap(id){const MP=KOMAPS[id||0]||KOMAPS[0];const rows=MP.l.map(l=>l+l.slice(0,-1).split('').reverse().join('')),R=rows.length,C=rows[0].length,g=new Uint8Array(C*R);
   for(let y=0;y<R;y++)for(let x=0;x<C;x++){const ch=rows[y][x];g[y*C+x]=ch==='#'?1:ch==='B'?2:ch==='~'?3:0;}ensurePaths(g,C,R,[2,6],[[C-3,6],[10,6]]);
   return {nm:MP.nm,C,R,g,bhp:new Float32Array(C*R),sp:[[[2.5*T,6.5*T]],[[(C-2.5)*T,6.5*T]]],center:{x:C/2*T,y:R/2*T},mine:{x:C/2*T,y:R/2*T}};}
-const BOTNICK=["잠만보는잠만잠", "야생의뉴비", "뉴비살려줘", "고인물주의", "튀어오르기장인", "잉어킹최강설", "메타몽인척", "고라파덕두통약", "야도란느림보", "파이리불좀꺼", "꼬부기스쿼트", "디그다삼형제", "망나뇽택배기사", "갸라도스분노조절", "뮤츠는뮤지컬", "부쉬에서삽니다", "젬3개먹고튐", "뒷치기장인", "한타는안함", "캐리해주세요", "버스기사", "무임승차중", "렉걸림ㅈㅅ", "손이느림", "AFK아님", "닉네임뭐하지", "닉네임못정함", "ㅇㅇ", "지나가던트레이너", "오박사제자", "몬볼던짐", "엄마나포켓몬해", "숙제는내일", "퇴근하고싶다", "본캐는마스터볼", "부캐입니다", "금고는내꺼", "별사냥꾼(진짜)", "이브이진화고민", "포켓몬GO걷는중", "눈치게임1등", "연타장인", "와드박는피카츄", "팀킬불가", "도망가는중", "체육관관장(자칭)", "챔피언(예정)", "사천왕막내", "도감완성3%", "이상한사탕중독"];
+const BOTNICK=["님손없음?", "정글차이", "갱좀요", "서폿뭐함", "팀운ㅈ망", "ff15", "핑찍지마", "킬뺏어서ㅈㅅ", "내탓아님", "다이아였음", "트롤아님빌드임", "ㅇㅈ?", "응너블락", "닷지할걸", "제가캐리함", "채팅끔", "알빠노", "어쩔티비", "킹받쥬?", "응아니야", "그건니생각", "렉이었음", "손풀리는중", "연습판임", "부캐라그럼", "본캐챌린저", "솔킬따임ㅈㅅ", "미드차이", "라인바꿀래?", "도주성공", "킬각아님", "님들왜안옴", "한타안감", "쌉캐리각", "ㅋㅋㄹㅃㅃ", "실화냐?", "뭐함?", "?", "ㄹㅇㅋㅋ", "님아그거아님", "이걸지네", "손가락이미끄러짐", "재밌냐?", "니가더못함", "바쁜척중", "왜나만때림", "억까ㄴㄴ", "템빨임", "폰으로하는중", "잠깐화장실"];
 const TMAPS=[{nm:'보석 협곡',h:GG_B,m:GG_M},{nm:"덤불 숲",h:["BBBB....BBBBB....BBBB", "BBBB.............BBBB", "......BBB...BBB......", "..##..BBB...BBB..##..", "..##.............##..", "BBB.....BBBBB.....BBB", "BBB..#..BBBBB..#..BBB", ".....#.........#.....", "..BBB....###....BBB..", "..BBB...........BBB..", ".......BB...BB.......", "BB.....BB...BB.....BB", "BB......b.b.b......BB", ".....BB.......BB.....", "....................."],m:"BBB...BB.....BB...BBB"},{nm:"강가 다리",h:["~~~..~~~~...~~~~..~~~", "~~~..~~~~...~~~~..~~~", ".....................", "..BB....##.##....BB..", "..BB.............BB..", "......~~~...~~~......", "##....~~~...~~~....##", ".....................", "...BB....BBB....BB...", "...BB....BBB....BB...", ".......#.....#.......", "~~.....#.....#.....~~", "~~......b.b.b......~~", ".....................", "....BB.........BB...."],m:"~~~~...~~...~~...~~~~"},{nm:"바위 요새",h:["..#####.......#####..", ".....................", "..#...BB.###.BB...#..", "..#...BB.....BB...#..", "..#.....#...#.....#..", ".....####...####.....", "BB.................BB", "BB...#..BB.BB..#...BB", ".....#..BB.BB..#.....", "..####.........####..", "..........#..........", "...BB.....#.....BB...", "...BB...b.b.b...BB...", ".....................", "..##.............##.."],m:"....###.......###...."}];
 const KOMAPS=[{nm:'결투장',l:KO_L},{nm:'덤불 결투장',l:["...........", ".BBB...BBBB", ".BBB.......", "......#....", "..BB..#..BB", "..BB.......", "...........", "..BB.......", "..BB..#..BB", "......#....", ".BBB.......", ".BBB...BBBB", "..........."]},{nm:'십자 다리',l:["~~~~...~~~~", "~~~~...~~~~", "...........", "..#.....#..", "..#..BB.#..", "......B....", "...........", "......B....", "..#..BB.#..", "..#.....#..", "...........", "~~~~...~~~~", "~~~~...~~~~"]}];
 const SDTH=[{nm:'외딴 들판',w:10,b:10,wa:2,x:6},{nm:'가시덤불 숲',w:6,b:20,wa:1,x:6},{nm:'호숫가',w:8,b:10,wa:7,x:5},{nm:'돌산 협곡',w:18,b:7,wa:1,x:11}];
@@ -1239,8 +1239,12 @@ function decide(e){
     return;
   }
   let obj=false;
-  if(G.mode==='gem'){const close=ne&&nd<rng*1.05;
-    if(!close&&(e.gems>=4||(e.gems>=2&&teamGems(e.team)>=8))){A.mode='hold';const dir=e.team===0?1:-1;A.gx=e.sx+dir*3*T+(A.jit?A.jit[0]*.3:0);A.gy=e.sy+(A.slot-1)*1.5*T;return;}
+  if(G.mode==='gem'){const close=ne&&nd<rng*1.05,tg=teamGems(e.team),og=teamGems(1-e.team);
+    const secure=tg>=10&&tg>og,heavy=e.gems>=6||(e.gems>=3&&tg>=8);
+    if(!close&&(secure&&e.gems>=1||heavy)){A.mode='hold';const dir=e.team===0?1:-1;
+      if(!A.hj||Math.random()<.08)A.hj=[(Math.random()-.5)*2.4*T,(Math.random()-.5)*3*T];
+      if(ne&&nd<rng*1.5){A.tgt=ne;A.gx=e.x+(e.x-ne.x)/(nd||1)*T;A.gy=e.y+(e.y-ne.y)/(nd||1)*T;return;}
+      A.gx=e.sx+dir*3*T+A.hj[0];A.gy=e.sy+(A.slot-1)*1.5*T+A.hj[1];return;}
     if(!close)obj=true;}
   if(G.mode==='heist'){const ms=G.safes[e.team];let iv=null,idd=1e9;for(const o of G.ents){if(!o.alive||o.safe||o.team===e.team||!visibleTo(o,e.team))continue;const d=dist(o,ms);if(d<6*T&&d<idd){idd=d;iv=o;}}
    if(iv&&(A.slot===2||dist(e,ms)<5*T)){A.tgt=ne=iv;nd=dist(e,iv);}else{let pl=null,pd=1e9;for(const o of G.ents){if(!o.alive||o.safe||o.team===e.team||!visibleTo(o,e.team))continue;const d=dist(e,o);if(d<pd){pd=d;pl=o;}}
@@ -1255,7 +1259,9 @@ function decide(e){
   if(G.mode==='heist'){const es=G.safes[1-e.team],dx=e.x-es.x,dy=e.y-es.y,l=Math.hypot(dx,dy)||1,k=Math.min(pref,l);
     if(A.slot===2&&G.t%40<12){const ms=G.safes[e.team],dir=e.team===0?1:-1;A.gx=ms.x+dir*4*T+A.jit[0];A.gy=ms.y+A.jit[1];return;}
     if(e.ch.atk.ty!=='lob'&&!los(e.x,e.y,es.x,es.y)){A.gx=es.x+dx/l*T*1.2;A.gy=es.y+dy/l*T*1.2;}else{A.gx=es.x+dx/l*k;A.gy=es.y+dy/l*k;}return;}
-  if(G.mode==='bounty'){const dir=e.team===0?1:-1,off=[[0,2],[-4,3],[4,3]][A.slot];A.gx=m.mine.x-off[1]*T*dir+A.jit[0];A.gy=m.mine.y+off[0]*T+A.jit[1];return;}
+  if(G.mode==='bounty'){let fe=null,fd=1e9;for(const o of G.ents){if(!o.alive||o.safe||o.team===e.team)continue;const d0=dist(e,o);if(d0<fd){fd=d0;fe=o;}}
+    if(fe&&(e.bounty||2)<5){A.gx=fe.x+A.jit[0]*.5;A.gy=fe.y+A.jit[1]*.5;return;}
+    const dir=e.team===0?1:-1,off=[[0,2],[-4,3],[4,3]][A.slot];A.gx=m.mine.x-off[1]*T*dir+A.jit[0];A.gy=m.mine.y+off[0]*T+A.jit[1];return;}
   if(G.mode==='gem'){
     if(best&&(bd<8*T||A.slot===0)){A.gx=best.x;A.gy=best.y;return;}
     const dir=e.team===0?1:-1,off=[[0,1.5],[-4,2.5],[4,2.5]][A.slot];
@@ -1389,10 +1395,10 @@ function mStep(tr,i,t,sp){const bar=Math.floor(i/16)%tr.ch.length,st=i%16,[root,
 function musTick(){if(!AC||!MUS.cur)return;const tr=TRACKS[MUS.cur],sp=60/tr.bpm/4;
   if(MUS.next<AC.currentTime-.2)MUS.next=AC.currentTime+.05;
   while(MUS.next<AC.currentTime+.18){mStep(tr,MUS.step,MUS.next,sp);MUS.step++;MUS.next+=sp;}}
-function musPlay(name){if(!AC)return;if(!MUS.gain){MUS.gain=AC.createGain();MUS.gain.gain.value=0;MUS.gain.connect(AC.destination);MUS.timer=setInterval(musTick,40);}
+function musPlay(name){if(!AC)return;if(!MUS.gain){MUS.gain=AC.createGain();MUS.gain.gain.value=0;const cp=AC.createDynamicsCompressor();cp.threshold.value=-16;cp.knee.value=8;cp.ratio.value=5;cp.attack.value=.004;cp.release.value=.2;MUS.gain.connect(cp);cp.connect(AC.destination);MUS.timer=setInterval(musTick,40);}
   const on=SAVE.snd!==0&&SAVE.mus!==0;if(!on)name=null;if(name===MUS.cur)return;
   const g=MUS.gain.gain,t=AC.currentTime;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);g.linearRampToValueAtTime(0,t+.25);
-  clearTimeout(MUS.tk);MUS.tk=setTimeout(()=>{MUS.cur=name;MUS.step=0;MUS.next=AC.currentTime+.05;if(name){const t2=AC.currentTime;g.cancelScheduledValues(t2);g.setValueAtTime(0,t2);g.linearRampToValueAtTime(.32,t2+.4);}},name&&MUS.cur?260:20);
+  clearTimeout(MUS.tk);MUS.tk=setTimeout(()=>{MUS.cur=name;MUS.step=0;MUS.next=AC.currentTime+.05;if(name){const t2=AC.currentTime;g.cancelScheduledValues(t2);g.setValueAtTime(0,t2);g.linearRampToValueAtTime(1.05,t2+.4);}},name&&MUS.cur?260:20);
   if(!MUS.cur)MUS.cur=null;}
 function musWant(){if(!AC||AC.state!=='running')return;let w='lobby';
   if(G&&!G.over){const m=G.mode;w=m==='sd'?'sd':m==='ko'?'ko':m==='train'?'lobby':'battle';
