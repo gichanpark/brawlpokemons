@@ -503,7 +503,7 @@ const CH=[
   atk:{nm:'바람일으키기',ds:'관통하는 돌풍 · 맞은 적을 밀쳐냄',ty:'shot',fx:'tail',el:'flying',range:6,speed:13,dmg:700,r:18,pierce:1,kb:.9,col:'#ddd6fe'},
   sup:{nm:'날려버리기',ds:'거대한 바람으로 앞의 적을 멀리 날려버림',ty:'shot',fx:'wave',el:'flying',range:7,speed:12,dmg:900,r:46,pierce:1,kb:3.2,col:'#c4b5fd'}},
  {k:'aegislash',id:681,nm:'킬가르도',fnm:'실드폼',role:'태세 변환 · 근접',el:'steel',gr:'e',col:'#facc15',hp:5000,spd:.98,rl:1.1,charge:2700,
-  atk:{nm:'성스러운칼',ds:'관통 칼날 베기 · 공격하면 블레이드폼(공격 강함·방어 약함)으로 바뀜',ty:'shot',fx:'blade',range:4.5,speed:17,dmg:430,r:14,pierce:1,col:'#fde047'},
+  atk:{nm:'성스러운칼',ds:'관통 칼날 베기 · 공격하면 블레이드폼(공격 강함·방어 약함)으로 바뀜 · 실드폼은 킹실드로만',ty:'shot',fx:'blade',range:4.5,speed:17,dmg:430,r:14,pierce:1,col:'#fde047'},
   sup:{nm:'칼날회오리',ds:'몸을 돌려 주변을 베는 그림자 칼날',ty:'nova',boom:'ghost',el:'ghost',aoe:2.6,dmg:1300,col:'#a855f7'}},
  {k:'darmanitan',id:555,nm:'불비달마',fnm:'노말폼',role:'근접 · 모드 변환',el:'fire',gr:'e',col:'#ef4444',hp:5400,spd:1.08,rl:1.1,charge:2800,
   atk:{nm:'불꽃펀치',ds:'묵직한 불꽃 주먹 2연타 · 화상',ty:'shot',fx:'fist',el:'fire',burst:2,gap:.12,range:3.5,speed:16,dmg:560,r:14,col:'#f97316',burn:{dps:160,t:2}},
@@ -2379,7 +2379,7 @@ const TRG={
  chansey:{t:['자연회복','체력이 아주 많고, 회복이 끊기지 않음 (피격 중에도 천천히 회복)'],g:['치유파동','6칸 안 가장 다친 아군 체력 35% 회복']},
  ditto:{t:['변신 · 괴짜','변신 중에는 복사한 포켓몬의 특성까지 그대로 (가젯은 메타몽 것) · 쓰러지면 원래대로'],g:['몸 늘리기','1.5초간 받는 피해 60% 감소 + 넉백 무시']},
  drifblim:{t:['부유','벽·물·바위 위를 자유롭게 떠다님'],g:['바람 타기','2.5초간 이동속도 크게 증가']},
- aegislash:{t:['배틀스위치','공격하면 3초간 블레이드폼 (피해 +50%, 받는 피해 +15%) · 공격을 멈추면 실드폼 (받는 피해 -35%)'],g:['킹실드','즉시 실드폼 + 2초간 받는 피해 90% 감소']},
+ aegislash:{t:['배틀스위치','공격하거나 필살기를 쓰면 블레이드폼 (피해 +50%, 받는 피해 +15%) · 실드폼 (받는 피해 -35%)으로는 가젯으로만 돌아감'],g:['킹실드','실드폼으로 돌아가며 1.2초간 받는 피해 90% 감소 (횟수 제한 없음 · 쿨타임 4초)']},
  darmanitan:{t:['달마모드','체력 50% 이하가 되면 달마모드(원거리 에스퍼, 받는 피해 -20%)로 · 70% 넘게 회복하면 노말폼으로'],g:['명상','즉시 모드를 바꾸고 5초간 고정 + 체력 15% 회복']},
  rayquaza:{t:['에어록 · 비행','물 위를 날아다님 · 지속 피해(화상·독·모래·소용돌이) 50% 감소'],g:['메가진화','8초간 메가레쿠쟈! 공격력 +40% · 이동속도 +20% · 몸이 커짐 (경기당 1회)']},
 };
@@ -2399,7 +2399,7 @@ const GSP={
  rock:{el:'rock',col:'#a8a29e',boom:'quake'},
  sand:{el:'rock',col:'#d6a46a'}};
 Object.values(GSP).forEach(s=>{s._id=SPECS.push(s)-1;});
-const GADN=k=>k==='rayquaza'?1:(k==='kyurem'||k==='morpeko'||k==='ogerpon')?99:3;
+const GADN=k=>k==='rayquaza'?1:(k==='kyurem'||k==='morpeko'||k==='ogerpon'||k==='aegislash')?99:3;
 const bm=(e,t)=>!(e&&e.ch&&e.ch.fly)&&(t===1||t===4||(t===3&&!(e&&e.ch&&e.ch.swim)));
 function nearEnemy(e,r){let b=null,bd=r*T;for(const o of G.ents)if(o.alive&&o.team!==e.team&&!o.dummyNoTarget&&visibleTo(o,e.team)){const d=Math.hypot(o.x-e.x,o.y-e.y);if(d<bd){bd=d;b=o;}}return b;}
 const immune=t=>t&&(t.ch.k==='metagross'||t.safe||t.stretchT>0);
@@ -2462,7 +2462,6 @@ function traitTick(e,dt){
   if(k==='charizard'&&e.hp<e.maxHp*.4&&Math.random()<dt*18)P_({x:e.x+rnd(-16,16),y:e.y-rnd(10,55),vx:0,vy:-80,t:.3,col:pick(['#fde047','#f97316','#dc2626']),r:6});
   if(k==='morpeko'&&e.form===1&&Math.random()<dt*4)P_({sh:'plus',x:e.x+rnd(-18,18),y:e.y-rnd(15,50),vx:0,vy:0,t:.18,col:'#a855f7',r:4});
   if(e.ch.ditto&&!(e.dittoT>0)&&!(NET.on&&!NET.host)){e.ch=chOf('ditto');e.form=0;spark(e.x,e.y-30,['#c4b5fd','#fff'],14,150,.5,5);addText(e.x,e.y-110,'변신 풀림','#c4b5fd');}
-  if(k==='aegislash'&&!e.ch.ditto&&e.form===1&&!(e.bladeT>0))setForm(e,0);
   if(k==='darmanitan'&&!e.ch.ditto&&!(e.zenLock>0)){if(!e.form&&e.hp<e.maxHp*.5)setForm(e,1);else if(e.form===1&&e.hp>e.maxHp*.7)setForm(e,0);}
   if(k==='chansey'&&e.alive&&e.hp<e.maxHp)e.hp=Math.min(e.maxHp,e.hp+e.maxHp*.012*dt);
   if(e.confT>0&&Math.random()<dt*6)P_({sh:'star',x:e.x+rnd(-16,16),y:e.y-rnd(55,75),vx:rnd(-40,40),vy:0,t:.3,col:pick(['#f472b6','#fde047']),r:4});
@@ -2514,7 +2513,7 @@ function useGadget(e,ang,d){
     case 'chansey':{let b=null,bh=1;for(const o of G.ents)if(o.alive&&!o.safe&&o.team===e.team&&Math.hypot(o.x-e.x,o.y-e.y)<6*T&&o.hp/o.maxHp<bh){bh=o.hp/o.maxHp;b=o;}if(!b)return false;heal(b,b.maxHp*.35);P_({ring:1,x:b.x,y:b.y,rad:50,col:'#86efac',t:.4});spark(b.x,b.y-40,['#86efac','#fff','#f9a8d4'],14,120,.6,5,{sh:'plus'});break;}
     case 'ditto':e.stretchT=1.5;spark(e.x,e.y-20,['#c4b5fd','#ede9fe'],14,140,.5,6);break;
     case 'drifblim':e.haste=Math.max(e.haste||0,2.5);spark(e.x,e.y-20,['#ddd6fe','#fff'],12,180,.4,4,{sh:'line'});break;
-    case 'aegislash':setForm(e,0);e.bladeT=0;e.kingT=2;P_({ring:1,x:e.x,y:e.y,rad:60,col:'#fde047',t:.6});break;
+    case 'aegislash':setForm(e,0);e.bladeT=0;e.kingT=1.2;P_({ring:1,x:e.x,y:e.y,rad:60,col:'#fde047',t:.6});break;
     case 'darmanitan':setForm(e,e.form?0:1);e.zenLock=5;heal(e,e.maxHp*.15);break;
     case 'meowscarada':e.invisT=2;e.haste=Math.max(e.haste||0,2);spark(e.x,e.y-30,['#f472b6','#4ade80','#fff'],16,160,.5,5,{sh:'leaf'});break;
     case 'tinkaton':bumpFz(e);e.dash={dx:ca,dy:sa,left:3.5*T,hit:new Set(),s:GSP.gyro};break;
