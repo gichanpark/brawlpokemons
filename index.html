@@ -407,7 +407,7 @@ const chOf=k=>CH.find(c=>c.k===k)||CH[0];
 const STARTERS=['venusaur','charizard','blastoise'];
 const owns=k=>!SAVE.own||SAVE.own.includes(k);
 const UNLOCK_GEM={r:25,s:50,e:100,m:180,l:300};
-function unlockPk(k){if(!SAVE.own)SAVE.own=[];if(!SAVE.own.includes(k))SAVE.own.push(k);}
+function unlockPk(k){if(!SAVE.own)SAVE.own=[];if(!SAVE.own.includes(k)){SAVE.own.push(k);if(SAVE.lv)delete SAVE.lv[k];}}
 function dropNew(ch){if(Math.random()>=ch)return null;const pool=CH.filter(c=>!owns(c.k));if(!pool.length)return null;const w={r:40,s:30,e:18,m:9,l:3};let tot=pool.reduce((a,c)=>a+w[c.gr],0),x=Math.random()*tot;for(const c of pool){x-=w[c.gr];if(x<=0){unlockPk(c.k);return c;}}return null;}
 
 /* ---------- 메뉴 ---------- */
@@ -2169,6 +2169,7 @@ function showTakeNote(n){const pk=(n.p||[]).map(k=>chOf(k).nm);
   modal(`<h2>관리자 회수 안내</h2><div style="font-size:11px;line-height:1.8">${n.c?`금구슬 ${fmtTake(n.c)} · `:''}${n.g?`혜성조각 ${fmtTake(n.g)} · `:''}${pk.length?`포켓몬 ${pk.join(', ')}`:''}<br>사유: ${(n.m||'').replace(/</g,'&lt;')}</div><div class="mrow"><button class="btn sm" onclick="closeModal()">확인</button></div>`);}
 function applyTake(r){const tc=r.tc||0,tg=r.tg||0,tp=r.tp||[];if(!tc&&!tg&&!tp.length)return false;
   SAVE.coins=Math.max(0,SAVE.coins-tc);SAVE.gems=Math.max(0,(SAVE.gems||0)-tg);
+  if(tp.length&&SAVE.lv)tp.forEach(k=>delete SAVE.lv[k]);
   if(SAVE.own&&tp.length){SAVE.own=SAVE.own.filter(k=>!tp.includes(k));if(!SAVE.own.length)delete SAVE.own;else if(!SAVE.own.includes(SAVE.sel))SAVE.sel=SAVE.own[0];}
   try{refreshMenu();}catch(e){}
   if(!G){if(!SAVE.own)setTimeout(showStarter,300);else setTimeout(()=>showTakeNote({c:tc,g:tg,p:tp,m:r.tm}),300);}
