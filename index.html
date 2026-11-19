@@ -871,7 +871,7 @@ function fireSuper(e,ang,d){
     snapWalkable(e);aoeHit(e,e.x,e.y,s.aoe*T,s.dmg,s,true);
   }else if(s.ty==='nova'){
     if(s.brk){const cx=Math.floor(e.x/T),cy=Math.floor(e.y/T);for(let y=-1;y<=1;y++)for(let x=-1;x<=1;x++)breakTile(cx+x,cy+y);}
-    aoeHit(e,e.x,e.y,s.aoe*T,s.dmg,s,true);G.shake=Math.max(G.shake,e===P?.35:0);
+    aoeHit(e,e.x,e.y,s.aoe*T,s.dmg,s,true);G.shake=Math.max(G.shake,e===P?.35:0);if(s.refill){e.ammo=e.ch.amax||3;P_({ring:1,x:e.x,y:e.y,rad:s.aoe*T,col:'#fde047',t:.5});P_({ring:1,x:e.x,y:e.y,rad:s.aoe*T*.6,col:'#fff',t:.4});spark(e.x,e.y-30,['#fde047','#fff','#f0abfc','#67e8f9'],30,320,.7,7,{sh:'star'});}
   }else if(s.ty==='meteor'){
     const dd=clamp(d??s.range*T,0,s.range*T),cx=e.x+ca*dd,cy=e.y+sa*dd;
     for(let i=0;i<s.n;i++){const a=Math.random()*6.28,r=i?Math.random()*s.area*T:0;
@@ -2279,8 +2279,9 @@ const NZF=(()=>{const b=CH.find(c=>c.k==='necrozma');const ub={nm:'하늘을태�
     atk:{nm:'메테오드라이브',ds:'휘어 날아가 끝에서 모이는 태양의 레이저 5발 · 넓고 강함',ty:'shot',fx:'prism',el:'steel',nani:1.7,count:5,range:6.5,speed:15,dmg:380,r:11,col:'#fbbf24'},sup:bu}),
   Object.assign({},b,{nm:'새벽의날개 네크로즈마',fnm:'새벽의날개',role:'변신형 · 저격',el:'ghost',hp:4400,spd:1.1,charge:3900,col:'#818cf8',form:2,
     atk:{nm:'섀도레이',ds:'휘어 날아가 끝에서 모이는 달의 레이저 5발 · 긴 사거리',ty:'shot',fx:'prism',el:'ghost',nani:1.2,count:5,range:9.5,speed:17,dmg:340,r:10,col:'#818cf8'},sup:Object.assign({},bu)}),
-  Object.assign({},b,{nm:'울트라네크로즈마',fnm:'울트라',role:'변신형 · 최종',el:'dragon',hp:5400,spd:1.15,rl:1.0,amax:5,charge:3700,col:'#fde047',form:3,
-    atk:{nm:'포톤레이저',ds:'휘어 날아가 끝에서 모이는 빛의 레이저 5발 · 탄환 최대 5개',ty:'shot',fx:'prism',el:'psychic',nani:1.5,count:5,range:8,speed:17,dmg:400,r:11,col:'#fef08a'},sup:ub})];})();
+  Object.assign({},b,{nm:'울트라네크로즈마',fnm:'울트라',role:'변신형 · 최종',el:'dragon',hp:5400,spd:1.15,rl:1.3,amax:5,charge:3700,col:'#fde047',form:3,
+    atk:Object.assign({},ub,{ds:'한 줄로 뻗어 적을 모두 관통하는 강한 레이저 · 탄환 최대 5개',range:9.5,speed:26,dmg:720,r:15,kb:.3}),
+    sup:{nm:'울트라포톤가이저',ds:'몸에서 빛을 폭발시켜 주변 적에게 큰 피해 + 밀쳐내고 잠깐 기절 · 탄환 5개 즉시 충전',ty:'nova',boom:'psy',el:'psychic',aoe:3.4,dmg:1800,kb:2,stun:.6,refill:1,col:'#fde047'}})];})();
 const FORMS={necrozma:NZF,kyurem:KYF,morpeko:MPF,zygarde:ZGF,ogerpon:OGF,aegislash:AEF,darmanitan:DMF};
 function formPor(k,i){return POR[k+'_'+(i||0)]||(i?POR[k+i]:POR[chOf(k).id]);}
 const SPECS=[];CH.concat(NZF.slice(1),KYF.slice(1),MPF.slice(1),ZGF.slice(1),OGF.slice(1),AEF.slice(1),DMF.slice(1)).forEach(c=>{c.atk._id=SPECS.push(c.atk)-1;c.sup._id=SPECS.push(c.sup)-1;});
