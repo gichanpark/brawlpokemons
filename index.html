@@ -2074,22 +2074,28 @@ const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+
 const cIco=`<img class="ico" src="${ICO.coin}">`,gIco=`<img class="ico" src="${ICO.gemc}">`;
 const SHOP=[
  {id:'daily',sec:'today',nm:'오늘의 무료 선물',ds:'하루에 한 번 무료!',cost:0,cur:'free',ball:'premier-ball'},
- {id:'poke',sec:'box',nm:'몬스터볼 상자',ds:'금구슬·파워 업·새 포켓몬 8%',cost:120,cur:'coin',ball:'poke-ball'},
- {id:'great',sec:'box',nm:'슈퍼볼 상자',ds:'파워 업 1개 · 새 포켓몬 20%',cost:20,cur:'gem',ball:'great-ball'},
- {id:'ultra',sec:'box',nm:'하이퍼볼 상자',ds:'파워 업 2개 · 새 포켓몬 35%',cost:45,cur:'gem',ball:'ultra-ball'},
- {id:'master',sec:'box',nm:'마스터볼 상자',ds:'파워 업 4개 · 새 포켓몬 60%',cost:90,cur:'gem',ball:'master-ball'},
+ {id:'poke',sec:'box',nm:'몬스터볼 상자',ds:'보상 1개 · 새 포켓몬 10%',cost:120,cur:'coin',ball:'poke-ball'},
+ {id:'great',sec:'box',nm:'슈퍼볼 상자',ds:'보상 2개 · 칸마다 새 포켓몬 20%',cost:20,cur:'gem',ball:'great-ball'},
+ {id:'ultra',sec:'box',nm:'하이퍼볼 상자',ds:'보상 3개 · 칸마다 새 포켓몬 25%',cost:45,cur:'gem',ball:'ultra-ball'},
+ {id:'master',sec:'box',nm:'마스터볼 상자',ds:'보상 4개 · 새 포켓몬 1마리 확정',cost:90,cur:'gem',ball:'master-ball'},
  {id:'c1',sec:'coin',nm:'금구슬 꾸러미',ds:'금구슬 150개',cost:10,cur:'gem',give:{coin:150}},
  {id:'c2',sec:'coin',nm:'금구슬 상자',ds:'금구슬 900개',cost:50,cur:'gem',give:{coin:900}},
 ];
 function randPow(n){const out=[];for(let i=0;i<n;i++){const can=CH.filter(c=>owns(c.k)&&lv(c.k)<11);if(!can.length)break;const c=pick(can);SAVE.lv[c.k]=lv(c.k)+1;out.push(c);}return out;}
+const BOXT={poke:{n:1,c:[.2,40,90],p:.55,g:[.15,2,4],k:.10},great:{n:2,c:[.15,80,150],p:.5,g:[.15,4,7],k:.20},
+  ultra:{n:3,c:[.1,120,200],p:.5,g:[.15,6,10],k:.25},master:{n:4,c:[.1,200,300],p:.45,g:[.15,10,15],k:.30}};
+const rint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function openBox(id){
-  const R={coin:0,gem:0,pow:[]};const r=Math.random();
+  const R={coin:0,gem:0,pow:[],pks:[]};
   if(id==='daily'){R.coin=30+Math.floor(Math.random()*6)*10;if(Math.random()<.35)R.gem=2+Math.floor(Math.random()*3);}
-  else if(id==='poke'){if(r<.45)R.coin=60+Math.floor(Math.random()*15)*10;else if(r<.85)R.pow=randPow(1);else{R.gem=3+Math.floor(Math.random()*6);R.coin=50;}}
-  else if(id==='great'){R.coin=150+Math.floor(Math.random()*16)*10;R.pow=randPow(1);if(Math.random()<.3)R.gem=5;}
-  else if(id==='ultra'){R.coin=250+Math.floor(Math.random()*20)*10;R.pow=randPow(2);}
-  else if(id==='master'){R.coin=600+Math.floor(Math.random()*40)*10;R.pow=randPow(4);R.gem=10;}
-  const dc={daily:0,poke:.08,great:.2,ultra:.35,master:.6}[id]||0;R.pk=dropNew(dc);
+  else{const B=BOXT[id];
+    for(let i=0;i<B.n;i++){let x=Math.random();
+      if(x<B.k){const c=dropNew(1);if(c){R.pks.push(c);continue;}x=B.k+B.c[0];}
+      x-=B.k;if(x<B.c[0]){R.coin+=Math.round(rint(B.c[1],B.c[2])/10)*10;continue;}
+      x-=B.c[0];if(x<B.g[0]){R.gem+=rint(B.g[1],B.g[2]);continue;}
+      const p=randPow(1);if(p.length)R.pow.push(...p);else R.gem+=rint(B.g[1],B.g[2]);}
+    if(id==='master'&&!R.pks.length){const c=dropNew(1);if(c)R.pks.push(c);}
+  }
   SAVE.coins+=R.coin;SAVE.gems=(SAVE.gems||0)+R.gem;return R;
 }
 const SEC={today:'오늘의 선물',box:'볼 상자',coin:'금구슬 교환'};
@@ -2114,7 +2120,7 @@ function boxAnim(it,R){
   ov.innerHTML=`<div class="bopen"><img class="bball shake" src="${BALL[it.ball]}"><div class="bt">${it.nm}</div></div>`;
   sfx('count');setTimeout(()=>sfx('count'),350);setTimeout(()=>sfx('count'),700);
   setTimeout(()=>{sfx('win');
-    const items=[];if(R.pk)items.push(`<div class="rw newpk"><img class="sbig por2" src="${POR[R.pk.id]}"><b>새 포켓몬!</b><span>${R.pk.nm} · ${GRADE[R.pk.gr].nm}</span></div>`);
+    const items=[];R.pks.forEach(pk=>items.push(`<div class="rw newpk"><img class="sbig por2" src="${POR[pk.id]}"><b>새 포켓몬!</b><span>${pk.nm} · ${GRADE[pk.gr].nm}</span></div>`));
     if(R.coin)items.push(`<div class="rw"><img class="sbig" src="${ICO.coin}"><b>+${R.coin}</b><span>금구슬</span></div>`);
     if(R.gem)items.push(`<div class="rw"><img class="sbig" src="${ICO.gemc}"><b>+${R.gem}</b><span>혜성조각</span></div>`);
     R.pow.forEach(c=>items.push(`<div class="rw"><img class="sbig por2" src="${POR[c.id]}"><b>파워 업!</b><span>${c.nm} → ${lv(c.k)}</span></div>`));
