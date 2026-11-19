@@ -528,9 +528,11 @@ function showScr(id){document.querySelectorAll('.scr').forEach(s=>s.classList.to
 const spdNm=v=>v<.85?'매우 느림':v<.95?'느림':v<1.08?'보통':v<1.2?'빠름':'매우 빠름';
 let viewK=null;
 let viewForm=0;
+const byGrade=(a,b)=>GRADE[a.gr].o-GRADE[b.gr].o||a.nm.localeCompare(b.nm,'ko');
+const sortCH=arr=>arr.slice().sort(byGrade);
 function buildGrid(){
   const g=$('#grid');g.innerHTML='';
-  CH.slice().sort((a,b)=>GRADE[a.gr].o-GRADE[b.gr].o).forEach(c=>{
+  sortCH(CH).forEach(c=>{
     const d=document.createElement('div');d.className='card'+(c.k===SAVE.sel?' sel':'');d.style.borderBottomColor=GRADE[c.gr].c;
     d.innerHTML=`<div class="tr">${owns(c.k)?"★"+tro(c.k):"잠김"}</div>${owns(c.k)?`<div class="lvb">Lv${lv(c.k)}</div>`:`<div class="lk">🔒</div>`}<img class="por" src="${POR[c.id]}"><div class="n">${c.nm}</div><div class="gd" style="background:${GRADE[c.gr].c}">${GRADE[c.gr].nm}</div>`;
     if(!owns(c.k))d.classList.add('lock');
@@ -2722,7 +2724,7 @@ async function loadRank(force){if(!force&&Date.now()-rankT<20000)return;rankT=Da
     $('#rkList').innerHTML=r.top.length?r.top.map((x,i)=>{const [src,ph]=otherAva(x.a,x.s);return `<div class="rk${x.me?' me':''}${i===0?' r1':''}"><span class="no">${i+1}</span><div class="ava fr-${/^[a-z]+$/.test(x.f||'')?x.f:'basic'}${ph?' ph':''}" style="--s:22px"><img src="${src}"></div><span class="nm">${esc(x.n)}</span><span class="tt">${x.t}</span></div>`;}).join(''):'아직 기록이 없어요';
     $('#rkMine').textContent=r.my?`내 순위 ${r.my}위 · 트로피 ${r.mt}`:'';}catch(e){}}
 function openProfile(tab){
-  const tt=totTro(),own=CH.filter(c=>owns(c.k)),cur=SAVE.ava||{t:'pk',k:SAVE.sel};
+  const tt=totTro(),own=sortCH(CH.filter(c=>owns(c.k))),cur=SAVE.ava||{t:'pk',k:SAVE.sel};
   const isOn=a=>cur.t===a.t&&(a.t==='img'?cur.i===a.i:cur.k===a.k&&(cur.f||0)===(a.f||0));
   const pors=[];own.forEach(c=>{if(FORMS[c.k]){const seen=new Set();FORMS[c.k].forEach((_,i)=>{const p=formPor(c.k,i);if(p&&!seen.has(p)){seen.add(p);pors.push({t:'por',k:c.k,f:i});}});}else pors.push({t:'por',k:c.k});});
   modal(`<h2>프로필</h2><div class="pf-top">${avaHTML(78)}<div style="flex:1">
@@ -2757,7 +2759,7 @@ function takeForm(x){
   modal(`<h2>재화·포켓몬 몰수 · ${x.u}</h2>
   <div class="amail"><div class="arow"><span><img class="ico" src="${ICO.coin}"> 금구슬 (보유 ${sv.coins||0})</span><input id="tkC" class="minput sm2" type="number" min="0" value="0"><label><input type="checkbox" id="tkCA"> 전부</label></div>
   <div class="arow"><span><img class="ico" src="${ICO.gemc}"> 혜성조각 (보유 ${sv.gems||0})</span><input id="tkG" class="minput sm2" type="number" min="0" value="0"><label><input type="checkbox" id="tkGA"> 전부</label></div>
-  <div class="arow" style="align-items:flex-start"><span>포켓몬</span><div class="tkpk">${own.length?own.map(k=>`<label class="tkp"><input type="checkbox" value="${k}"><img src="${POR[chOf(k).id]}"><span>${chOf(k).nm}</span></label>`).join(''):'<span style="opacity:.6">가진 포켓몬 정보가 없어요</span>'}</div></div>
+  <div class="arow" style="align-items:flex-start"><span>포켓몬</span><div class="tkpk">${own.length?own.slice().sort((a,b)=>byGrade(chOf(a),chOf(b))).map(k=>`<label class="tkp"><input type="checkbox" value="${k}"><img src="${POR[chOf(k).id]}"><span>${chOf(k).nm}</span></label>`).join(''):'<span style="opacity:.6">가진 포켓몬 정보가 없어요</span>'}</div></div>
   <div class="arow"><span>사유</span><input id="tkMsg" class="minput sm2" maxlength="200" placeholder="예) 버그 악용" style="flex:1"></div>
   <div class="arow"><button class="btn sm" id="tkGo" style="background:#dc2626;color:#fff">몰수하기</button><button class="btn b2 sm" id="tkBack">돌아가기</button><span id="tkRes" style="font-size:11px"></span></div></div>
   <div style="font-size:11px;opacity:.7">포켓몬을 모두 몰수하면 그 회원은 다음 접속 때 스타팅 포켓몬을 다시 고르게 돼요. 회원이 접속 중이면 다음 저장 때 바로 반영돼요.</div>`);
@@ -2783,18 +2785,18 @@ async function adminPanel(target){
     <button data-a="${x.admin?'unadmin':'admin'}" data-u="${x.u}">${x.admin?'관리자 해제':'관리자 지정'}</button><button data-a="delete" data-u="${x.u}" class="del">삭제</button></td></tr>`;}).join('');
   modal(`<h2>관리자 메뉴 · 회원 ${r.users.length}명</h2>
   <div class="amail"><b>트로피 지급 · 차감 (다음 접속/저장 때 반영)</b>
-    <div class="arow"><select id="atMode" class="minput sm2"><option value="give">지급</option><option value="take">차감</option></select><span>받는 사람</span><select id="atTo" class="minput sm2">${opts}</select><span>포켓몬</span><select id="atPk" class="minput sm2"><option value="__all">모든 포켓몬</option>${CH.map(c=>`<option value="${c.k}">${c.nm}</option>`).join('')}</select></div>
+    <div class="arow"><select id="atMode" class="minput sm2"><option value="give">지급</option><option value="take">차감</option></select><span>받는 사람</span><select id="atTo" class="minput sm2">${opts}</select><span>포켓몬</span><select id="atPk" class="minput sm2"><option value="__all">모든 포켓몬</option>${sortCH(CH).map(c=>`<option value="${c.k}">${c.nm} (${GRADE[c.gr].nm})</option>`).join('')}</select></div>
     <div class="arow"><span>트로피</span><input id="atN" class="minput sm2" type="number" min="0" value="0"><label id="atAllW" style="display:none"><input type="checkbox" id="atAll"> 전부 (0으로)</label><button class="btn sm" id="atGo">지급</button><span id="atRes" style="font-size:11px"></span></div></div>
   <div class="amail"><b>재화·포켓몬 지급 (우편으로 보내져요)</b>
     <div class="arow"><span>받는 사람</span><select id="amTo" class="minput sm2">${opts}</select></div>
     <div class="arow"><span><img class="ico" src="${ICO.coin}"> 금구슬</span><input id="amC" class="minput sm2" type="number" min="0" value="0"><span><img class="ico" src="${ICO.gemc}"> 혜성조각</span><input id="amG" class="minput sm2" type="number" min="0" value="0"></div>
-    <div class="arow" style="align-items:flex-start"><span>포켓몬</span><div class="tkpk" id="amPk" style="max-height:66px;overflow-y:auto">${CH.map(c=>`<label class="tkp"><input type="checkbox" value="${c.k}"><img src="${POR[c.id]}"><span>${c.nm}</span></label>`).join('')}</div></div>
+    <div class="arow" style="align-items:flex-start"><span>포켓몬</span><div class="tkpk" id="amPk" style="max-height:66px;overflow-y:auto">${sortCH(CH).map(c=>`<label class="tkp"><input type="checkbox" value="${c.k}"><img src="${POR[c.id]}"><span>${c.nm}</span></label>`).join('')}</div></div>
     <div class="arow"><span>메시지</span><input id="amMsg" class="minput sm2" maxlength="200" placeholder="예) 점검 보상입니다!" style="flex:1"></div>
     <div class="arow"><button class="btn sm" id="amSend">보내기</button><span id="amRes" style="font-size:11px"></span></div></div>
   <table class="adt"><tr><th>아이디</th><th>트로피</th><th>금구슬</th><th>혜성조각</th><th>관리</th></tr>${rows}</table>
   <div style="font-size:11px;opacity:.7;margin-top:6px">삭제는 두 번 눌러야 실행돼요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);
   const atSync=()=>{const tk=$('#atMode').value==='take';$('#atAllW').style.display=tk?'':'none';$('#atGo').textContent=tk?'차감':'지급';$('#atGo').style.background=tk?'#dc2626':'';$('#atGo').style.color=tk?'#fff':'';};
-  $('#atMode').onchange=atSync;$('#atPk').value=CH[0].k;
+  $('#atMode').onchange=atSync;$('#atPk').value=sortCH(CH)[0].k;
   $('#atGo').onclick=async()=>{const to=$('#atTo').value,k=$('#atPk').value,take=$('#atMode').value==='take',all=take&&$('#atAll').checked,m=Math.abs(parseInt($('#atN').value)||0),n=all?-100000:take?-m:m;
     if(!n){$('#atRes').textContent='트로피 수를 입력해 주세요';return;}
     if(take&&!$('#atGo').dataset.ok2){$('#atGo').dataset.ok2=1;$('#atGo').textContent='정말 차감?';return;}
