@@ -2926,7 +2926,7 @@ let rankT=0;
 async function loadRank(force){if(!force&&Date.now()-rankT<20000)return;rankT=Date.now();
   try{const r=await rpc('pb_rank',{p_token:ACC.token||null});if(!r||!r.ok)return;
     $('#rkList').innerHTML=r.top.length?r.top.map((x,i)=>{const [src,ph]=otherAva(x.a,x.s);return `<div class="rk${x.me?' me':''}${i===0?' r1':''}"><span class="no">${i+1}</span><div class="ava fr-${/^[a-z]+$/.test(x.f||'')?x.f:'basic'}${ph?' ph':''}" style="--s:22px"><img src="${src}"></div><span class="nm">${esc(x.n)}</span><span class="tt">${x.t}</span></div>`;}).join(''):'아직 기록이 없어요';
-    $('#rkMine').textContent=r.my?`내 순위 ${r.my}위 · 트로피 ${r.mt}`:'';}catch(e){}}
+    $('#rkMine').textContent=r.admin?'관리자 계정은 랭킹에서 빠져요':r.my?`내 순위 ${r.my}위 · 트로피 ${r.mt}`:'';}catch(e){}}
 function openProfile(tab){
   const tt=totTro(),own=sortCH(CH.filter(c=>owns(c.k))),cur=SAVE.ava||{t:'pk',k:SAVE.sel};
   const isOn=a=>cur.t===a.t&&(a.t==='img'?cur.i===a.i:cur.k===a.k&&(cur.f||0)===(a.f||0));
