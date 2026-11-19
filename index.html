@@ -2299,7 +2299,7 @@ document.querySelectorAll('img[data-ico]').forEach(im=>im.src=ICO[im.dataset.ico
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();};
 const cIco=`<img class="ico" src="${ICO.coin}">`,gIco=`<img class="ico" src="${ICO.gemc}">`;
 const SHOP=[
- {id:'scout',sec:'today',nm:'스카우트',ds:'5마리 중 1마리를 골라 데려와요',cost:800,cur:'coin',ball:'luxury-ball'},
+ {id:'scout',sec:'today',nm:'스카우트',ds:'5마리 중 1마리를 골라 데려와요',cost:4000,cur:'coin',ball:'luxury-ball'},
  {id:'daily',sec:'today',nm:'오늘의 무료 선물',ds:'하루에 한 번 무료!',cost:0,cur:'free',ball:'premier-ball'},
  {id:'poke',sec:'box',nm:'몬스터볼 상자',ds:'보상 1개 · 새 포켓몬 10%',cost:120,cur:'coin',ball:'poke-ball'},
  {id:'great',sec:'box',nm:'슈퍼볼 상자',ds:'보상 2개 · 칸마다 새 포켓몬 20%',cost:20,cur:'gem',ball:'great-ball'},
