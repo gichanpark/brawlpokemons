@@ -893,8 +893,8 @@ function spawnShots(e,s,ang,d,sup){
     return;
   }
   const cnt=s.count||1;
-  if(s.nani){const bx=e.x+Math.cos(ang)*e.r*.7,by=e.y+Math.sin(ang)*e.r*.7;for(let i=0;i<cnt;i++){const k=cnt>1?-1+2*i/(cnt-1):0;
-    G.projs.push({x:bx,y:by,bx,by,cv:k*s.nani*T,gk:k<0?1:k>0?2:0,vx:Math.cos(ang)*s.speed*T,vy:Math.sin(ang)*s.speed*T,tr:0,maxD:s.range*T,r:s.r,o:e,team:e.team,s,sup,hit:new Set(),chain:0,rot:0});}return;}
+  if(s.nani){const bx=e.x+Math.cos(ang)*e.r*.7,by=e.y+Math.sin(ang)*e.r*.7,nd=naniD(s,d),nk=naniA(s,nd);for(let i=0;i<cnt;i++){const k=cnt>1?-1+2*i/(cnt-1):0;
+    G.projs.push({x:bx,y:by,bx,by,cv:k*nk,gk:k<0?1:k>0?2:0,vx:Math.cos(ang)*s.speed*T,vy:Math.sin(ang)*s.speed*T,tr:0,maxD:nd,r:s.r,o:e,team:e.team,s,sup,hit:new Set(),chain:0,rot:0});}return;}
   for(let i=0;i<cnt;i++){
     const a=s.par?ang:ang+(cnt>1?-s.spread/2+s.spread*i/(cnt-1):0)+(s.flame?(Math.random()-.5)*.08:0),po=s.par&&cnt>1?(-s.par/2+s.par*i/(cnt-1)):0;
     G.projs.push({x:e.x+Math.cos(a)*e.r*.7-Math.sin(a)*po,y:e.y+Math.sin(a)*e.r*.7+Math.cos(a)*po,vx:Math.cos(a)*s.speed*T,vy:Math.sin(a)*s.speed*T,
@@ -1080,6 +1080,7 @@ function shatter(p,wall){const base=Math.atan2(p.vy,p.vx)+(wall?Math.PI:0),sh={t
   for(let j=-1;j<=1;j++){const a=base+j*.6;G.projs.push({x,y,vx:Math.cos(a)*sh.speed*T,vy:Math.sin(a)*sh.speed*T,tr:0,maxD:sh.range*T,r:sh.r,o:p.o,team:p.team,s:shs,sup:p.sup,hit:new Set(p.hit),chain:0,rot:0});}
   spark(p.x,p.y,['#a8a29e','#57534e'],8,150,.4,6,{g:500});}
 const NZG=13;
+const naniD=(s,d)=>clamp(d==null?s.range*T:d,2.2*T,s.range*T),naniA=(s,nd)=>s.nani*T*(.35+.65*nd/(s.range*T));
 function pMove(p,ds){const v=Math.hypot(p.vx,p.vy)||1,ux=p.vx/v,uy=p.vy/v;p.bx+=ux*ds;p.by+=uy*ds;p.tr+=ds;const o=p.cv*Math.sin(Math.PI*Math.min(1,p.tr/p.maxD));p.x=p.bx-uy*o;p.y=p.by+ux*o;}
 function nzGain(o,gk){if(!o||o.ch.k!=='necrozma'||o.ch.ditto||o.form)return;if((o.sun||0)+(o.moon||0)>=NZG)return;const k=gk===1?'sun':'moon';o[k]=(o[k]||0)+1;if(o===P&&o.sun+o.moon>=NZG)addText(o.x,o.y-100,(o.sun>o.moon?'태양':o.moon>o.sun?'달':'태양=달')+' 게이지 완성!',o.sun>=o.moon?'#fdba74':'#7dd3fc');}
 function updProjs(dt){
@@ -2112,7 +2113,7 @@ function drawAim(){
     ctx.beginPath();ctx.arc(tx,ty,rad,0,7);ctx.fill();bs();
     ctx.strokeStyle=AC;ctx.lineWidth=4;ctx.globalAlpha=.5+.3*Math.sin(G.t*8);ctx.beginPath();ctx.arc(tx,ty,rad*.35,0,7);ctx.stroke();ctx.globalAlpha=1;return;}
   ctx.save();ctx.translate(P.x,P.y);ctx.rotate(ang);
-  if(s.nani){const A=s.nani*T;ctx.beginPath();for(let i=0;i<=24;i++){const t=i/24;ctx.lineTo(R*t,A*Math.sin(Math.PI*t)+(s.r||10));}for(let i=24;i>=0;i--){const t=i/24;ctx.lineTo(R*t,-A*Math.sin(Math.PI*t)-(s.r||10));}ctx.closePath();ctx.fill();bs();}
+  if(s.nani){const RN=naniD(s,R*f),A=naniA(s,RN);ctx.beginPath();for(let i=0;i<=24;i++){const t=i/24;ctx.lineTo(RN*t,A*Math.sin(Math.PI*t)+(s.r||10));}for(let i=24;i>=0;i--){const t=i/24;ctx.lineTo(RN*t,-A*Math.sin(Math.PI*t)-(s.r||10));}ctx.closePath();ctx.fill();bs();}
   else if((s.count||1)>1&&s.spread>.2){ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,R,-s.spread/2-.05,s.spread/2+.05);ctx.closePath();ctx.fill();bs();}
   else{const w=s.ty==='dash'?P.r*2:Math.max(14,(s.r||10)*2+(s.par||0));rr(0,-w/2,R,w,w/2);ctx.fill();bs();}
   ctx.restore();
