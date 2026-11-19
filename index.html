@@ -1961,8 +1961,7 @@ function drawBars(e){
   if(e.ch.k==='necrozma'&&!e.ch.ditto&&!e.form&&e.alive){const sun=e.nzMode!==2,cx2=Math.round(sx+Math.max(30,38*VIEW.S)),cy2=Math.round(sy-Math.max(30,42*VIEW.S)),R0=11;
     ctx.fillStyle='rgba(10,6,24,.75)';ctx.beginPath();ctx.arc(cx2,cy2,R0+8,0,7);ctx.fill();ctx.strokeStyle=sun?'#fb923c':'#38bdf8';ctx.lineWidth=2;ctx.stroke();
     if(sun){ctx.strokeStyle='#fdba74';ctx.lineWidth=3;for(let k=0;k<8;k++){const an=k*.785+G.t*.8;ctx.beginPath();ctx.moveTo(cx2+Math.cos(an)*(R0-2),cy2+Math.sin(an)*(R0-2));ctx.lineTo(cx2+Math.cos(an)*(R0+5),cy2+Math.sin(an)*(R0+5));ctx.stroke();}ctx.fillStyle='#f97316';ctx.beginPath();ctx.arc(cx2,cy2,R0-3,0,7);ctx.fill();ctx.fillStyle='#fde68a';ctx.beginPath();ctx.arc(cx2-2,cy2-2,3,0,7);ctx.fill();}
-    else{ctx.fillStyle='#38bdf8';ctx.beginPath();ctx.arc(cx2,cy2,R0,0,7);ctx.fill();ctx.fillStyle='rgba(10,6,24,1)';ctx.beginPath();ctx.arc(cx2+5,cy2-4,R0-1,0,7);ctx.fill();ctx.fillStyle='#e0f2fe';ctx.fillRect(cx2-7,cy2+2,3,3);}
-    ptext(sun?'태양':'달',cx2,cy2+R0+20,11,sun?'#fdba74':'#7dd3fc');}
+    else{ctx.fillStyle='#38bdf8';ctx.beginPath();ctx.arc(cx2,cy2,R0,0,7);ctx.fill();ctx.fillStyle='rgba(10,6,24,1)';ctx.beginPath();ctx.arc(cx2+5,cy2-4,R0-1,0,7);ctx.fill();ctx.fillStyle='#e0f2fe';ctx.fillRect(cx2-7,cy2+2,3,3);}}
   if(G.mode==='bounty'){const oy=e.name&&e!==P?14:0;pix('bstar',sx-12,y-26-oy,2);ptext(String(e.bounty||2),sx+2,y-19-oy,11,'#fde047','left');}
   const icon=e.gems>0?'gem':e.cubes>0?'cube':null;
   if(icon){const n=e.gems>0?e.gems:e.cubes,oy=e.name&&e!==P?14:0;ctx.globalAlpha=1;pix(icon,sx-12,y-26-oy,2);ptext(String(n),sx+2,y-19-oy,11,'#fff','left');}
@@ -2112,7 +2111,7 @@ function drawAim(){
     ctx.beginPath();ctx.arc(tx,ty,rad,0,7);ctx.fill();bs();
     ctx.strokeStyle=AC;ctx.lineWidth=4;ctx.globalAlpha=.5+.3*Math.sin(G.t*8);ctx.beginPath();ctx.arc(tx,ty,rad*.35,0,7);ctx.stroke();ctx.globalAlpha=1;return;}
   ctx.save();ctx.translate(P.x,P.y);ctx.rotate(ang);
-  if(s.nani){const RN=naniD(s,R*f),A=naniA(s,RN),rr=s.r||10,cr=Math.max(22,rr*2.4),nz=P.ch.k==='necrozma'&&!P.ch.ditto&&!P.form&&!sup,side=P.nzMode===2?2:1,NC=nz?(side===1?'#fb923c':'#38bdf8'):AC;
+  if(s.nani){const RN=naniD(s,R*f),A=naniA(s,RN),rr=s.r||10,cr=Math.max(22,rr*2.4),nz=false,side=P.nzMode===2?2:1,NC=nz?(side===1?'#fb923c':'#38bdf8'):AC;
     if(nz)ctx.fillStyle=side===1?'rgba(251,146,60,.28)':'rgba(56,189,248,.28)';
     const pt=(t,sg)=>[RN*t,sg*(A*Math.sin(Math.PI*t)+rr)];let te=1;while(te>0&&Math.hypot(pt(te,1)[0]-RN,pt(te,1)[1])<cr)te-=.005;
     const top=[],bot=[];for(let i=0;i<=30;i++){const t=te*i/30;top.push(pt(t,1));bot.push(pt(t,-1));}
