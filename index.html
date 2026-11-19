@@ -2166,7 +2166,7 @@ if(!SAVE.coins)SAVE.coins=0;if(!SAVE.gems)SAVE.gems=0;if(!SAVE.lv)SAVE.lv={};if(
 
 function refreshMenu(){
   const c=chOf(SAVE.sel),hi=$('#heroImg');
-  hi.onload=()=>{hi.style.width=(hi.naturalWidth*1.15)+'px';};hi.src=SPR[c.id];
+  hi.onload=()=>{hi.style.width=(hi.naturalWidth*1.15)+'px';};hi.src=SPR[c.id];clearInterval(window._heroT);if(c.k==='trio'){const L=['642','641','645'];let i=0;hi.src=SPR[L[0]];window._heroT=setInterval(()=>{if(!document.body.contains(hi)||chOf(SAVE.sel).k!=='trio'){clearInterval(window._heroT);return;}i=(i+1)%3;hi.style.transition='opacity .15s';hi.style.opacity=0;setTimeout(()=>{hi.src=SPR[L[i]];hi.style.opacity=1;},150);},1600);}
   $('#heroName').textContent=c.nm;$('#heroLv').textContent='파워 '+lv(c.k);
   $('#heroRole').textContent=GRADE[c.gr].nm+' · '+EL[c.el].nm+' 타입 · '+c.role;
   $('#selTro').textContent=tro(c.k);
