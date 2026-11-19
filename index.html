@@ -454,7 +454,7 @@ const totTro=()=>CH.reduce((a,c)=>a+tro(c.k),0);
 const chOf=k=>CH.find(c=>c.k===k)||CH[0];
 const STARTERS=['venusaur','charizard','blastoise'];
 const owns=k=>!SAVE.own||SAVE.own.includes(k);
-const UNLOCK_GEM={r:25,s:50,e:100,m:180,l:300};
+const UNLOCK_GEM={r:200,s:400,e:800,m:1400,l:2500};
 function unlockPk(k){if(!SAVE.own)SAVE.own=[];if(!SAVE.own.includes(k)){SAVE.own.push(k);if(SAVE.lv)delete SAVE.lv[k];}}
 function dropNew(ch){if(Math.random()>=ch)return null;const pool=CH.filter(c=>!owns(c.k));if(!pool.length)return null;const w={r:40,s:30,e:18,m:9,l:3};let tot=pool.reduce((a,c)=>a+w[c.gr],0),x=Math.random()*tot;for(const c of pool){x-=w[c.gr];if(x<=0){unlockPk(c.k);return c;}}return null;}
 
