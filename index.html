@@ -2643,7 +2643,7 @@ const ACC={user:null,token:null,admin:false};
 const API='https://fidocivflebjwpjndlue.supabase.co/rest/v1/rpc/',APIKEY='sb_publishable_hLKLyBTK5sDp4TlYlCosFg_9WoOgX9X';
 async function rpc(fn,args){const r=await fetch(API+fn,{method:'POST',headers:{apikey:APIKEY,'Content-Type':'application/json'},body:JSON.stringify(args)});return r.json();}
 let saveTimer=null;
-function applyGrant(r){const c=r.gc||0,g=r.gg||0,gt=r.gt&&typeof r.gt==='object'?r.gt:{},tk=Object.keys(gt).filter(k=>CH.find(x=>x.k===k)&&gt[k]);if(!c&&!g&&!tk.length)return false;SAVE.coins+=c;SAVE.gems=(SAVE.gems||0)+g;if(!SAVE.tro)SAVE.tro={};tk.forEach(k=>{SAVE.tro[k]=Math.max(0,(SAVE.tro[k]||0)+(+gt[k]||0));});try{refreshMenu();}catch(e){}setTimeout(()=>modal(`<h2>관리자 선물 도착!</h2><div class="rws">${tk.map(k=>`<div class="rw"><img class="sbig por2" src="${POR[chOf(k).id]}"><b>${gt[k]>0?'+':''}${gt[k]}</b><span>${chOf(k).nm} 트로피</span></div>`).join('')}${c?`<div class="rw"><img class="sbig" src="${ICO.coin}"><b>+${c}</b><span>금구슬</span></div>`:''}${g?`<div class="rw"><img class="sbig" src="${ICO.gemc}"><b>+${g}</b><span>혜성조각</span></div>`:''}</div><div class="mrow"><button class="btn sm" onclick="closeModal()">확인</button></div>`),300);return true;}
+function applyGrant(r){const c=r.gc||0,g=r.gg||0,gt=r.gt&&typeof r.gt==='object'?r.gt:{},tk=Object.keys(gt).filter(k=>CH.find(x=>x.k===k)&&gt[k]);if(!c&&!g&&!tk.length)return false;SAVE.coins+=c;SAVE.gems=(SAVE.gems||0)+g;if(!SAVE.tro)SAVE.tro={};const dl={};tk.forEach(k=>{const b0=SAVE.tro[k]||0;SAVE.tro[k]=Math.max(0,b0+(+gt[k]||0));dl[k]=SAVE.tro[k]-b0;});const neg=tk.length&&tk.every(k=>dl[k]<=0)&&!c&&!g;try{refreshMenu();}catch(e){}setTimeout(()=>modal(`<h2>${neg?'관리자 트로피 차감 안내':'관리자 선물 도착!'}</h2><div class="rws">${tk.filter(k=>dl[k]).map(k=>`<div class="rw"><img class="sbig por2" src="${POR[chOf(k).id]}"><b style="color:${dl[k]<0?'#f87171':'#fde047'}">${dl[k]>0?'+':''}${dl[k]}</b><span>${chOf(k).nm} 트로피</span></div>`).join('')}${c?`<div class="rw"><img class="sbig" src="${ICO.coin}"><b>+${c}</b><span>금구슬</span></div>`:''}${g?`<div class="rw"><img class="sbig" src="${ICO.gemc}"><b>+${g}</b><span>혜성조각</span></div>`:''}</div><div class="mrow"><button class="btn sm" onclick="closeModal()">확인</button></div>`),300);return true;}
 function fmtTake(n){return n>=999999999?'전부':n;}
 function showTakeNote(n){const pk=(n.p||[]).map(k=>chOf(k).nm);
   modal(`<h2>관리자 회수 안내</h2><div style="font-size:11px;line-height:1.8">${n.c?`금구슬 ${fmtTake(n.c)} · `:''}${n.g?`혜성조각 ${fmtTake(n.g)} · `:''}${pk.length?`포켓몬 ${pk.join(', ')}`:''}<br>사유: ${(n.m||'').replace(/</g,'&lt;')}</div><div class="mrow"><button class="btn sm" onclick="closeModal()">확인</button></div>`);}
@@ -2782,9 +2782,9 @@ async function adminPanel(target){
     <button data-a="mailto" data-u="${x.u}">우편</button><button data-a="take" data-u="${x.u}" class="del">몰수</button><button data-a="${x.banned?'unban':'ban'}" data-u="${x.u}">${x.banned?'정지 해제':'정지'}</button>
     <button data-a="${x.admin?'unadmin':'admin'}" data-u="${x.u}">${x.admin?'관리자 해제':'관리자 지정'}</button><button data-a="delete" data-u="${x.u}" class="del">삭제</button></td></tr>`;}).join('');
   modal(`<h2>관리자 메뉴 · 회원 ${r.users.length}명</h2>
-  <div class="amail"><b>트로피 지급 (포켓몬별 · 음수면 회수 · 다음 접속/저장 때 반영)</b>
-    <div class="arow"><span>받는 사람</span><select id="atTo" class="minput sm2">${opts}</select><span>포켓몬</span><select id="atPk" class="minput sm2">${CH.map(c=>`<option value="${c.k}">${c.nm}</option>`).join('')}</select></div>
-    <div class="arow"><span>트로피</span><input id="atN" class="minput sm2" type="number" value="0"><button class="btn sm" id="atGo">지급</button><span id="atRes" style="font-size:11px"></span></div></div>
+  <div class="amail"><b>트로피 지급 · 차감 (다음 접속/저장 때 반영)</b>
+    <div class="arow"><select id="atMode" class="minput sm2"><option value="give">지급</option><option value="take">차감</option></select><span>받는 사람</span><select id="atTo" class="minput sm2">${opts}</select><span>포켓몬</span><select id="atPk" class="minput sm2"><option value="__all">모든 포켓몬</option>${CH.map(c=>`<option value="${c.k}">${c.nm}</option>`).join('')}</select></div>
+    <div class="arow"><span>트로피</span><input id="atN" class="minput sm2" type="number" min="0" value="0"><label id="atAllW" style="display:none"><input type="checkbox" id="atAll"> 전부 (0으로)</label><button class="btn sm" id="atGo">지급</button><span id="atRes" style="font-size:11px"></span></div></div>
   <div class="amail"><b>재화·포켓몬 지급 (우편으로 보내져요)</b>
     <div class="arow"><span>받는 사람</span><select id="amTo" class="minput sm2">${opts}</select></div>
     <div class="arow"><span><img class="ico" src="${ICO.coin}"> 금구슬</span><input id="amC" class="minput sm2" type="number" min="0" value="0"><span><img class="ico" src="${ICO.gemc}"> 혜성조각</span><input id="amG" class="minput sm2" type="number" min="0" value="0"></div>
@@ -2793,13 +2793,16 @@ async function adminPanel(target){
     <div class="arow"><button class="btn sm" id="amSend">보내기</button><span id="amRes" style="font-size:11px"></span></div></div>
   <table class="adt"><tr><th>아이디</th><th>트로피</th><th>금구슬</th><th>혜성조각</th><th>관리</th></tr>${rows}</table>
   <div style="font-size:11px;opacity:.7;margin-top:6px">삭제는 두 번 눌러야 실행돼요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);
-  $('#atGo').onclick=async()=>{const to=$('#atTo').value,k=$('#atPk').value,n=parseInt($('#atN').value)||0;
+  const atSync=()=>{const tk=$('#atMode').value==='take';$('#atAllW').style.display=tk?'':'none';$('#atGo').textContent=tk?'차감':'지급';$('#atGo').style.background=tk?'#dc2626':'';$('#atGo').style.color=tk?'#fff':'';};
+  $('#atMode').onchange=atSync;$('#atPk').value=CH[0].k;
+  $('#atGo').onclick=async()=>{const to=$('#atTo').value,k=$('#atPk').value,take=$('#atMode').value==='take',all=take&&$('#atAll').checked,m=Math.abs(parseInt($('#atN').value)||0),n=all?-100000:take?-m:m;
     if(!n){$('#atRes').textContent='트로피 수를 입력해 주세요';return;}
+    if(take&&!$('#atGo').dataset.ok2){$('#atGo').dataset.ok2=1;$('#atGo').textContent='정말 차감?';return;}
     if(to==='*'&&!$('#atGo').dataset.ok){$('#atGo').dataset.ok=1;$('#atGo').textContent='전체에게? 한 번 더';return;}
     $('#atGo').disabled=true;$('#atRes').textContent='처리 중...';
-    try{const q=await rpc('pb_admin_tro',{p_token:ACC.token,p_target:to,p_pk:k,p_amt:n});$('#atRes').textContent=q.ok?`${q.n}명에게 ${chOf(k).nm} 트로피 ${n>0?'+':''}${n}`:({no_user:'없는 아이디예요',bad_amount:'수치를 확인해 주세요'}[q.err]||'실패했어요');
+    try{const q=await rpc('pb_admin_tro',{p_token:ACC.token,p_target:to,p_pk:k,p_amt:n});$('#atRes').textContent=q.ok?`${q.n}명 · ${k==='__all'?'모든 포켓몬':chOf(k).nm} 트로피 ${all?'전부 차감':(n>0?'+':'')+n}`:({no_user:'없는 아이디예요',bad_amount:'수치를 확인해 주세요'}[q.err]||'실패했어요');
       if(q.ok&&(to===ACC.user||to==='*'))serverSave();}catch(e){$('#atRes').textContent='연결 실패';}
-    $('#atGo').disabled=false;$('#atGo').textContent='지급';delete $('#atGo').dataset.ok;};
+    $('#atGo').disabled=false;delete $('#atGo').dataset.ok;delete $('#atGo').dataset.ok2;atSync();};
   $('#amSend').onclick=async()=>{
     const to=$('#amTo').value,c=Math.max(0,parseInt($('#amC').value)||0),g=Math.max(0,parseInt($('#amG').value)||0),msg=$('#amMsg').value.trim();
     const pks=[...document.querySelectorAll('#amPk input:checked')].map(i=>i.value);
