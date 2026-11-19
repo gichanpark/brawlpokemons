@@ -491,7 +491,7 @@ const CH=[
  {k:'zygarde',id:718,nm:'지가르데',fnm:'10%폼',role:'성장형 · 빠른 근접',el:'dragon',gr:'l',col:'#84cc16',hp:3600,spd:1.25,rl:1.0,charge:2000,
   atk:{nm:'사우전드애로우',ds:'초록 화살 3발 · 폼이 오를수록 화살 수·피해·사거리 증가',ty:'shot',fx:'blade',count:3,spread:.3,range:5,speed:16,dmg:260,r:10,col:'#a3e635'},
   sup:{nm:'사우전드웨이브',ds:'땅을 타고 퍼지는 관통 파동 · 쓸 때마다 스웜체인지로 강해짐',ty:'shot',fx:'wave',range:6,speed:12,dmg:800,r:30,pierce:1,kb:1,col:'#84cc16'}},
- {k:'necrozma',id:800,nm:'네크로즈마',fnm:'기본',role:'변신형 · 레이저',el:'psychic',gr:'l',col:'#a78bfa',hp:4400,spd:1.0,rl:1.25,charge:4600,
+ {k:'necrozma',id:800,nm:'네크로즈마',fnm:'기본',role:'변신형 · 레이저',el:'psychic',gr:'l',col:'#a78bfa',hp:4400,spd:1.0,rl:1.25,charge:7600,
   atk:{nm:'프리즘레이저',ds:'서로 다른 각도로 휘어 날아가 끝에서 모이는 레이저 3발 · 왼쪽은 태양(주황) 게이지, 오른쪽은 달(하늘색) 게이지 충전',ty:'shot',fx:'prism',nani:1.4,count:3,range:7.5,speed:15,dmg:480,r:10,col:'#c4b5fd'},
   sup:{nm:'포톤가이저',ds:'주변에 빛의 기둥 폭발 · 태양 게이지가 높으면 황혼의갈기, 달 게이지가 높으면 새벽의날개로 합체',ty:'nova',boom:'psy',aoe:2.8,dmg:1400,col:'#e9d5ff'}},
  {k:'meowscarada',id:908,nm:'마스카나',role:'암살 · 기습',el:'grass',gr:'s',col:'#4ade80',hp:3300,spd:1.22,rl:1.2,charge:2600,
@@ -1079,7 +1079,7 @@ function shatter(p,wall){const base=Math.atan2(p.vy,p.vx)+(wall?Math.PI:0),sh={t
   const x=p.x-(wall?p.vx*.03:0),y=p.y-(wall?p.vy*.03:0);const shs=shardSpec(p.s);
   for(let j=-1;j<=1;j++){const a=base+j*.6;G.projs.push({x,y,vx:Math.cos(a)*sh.speed*T,vy:Math.sin(a)*sh.speed*T,tr:0,maxD:sh.range*T,r:sh.r,o:p.o,team:p.team,s:shs,sup:p.sup,hit:new Set(p.hit),chain:0,rot:0});}
   spark(p.x,p.y,['#a8a29e','#57534e'],8,150,.4,6,{g:500});}
-const NZG=9;
+const NZG=13;
 function pMove(p,ds){const v=Math.hypot(p.vx,p.vy)||1,ux=p.vx/v,uy=p.vy/v;p.bx+=ux*ds;p.by+=uy*ds;p.tr+=ds;const o=p.cv*Math.sin(Math.PI*Math.min(1,p.tr/p.maxD));p.x=p.bx-uy*o;p.y=p.by+ux*o;}
 function nzGain(o,gk){if(!o||o.ch.k!=='necrozma'||o.ch.ditto||o.form)return;if((o.sun||0)+(o.moon||0)>=NZG)return;const k=gk===1?'sun':'moon';o[k]=(o[k]||0)+1;if(o===P&&o.sun+o.moon>=NZG)addText(o.x,o.y-100,(o.sun>o.moon?'태양':o.moon>o.sun?'달':'태양=달')+' 게이지 완성!',o.sun>=o.moon?'#fdba74':'#7dd3fc');}
 function updProjs(dt){
@@ -2275,9 +2275,9 @@ const DMF=(()=>{const b=CH.find(c=>c.k==='darmanitan');return [b,Object.assign({
   sup:{nm:'대문자',ds:'명상으로 모은 불꽃 4개가 쏟아짐 · 화상',ty:'meteor',boom:'dai',el:'fire',range:8,n:4,area:1.8,dmg:950,aoe:1.4,fl:.8,col:'#60a5fa',burn:{dps:200,t:2}}})];})();
 const NZF=(()=>{const b=CH.find(c=>c.k==='necrozma');const ub={nm:'하늘을태우는멸망의빛',ds:'한 줄로 뻗어 모든 적을 관통하는 거대한 광선',ty:'shot',fx:'ultra',el:'dragon',range:11,speed:24,dmg:2200,r:26,pierce:1,kb:1.2,col:'#fde047'};
  const bu=Object.assign({},ub,{nm:'울트라버스트',ds:'울트라네크로즈마로 변신하며 한 줄 관통 광선 발사 · 이후 탄환 최대 5개'});return [b,
-  Object.assign({},b,{nm:'황혼의갈기 네크로즈마',fnm:'황혼의갈기',role:'변신형 · 탱커',el:'steel',hp:5800,spd:.95,charge:3900,col:'#f59e0b',form:1,
+  Object.assign({},b,{nm:'황혼의갈기 네크로즈마',fnm:'황혼의갈기',role:'변신형 · 탱커',el:'steel',hp:5800,spd:.95,charge:6800,col:'#f59e0b',form:1,
     atk:{nm:'메테오드라이브',ds:'휘어 날아가 끝에서 모이는 태양의 레이저 5발 · 넓고 강함',ty:'shot',fx:'prism',el:'steel',nani:1.7,count:5,range:6.5,speed:15,dmg:380,r:11,col:'#fbbf24'},sup:bu}),
-  Object.assign({},b,{nm:'새벽의날개 네크로즈마',fnm:'새벽의날개',role:'변신형 · 저격',el:'ghost',hp:4400,spd:1.1,charge:3900,col:'#818cf8',form:2,
+  Object.assign({},b,{nm:'새벽의날개 네크로즈마',fnm:'새벽의날개',role:'변신형 · 저격',el:'ghost',hp:4400,spd:1.1,charge:6800,col:'#818cf8',form:2,
     atk:{nm:'섀도레이',ds:'휘어 날아가 끝에서 모이는 달의 레이저 5발 · 긴 사거리',ty:'shot',fx:'prism',el:'ghost',nani:1.2,count:5,range:9.5,speed:17,dmg:340,r:10,col:'#818cf8'},sup:Object.assign({},bu)}),
   Object.assign({},b,{nm:'울트라네크로즈마',fnm:'울트라',role:'변신형 · 최종',el:'dragon',hp:5400,spd:1.15,rl:1.3,amax:5,charge:3700,col:'#fde047',form:3,
     atk:Object.assign({},ub,{ds:'한 줄로 뻗어 적을 모두 관통하는 강한 레이저 · 탄환 최대 5개',range:9.5,speed:26,dmg:720,r:15,kb:.3}),
