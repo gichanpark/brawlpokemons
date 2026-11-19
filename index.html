@@ -947,7 +947,8 @@ function aoeHit(src,x,y,rad,dmg,s,sup){
     if(m.g[i]===4&&Math.hypot((tx+.5)*T-x,(ty+.5)*T-y)<rad+T*.4)hitBox(i,dmg,sup?null:src);}
 }
 function kdCount(src,e){if(!e||e.dummy||e.safe)return;e.deaths=(e.deaths||0)+1;if(src&&src!==e&&src.team!==e.team)src.kills=(src.kills||0)+1;}
-function feedOf(src,e){const o=x=>x?{k:x.ch.k,n:x===P?(SAVE.nick||'나'):(x.name||x.ch.nm),t:x.team,me:x===P}:null;return {a:o(src),b:o(e),t:3.5,mine:e===P||src===P};}
+const PIC={};function porImg(k,fo){const key=k+'|'+(fo||0);let im=PIC[key];if(!im){im=new Image();im.onload=()=>{im.ok=1};im.src=k==='trio'?POR.trio:(FORMS[k]&&fo?formPor(k,fo):POR[chOf(k).id]);PIC[key]=im;}return im;}
+function feedOf(src,e){const o=x=>x?{k:x.ch.k,fo:x.ch.ditto?0:(x.form||0),n:x===P?(SAVE.nick||'나'):(x.name||x.ch.nm),t:x.team,me:x===P}:null;return {a:o(src),b:o(e),t:3.5,mine:e===P||src===P};}
 function kill(e,src){
   if(e.safe){e.alive=false;e.hp=0;sfx('bigboom',e.x,e.y);G.shake=.5;G.slowT=.6;parts(e.x,e.y,50,'#9ca3af',320,1,7);parts(e.x,e.y,30,'#fde047',260,.8,5);ring(e.x,e.y,120,'#fff');
     const fs=(e.team===P.team?'우리':'상대')+' 금고 파괴!';G.feed.push({s:fs,t:3.5,mine:true});addText(e.x,e.y-80,'금고 파괴!','#fde047',1);endMatch('heist',e.team===P.team?'lose':'win');return;}
@@ -2041,8 +2042,8 @@ function drawHUD(){
     const col=o=>!o?'#d6d3d1':o.me?'#67e8f9':G.mode==='sd'?'#fff':o.t===P.team?'#93c5fd':'#fca5a5';
     const wb=Math.ceil(MAIN.measureText(f.b.n).width),wa=f.a?Math.ceil(MAIN.measureText(f.a.n).width):Math.ceil(MAIN.measureText('독가스').width);
     const total=22+4+wa+10+16+10+22+4+wb+12;let x=W-12-total;pbox(x,y-16,total,24,f.mine?'rgba(80,60,10,.85)':'rgba(20,14,40,.78)');x+=6;
-    if(f.a)IMQ.push([IMG[f.a.k],x+11,y-4,20,al]);else IMQ.push(['skull',x+11,y-4,20,al]);x+=26;tx(f.a?f.a.n:'독가스',x,y,11,col(f.a),'left',al);x+=wa+10;
-    tx('▶',x+8,y,11,'#fde047','center',al);x+=26;IMQ.push([IMG[f.b.k],x+11,y-4,20,al]);x+=26;tx(f.b.n,x,y,11,col(f.b),'left',al);});
+    if(f.a)IMQ.push([porImg(f.a.k,f.a.fo),x+11,y-4,20,al]);else IMQ.push(['skull',x+11,y-4,20,al]);x+=26;tx(f.a?f.a.n:'독가스',x,y,11,col(f.a),'left',al);x+=wa+10;
+    tx('▶',x+8,y,11,'#fde047','center',al);x+=26;IMQ.push([porImg(f.b.k,f.b.fo),x+11,y-4,20,al]);x+=26;tx(f.b.n,x,y,11,col(f.b),'left',al);});
   if(!P.alive&&(TM()||G.mode==='train')&&G.mode!=='ko'&&!G.over)tx('부활까지 '+Math.ceil(P.respawn)+'초',W/2,H/2-60,22,'#fff');
   if(G.intro>0){tx(G.mode==='ko'?'라운드 '+G.ko.round:MODES[G.mode].nm,W/2,H/2-110,22,'#fff');tx(String(Math.ceil(G.intro)),W/2,H/2-30,88,'#fde047');}
   else if(G.t<1)tx('시작!',W/2,H/2-40,44,'#fde047','center',1-G.t);
