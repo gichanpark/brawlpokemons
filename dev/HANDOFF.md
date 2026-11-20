@@ -49,6 +49,7 @@ JS 문법 검사: index.html 의 `<script>` 들을 뽑아 `node --check`.
 - 특수 캐릭터: 스티브(채굴·제작대·핫바 UI `drawSteveUI`), 기라티나(그림자·섀도다이브), 버드렉스(`calyMount`, `CXF`), 아르세우스(`nobleN`), 러브로스(헤롱헤롱 `loveT`).
 
 ## 5. Supabase
+- pb_notice.hidden=true 면 공지 목록에서 숨김
 - 테이블: pb_stock_co(주식 종목·뉴스 문구), pb_stock_px(1분 틱 시세, 5일 보관), pb_users, pb_mail(+bc_id, until), pb_mail_bc(전체 배포 기간), pb_notice(+img), pb_notice_cmt, pb_friend, pb_invite, pb_duel, pb_secret
 - 함수: pb_stock(p_n) — 호출 시 밀린 1분 틱을 서버에서 생성(랜덤워크+평균회귀+뉴스 — 뉴스는 그 틱에 뜨고 효과는 pb_stock_co.pend/pend_n 으로 다음 4분에 나눠 반영) 후 최근 시세 반환, pb_signup/login/session/me/save/ping/logout, pb_mail_list/claim/claim_all, pb_admin_* (mail[p_days 수령기간], notice, code, tro, take, ban, act, list), pb_notice_*, pb_friend_*, pb_invite*, pb_duel_*, pb_rank, pb_profile, pb_code_check, pb_tot
 - 클라이언트는 anon 키로 RPC만 호출 (모든 함수 security definer, 토큰 검사).
@@ -72,3 +73,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - 그림(이펙트·아이콘·배너)은 모두 도트(픽셀) 느낌으로.
 - 답변은 항상 한국어로.
 - **현재 슬롯머신·포켓증권은 숨김 상태** (`const SHOW_GAMBLE=false`). 사용자가 다시 추가하라고 하면 true로 바꾸면 됨 (공매도 반대매매 백그라운드 검사도 같이 멈춰 있음).
+- v1.15.0 공지(pb_notice id 17)는 hidden=true 로 숨김. 슬롯·주식 다시 켤 때 같이 false 로.
