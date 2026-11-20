@@ -452,7 +452,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.14.0';
+const VER='1.14.1';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -3518,6 +3518,7 @@ function reflectTick(){for(const e of G.ents){if(!(e.reflT>0)||!e.alive)continue
   for(let i=G.projs.length-1;i>=0;i--){const p=G.projs[i];if(p.team===e.team)continue;const x=p.lob?p.tx:p.x,y=p.lob?p.ty:p.y;
     if(Math.hypot(x-e.x,y-e.y)<2*T){G.projs.splice(i,1);spark(x,y,['#f9a8d4','#fff'],8,160,.3,4,{sh:'star'});}}}}
 function ddUp(e){e.ddN=Math.min(3,(e.ddN||0)+1);P_({ring:1,x:e.x,y:e.y,rad:70,col:'#38bdf8',t:.45});spark(e.x,e.y-40,['#38bdf8','#ef4444','#fff'],16,200,.6,5,{sh:'star'});addText(e.x,e.y-130,'용의춤! ('+e.ddN+'/3)','#7dd3fc',1);}
+function gadUse(e){e.gadN--;e.gadCd=4;e.lastAtk=G.t;sfx('gadget',e.x,e.y);}
 function useGadget(e,ang,d){
   if(!e.alive||!(e.gadN>0)||e.gadCd>0||G.intro>0||G.over)return false;
   const k=e.ch.ditto?'ditto':e.ch.k;if((e.stun>0&&k!=='lucario')||e.dash||e.leap||e.digT>0||e.shellT>0)return false;
@@ -3575,17 +3576,17 @@ function useGadget(e,ang,d){
       const all=G.items.filter(i=>i.ty==='rock'&&i.o===e);while(all.length>6){const x=all.shift();G.items.splice(G.items.indexOf(x),1);}break;}
     case 'ironbundle':bumpFz(e);e.dash={dx:ca,dy:sa,left:3.5*T,hit:new Set(),s:GSP.flip};e.ammo=Math.min(e.ch.amax||3,e.ammo+1);break;
     case 'ironvaliant':e.invisT=2;e.haste=Math.max(e.haste||0,2);spark(e.x,e.y-30,['#4ade80','#f9a8d4','#fff'],16,160,.5,5,{sh:'star'});break;
-    case 'glastrier':{e.ironT=Math.max(e.ironT||0,2.5);P_({ring:1,x:e.x,y:e.y,rad:60,col:'#bae6fd',t:.4});addText(e.x,e.y-120,'철벽!','#bae6fd');return true;}
-    case 'spectrier':{e.haste=Math.max(e.haste||0,2);e.inv=Math.max(e.inv,.35);spark(e.x,e.y-20,['#a78bfa','#4c1d95','#fff'],16,200,.5,5,{sh:'plus'});addText(e.x,e.y-120,'유령 질주!','#c4b5fd');return true;}
-    case 'hlil':{aoeHit(e,e.x,e.y,2.3*T,700,GSP.petal,true);spark(e.x,e.y-30,['#f9a8d4','#fbcfe8','#86efac','#fff'],30,240,.7,5,{sh:'leaf'});addText(e.x,e.y-120,'꽃보라!','#f9a8d4');return true;}
-    case 'harc':{e.haste=Math.max(e.haste||0,1.6);e.inv=Math.max(e.inv,.4);spark(e.x,e.y-20,['#f97316','#fde047','#fff'],16,200,.4,5,{sh:'plus'});addText(e.x,e.y-120,'신속!','#fdba74');return true;}
-    case 'hele':{bumpFz(e);e.dash={dx:ca,dy:sa,left:4*T,hit:new Set(),s:GSP.eroll};addText(e.x,e.y-120,'구르기!','#fde047');return true;}
-    case 'hava':{e.ironT=Math.max(e.ironT||0,3);P_({ring:1,x:e.x,y:e.y,rad:60,col:'#bae6fd',t:.4});addText(e.x,e.y-120,'철벽!','#bae6fd');return true;}
-    case 'arceus':{heal(e,e.maxHp*.3);spark(e.x,e.y-30,['#fde68a','#fff'],16,150,.6,5,{sh:'plus'});addText(e.x,e.y-120,'HP회복!','#86efac');return true;}
+    case 'glastrier':{e.ironT=Math.max(e.ironT||0,2.5);P_({ring:1,x:e.x,y:e.y,rad:60,col:'#bae6fd',t:.4});addText(e.x,e.y-120,'철벽!','#bae6fd');gadUse(e);return true;}
+    case 'spectrier':{e.haste=Math.max(e.haste||0,2);e.inv=Math.max(e.inv,.35);spark(e.x,e.y-20,['#a78bfa','#4c1d95','#fff'],16,200,.5,5,{sh:'plus'});addText(e.x,e.y-120,'유령 질주!','#c4b5fd');gadUse(e);return true;}
+    case 'hlil':{aoeHit(e,e.x,e.y,2.3*T,700,GSP.petal,true);spark(e.x,e.y-30,['#f9a8d4','#fbcfe8','#86efac','#fff'],30,240,.7,5,{sh:'leaf'});addText(e.x,e.y-120,'꽃보라!','#f9a8d4');gadUse(e);return true;}
+    case 'harc':{e.haste=Math.max(e.haste||0,1.6);e.inv=Math.max(e.inv,.4);spark(e.x,e.y-20,['#f97316','#fde047','#fff'],16,200,.4,5,{sh:'plus'});addText(e.x,e.y-120,'신속!','#fdba74');gadUse(e);return true;}
+    case 'hele':{bumpFz(e);e.dash={dx:ca,dy:sa,left:4*T,hit:new Set(),s:GSP.eroll};addText(e.x,e.y-120,'구르기!','#fde047');gadUse(e);return true;}
+    case 'hava':{e.ironT=Math.max(e.ironT||0,3);P_({ring:1,x:e.x,y:e.y,rad:60,col:'#bae6fd',t:.4});addText(e.x,e.y-120,'철벽!','#bae6fd');gadUse(e);return true;}
+    case 'arceus':{heal(e,e.maxHp*.3);spark(e.x,e.y-30,['#fde68a','#fff'],16,150,.6,5,{sh:'plus'});addText(e.x,e.y-120,'HP회복!','#86efac');gadUse(e);return true;}
     case 'enamorus':{let t=null,bd=4.5*T;for(const o of G.ents){if(!o.alive||!enemyOf(e,o)||o.safe||!visibleTo(o,e.team))continue;const d0=dist(e,o);if(d0<bd){bd=d0;t=o;}}if(!t){if(e===P)addText(e.x,e.y-110,'가까운 적이 없어요','#fff');return false;}
-      t.loveT=Math.max(t.loveT||0,2.5);const d=Math.round(t.maxHp*.12);damage(e,t,d,true);heal(e,d);P_({sh:'bolt',pts:[[e.x,e.y-40],[t.x,t.y-40]],col:'#f472b6',w:4,t:.25,x:e.x,y:e.y,vx:0,vy:0});spark(t.x,t.y-40,['#f472b6','#fff'],14,140,.6,6,{sh:'heart'});addText(t.x,t.y-110,'천사의키스! 헤롱헤롱!','#f9a8d4',1);return true;}
+      t.loveT=Math.max(t.loveT||0,2.5);const d=Math.round(t.maxHp*.12);damage(e,t,d,true);heal(e,d);P_({sh:'bolt',pts:[[e.x,e.y-40],[t.x,t.y-40]],col:'#f472b6',w:4,t:.25,x:e.x,y:e.y,vx:0,vy:0});spark(t.x,t.y-40,['#f472b6','#fff'],14,140,.6,6,{sh:'heart'});addText(t.x,t.y-110,'천사의키스! 헤롱헤롱!','#f9a8d4',1);gadUse(e);return true;}
     case 'steve':{mineOre(e);e.gadCd=3;return true;}
-    case 'giratina':{e.inv=Math.max(e.inv,1.2);e.haste=Math.max(e.haste||0,1.2);P_({ring:1,x:e.x,y:e.y,rad:60,col:'#3b0764',t:.4});spark(e.x,e.y-20,['#1e0533','#7e22ce','#a855f7'],18,150,.6,5,{g:-100});addText(e.x,e.y-120,'그림자 숨기!','#d8b4fe');return true;}
+    case 'giratina':{e.inv=Math.max(e.inv,1.2);e.haste=Math.max(e.haste||0,1.2);P_({ring:1,x:e.x,y:e.y,rad:60,col:'#3b0764',t:.4});spark(e.x,e.y-20,['#1e0533','#7e22ce','#a855f7'],18,150,.6,5,{g:-100});addText(e.x,e.y-120,'그림자 숨기!','#d8b4fe');gadUse(e);return true;}
     case 'trio':case 'lati':{if(e.ch.ditto)break;const m=trioNext(e);if(m<0){if(e===P)addText(e.x,e.y-110,'교대할 포켓몬이 없어요','#fff');return false;}trioSet(e,m,true);e.gadCd=2.5;return true;}
     case 'necrozma':{if(e.form||e.ch.ditto){if(e===P)addText(e.x,e.y-110,'합체 후에는 못 바꿔요','#fff');return false;}e.nzMode=e.nzMode===2?1:2;const sun=e.nzMode===1;spark(e.x,e.y-30,sun?['#fb923c','#fde68a','#fff']:['#38bdf8','#bae6fd','#fff'],16,150,.5,5,{sh:'star'});P_({ring:1,x:e.x,y:e.y,rad:60,col:sun?'#fb923c':'#38bdf8',t:.4});addText(e.x,e.y-118,sun?'태양 모드':'달 모드',sun?'#fdba74':'#7dd3fc',1);sfx('form',e.x,e.y);e.gadCd=.6;return true;}
     case 'sylveon':{let n=0;for(const o of G.ents)if(o.alive&&o.team!==e.team&&Math.hypot(o.x-e.x,o.y-e.y)<4*T){o.weakT=3;n++;spark(o.x,o.y-40,['#f9a8d4','#fff'],6,80,.5,4,{sh:'star'});}break;}
