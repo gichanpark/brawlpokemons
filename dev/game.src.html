@@ -349,6 +349,22 @@ select.minput{width:auto}
 .apk input:checked+.apk-c{background:#3b2d63;border-color:#fde047;border-bottom-color:var(--gc)}.apk input:checked+.apk-c i{display:block}
 .apk-gr{display:flex;gap:4px}.apk-gr button{font-family:inherit;font-size:11px;color:#fff;background:#2a2140;border:2px solid #111;padding:3px 7px;cursor:pointer}.apk-gr button.on{background:#fde047;color:#111}
 .tkpk{display:flex;flex-wrap:wrap;gap:4px;max-width:520px}.tkp{display:flex;align-items:center;gap:3px;background:#1c1530;border:2px solid #111;padding:2px 5px;cursor:pointer}.tkp img{width:22px;height:22px;image-rendering:pixelated}.tkp input:checked+img{outline:2px solid #dc2626}
+.px{image-rendering:pixelated}
+.slot{background:#7f1d1d;border:4px solid #111;box-shadow:inset 0 4px 0 #b91c1c,inset 0 -6px 0 #450a0a,0 6px 0 #111;padding:10px 14px 12px;display:flex;align-items:center;gap:14px;max-width:96%}
+.sl-l,.sl-r{display:flex;flex-direction:column;align-items:center;gap:7px}.sl-r{width:270px}
+.slot.jack{animation:sljack .12s steps(2) 10}@keyframes sljack{50%{box-shadow:inset 0 4px 0 #fde047,inset 0 -6px 0 #a16207,0 6px 0 #111;background:#a16207}}
+.sl-top{font-size:20px;color:#fde047;text-shadow:3px 3px 0 #111;letter-spacing:2px}
+.sl-win{position:relative;display:flex;gap:6px;background:#111;padding:6px;border:3px solid #fde047}
+.sl-line{position:absolute;left:0;right:0;top:50%;height:4px;margin-top:-2px;background:#fde047;opacity:.55;z-index:1;pointer-events:none}
+.sl-reel{width:70px;height:156px;background:#fef3c7;border:3px solid #111;box-shadow:inset 0 8px 0 rgba(0,0,0,.18),inset 0 -8px 0 rgba(0,0,0,.18);display:flex;flex-direction:column;align-items:center;justify-content:space-between;overflow:hidden;padding:2px 0}
+.sl-reel>div{height:48px;display:flex;align-items:center;justify-content:center;opacity:.45}.sl-reel>div.mid{opacity:1}
+.sl-reel img{max-width:58px;max-height:46px;image-rendering:pixelated}
+.sl-reel.sh>div{transform:translateY(6px)}.sl-reel.land{animation:slland .18s steps(3)}@keyframes slland{0%{transform:translateY(-8px)}100%{transform:none}}
+.sl-msg{font-size:13px;min-height:18px;text-align:center;color:#fff}.sl-msg.big{color:#fde047;font-size:16px;text-shadow:2px 2px 0 #111}.sl-msg.win{color:#fde047}.sl-msg.even{color:#bae6fd}.sl-msg.lose{color:#d6d3d1}
+.sl-pay{font-size:11px;line-height:1.7;text-align:center;background:#450a0a;border:2px solid #111;padding:4px 8px}.sl-pay img{height:16px;vertical-align:middle;image-rendering:pixelated;margin-right:2px}.sl-pay b{color:#fde047;font-weight:400}
+.sl-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center}.sl-have{font-size:11px}.sl-have .ico{height:14px}
+.sl-cur,.sl-bet{font-family:inherit;font-size:11px;color:#fff;background:#1c1530;border:2px solid #111;box-shadow:inset 0 2px 0 #3b2d63;padding:4px 8px;cursor:pointer;display:flex;align-items:center;gap:4px}.sl-cur img{height:14px}
+.sl-cur.on,.sl-bet.on{background:#facc15;color:#111;box-shadow:inset 0 2px 0 #fef08a}.sl-bet:disabled{opacity:.35;cursor:default}
 </style>
 </head>
 <body>
@@ -455,7 +471,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.14.4';
+const VER='1.14.5';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -3704,6 +3720,7 @@ const SHOP=[
  {id:'master',sec:'box',nm:'마스터볼 상자',ds:'보상 14개 · 칸마다 새 포켓몬 7%',cost:90,cur:'gem',ball:'master-ball'},
  {id:'c1',sec:'coin',nm:'금구슬 꾸러미',ds:'금구슬 150개',cost:10,cur:'gem',give:{coin:150}},
  {id:'c2',sec:'coin',nm:'금구슬 상자',ds:'금구슬 900개',cost:50,cur:'gem',give:{coin:900}},
+ {id:'slot',sec:'game',nm:'슬롯머신',ds:'금구슬이나 혜성조각을 걸고 돌려요',cost:0,cur:'slot'},
 ];
 function randPow(n){const out=[];for(let i=0;i<n;i++){const can=CH.filter(c=>ownP(c.k)&&lv(c.k)<11);if(!can.length)break;const c=pick(can);SAVE.lv[c.k]=lv(c.k)+1;out.push(c);}return out;}
 const BOXT={poke:{n:4,c:[.35,20,40],g:[.15,1,2],k:.03},great:{n:7,c:[.3,30,60],g:[.15,2,3],k:.05},
@@ -3721,23 +3738,73 @@ function openBox(id){
   }
   SAVE.coins+=R.coin;SAVE.gems=(SAVE.gems||0)+R.gem;return R;
 }
-const SEC={today:'스카우트 · 오늘의 선물',box:'볼 상자',coin:'금구슬 교환'};
+const SEC={today:'스카우트 · 오늘의 선물',box:'볼 상자',coin:'금구슬 교환',game:'미니게임'};
 function renderShop(){
   const done=SAVE.daily===today();
   $('#shCoin').textContent=SAVE.coins;$('#shGem').textContent=SAVE.gems||0;
   $('#shBody').innerHTML=Object.entries(SEC).map(([k,t])=>`<div class="shsec"><h3>${t}</h3><div class="shrow">`+SHOP.filter(it=>it.sec===k).map(it=>{
-    const can=it.cur==='free'?!done:it.cur==='coin'?SAVE.coins>=it.cost:(SAVE.gems||0)>=it.cost;
-    const price=it.cur==='free'?(done?'내일 다시':'무료'):`${it.cur==='coin'?cIco:gIco} ${it.cost}`;
-    const pic=it.give?`<img class="sbig" src="${ICO.coin}">`:`<img class="sbig" src="${BALL[it.ball]}">`;
+    const can=it.cur==='slot'?true:it.cur==='free'?!done:it.cur==='coin'?SAVE.coins>=it.cost:(SAVE.gems||0)>=it.cost;
+    const price=it.cur==='slot'?'플레이':it.cur==='free'?(done?'내일 다시':'무료'):`${it.cur==='coin'?cIco:gIco} ${it.cost}`;
+    const pic=it.cur==='slot'?`<img class="sbig px" src="${SLOTI.icon}">`:it.give?`<img class="sbig" src="${ICO.coin}">`:`<img class="sbig" src="${BALL[it.ball]}">`;
     return `<div class="sitem${can?'':' off'}" data-id="${it.id}">${pic}<b>${it.nm}</b><span>${it.ds}</span><div class="sprice">${price}</div></div>`;}).join('')+`</div></div>`).join('');
   document.querySelectorAll('#shBody .sitem').forEach(el=>el.onclick=()=>{
     const it=SHOP.find(x=>x.id===el.dataset.id);if(el.classList.contains('off'))return;
+    if(it.cur==='slot'){sfx('ui');slotOpen();return;}
     if(it.cur==='coin')SAVE.coins-=it.cost;else if(it.cur==='gem')SAVE.gems-=it.cost;else SAVE.daily=today();
     if(it.give){SAVE.coins+=it.give.coin;save();renderShop();sfx('cube');return;}
     if(it.id==='scout'){save();renderShop();scoutAnim();return;}
     const R=openBox(it.id);save();renderShop();boxAnim(it,R);
   });
 }
+/* ---------- 슬롯머신 ---------- */
+const SLOTI=(()=>{const mk=(rows,P)=>{const c=document.createElement('canvas');c.width=rows[0].length;c.height=rows.length;const x=c.getContext('2d');rows.forEach((r,y)=>{for(let i=0;i<r.length;i++){const ch=r[i];if(ch!=='.'){x.fillStyle=P[ch];x.fillRect(i,y,1,1);}}});return c.toDataURL();};
+  const seven=mk(['................','..kkkkkkkkkkkk..','..krrrrrrrrrrk..','..krhhhhhhhrrk..','..kkkkkkkkrrdk..','.........krrdk..','........krrdk...','.......krrdk....','......krrdk.....','......krrdk.....','.....krrdk......','.....krrdk......','.....krrdk......','.....kkkkk......','................','................'],{k:'#111',r:'#ef4444',h:'#fecaca',d:'#991b1b'});
+  const icon=mk(['................','..kkkkkkkkkkk...','..kyyyyyyyyyk...','..kykkkkkkkyk.k.','..kykwkwkwkykkyk','..kykwkwkwkyk.k.','..kykkkkkkkyk.k.','..kyyyyyyyyykkk.','..kyokkokkoyk...','..kyyyyyyyyyk...','..kddddddddddk..','..kdkkkkkkkkdk..','..kdddddddddddk.','..kkkkkkkkkkkkk.','................','................'],{k:'#111',y:'#facc15',w:'#fff',o:'#ef4444',d:'#a16207'});
+  return {seven,icon};})();
+const SLOTS=[{k:'pika',nm:'피카츄',w:28},{k:'pachi',nm:'파치리스',w:28},{k:'morpe',nm:'모르페코',w:28},{k:'seven',nm:'7',w:10},{k:'mew',nm:'뮤츠',w:6}];
+const slotImg=k=>k==='seven'?SLOTI.seven:SPR[{pika:25,pachi:417,morpe:877,mew:150}[k]];
+function slotRoll(){let x=Math.random()*100;for(const s of SLOTS){if(x<s.w)return s.k;x-=s.w;}return 'pika';}
+function slotJudge(r,bet){const c={};r.forEach(k=>c[k]=(c[k]||0)+1);const mx=Math.max(...Object.values(c));
+  if(mx===3&&r[0]==='mew')return {pay:0,tkt:1,msg:'뮤츠 3개! 전설 선택권 획득!',big:1};
+  if(mx===3&&r[0]==='seven')return {pay:bet*4,msg:'7 7 7! 4배!',big:1};
+  if(mx===3)return {pay:bet*2,msg:'같은 그림 3개! 2배!'};
+  if(mx===2)return {pay:bet,msg:'같은 그림 2개! 건 만큼 돌려받아요'};
+  return {pay:0,msg:'꽝! 건 재화를 모두 잃었어요'};}
+let SLOT={cur:'coin',bet:50};
+const SLOTB={coin:[10,50,100,500,1000],gem:[1,5,10,50,100]};
+function slotOpen(){const ov=$('#shOv');ov.classList.add('on');let spin=false;const have=()=>SLOT.cur==='coin'?SAVE.coins:(SAVE.gems||0);
+  const reelH=k=>`<img class="px" src="${slotImg(k)}">`;
+  ov.innerHTML=`<div class="slot"><div class="sl-l"><div class="sl-top">슬롯머신</div>
+    <div class="sl-win"><div class="sl-line"></div>${[0,1,2].map(i=>`<div class="sl-reel" id="slR${i}"><div>${reelH(slotRoll())}</div><div class="mid">${reelH(slotRoll())}</div><div>${reelH(slotRoll())}</div></div>`).join('')}</div>
+    </div><div class="sl-r"><div class="sl-msg" id="slMsg">그림 3개를 맞춰 보세요!</div>
+    <div class="sl-pay">같은 그림 3개 <b>2배</b> · 2개 <b>1배</b> · 없으면 <b>몰수</b><br>${reelH('seven')}3개 <b>4배</b> · ${reelH('mew')}3개 <b>전설 선택권</b></div>
+    <div class="sl-row"><button class="sl-cur" data-c="coin"><img src="${ICO.coin}">금구슬</button><button class="sl-cur" data-c="gem"><img src="${ICO.gemc}">혜성조각</button><span class="sl-have" id="slHave"></span></div>
+    <div class="sl-row" id="slBets"></div>
+    <div class="sl-row"><button class="btn sm" id="slGo">돌리기!</button><button class="btn b2 sm" id="slX">나가기</button></div></div></div>`;
+  const ui=()=>{const B=SLOTB[SLOT.cur];if(!B.includes(SLOT.bet))SLOT.bet=B[1];
+    document.querySelectorAll('.sl-cur').forEach(b=>b.classList.toggle('on',b.dataset.c===SLOT.cur));
+    $('#slHave').innerHTML=`보유 ${SLOT.cur==='coin'?cIco:gIco} ${have()}`;
+    $('#slBets').innerHTML=B.map(v=>`<button class="sl-bet${v===SLOT.bet?' on':''}" data-v="${v}" ${v>have()?'disabled':''}>${v}</button>`).join('');
+    document.querySelectorAll('.sl-bet').forEach(b=>b.onclick=()=>{if(spin)return;SLOT.bet=+b.dataset.v;sfx('ui');ui();});
+    $('#slGo').disabled=spin||SLOT.bet>have();$('#slGo').textContent=spin?'도는 중...':`${SLOT.bet} 걸고 돌리기!`;
+    $('#shCoin').textContent=SAVE.coins;$('#shGem').textContent=SAVE.gems||0;};
+  document.querySelectorAll('.sl-cur').forEach(b=>b.onclick=()=>{if(spin)return;SLOT.cur=b.dataset.c;sfx('ui');ui();});
+  $('#slX').onclick=()=>{if(spin)return;ov.classList.remove('on');ov.innerHTML='';renderShop();};
+  $('#slGo').onclick=()=>{if(spin)return;const bet=SLOT.bet,cur=SLOT.cur;if(bet>have())return;
+    if(cur==='coin')SAVE.coins-=bet;else SAVE.gems-=bet;
+    const res=[slotRoll(),slotRoll(),slotRoll()],J=slotJudge(res,bet);
+    if(J.pay){if(cur==='coin')SAVE.coins+=J.pay;else SAVE.gems=(SAVE.gems||0)+J.pay;}if(J.tkt)invAdd('sel_l',1);save();
+    spin=true;ui();$('#slMsg').textContent='두근두근...';$('#slMsg').className='sl-msg';sfx('go');
+    const R=[0,1,2].map(i=>$('#slR'+i)),stopAt=[700,1150,1600],t0=performance.now();let last=0;
+    const tick=now=>{const el=now-t0;if(now-last>65){last=now;R.forEach((r,i)=>{if(r._stop)return;const d=r.children;d[2].innerHTML=d[1].innerHTML;d[1].innerHTML=d[0].innerHTML;d[0].innerHTML=reelH(slotRoll());r.classList.toggle('sh',!r.classList.contains('sh'));});}
+      R.forEach((r,i)=>{if(!r._stop&&el>=stopAt[i]){r._stop=1;r.classList.remove('sh');r.children[1].innerHTML=reelH(res[i]);r.children[0].innerHTML=reelH(slotRoll());r.children[2].innerHTML=reelH(slotRoll());r.classList.add('land');sfx('count');}});
+      if(el<stopAt[2]+60){requestAnimationFrame(tick);return;}
+      R.forEach(r=>{r._stop=0;r.classList.remove('land');});spin=false;
+      const m=$('#slMsg');m.textContent=J.msg+(J.pay?` (+${J.pay} ${cur==='coin'?'금구슬':'혜성조각'})`:'');m.className='sl-msg '+(J.big?'big':J.pay>bet?'win':J.pay?'even':'lose');
+      sfx(J.big?'win':J.pay>bet?'gem':J.pay?'ui':'hurt');if(J.big)$('.slot').classList.add('jack'),setTimeout(()=>{const s=$('.slot');if(s)s.classList.remove('jack');},1500);
+      if(J.tkt){invBadge();setTimeout(()=>toast('전설 선택권이 가방에 들어갔어요!'),400);}ui();};
+    requestAnimationFrame(tick);};
+  ui();}
 function openShop(){closeModal();renderShop();showScr('shop');}
 function boxAnim(it,R){
   const ov=$('#shOv');ov.classList.add('on');
