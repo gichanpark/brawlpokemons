@@ -332,6 +332,9 @@ select.minput{width:auto}
 .ghd{grid-column:1/-1;font-size:12px;padding:6px 4px 2px;border-bottom:3px solid var(--gc,#a1a1aa);display:flex;justify-content:space-between;align-items:baseline}.ghd b{color:var(--gc,#fff)}.ghd i{font-style:normal;font-size:10px;opacity:.75}
 .grid{grid-template-columns:repeat(3,minmax(0,1fr));flex:1.05;overflow-y:auto;min-height:0;padding:0 4px 6px 0;touch-action:none;gap:6px;scrollbar-width:thin;scrollbar-color:#facc15 #1c1530}
 .detail{overflow-y:auto;min-height:0;touch-action:none;scrollbar-width:thin;scrollbar-color:#facc15 #1c1530}
+.sbw{display:flex;gap:4px;min-height:0;min-width:0}.gcol .sbw{flex:1}.selwrap>.sbw{flex:1}.sbw>.grid,.sbw>.detail{flex:1;min-width:0;scrollbar-width:none}.sbw>.grid::-webkit-scrollbar,.sbw>.detail::-webkit-scrollbar{display:none}
+.sbar{position:relative;width:16px;flex:none;background:#1c1530;border:2px solid #111;box-shadow:inset 2px 0 0 #2a2048;cursor:pointer;touch-action:none}
+.sbar.off{visibility:hidden}.sth{position:absolute;left:0;right:0;top:0;min-height:24px;background:#facc15;border-bottom:3px solid #a16207;box-shadow:inset 3px 0 0 #fde68a,inset 0 3px 0 #fef3c7;outline:2px solid #111;cursor:grab}.sbar.on .sth{background:#fde047;cursor:grabbing}
 .grid .card{padding:6px 4px 4px}
 .grid .card img.por{width:54px;height:54px;margin:12px 0 2px}
 .grid .card .n{font-size:11px}
@@ -452,7 +455,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.14.3';
+const VER='1.14.4';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -913,6 +916,23 @@ function dragScroll(el){let st=null;
   const end=()=>{if(st&&st.moved)el._drag=Date.now();st=null;};el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
   el.addEventListener('click',e=>{if(el._drag&&Date.now()-el._drag<120){e.stopPropagation();e.preventDefault();}},true);}
 dragScroll($('#grid'));dragScroll($('#detail'));$('#grid')._ds=1;$('#detail')._ds=1;
+/* 오른쪽 스크롤 바 (눌러서 끌기) */
+function scrollBar(el){const w=document.createElement('div');w.className='sbw';el.parentElement.insertBefore(w,el);w.appendChild(el);
+  const tr=document.createElement('div');tr.className='sbar';const th=document.createElement('div');th.className='sth';tr.appendChild(th);w.appendChild(tr);tr._ds=1;th._ds=1;
+  let th_h=24,st=null;
+  const upd=()=>{const ch=el.clientHeight,sh=el.scrollHeight,H=tr.clientHeight;if(sh<=ch+2||H<10){tr.classList.add('off');return;}tr.classList.remove('off');
+    th_h=Math.max(24,Math.round(H*ch/sh));const k=el.scrollTop/(sh-ch);th.style.height=th_h+'px';th.style.top=Math.round((H-th_h)*k)+'px';};
+  const ratio=()=>(el.scrollHeight-el.clientHeight)/Math.max(1,tr.clientHeight-th_h);
+  tr.addEventListener('pointerdown',e=>{e.stopPropagation();e.preventDefault();const p=pt(e);
+    if(e.target!==th){const r=tr.getBoundingClientRect(),top=ROT?innerWidth-r.right:r.top;el.scrollTop=(p.y-top-th_h/2)*ratio();upd();}
+    st={y:p.y,top:el.scrollTop,id:e.pointerId};tr.classList.add('on');try{tr.setPointerCapture(e.pointerId);}catch(_){}});
+  tr.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;e.stopPropagation();const p=pt(e);el.scrollTop=st.top+(p.y-st.y)*ratio();upd();});
+  const end=e=>{if(st){st=null;tr.classList.remove('on');}};tr.addEventListener('pointerup',end);tr.addEventListener('pointercancel',end);
+  tr.addEventListener('click',e=>{e.stopPropagation();});
+  el.addEventListener('scroll',upd,{passive:true});addEventListener('resize',()=>setTimeout(upd,50));
+  try{new ResizeObserver(upd).observe(el);new MutationObserver(()=>requestAnimationFrame(upd)).observe(el,{childList:true,subtree:true});}catch(_){}
+  el._sbUpd=upd;return upd;}
+scrollBar($('#grid'));scrollBar($('#detail'));
 /* 폰: 모달·목록 터치 스크롤 (body가 touch-action:none 이라 직접 처리) */
 {let S=null,dragAt=0;
  const chainOf=t=>{const L=[];for(let e=t;e&&e!==document.body&&e!==document.documentElement;e=e.parentElement){if(e._ds)return null;const cs=getComputedStyle(e);if((cs.overflowY==='auto'||cs.overflowY==='scroll')&&e.scrollHeight>e.clientHeight+2){if(!ROT&&cs.touchAction.includes('pan-y'))return L.length?L:null;L.push(e);}}return L;};
