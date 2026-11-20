@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.13.1** (소스의 `const VER='...'`)
+- 현재 버전: **v1.15.0** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -49,8 +49,8 @@ JS 문법 검사: index.html 의 `<script>` 들을 뽑아 `node --check`.
 - 특수 캐릭터: 스티브(채굴·제작대·핫바 UI `drawSteveUI`), 기라티나(그림자·섀도다이브), 버드렉스(`calyMount`, `CXF`), 아르세우스(`nobleN`), 러브로스(헤롱헤롱 `loveT`).
 
 ## 5. Supabase
-- 테이블: pb_users, pb_mail(+bc_id, until), pb_mail_bc(전체 배포 기간), pb_notice(+img), pb_notice_cmt, pb_friend, pb_invite, pb_duel, pb_secret
-- 함수: pb_signup/login/session/me/save/ping/logout, pb_mail_list/claim/claim_all, pb_admin_* (mail[p_days 수령기간], notice, code, tro, take, ban, act, list), pb_notice_*, pb_friend_*, pb_invite*, pb_duel_*, pb_rank, pb_profile, pb_code_check, pb_tot
+- 테이블: pb_stock_co(주식 종목·뉴스 문구), pb_stock_px(3분 틱 시세), pb_users, pb_mail(+bc_id, until), pb_mail_bc(전체 배포 기간), pb_notice(+img), pb_notice_cmt, pb_friend, pb_invite, pb_duel, pb_secret
+- 함수: pb_stock(p_n) — 호출 시 밀린 3분 틱을 서버에서 생성(랜덤워크+평균회귀+뉴스) 후 최근 시세 반환, pb_signup/login/session/me/save/ping/logout, pb_mail_list/claim/claim_all, pb_admin_* (mail[p_days 수령기간], notice, code, tro, take, ban, act, list), pb_notice_*, pb_friend_*, pb_invite*, pb_duel_*, pb_rank, pb_profile, pb_code_check, pb_tot
 - 클라이언트는 anon 키로 RPC만 호출 (모든 함수 security definer, 토큰 검사).
 
 ## 6. 에셋 출처
@@ -66,3 +66,8 @@ JS 문법 검사: index.html 의 `<script>` 들을 뽑아 `node --check`.
 
 ## 8. 최근 작업 이력 (요약)
 v1.9 라티아스·라티오스/기라티나 → v1.10 가방(인벤토리)·선택권·스티브(한정) → v1.11 러브로스 → v1.12 히스이 주인 4종+아르세우스, 선택창 정렬, 아군 봇(멀티 방·혼자 팀전·로비 양옆 AI 파티), 기간제 파워 9 고정 → v1.13 버드렉스·블리자포스·레이스포스, 우편 수령 기간(전체 배포는 기간 내 신규 가입자도 수령)
+v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기 후 6초, `PDXB`), 가젯 횟수 버그 수정, 휘두르기 도트 아트(`ARTI`), 선택창 스크롤 바(`scrollBar`), 슬롯머신(`slotOpen`/`slotOdds` — 많이 걸수록 잭팟↑, 전설 선택권은 금구슬 1000개어치 이상 베팅 시만, 이 기준은 화면에 표시하지 말 것) → v1.15 포켓증권(`stockOpen`, 보유는 `SAVE.stk={SYM:{n,c}}`)
+
+## 9. 추가 규칙
+- 그림(이펙트·아이콘·배너)은 모두 도트(픽셀) 느낌으로.
+- 답변은 항상 한국어로.
