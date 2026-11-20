@@ -506,7 +506,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.15.2';
+const VER='1.15.3';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -3774,7 +3774,8 @@ function openBox(id){
   }
   SAVE.coins+=R.coin;SAVE.gems=(SAVE.gems||0)+R.gem;return R;
 }
-const SEC={today:'스카우트 · 오늘의 선물',box:'볼 상자',coin:'금구슬 교환',game:'미니게임 · 투자'};
+const SHOW_GAMBLE=false;/* 슬롯머신·포켓증권 노출 (true로 바꾸면 다시 보임) */
+const SEC=Object.assign({today:'스카우트 · 오늘의 선물',box:'볼 상자',coin:'금구슬 교환'},SHOW_GAMBLE?{game:'미니게임 · 투자'}:{});
 function renderShop(){
   const done=SAVE.daily===today();
   $('#shCoin').textContent=SAVE.coins;$('#shGem').textContent=SAVE.gems||0;
@@ -3895,8 +3896,8 @@ function stLiq(){if(!hasShort()||!ST.d)return;const msgs=[];
     if(typeof G!=='undefined'&&G&&!G.over)toast(msgs[0]);else{modal(html);$('#liqOk').onclick=()=>{closeModal();if(bad&&$('#stock').classList.contains('on')){clearInterval(ST.iv);ST.iv=null;refreshMenu();showScr('menu');}};}
     try{stRender(true);}catch(e){}}}
 /* 화면 밖에서도 공매도가 있으면 가끔 검사 */
-setInterval(()=>{if(hasShort()&&!$('#stock').classList.contains('on')&&!ST.busy){ST.busy=true;stLoad(!ST.d).then(()=>ST.busy=false);}},90000);
-setTimeout(()=>{if(hasShort()){ST.busy=true;stLoad(true).then(()=>ST.busy=false);}},6000);
+setInterval(()=>{if(SHOW_GAMBLE&&hasShort()&&!$('#stock').classList.contains('on')&&!ST.busy){ST.busy=true;stLoad(!ST.d).then(()=>ST.busy=false);}},90000);
+setTimeout(()=>{if(SHOW_GAMBLE&&hasShort()){ST.busy=true;stLoad(true).then(()=>ST.busy=false);}},6000);
 const isBroke=()=>(SAVE.gems||0)<0;
 function brokeModal(){modal(`<h2>신용불량자</h2><div style="font-size:12px;line-height:1.8;padding:6px 4px">공매도 실패로 혜성조각이 <b style="color:#fca5a5">${fmtI(SAVE.gems)}개</b>예요.<br>빚을 다 갚을 때까지 상점을 이용할 수 없어요.<br>게임에서 혜성조각을 벌어 0개 이상으로 만들어 주세요.</div><div class="mrow"><button class="btn sm" id="bkOk">확인</button></div>`);$('#bkOk').onclick=closeModal;sfx('hurt');}
 function stockOpen(){if(isBroke()){brokeModal();return;}showScr('stock');$('#stGem').textContent=SAVE.gems||0;

@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.15.1** (소스의 `const VER='...'`)
+- 현재 버전: **v1.15.3** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -71,3 +71,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 ## 9. 추가 규칙
 - 그림(이펙트·아이콘·배너)은 모두 도트(픽셀) 느낌으로.
 - 답변은 항상 한국어로.
+- **현재 슬롯머신·포켓증권은 숨김 상태** (`const SHOW_GAMBLE=false`). 사용자가 다시 추가하라고 하면 true로 바꾸면 됨 (공매도 반대매매 백그라운드 검사도 같이 멈춰 있음).
