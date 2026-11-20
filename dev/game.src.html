@@ -351,7 +351,7 @@ select.minput{width:auto}
 .tkpk{display:flex;flex-wrap:wrap;gap:4px;max-width:520px}.tkp{display:flex;align-items:center;gap:3px;background:#1c1530;border:2px solid #111;padding:2px 5px;cursor:pointer}.tkp img{width:22px;height:22px;image-rendering:pixelated}.tkp input:checked+img{outline:2px solid #dc2626}
 .px{image-rendering:pixelated}
 .slot{background:#7f1d1d;border:4px solid #111;box-shadow:inset 0 4px 0 #b91c1c,inset 0 -6px 0 #450a0a,0 6px 0 #111;padding:10px 14px 12px;display:flex;align-items:center;gap:14px;max-width:96%}
-.sl-l,.sl-r{display:flex;flex-direction:column;align-items:center;gap:7px}.sl-r{width:270px}
+.sl-l,.sl-r{display:flex;flex-direction:column;align-items:center;gap:7px}.sl-r{width:290px}
 .slot.jack{animation:sljack .12s steps(2) 10}@keyframes sljack{50%{box-shadow:inset 0 4px 0 #fde047,inset 0 -6px 0 #a16207,0 6px 0 #111;background:#a16207}}
 .sl-top{font-size:20px;color:#fde047;text-shadow:3px 3px 0 #111;letter-spacing:2px}
 .sl-win{position:relative;display:flex;gap:6px;background:#111;padding:6px;border:3px solid #fde047}
@@ -363,6 +363,9 @@ select.minput{width:auto}
 .sl-msg{font-size:13px;min-height:18px;text-align:center;color:#fff}.sl-msg.big{color:#fde047;font-size:16px;text-shadow:2px 2px 0 #111}.sl-msg.win{color:#fde047}.sl-msg.even{color:#bae6fd}.sl-msg.lose{color:#d6d3d1}
 .sl-pay{font-size:11px;line-height:1.7;text-align:center;background:#450a0a;border:2px solid #111;padding:4px 8px}.sl-pay img{height:16px;vertical-align:middle;image-rendering:pixelated;margin-right:2px}.sl-pay b{color:#fde047;font-weight:400}
 .sl-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center}.sl-have{font-size:11px}.sl-have .ico{height:14px}
+.sl-sm{font-size:11px;opacity:.75}
+.sl-in{display:flex;align-items:center;gap:4px;font-size:11px;width:100%}.sl-in img{height:16px;image-rendering:pixelated}.sl-in span{width:52px}.sl-in i{font-style:normal;opacity:.75;font-size:11px;margin-left:auto}
+.sl-in input{font-family:inherit;font-size:13px;width:72px;padding:4px 6px;background:#fef3c7;color:#111;border:2px solid #111;box-shadow:inset 0 2px 0 #d6c79a;outline:none}.sl-in input:focus{background:#fff}.sl-in input:disabled{opacity:.6}.sl-in .sl-bet{padding:3px 6px;white-space:nowrap}.sl-in i{white-space:nowrap}
 .sl-cur,.sl-bet{font-family:inherit;font-size:11px;color:#fff;background:#1c1530;border:2px solid #111;box-shadow:inset 0 2px 0 #3b2d63;padding:4px 8px;cursor:pointer;display:flex;align-items:center;gap:4px}.sl-cur img{height:14px}
 .sl-cur.on,.sl-bet.on{background:#facc15;color:#111;box-shadow:inset 0 2px 0 #fef08a}.sl-bet:disabled{opacity:.35;cursor:default}
 </style>
@@ -471,7 +474,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.14.5';
+const VER='1.14.6';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -3761,47 +3764,57 @@ const SLOTI=(()=>{const mk=(rows,P)=>{const c=document.createElement('canvas');c
   const seven=mk(['................','..kkkkkkkkkkkk..','..krrrrrrrrrrk..','..krhhhhhhhrrk..','..kkkkkkkkrrdk..','.........krrdk..','........krrdk...','.......krrdk....','......krrdk.....','......krrdk.....','.....krrdk......','.....krrdk......','.....krrdk......','.....kkkkk......','................','................'],{k:'#111',r:'#ef4444',h:'#fecaca',d:'#991b1b'});
   const icon=mk(['................','..kkkkkkkkkkk...','..kyyyyyyyyyk...','..kykkkkkkkyk.k.','..kykwkwkwkykkyk','..kykwkwkwkyk.k.','..kykkkkkkkyk.k.','..kyyyyyyyyykkk.','..kyokkokkoyk...','..kyyyyyyyyyk...','..kddddddddddk..','..kdkkkkkkkkdk..','..kdddddddddddk.','..kkkkkkkkkkkkk.','................','................'],{k:'#111',y:'#facc15',w:'#fff',o:'#ef4444',d:'#a16207'});
   return {seven,icon};})();
-const SLOTS=[{k:'pika',nm:'피카츄',w:28},{k:'pachi',nm:'파치리스',w:28},{k:'morpe',nm:'모르페코',w:28},{k:'seven',nm:'7',w:10},{k:'mew',nm:'뮤츠',w:6}];
+const SLOTS=[{k:'pika',nm:'피카츄'},{k:'pachi',nm:'파치리스'},{k:'morpe',nm:'모르페코'},{k:'seven',nm:'7'},{k:'mew',nm:'뮤츠'}];
 const slotImg=k=>k==='seven'?SLOTI.seven:SPR[{pika:25,pachi:417,morpe:877,mew:150}[k]];
-function slotRoll(){let x=Math.random()*100;for(const s of SLOTS){if(x<s.w)return s.k;x-=s.w;}return 'pika';}
-function slotJudge(r,bet){const c={};r.forEach(k=>c[k]=(c[k]||0)+1);const mx=Math.max(...Object.values(c));
-  if(mx===3&&r[0]==='mew')return {pay:0,tkt:1,msg:'뮤츠 3개! 전설 선택권 획득!',big:1};
-  if(mx===3&&r[0]==='seven')return {pay:bet*4,msg:'7 7 7! 4배!',big:1};
-  if(mx===3)return {pay:bet*2,msg:'같은 그림 3개! 2배!'};
-  if(mx===2)return {pay:bet,msg:'같은 그림 2개! 건 만큼 돌려받아요'};
-  return {pay:0,msg:'꽝! 건 재화를 모두 잃었어요'};}
-let SLOT={cur:'coin',bet:50};
-const SLOTB={coin:[10,50,100,500,1000],gem:[1,5,10,50,100]};
-function slotOpen(){const ov=$('#shOv');ov.classList.add('on');let spin=false;const have=()=>SLOT.cur==='coin'?SAVE.coins:(SAVE.gems||0);
+const SLOTK=SLOTS.map(x=>x.k);
+function slotRoll(){return pick(SLOTK);}
+const SLOT_GEMV=18,SLOT_MEWMIN=1000;/* 금구슬 1000개어치 미만으로 걸면 전설 선택권 안 나옴 *//* 혜성조각 1개 = 금구슬 18개로 쳐서 베팅 크기를 잼 */
+function slotOdds(v){const t=clamp(Math.log10(Math.max(v,30)/30)/Math.log10(3000/30),0,1),L=(a,b)=>a+(b-a)*t;
+  return {mew:v<SLOT_MEWMIN?0:Math.min(1/150,v/300000),s7:L(.06,.003),s3:L(.22,.03),s2:L(.30,.25)};}
+function slotSpin(v){const o=slotOdds(v);let x=Math.random();const sh=a=>a.sort(()=>Math.random()-.5);
+  if((x-=o.mew)<0)return ['mew','mew','mew'];
+  if((x-=o.s7)<0)return ['seven','seven','seven'];
+  if((x-=o.s3)<0){const k=pick(['pika','pachi','morpe']);return [k,k,k];}
+  if((x-=o.s2)<0){const k=pick(SLOTK),y=pick(SLOTK.filter(z=>z!==k));return sh([k,k,y]);}
+  return sh(SLOTK.slice()).slice(0,3);}
+function slotJudge(r){const c={};r.forEach(k=>c[k]=(c[k]||0)+1);const mx=Math.max(...Object.values(c));
+  if(mx===3&&r[0]==='mew')return {m:0,tkt:1,msg:'뮤츠 3개! 전설 선택권 획득!',big:1};
+  if(mx===3&&r[0]==='seven')return {m:4,msg:'7 7 7! 4배!',big:1};
+  if(mx===3)return {m:2,msg:'같은 그림 3개! 2배!'};
+  if(mx===2)return {m:1,msg:'같은 그림 2개! 건 만큼 돌려받아요'};
+  return {m:0,msg:'꽝! 건 재화를 모두 잃었어요'};}
+let SLOT={coin:50,gem:0};
+function slotOpen(){const ov=$('#shOv');ov.classList.add('on');let spin=false;
   const reelH=k=>`<img class="px" src="${slotImg(k)}">`;
   ov.innerHTML=`<div class="slot"><div class="sl-l"><div class="sl-top">슬롯머신</div>
     <div class="sl-win"><div class="sl-line"></div>${[0,1,2].map(i=>`<div class="sl-reel" id="slR${i}"><div>${reelH(slotRoll())}</div><div class="mid">${reelH(slotRoll())}</div><div>${reelH(slotRoll())}</div></div>`).join('')}</div>
-    </div><div class="sl-r"><div class="sl-msg" id="slMsg">그림 3개를 맞춰 보세요!</div>
-    <div class="sl-pay">같은 그림 3개 <b>2배</b> · 2개 <b>1배</b> · 없으면 <b>몰수</b><br>${reelH('seven')}3개 <b>4배</b> · ${reelH('mew')}3개 <b>전설 선택권</b></div>
-    <div class="sl-row"><button class="sl-cur" data-c="coin"><img src="${ICO.coin}">금구슬</button><button class="sl-cur" data-c="gem"><img src="${ICO.gemc}">혜성조각</button><span class="sl-have" id="slHave"></span></div>
-    <div class="sl-row" id="slBets"></div>
+    </div><div class="sl-r"><div class="sl-msg" id="slMsg">적게 걸수록 잘 맞아요!</div>
+    <div class="sl-pay">같은 그림 3개 <b>2배</b> · 2개 <b>1배</b> · 없으면 <b>몰수</b><br>${reelH('seven')}3개 <b>4배</b> · ${reelH('mew')}3개 <b>전설 선택권</b><br><span class="sl-sm">전설 선택권은 금구슬 ${SLOT_MEWMIN}개어치 이상 걸 때만 (혜성조각 1개 = 금구슬 ${SLOT_GEMV}개)</span></div>
+    ${[['coin',ICO.coin,'금구슬'],['gem',ICO.gemc,'혜성조각']].map(([k,ic,nm])=>`<div class="sl-in"><img src="${ic}"><span>${nm}</span><input type="number" inputmode="numeric" min="0" step="1" id="slIn_${k}"><button class="sl-bet" data-k="${k}" data-a="0">0</button><button class="sl-bet" data-k="${k}" data-a="max">최대</button><i id="slHv_${k}"></i></div>`).join('')}
     <div class="sl-row"><button class="btn sm" id="slGo">돌리기!</button><button class="btn b2 sm" id="slX">나가기</button></div></div></div>`;
-  const ui=()=>{const B=SLOTB[SLOT.cur];if(!B.includes(SLOT.bet))SLOT.bet=B[1];
-    document.querySelectorAll('.sl-cur').forEach(b=>b.classList.toggle('on',b.dataset.c===SLOT.cur));
-    $('#slHave').innerHTML=`보유 ${SLOT.cur==='coin'?cIco:gIco} ${have()}`;
-    $('#slBets').innerHTML=B.map(v=>`<button class="sl-bet${v===SLOT.bet?' on':''}" data-v="${v}" ${v>have()?'disabled':''}>${v}</button>`).join('');
-    document.querySelectorAll('.sl-bet').forEach(b=>b.onclick=()=>{if(spin)return;SLOT.bet=+b.dataset.v;sfx('ui');ui();});
-    $('#slGo').disabled=spin||SLOT.bet>have();$('#slGo').textContent=spin?'도는 중...':`${SLOT.bet} 걸고 돌리기!`;
+  const have=k=>k==='coin'?SAVE.coins:(SAVE.gems||0);
+  const norm=k=>{const el=$('#slIn_'+k);let v=Math.floor(+el.value||0);v=clamp(v,0,have(k));SLOT[k]=v;return v;};
+  const ui=()=>{for(const k of ['coin','gem']){const el=$('#slIn_'+k);if(document.activeElement!==el)el.value=SLOT[k]=Math.min(SLOT[k],have(k));$('#slHv_'+k).textContent='보유 '+have(k);el.disabled=spin;}
+    const c=Math.min(SLOT.coin,have('coin')),g=Math.min(SLOT.gem,have('gem')),ok=!spin&&c+g>0;
+    $('#slGo').disabled=!ok;$('#slGo').textContent=spin?'도는 중...':c+g>0?'돌리기!':'걸 재화를 입력하세요';
     $('#shCoin').textContent=SAVE.coins;$('#shGem').textContent=SAVE.gems||0;};
-  document.querySelectorAll('.sl-cur').forEach(b=>b.onclick=()=>{if(spin)return;SLOT.cur=b.dataset.c;sfx('ui');ui();});
+  for(const k of ['coin','gem']){const el=$('#slIn_'+k);el.oninput=()=>{SLOT[k]=Math.max(0,Math.floor(+el.value||0));ui();};el.onchange=()=>{norm(k);el.value=SLOT[k];ui();};
+    el.addEventListener('pointerdown',e=>e.stopPropagation());el.addEventListener('keydown',e=>e.stopPropagation());}
+  document.querySelectorAll('.sl-in .sl-bet').forEach(b=>b.onclick=()=>{if(spin)return;const k=b.dataset.k;SLOT[k]=b.dataset.a==='max'?have(k):0;$('#slIn_'+k).value=SLOT[k];sfx('ui');ui();});
   $('#slX').onclick=()=>{if(spin)return;ov.classList.remove('on');ov.innerHTML='';renderShop();};
-  $('#slGo').onclick=()=>{if(spin)return;const bet=SLOT.bet,cur=SLOT.cur;if(bet>have())return;
-    if(cur==='coin')SAVE.coins-=bet;else SAVE.gems-=bet;
-    const res=[slotRoll(),slotRoll(),slotRoll()],J=slotJudge(res,bet);
-    if(J.pay){if(cur==='coin')SAVE.coins+=J.pay;else SAVE.gems=(SAVE.gems||0)+J.pay;}if(J.tkt)invAdd('sel_l',1);save();
+  $('#slGo').onclick=()=>{if(spin)return;const c=norm('coin'),g=norm('gem');if(c+g<=0)return;
+    SAVE.coins-=c;SAVE.gems=(SAVE.gems||0)-g;
+    const res=slotSpin(c+g*SLOT_GEMV),J=slotJudge(res);
+    if(J.m){SAVE.coins+=c*J.m;SAVE.gems+=g*J.m;}if(J.tkt)invAdd('sel_l',1);save();
     spin=true;ui();$('#slMsg').textContent='두근두근...';$('#slMsg').className='sl-msg';sfx('go');
     const R=[0,1,2].map(i=>$('#slR'+i)),stopAt=[700,1150,1600],t0=performance.now();let last=0;
-    const tick=now=>{const el=now-t0;if(now-last>65){last=now;R.forEach((r,i)=>{if(r._stop)return;const d=r.children;d[2].innerHTML=d[1].innerHTML;d[1].innerHTML=d[0].innerHTML;d[0].innerHTML=reelH(slotRoll());r.classList.toggle('sh',!r.classList.contains('sh'));});}
+    const tick=now=>{const el=now-t0;if(now-last>65){last=now;R.forEach(r=>{if(r._stop)return;const d=r.children;d[2].innerHTML=d[1].innerHTML;d[1].innerHTML=d[0].innerHTML;d[0].innerHTML=reelH(slotRoll());r.classList.toggle('sh',!r.classList.contains('sh'));});}
       R.forEach((r,i)=>{if(!r._stop&&el>=stopAt[i]){r._stop=1;r.classList.remove('sh');r.children[1].innerHTML=reelH(res[i]);r.children[0].innerHTML=reelH(slotRoll());r.children[2].innerHTML=reelH(slotRoll());r.classList.add('land');sfx('count');}});
       if(el<stopAt[2]+60){requestAnimationFrame(tick);return;}
       R.forEach(r=>{r._stop=0;r.classList.remove('land');});spin=false;
-      const m=$('#slMsg');m.textContent=J.msg+(J.pay?` (+${J.pay} ${cur==='coin'?'금구슬':'혜성조각'})`:'');m.className='sl-msg '+(J.big?'big':J.pay>bet?'win':J.pay?'even':'lose');
-      sfx(J.big?'win':J.pay>bet?'gem':J.pay?'ui':'hurt');if(J.big)$('.slot').classList.add('jack'),setTimeout(()=>{const s=$('.slot');if(s)s.classList.remove('jack');},1500);
+      const got=[c*J.m?`+${c*J.m} 금구슬`:'',g*J.m?`+${g*J.m} 혜성조각`:''].filter(Boolean).join(' · ');
+      const m=$('#slMsg');m.textContent=J.msg+(got?` (${got})`:'');m.className='sl-msg '+(J.big?'big':J.m>1?'win':J.m?'even':'lose');
+      sfx(J.big?'win':J.m>1?'gem':J.m?'ui':'hurt');if(J.big){$('.slot').classList.add('jack');setTimeout(()=>{const s=$('.slot');if(s)s.classList.remove('jack');},1500);}
       if(J.tkt){invBadge();setTimeout(()=>toast('전설 선택권이 가방에 들어갔어요!'),400);}ui();};
     requestAnimationFrame(tick);};
   ui();}
