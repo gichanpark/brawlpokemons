@@ -474,7 +474,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.14.8';
+const VER='1.14.9';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -3770,7 +3770,7 @@ const SLOTK=SLOTS.map(x=>x.k);
 function slotRoll(){return pick(SLOTK);}
 const SLOT_GEMV=18,SLOT_MEWMIN=1000;/* 금구슬 1000개어치 미만으로 걸면 전설 선택권 안 나옴 *//* 혜성조각 1개 = 금구슬 18개로 쳐서 베팅 크기를 잼 */
 function slotOdds(v){const t=clamp(Math.log10(Math.max(v,30)/30)/Math.log10(3000/30),0,1),L=(a,b)=>a+(b-a)*t;
-  return {mew:v<SLOT_MEWMIN?0:Math.min(1/150,v/300000),s7:L(.045,.002),s3:L(.11,.02),s2:L(.29,.17)};}
+  return {mew:v<SLOT_MEWMIN?0:Math.min(1/150,v/300000),s7:L(.005,.04),s3:L(.04,.14),s2:L(.30,.10)};}
 function slotSpin(v){const o=slotOdds(v);let x=Math.random();const sh=a=>a.sort(()=>Math.random()-.5);
   if((x-=o.mew)<0)return ['mew','mew','mew'];
   if((x-=o.s7)<0)return ['seven','seven','seven'];
@@ -3788,7 +3788,7 @@ function slotOpen(){const ov=$('#shOv');ov.classList.add('on');let spin=false;
   const reelH=k=>`<img class="px" src="${slotImg(k)}">`;
   ov.innerHTML=`<div class="slot"><div class="sl-l"><div class="sl-top">슬롯머신</div>
     <div class="sl-win"><div class="sl-line"></div>${[0,1,2].map(i=>`<div class="sl-reel" id="slR${i}"><div>${reelH(slotRoll())}</div><div class="mid">${reelH(slotRoll())}</div><div>${reelH(slotRoll())}</div></div>`).join('')}</div>
-    </div><div class="sl-r"><div class="sl-msg" id="slMsg">적게 걸수록 잘 맞아요!</div>
+    </div><div class="sl-r"><div class="sl-msg" id="slMsg">많이 걸수록 잭팟이 잘 터져요!</div>
     <div class="sl-pay">같은 그림 3개 <b>3배</b> · 2개 <b>1.5배</b> · 없으면 <b>몰수</b><br>${reelH('seven')}3개 <b>4배</b> · ${reelH('mew')}3개 <b>전설 선택권</b></div>
     ${[['coin',ICO.coin,'금구슬'],['gem',ICO.gemc,'혜성조각']].map(([k,ic,nm])=>`<div class="sl-in"><img src="${ic}"><span>${nm}</span><input type="number" inputmode="numeric" min="0" step="1" id="slIn_${k}"><button class="sl-bet" data-k="${k}" data-a="0">0</button><button class="sl-bet" data-k="${k}" data-a="max">최대</button><i id="slHv_${k}"></i></div>`).join('')}
     <div class="sl-row"><button class="btn sm" id="slGo">돌리기!</button><button class="btn b2 sm" id="slX">나가기</button></div></div></div>`;
