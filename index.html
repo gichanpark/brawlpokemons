@@ -2483,7 +2483,7 @@ function drawHUD(){
   else if(G.t<1)tx('시작!',W/2,H/2-40,44,'#fde047','center',1-G.t);
   if(G.over&&G.result)tx(G.result.big,W/2,H/2-40,44,'#fde047');
   const touch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
-  drawSteveUI();
+  drawSteveUI(tx);
   if(touch&&!(G.mode==='sd'&&!P.alive)){
     if(IN.mv)stick(IN.mv.sx,IN.mv.sy,IN.mv.x,IN.mv.y,'rgba(255,255,255,.2)','rgba(255,255,255,.75)',60);
     else{ctx.globalAlpha=.35;stick(100,H-110,100,H-110,'rgba(255,255,255,.15)','rgba(255,255,255,.5)',55);ctx.globalAlpha=1;}
@@ -2786,19 +2786,21 @@ function steveEquip(e,t){if(!e.tools||!e.tools.includes(t)||(e.form||0)===t)retu
 function steveCraftT(e,t){if(!e.alive||!nearTab(e)||!e.tools||e.tools.includes(t)||!canCraft(e,t))return false;const r=RECIPE[t];
   Object.keys(r).forEach(k=>{e.ores[ORE.findIndex(o=>o.k===k)]-=r[k];});e.tools.push(t);e.form=t;e.ch=STF[t];P_({ring:1,x:e.x,y:e.y,rad:60,col:STF[t].atk.col,t:.4});spark(e.x,e.y-40,[STF[t].atk.col,'#fff','#92400e'],18,180,.5,5,{sh:'plus'});addText(e.x,e.y-130,STF[t].atk.nm+' 제작!',STF[t].atk.col,1);sfx('form',e.x,e.y);return true;}
 function steveAct(t,craft){if(!P||!P.alive)return;if(NET.on&&!NET.host){sendIn('a',{s:craft?4:3,t});return;}craft?steveCraftT(P,t):steveEquip(P,t);}
-function steveUI(){if(W>H){const sz=Math.min(44,Math.max(30,(H-170)/6.2)),gap=5,x=W-sz/2-10,top=Math.max(64,H*.5-(5*(sz+gap))/2-20);return {sz,gap,x,top,cx:x-sz-gap-6};}const sz=40,gap=5;return {sz,gap,x:W-sz/2-10,top:H*.28,cx:W-sz*1.5-26};}
-function steveUIHit(x,y){if(!P||P.ch.k!=='steve'||P.ch.ditto||!P.alive)return null;const U=steveUI();for(let t=0;t<5;t++){const yy=U.top+t*(U.sz+U.gap)+U.sz/2;if(Math.abs(y-yy)>U.sz/2+2)continue;
-  if(Math.abs(x-U.x)<=U.sz/2+3)return {t,c:0};if(t&&nearTab(P)&&!(P.tools||[0]).includes(t)&&Math.abs(x-U.cx)<=U.sz*.75)return {t,c:1};}return null;}
-function drawSteveUI(){if(!P||P.ch.k!=='steve'||P.ch.ditto||!P.alive)return;const U=steveUI(),tl=P.tools||[0],near=nearTab(P);ctx.save();ctx.imageSmoothingEnabled=false;
-  for(let t=0;t<5;t++){const y=U.top+t*(U.sz+U.gap),own=tl.includes(t),held=(P.form||0)===t,x=U.x-U.sz/2;
-    ctx.fillStyle='#111';ctx.fillRect(x-3,y-3,U.sz+6,U.sz+6);ctx.fillStyle=held?'#a8a29e':'#57534e';ctx.fillRect(x,y,U.sz,U.sz);ctx.fillStyle=held?'#d6d3d1':'#78716c';ctx.fillRect(x,y,U.sz,3);
-    if(held){ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.strokeRect(x-2,y-2,U.sz+4,U.sz+4);}
-    if(!('ontouchstart' in window))ptext(String(t+1),x+4,y+13,11,'#fde047','left');
-    const ik=t?TOOLI[t]:null;ctx.globalAlpha=own?1:.25;if(ik&&MCOK(ik))ctx.drawImage(MCI[ik],x+4,y+4,U.sz-8,U.sz-8);else if(!t){ctx.fillStyle='#f5d0a9';ctx.fillRect(x+U.sz*.3,y+U.sz*.3,U.sz*.4,U.sz*.4);ctx.fillStyle='#111';ctx.strokeStyle='#111';ctx.lineWidth=2;ctx.strokeRect(x+U.sz*.3,y+U.sz*.3,U.sz*.4,U.sz*.4);}ctx.globalAlpha=1;
-    if(t&&near&&!own){const ok=canCraft(P,t),cx=U.cx,w=U.sz*1.5,cy=y;ctx.fillStyle='#111';ctx.fillRect(cx-w/2-3,cy-3,w+6,U.sz+6);ctx.fillStyle=ok?'#92400e':'#3f3f46';ctx.fillRect(cx-w/2,cy,w,U.sz);ctx.fillStyle=ok?'#b45309':'#52525b';ctx.fillRect(cx-w/2,cy,w,3);
-      const r=RECIPE[t],ks=Object.keys(r);let xx=cx-w/2+4;ks.forEach(k=>{const o=ORE.find(q=>q.k===k),isz=Math.round(U.sz*.46),bw=w/ks.length;if(MCOK(o.i))ctx.drawImage(MCI[o.i],xx,cy+(U.sz-isz)/2,isz,isz);ptext(String(r[k]),xx+isz+2,cy+U.sz/2+5,13,ok?'#fff':'#a1a1aa','left');xx+=bw;});
-      if(ok&&Math.floor(G.t*3)%2){ctx.strokeStyle='#fde047';ctx.lineWidth=2;ctx.strokeRect(cx-w/2-2,cy-2,w+4,U.sz+4);}}}
-  if(near){const t0=U.top-16;ptext('제작대',(U.cx+U.x)/2,t0,13,'#fde047','center');}ctx.restore();}
+function steveUI(){const sz=Math.round(Math.min(52,Math.max(42,H*.12))),gap=6,top=Math.round(Math.max(56,H*.13));return {sz,gap,top,x0:W-10-5*sz-4*gap,ch:Math.round(sz*1.25)};}
+const slotX=(U,t)=>U.x0+t*(U.sz+U.gap);
+function steveUIHit(x,y){if(!P||P.ch.k!=='steve'||P.ch.ditto||!P.alive)return null;const U=steveUI();for(let t=0;t<5;t++){const sx=slotX(U,t);if(x<sx-3||x>sx+U.sz+3)continue;
+  if(y>=U.top-3&&y<=U.top+U.sz+3)return {t,c:0};if(t&&nearTab(P)&&!(P.tools||[0]).includes(t)&&y>U.top+U.sz&&y<=U.top+U.sz+U.gap+U.ch+4)return {t,c:1};}return null;}
+function drawSteveUI(TXF){const PT=(a,b,c,d,e,g)=>TXF?TXF(a,b,c,d,e,g):ptext(a,b,c,d,e,g);if(!P||P.ch.k!=='steve'||P.ch.ditto||!P.alive)return;const U=steveUI(),tl=P.tools||[0],near=nearTab(P),pc=!(('ontouchstart' in window)||navigator.maxTouchPoints>0);ctx.save();ctx.imageSmoothingEnabled=false;
+  ctx.fillStyle='rgba(10,6,24,.55)';ctx.fillRect(U.x0-6,U.top-6,5*U.sz+4*U.gap+12,U.sz+12);
+  for(let t=0;t<5;t++){const x=slotX(U,t),y=U.top,own=tl.includes(t),held=(P.form||0)===t;
+    ctx.fillStyle='#111';ctx.fillRect(x-3,y-3,U.sz+6,U.sz+6);ctx.fillStyle=held?'#a8a29e':'#57534e';ctx.fillRect(x,y,U.sz,U.sz);ctx.fillStyle=held?'#e7e5e4':'#78716c';ctx.fillRect(x,y,U.sz,3);
+    if(held){ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.strokeRect(x-3,y-3,U.sz+6,U.sz+6);}
+    const ik=t?TOOLI[t]:null,p=Math.round(U.sz*.14);ctx.globalAlpha=own?1:.22;if(ik&&MCOK(ik))ctx.drawImage(MCI[ik],x+p,y+p,U.sz-2*p,U.sz-2*p);else if(!t){const q=U.sz*.32;ctx.fillStyle='#111';ctx.fillRect(x+q-2,y+q-2,U.sz-2*q+4,U.sz-2*q+4);ctx.fillStyle='#f5d0a9';ctx.fillRect(x+q,y+q,U.sz-2*q,U.sz-2*q);}ctx.globalAlpha=1;
+    if(pc)PT(String(t+1),x+4,y+14,12,'#fde047','left');
+    if(t&&near&&!own){const ok=canCraft(P,t),cy=y+U.sz+U.gap,r=RECIPE[t],ks=Object.keys(r);ctx.fillStyle='#111';ctx.fillRect(x-3,cy-3,U.sz+6,U.ch+6);ctx.fillStyle=ok?'#92400e':'#3f3f46';ctx.fillRect(x,cy,U.sz,U.ch);ctx.fillStyle=ok?'#d97706':'#52525b';ctx.fillRect(x,cy,U.sz,3);
+      const rh=(U.ch-4)/ks.length,isz=Math.round(Math.min(rh-4,U.sz*.42));ks.forEach((k,n)=>{const o=ORE.find(q=>q.k===k),yy=cy+3+n*rh+(rh-isz)/2;if(MCOK(o.i))ctx.drawImage(MCI[o.i],x+5,yy,isz,isz);PT('x'+r[k],x+8+isz,yy+isz*.8,Math.max(12,Math.round(isz*.75)),ok?'#fff':'#a1a1aa','left');});
+      if(ok&&Math.floor(G.t*3)%2){ctx.strokeStyle='#fde047';ctx.lineWidth=3;ctx.strokeRect(x-3,cy-3,U.sz+6,U.ch+6);}}}
+  if(near)PT('제작대 · 아래 칸을 눌러 제작',U.x0+(5*U.sz+4*U.gap)/2,U.top+U.sz+U.gap+U.ch+22,12,'#fde047','center');ctx.restore();}
 const SETX={trio:{F:TRF,N:TRN,C:TRC,n:3,st:2},lati:{F:LTF,N:['라티아스','라티오스'],C:['#f472b6','#60a5fa'],n:2,st:1}};
 function minCore(e){e.form=1;e.ch=MNF[1];P_({ring:1,x:e.x,y:e.y,rad:90,col:'#ef4444',t:.5});spark(e.x,e.y-30,['#78716c','#ef4444','#fde047','#fff'],26,260,.6,6);addText(e.x,e.y-130,'리밋실드 해제! 코어의 모습','#fca5a5',1);sfx('form',e.x,e.y);}
 function trioSet(e,m,save){const X=SETX[e.ch.k];if(save)e.tf[e.tm||0]=clamp(e.hp/e.maxHp,0,1);const old=e.ch;e.tm=m;e.form=m*X.st;e.ch=X.F[e.form];e.maxHp+=Math.round((e.ch.hp-old.hp)*(e.baseMul||1));e.hp=Math.max(1,Math.round(e.maxHp*e.tf[m]));
