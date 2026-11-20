@@ -392,7 +392,9 @@ select.minput{width:auto}
 .pf-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.pf-sum>div{background:#2a2140;border:2px solid #111;padding:4px 6px;display:flex;flex-direction:column;font-size:11px;opacity:.95}.pf-sum b{font-weight:400;font-size:13px;margin-top:2px}.pf-sum .ico{height:12px}
 .pf-t{display:flex;flex-direction:column;gap:4px}.pf-r{display:flex;align-items:center;gap:6px;background:#2a2140;border:2px solid #111;padding:4px 6px;cursor:pointer}.pf-nm{flex:1;min-width:0;display:flex;flex-direction:column}.pf-nm b{font-weight:400;font-size:12px}.pf-nm span{font-size:11px;opacity:.8}.pf-nm i{font-style:normal}
 .pf-bar{height:4px;background:#111;margin-top:3px}.pf-bar i{display:block;height:100%}.pf-v{text-align:right;display:flex;flex-direction:column;font-size:11px}.pf-v b{font-weight:400;font-size:12px}
-.st-news{width:100%;max-width:960px;box-sizing:border-box;margin:6px 8px 8px;background:#111;border:2px solid #3b2d63;padding:4px 8px;font-size:11px;white-space:nowrap;overflow:hidden;display:flex;gap:14px;align-items:center}.st-news b{color:#fde047;font-weight:400}.st-news .nw em{opacity:.6;font-style:normal}
+.st-news{width:100%;max-width:960px;box-sizing:border-box;margin:6px 8px 8px;background:#111;border:2px solid #3b2d63;box-shadow:inset 0 0 0 2px #000;padding:4px 8px;font-size:12px;white-space:nowrap;overflow:hidden;display:flex;gap:10px;align-items:center}.st-news>b{color:#111;background:#fde047;font-weight:400;padding:1px 6px;flex:none;z-index:1}
+.st-mq{flex:1;overflow:hidden;min-width:0}.st-mqt{display:inline-flex;align-items:center;gap:14px;animation:stmq 40s linear infinite;color:#fde68a;text-shadow:0 0 4px rgba(253,224,71,.4)}.st-mqt .nw em{opacity:.6;font-style:normal;color:#fff}.st-mqt .nsep{font-style:normal;color:#f97316}
+@keyframes stmq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 </style>
 </head>
 <body>
@@ -504,7 +506,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.15.1';
+const VER='1.15.2';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -3962,9 +3964,19 @@ function stRender(soft){if(!ST.d)return;const D=ST.d,co=D.co||[];$('#stGem').tex
   $('#stMaxS').onclick=()=>{q.value=h.n||sh.n;est();sfx('ui');};
   $('#stBuy').onclick=()=>stTrade('buy');$('#stSell').onclick=()=>stTrade('sell');$('#stShort').onclick=()=>stTrade('short');$('#stCover').onclick=()=>stTrade('cover');est();
   stNews();}
-function stNews(){const D=ST.d,news=(D.news||[]).slice(0,6);
-  $('#stNews').innerHTML=`<b>뉴스</b>`+(news.length?news.map(nw=>{const a=D.px[nw.sym]||[],i=a.findIndex(x=>x[0]===nw.t),d=i>0?+a[i][1]-+a[i-1][1]:0,m=Math.max(0,Math.round((stNow()-nw.t*stSec())/60000));
-    return `<span class="nw">${d>=0?'<i class="up">▲</i>':'<i class="dn">▼</i>'} ${nw.n} <em>${m<60?m+'분 전':Math.floor(m/60)+'시간 전'}</em></span>`;}).join(''):'<span class="nw">최근 소식이 없어요</span>');}
+const ST_GOSSIP=['기찬, 급식 몰래 두 번 받다 적발','기찬, 체육관 관장에게 도전했다가 3초 만에 패배','기찬, 잃어버린 몬스터볼 주인에게 돌려줘 칭찬','기찬, 포켓몬센터 앞 새치기 논란','기찬, 잠만보에게 길 막혀 지각','기찬, 이상해씨 돌봄 봉사활동 참여',
+  '광덕, 야생 피카츄에게 전기 맞고 머리 폭발','광덕, 포켓몬리그 응원단장 선정','광덕, 편의점 상처약 싹쓸이 의혹','광덕, 길 잃은 꼬렛 집 찾아줘','광덕, 고라파덕과 노래방 99점 기록','광덕, 자전거 도로 무단 질주로 경고',
+  '태암, 길 잃은 파치리스 구조','태암, 낚싯대로 잉어킹만 100마리 낚아 신기록','태암, 도서관 책 3년 연체 적발','태암, 포켓몬 퀴즈 대회 우승','태암, 잠만보 흉내 내다 진짜 잠듦','태암, 미확인 포켓몬 목격담 제보… 알고 보니 메타몽',
+  '기찬·광덕·태암, 체육관 뒤에서 몰래 배틀하다 관장에게 걸려','광덕·태암, 기찬 생일 깜짝 파티 성공','기찬, 광덕 도시락 몰래 먹은 혐의 부인','태암, 광덕에게 빌린 자전거 아직도 안 돌려줘'];
+function stNews(){const D=ST.d,now=stNow(),hr=Math.floor(now/1800000);
+  let sd=hr*9301+49297;const rnd=()=>(sd=(sd*233280+49297)%2147483647)/2147483647;
+  const real=(D.news||[]).slice(0,7).map(nw=>({n:nw.n,m:Math.max(0,Math.round((now-nw.t*stSec())/60000))}));
+  const pool=ST_GOSSIP.slice(),gos=[];for(let i=0;i<7&&pool.length;i++){const k=Math.floor(rnd()*pool.length);gos.push({n:pool.splice(k,1)[0],m:Math.floor(rnd()*540)});}
+  const L=real.concat(gos).sort((a,b)=>a.m-b.m),key=L.map(x=>x.n).join('|');
+  if(ST.nkey===key&&$('#stNews .st-mqt'))return;ST.nkey=key;
+  const one=L.map(x=>`<span class="nw">${x.n} <em>${x.m<60?x.m+'분 전':Math.floor(x.m/60)+'시간 전'}</em></span>`).join('<i class="nsep">◆</i>')+'<i class="nsep">◆</i>';
+  $('#stNews').innerHTML=`<b>뉴스</b><div class="st-mq"><div class="st-mqt">${one}${one}</div></div>`;
+  requestAnimationFrame(()=>{const t=$('#stNews .st-mqt');if(t)t.style.animationDuration=Math.max(20,t.scrollWidth/2/45)+'s';});}
 /* 내 주식 모아보기 */
 function stPortfolio(){const D=ST.d,co=D.co||[];const rows=[];let tv=0,tc=0,spl=0;
   for(const c of co){const h=stHold(c.sym),sh=stShort(c.sym),p=stPx(c.sym);
