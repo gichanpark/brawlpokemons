@@ -1225,7 +1225,8 @@ function spawnShots(e,s,ang,d,sup){
     return;
   }
   if(s.swing){const dir=(e.swDir=-(e.swDir||1));swingFx(e,s,ang,dir);ev('W2',s._id,e.nid,Math.round(ang*100),dir);const R0=s.range*T;
-    for(const o of G.ents){if(!o.alive||!enemyOf(e,o))continue;const dx=o.x-e.x,dy=o.y-e.y,dd=Math.hypot(dx,dy);if(dd>R0+o.r)continue;let da=Math.atan2(dy,dx)-ang;da=Math.atan2(Math.sin(da),Math.cos(da));if(dd>o.r&&Math.abs(da)>s.swing/2+o.r/Math.max(dd,1))continue;hitEff(e,o,s,s.dmg,sup,dx,dy);}return;}
+    for(const o of G.ents){if(!o.alive||!enemyOf(e,o))continue;const dx=o.x-e.x,dy=o.y-e.y,dd=Math.hypot(dx,dy);if(dd>R0+o.r)continue;let da=Math.atan2(dy,dx)-ang;da=Math.atan2(Math.sin(da),Math.cos(da));if(dd>o.r&&Math.abs(da)>s.swing/2+o.r/Math.max(dd,1))continue;hitEff(e,o,s,s.dmg,sup,dx,dy);}
+    {const m=G.map,cx=Math.floor(e.x/T),cy=Math.floor(e.y/T),n=Math.ceil(s.range)+1;for(let ty=cy-n;ty<=cy+n;ty++)for(let tx=cx-n;tx<=cx+n;tx++){if(tx<0||ty<0||tx>=m.C||ty>=m.R)continue;const i=ty*m.C+tx;if(m.g[i]!==4)continue;const dx=(tx+.5)*T-e.x,dy=(ty+.5)*T-e.y,dd=Math.hypot(dx,dy);if(dd>R0+T*.45)continue;let da=Math.atan2(dy,dx)-ang;da=Math.atan2(Math.sin(da),Math.cos(da));if(dd>T*.7&&Math.abs(da)>s.swing/2+(T*.45)/dd)continue;hitBox(i,s.dmg,sup?null:e);}}return;}
   if(s.soul){const L=e.souls&&e.souls.length?e.souls:[e.ch.k];{const a=ang+(Math.random()-.5)*.06;e.soulI=((e.soulI??-1)+1)%L.length;
     G.projs.push({x:e.x+Math.cos(a)*e.r*.7,y:e.y+Math.sin(a)*e.r*.7,vx:Math.cos(a)*s.speed*T,vy:Math.sin(a)*s.speed*T,tr:0,maxD:s.range*T,r:s.r,o:e,team:e.team,s,sup,hit:new Set(),chain:0,rot:0,sk:L[e.soulI]});}return;}
   const cnt=s.count||1;
