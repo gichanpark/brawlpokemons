@@ -237,6 +237,7 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .lg-box{display:flex;flex-direction:column;gap:8px;align-items:center;background:#1c1530;border:3px solid #111;box-shadow:inset 0 3px 0 #3b2d63,0 5px 0 #111;padding:12px 16px}
 .lg-box .minput{width:260px;font-size:11px;padding:9px 10px}
 .lg-btns{display:flex;gap:10px}.lg-err{font-size:11px;color:#fca5a5;min-height:14px;max-width:280px;text-align:center}
+.pu-res{max-height:220px;overflow-y:auto}
 .adm{background:#facc15;color:#111;font-size:11px;padding:1px 4px}.ban{background:#dc2626;font-size:11px;padding:1px 4px}
 .adt{border-collapse:collapse;font-size:11px;width:100%}.adt th,.adt td{border:2px solid #111;padding:4px 6px;text-align:left}.adt th{background:#2a2140;font-weight:400}
 .acts button{font-family:inherit;font-size:11px;margin:1px;border:2px solid #111;background:#3b82f6;color:#fff;cursor:pointer;padding:2px 5px}.acts button.del{background:#dc2626}
@@ -506,7 +507,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.15.5';
+const VER='1.15.6';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1698,6 +1699,7 @@ function endMatch(mode,res){
     sub=mode==='ball'?`골 · 우리 ${G.goals[P.team]} : ${G.goals[1-P.team]} 상대`:mode==='bounty'?`별 · 우리 ${G.stars[P.team]} : ${G.stars[1-P.team]} 상대`:mode==='heist'?`금고 체력 · 우리 ${safePct(P.team)}% : ${safePct(1-P.team)}% 상대`:`우리 ${teamGems(P.team)} : ${teamGems(1-P.team)} 상대`;}
   else{const tbl=[0,10,8,7,6,4,2,0,-1,-2,-3];d=tbl[res]||0;big=res===1?'1등!':res+'등';sub=res===1?'최후의 생존자!':'10명 중 '+res+'등';}
   const k=P.ch.k;SAVE.tro[k]=Math.max(0,tro(k)+d);
+  if(ACC.token&&G.mode!=='train'){try{rpc('pb_pick_log',{p_token:ACC.token,p_k:SAVE.sel,p_mode:mode,p_res:String(res),p_multi:!!NET.on}).catch(()=>{});}catch(e){}}
   let coin=tm?(res==='win'?30:res==='draw'?15:10):([0,40,32,28,24,18,14,10,8,6,4][res]||4);
   const road=[];while(SAVE.road<ROAD.length&&totTro()>=ROAD[SAVE.road].t){const rr=Object.assign({},ROAD[SAVE.road]);if(rr.pk){const k=rr.pk==='starter'?STARTERS.find(x=>!owns(x)):rr.pk;if(k&&!owns(k)){unlockPk(k);rr.got=chOf(k).nm;}}road.push(rr);coin+=rr.c;SAVE.road++;}
   let gem=(tm&&res==='win')||(mode==='sd'&&res<=3)?2:0;gem+=road.length*5;
@@ -4399,6 +4401,8 @@ async function adminPanel(target){
     <button data-a="mailto" data-u="${x.u}">우편</button><button data-a="take" data-u="${x.u}" class="del">몰수</button><button data-a="${x.banned?'unban':'ban'}" data-u="${x.u}">${x.banned?'정지 해제':'정지'}</button>
     <button data-a="${x.admin?'unadmin':'admin'}" data-u="${x.u}">${x.admin?'관리자 해제':'관리자 지정'}</button><button data-a="delete" data-u="${x.u}" class="del">삭제</button></td></tr>`;}).join('');
   modal(`<h2>관리자 메뉴 · 회원 ${r.users.length}명</h2>
+  <div class="amail"><b>캐릭터 사용률</b> <span style="font-size:11px;opacity:.7">(로그인 유저가 끝낸 판 기준 · 훈련장 제외)</span>
+    <div class="arow"><select id="puDays" class="minput sm2"><option value="1">최근 1일</option><option value="7" selected>최근 7일</option><option value="30">최근 30일</option><option value="3650">전체</option></select><button class="btn sm" id="puGo">보기</button><span id="puSum" style="font-size:11px"></span></div><div id="puRes" class="pu-res"></div></div>
   <div class="amail"><b>트로피 지급 · 차감 (다음 접속/저장 때 반영)</b>
     <div class="arow"><select id="atMode" class="minput sm2"><option value="give">지급</option><option value="take">차감</option></select><span>받는 사람</span><select id="atTo" class="minput sm2">${opts}</select><span>포켓몬</span><select id="atPk" class="minput sm2"><option value="__all">모든 포켓몬</option>${sortCH(CH).map(c=>`<option value="${c.k}">${c.nm} (${GRADE[c.gr].nm})</option>`).join('')}</select></div>
     <div class="arow"><span>트로피</span><input id="atN" class="minput sm2" type="number" min="0" value="0"><label id="atAllW" style="display:none"><input type="checkbox" id="atAll"> 전부 (0으로)</label><button class="btn sm" id="atGo">지급</button><span id="atRes" style="font-size:11px"></span></div></div>
@@ -4418,6 +4422,11 @@ async function adminPanel(target){
    const cnt=()=>{$('#amCnt').textContent=document.querySelectorAll('#amPk input:checked').length+'마리 선택';};
    $('#amQ').oninput=flt;document.querySelectorAll('.apk-gr button').forEach(b=>b.onclick=()=>{gsel=b.dataset.g;document.querySelectorAll('.apk-gr button').forEach(x=>x.classList.toggle('on',x===b));flt();});
    document.querySelectorAll('#amPk input').forEach(i=>i.onchange=cnt);$('#amNone').onclick=()=>{document.querySelectorAll('#amPk input:checked').forEach(i=>i.checked=false);cnt();};}
+  $('#puGo').onclick=async()=>{$('#puSum').textContent='불러오는 중...';let q;try{q=await rpc('pb_pick_stats',{p_token:ACC.token,p_days:+$('#puDays').value});}catch(e){q={ok:false};}
+    if(!q.ok){$('#puSum').textContent='불러오지 못했어요';return;}const M={};(q.rows||[]).forEach(x=>M[x.k]=x);const tot=q.total||0;
+    const L=CH.filter(c=>c.gr!=='sp'||M[c.k]).map(c=>({c,n:(M[c.k]||{}).n||0,u:(M[c.k]||{}).users||0,w:(M[c.k]||{}).wins||0})).sort((a,b)=>a.n-b.n||GRADE[a.c.gr].o-GRADE[b.c.gr].o);
+    $('#puSum').textContent=`총 ${tot}판 · 한 번도 안 쓰인 포켓몬 ${L.filter(x=>!x.n).length}마리`;
+    $('#puRes').innerHTML=`<table class="adt"><tr><th>포켓몬</th><th>등급</th><th>판수</th><th>사용률</th><th>유저</th><th>승률</th></tr>${L.map(x=>`<tr><td>${x.c.nm}</td><td style="color:${GRADE[x.c.gr].c}">${GRADE[x.c.gr].nm}</td><td>${x.n}</td><td>${tot?(x.n/tot*100).toFixed(1)+'%':'-'}</td><td>${x.u}</td><td>${x.n?Math.round(x.w/x.n*100)+'%':'-'}</td></tr>`).join('')}</table>`;};
   const atSync=()=>{const tk=$('#atMode').value==='take';$('#atAllW').style.display=tk?'':'none';$('#atGo').textContent=tk?'차감':'지급';$('#atGo').style.background=tk?'#dc2626':'';$('#atGo').style.color=tk?'#fff':'';};
   $('#atMode').onchange=atSync;$('#atPk').value=sortCH(CH)[0].k;
   $('#atGo').onclick=async()=>{const to=$('#atTo').value,k=$('#atPk').value,take=$('#atMode').value==='take',all=take&&$('#atAll').checked,m=Math.abs(parseInt($('#atN').value)||0),n=all?-100000:take?-m:m;
