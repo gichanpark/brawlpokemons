@@ -506,7 +506,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.15.4';
+const VER='1.15.5';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -533,7 +533,7 @@ const CH=[
  {k:'gengar',id:94,nm:'팬텀',role:'중거리 · 흡혈',el:'ghost',gr:'e',col:'#a855f7',hp:3400,spd:1.05,rl:1.5,charge:3000,
   atk:{nm:'섀도볼',ds:'느린 관통 구체 · 준 피해의 35% 흡수',ty:'shot',fx:'shadow',range:7,speed:8,dmg:1100,r:18,pierce:1,ls:.35,col:'#7e22ce'},
   sup:{nm:'고스트다이브',ds:'그림자로 숨었다 벽 너머에서 튀어나와 폭발',ty:'tele',boom:'ghost',range:7,dmg:1300,aoe:2,col:'#c084fc'}},
- {k:'snorlax',id:143,nm:'잠만보',role:'탱커 · 산탄',el:'normal',gr:'r',col:'#94a3b8',hp:7200,spd:0.78,rl:1.4,charge:3200,regen:2,pv:'먹보: 체력 회복 속도 2배',
+ {k:'snorlax',id:143,nm:'잠만보',role:'탱커 · 산탄',el:'normal',gr:'e',col:'#94a3b8',hp:7200,spd:0.78,rl:1.4,charge:3200,regen:2,pv:'먹보: 체력 회복 속도 2배',
   atk:{nm:'몸통박치기',ds:'짧은 사거리 충격파 5발 · 살짝 밀쳐냄',ty:'shot',fx:'impact',count:5,spread:.6,range:3.5,speed:13,dmg:360,r:10,kb:.35,col:'#f5f5f4'},
   sup:{nm:'누르기',ds:'점프해 내려찍기 · 기절 + 벽 파괴',ty:'leap',boom:'quake',range:6,dmg:1600,aoe:2.2,stun:1,brk:1,col:'#d6d3d1'}},
  {k:'greninja',id:658,nm:'개굴닌자',role:'중거리 · 기동',el:'water',gr:'e',col:'#2563eb',hp:3100,spd:1.28,rl:1.2,charge:3000,
@@ -566,7 +566,7 @@ const CH=[
  {k:'lycanroc',id:745,nm:'루가루암',role:'근접 · 마무리',el:'rock',gr:'r',col:'#fb923c',hp:4400,spd:1.25,rl:.9,charge:2500,
   atk:{nm:'깨물어부수기',ds:'빠른 2연속 물기 · 체력 50% 이하 적에게 1.6배',ty:'shot',fx:'jaw',burst:2,gap:.1,range:3.5,speed:15,dmg:650,r:13,exec:1.6,col:'#e7e5e4'},
   sup:{nm:'액셀록',ds:'바위를 두르고 번개처럼 돌진',ty:'dash',fx:'rockdash',range:6,speed:24,dmg:1600,kb:2,col:'#a8a29e'}},
- {k:'mimikyu',id:778,nm:'따라큐',role:'근접 · 생존',el:'ghost',gr:'s',col:'#fde047',hp:4800,spd:1.15,rl:1.1,charge:2700,
+ {k:'mimikyu',id:778,nm:'따라큐',role:'근접 · 생존',el:'ghost',gr:'e',col:'#fde047',hp:4800,spd:1.15,rl:1.1,charge:2700,
   atk:{nm:'섀도클로',ds:'나란히 날아가는 그림자 발톱 3개 (관통) · 맞은 적을 끌어당김',ty:'shot',fx:'claw',count:3,spread:0,par:44,range:5.8,speed:14,dmg:480,r:11,pierce:1,pull:1.1,col:'#7e22ce'},
   sup:{nm:'탈',ds:'(특성) 탈을 써서 2.5초 무적 + 이동속도 증가',ty:'disguise',dur:2.5,col:'#fde047'}},
  {k:'scizor',id:212,nm:'핫삼',role:'근접 · 딜러',el:'steel',gr:'s',col:'#ef4444',hp:4200,spd:1.12,rl:.8,charge:2400,
@@ -3067,8 +3067,13 @@ const DXF=(()=>{const b=CH.find(c=>c.k==='deoxys');return [b,
 const FORMS={deoxys:DXF,minior:MNF,palafin:PLF,magikarp:MKF,trio:TRF,lati:LTF,calyrex:CXF,enamorus:ENF,steve:STF,giratina:GRF,necrozma:NZF,kyurem:KYF,morpeko:MPF,zygarde:ZGF,ogerpon:OGF,aegislash:AEF,darmanitan:DMF};
 /* 등급별 능력치 평탄화: 체력·공격력·필살기 피해의 등급 평균을 전체 평균의 94/97/100/103/106% 로 맞춤 (등급 안 강약은 비율 유지) */
 const GRADE_STEP={r:.94,s:.97,e:1,m:1.03,l:1.06};
+const GRADE_FIX=['snorlax','mimikyu','gyarados','tinkaton','lycanroc','tyranitar','palafin','tapukoko','maushold','tatsugiri','glaceon'];
 (()=>{const B=CH.filter(c=>GRADE_STEP[c.gr]),dps=c=>c.atk.dmg*(c.atk.count||1)*(c.atk.burst||1)*(c.atk.dsc?1.5:1);
   const mean=(L,f)=>L.length?L.reduce((a,c)=>a+f(c),0)/L.length:0,hasS=c=>c.sup.dmg>0;
+  /* 등급 평균에서 너무 벗어난 캐릭터는 ±25% 안으로 */
+  for(let it=0;it<4;it++)for(const k of GRADE_FIX){const c=B.find(x=>x.k===k);if(!c)continue;const L=B.filter(x=>x.gr===c.gr),cl=(v,m)=>Math.min(m*1.25,Math.max(m*.75,v))/v;
+    const fh=cl(c.hp,mean(L,x=>x.hp)),fa=cl(dps(c),mean(L,dps)),fs=hasS(c)?cl(c.sup.dmg,mean(L.filter(hasS),x=>x.sup.dmg)):1;
+    c.hp=Math.round(c.hp*fh/10)*10;c.atk.dmg=Math.round(c.atk.dmg*fa);if(hasS(c))c.sup.dmg=Math.round(c.sup.dmg*fs);}
   const all={hp:mean(B,c=>c.hp),atk:mean(B,dps),sup:mean(B.filter(hasS),c=>c.sup.dmg)},F={};
   for(const g in GRADE_STEP){const L=B.filter(c=>c.gr===g);F[g]={hp:all.hp*GRADE_STEP[g]/mean(L,c=>c.hp),atk:all.atk*GRADE_STEP[g]/mean(L,dps),sup:all.sup*GRADE_STEP[g]/mean(L.filter(hasS),c=>c.sup.dmg)};}
   const done=new Set();
