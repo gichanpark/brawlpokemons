@@ -507,7 +507,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.16.0';
+const VER='1.16.1';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -867,7 +867,7 @@ const CH=[
  {k:'ironvaliant',id:1006,nm:'무쇠무인',pdx:'f',role:'암살 · 순간이동',el:'fairy',gr:'m',col:'#4ade80',hp:4000,spd:1.2,rl:1.0,charge:2600,
   atk:{nm:'소울크래시',ds:'부채꼴로 베어내는 정신의 칼날 · 30% 확률로 1.5초간 공격 하락',ty:'shot',swing:1.4,art:'vblade',el:'fairy',range:2.5,speed:16,dmg:780,r:18,weakC:{c:.3,t:1.5},col:'#f9a8d4'},
   sup:{nm:'인파이트',ds:'순간이동해 들이닥쳐 주변 적에게 큰 피해 · 반동으로 3초간 받는 피해 증가',ty:'tele',boom:'pop',el:'fight',range:6,aoe:1.9,dmg:1700,kb:.8,selfVuln:3,col:'#4ade80'}},
- {k:'eternatus',id:890,nm:'무한다이노',paid:1,role:'포격 · 거다이맥스',el:'dragon',gr:'l',col:'#7e22ce',hp:5000,spd:.95,rl:1.15,charge:3000,
+ {k:'eternatus',id:890,nm:'무한다이노',role:'포격 · 거다이맥스',el:'dragon',gr:'l',col:'#7e22ce',hp:5000,spd:.95,rl:1.15,charge:3000,
   atk:{nm:'다이맥스포',ds:'세 방향으로 뻗는 관통 레이저 · 체력이 많이 남은 적일수록 더 아픔 (최대 1.5배)',ty:'shot',fx:'dmax',el:'dragon',count:3,spread:.42,range:7.5,speed:24,dmg:340,r:9,pierce:1,hiHp:.5,col:'#a855f7'},
   sup:{nm:'무한다이빔',ds:'거다이맥스해 떠오른 뒤 2.5초 동안 넓은 빔을 쏨 · 빔 주변 적을 조금씩 빨아들임',gmax:.9,ebeam:2.5,ty:'shot',fx:'dmax',el:'dragon',range:9,w:1.7,dmg:2600,col:'#dc2626'}},
  {k:'steve',id:'steve',rface:1,nm:'스티브',fnm:'스티브 (맨손)',role:'한정 · 채굴과 제작',el:'normal',gr:'sp',col:'#22d3ee',hp:4200,spd:1.1,rl:1.0,charge:2600,
