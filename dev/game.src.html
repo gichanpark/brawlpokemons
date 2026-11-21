@@ -506,7 +506,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.15.3';
+const VER='1.15.4';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1335,7 +1335,7 @@ function fireSuper(e,ang,d){
     const add=Math.round((e.ch.hp-old.hp)*(e.baseMul||1));e.maxHp+=add;e.hp=Math.max(1,Math.min(e.maxHp,e.hp+Math.max(0,add)));
     const cc=e.form===1?['#f59e0b','#fde68a','#1f2937']:e.form===2?['#4f46e5','#c7d2fe','#1f2937']:['#fde047','#fff','#f0abfc','#67e8f9'];
     P_({ring:1,x:e.x,y:e.y,rad:120,col:cc[0],t:.6});P_({ring:1,x:e.x,y:e.y,rad:70,col:'#fff',t:.4});spark(e.x,e.y-40,cc,34,280,.8,7,{sh:'star'});
-    addText(e.x,e.y-130,e.form===3?'울트라네크로즈마!':e.ch.fnm+' 합체!',cc[1],1);sfx('bigboom',e.x,e.y);if(e===P)G.shake=Math.max(G.shake,.3);}
+    heal(e,e.maxHp*.25);addText(e.x,e.y-130,e.form===3?'울트라네크로즈마!':e.ch.fnm+' 합체!',cc[1],1);sfx('bigboom',e.x,e.y);if(e===P)G.shake=Math.max(G.shake,.3);}
   if(s.gmax){const was=e.gmaxT>0;e.gmaxT=s.gmax;e.gmaxD=s.gmax;if(!was){sfx('bigboom',e.x,e.y);addText(e.x,e.y-130,'거다이맥스!','#f87171',1);P_({ring:1,x:e.x,y:e.y,rad:110,col:'#dc2626',t:.6});P_({ring:1,x:e.x,y:e.y,rad:70,col:'#f87171',t:.45});spark(e.x,e.y-60,['#dc2626','#f87171','#fff'],26,260,.7,7);if(e===P)G.shake=Math.max(G.shake,.35);}}
   if(s.ty==='dash'||s.ty==='leap'||s.ty==='tele'||s.ty==='sdive')bumpFz(e);
   if(s.ty==='dash'&&s.ironS)e.ironT=Math.max(e.ironT||0,s.ironS);
@@ -3065,6 +3065,17 @@ const DXF=(()=>{const b=CH.find(c=>c.k==='deoxys');return [b,
   Object.assign({},b,{fnm:'디펜스폼',form:2,role:'폼 체인지 · 방어',hp:5800,spd:.9,col:'#ea580c',atk:Object.assign({},b.atk,{nm:'사이코부스트',ds:'약한 염동 구체 · 단단한 몸',dmg:420}),sup:{nm:'코스믹파워',ds:'5초간 받는 피해 -50% + 체력 30% 회복',ty:'nova',boom:'psy',el:'psychic',aoe:2,dmg:400,selfHeal:.3,ironS:5,col:'#fb923c'}}),
   Object.assign({},b,{fnm:'스피드폼',form:3,role:'폼 체인지 · 속도',hp:3600,spd:1.45,rl:.8,col:'#f97316',atk:Object.assign({},b.atk,{nm:'사이코부스트',ds:'빠르게 연사하는 염동 구체',dmg:520,speed:20}),sup:{nm:'신속',ds:'눈에 안 보이는 속도로 돌진',ty:'dash',fx:'speed',el:'normal',range:8,speed:34,dmg:1500,kb:1,col:'#fdba74'}})];})();
 const FORMS={deoxys:DXF,minior:MNF,palafin:PLF,magikarp:MKF,trio:TRF,lati:LTF,calyrex:CXF,enamorus:ENF,steve:STF,giratina:GRF,necrozma:NZF,kyurem:KYF,morpeko:MPF,zygarde:ZGF,ogerpon:OGF,aegislash:AEF,darmanitan:DMF};
+/* 등급별 능력치 평탄화: 체력·공격력·필살기 피해의 등급 평균을 전체 평균의 94/97/100/103/106% 로 맞춤 (등급 안 강약은 비율 유지) */
+const GRADE_STEP={r:.94,s:.97,e:1,m:1.03,l:1.06};
+(()=>{const B=CH.filter(c=>GRADE_STEP[c.gr]),dps=c=>c.atk.dmg*(c.atk.count||1)*(c.atk.burst||1)*(c.atk.dsc?1.5:1);
+  const mean=(L,f)=>L.length?L.reduce((a,c)=>a+f(c),0)/L.length:0,hasS=c=>c.sup.dmg>0;
+  const all={hp:mean(B,c=>c.hp),atk:mean(B,dps),sup:mean(B.filter(hasS),c=>c.sup.dmg)},F={};
+  for(const g in GRADE_STEP){const L=B.filter(c=>c.gr===g);F[g]={hp:all.hp*GRADE_STEP[g]/mean(L,c=>c.hp),atk:all.atk*GRADE_STEP[g]/mean(L,dps),sup:all.sup*GRADE_STEP[g]/mean(L.filter(hasS),c=>c.sup.dmg)};}
+  const done=new Set();
+  const scale=(c,g)=>{if(!c||done.has(c))return;done.add(c);const f=F[g];if(typeof c.hp==='number')c.hp=Math.round(c.hp*f.hp/10)*10;
+    for(const [sp,m] of [[c.atk,f.atk],[c.sup,f.sup]]){if(!sp||done.has(sp))continue;done.add(sp);if(sp.dmg>0)sp.dmg=Math.round(sp.dmg*m);}};
+  for(const c of B){scale(c,c.gr);const fm=FORMS[c.k];if(fm)fm.forEach(x=>scale(x,c.gr));}
+  window.GRADE_F=F;})();
 function formPor(k,i){return POR[k+'_'+(i||0)]||(i?POR[k+i]:null)||POR[chOf(k).id];}
 const SPECS=[];CH.concat(DXF.slice(1),MNF.slice(1),PLF.slice(1),MKF.slice(1),TRF.slice(1),LTF.slice(1),CXF.slice(1),ENF.slice(1),STF.slice(1),GRF.slice(1),NZF.slice(1),KYF.slice(1),MPF.slice(1),ZGF.slice(1),OGF.slice(1),AEF.slice(1),DMF.slice(1)).forEach(c=>{c.atk._id=SPECS.push(c.atk)-1;c.sup._id=SPECS.push(c.sup)-1;});
 const SHARDS={};
@@ -3350,7 +3361,7 @@ const TRG={
  snorlax:{t:['두꺼운지방 · 먹보','불꽃 피해 50% 감소 · 체력 회복 2배'],g:['잠자기','체력 50%를 즉시 회복하지만 1.5초 잠듦']},
  greninja:{t:['변환자재','공격할 때마다 2초간 이동속도 +10% (최대 3중첩)'],g:['그림자분신','2.5초간 투명해지고 빨라짐 (공격하면 풀림)']},
  dragonite:{t:['멀티스케일','체력이 가득할 때 받는 피해 50% 감소'],g:['용의춤','4초간 장전 속도 2배 · 이동속도 +15%']},
- mewtwo:{t:['프레셔','3칸 안의 적은 장전 속도 -30%'],g:['HP회복','체력 35% 즉시 회복']},
+ mewtwo:{t:['프레셔','4칸 안의 적은 장전 속도 -35%'],g:['HP회복','체력 40% 즉시 회복']},
  gyarados:{t:['위협 · 헤엄','4칸 안의 적 공격력 -20% · 물 위를 빠르게 헤엄침'],g:['바다회오리','지정한 곳에 3초간 적을 끌어당기고 느리게 하는 소용돌이']},
  tyranitar:{t:['모래날림','3칸 안의 적에게 모래바람 지속 피해'],g:['스텔스록','주변에 밟으면 터지는 바위 함정 3개 설치']},
  garchomp:{t:['까칠한피부 · 광폭화','가까이서 때린 적에게 피해 20% 반사 · 체력 50% 이하 공격력·속도 +25%'],g:['구멍파기','1.2초간 땅속으로 숨어 무적 상태로 빠르게 이동']},
@@ -3368,7 +3379,7 @@ const TRG={
  talonflame:{t:['질풍날개 · 비행','체력이 가득할 때 이동속도 +20% · 물 위를 날아다님'],g:['날개쉬기','체력 30% 즉시 회복']},
  morpeko:{t:['꼬르륵스위치','배부른 모양: 이동속도 +10% · 배고픈 모양: 공격력 +25%'],g:['꼬르륵스위치','배부른 모양 ↔ 배고픈 모양 폼 체인지 · 바꿀 때 탄약 1칸 충전 (횟수 제한 없음 · 쿨타임 4초)']},
  cinderace:{t:['리베로','적을 맞히면 필살기가 25% 더 빨리 충전'],g:['니트로차지','불꽃을 두르고 짧게 돌진하며 부딪친 적에게 피해']},
- kyurem:{t:['프레셔 · 폼 체인지','3칸 안의 적은 장전 속도 -30% · 가젯으로 블랙큐레무(근접 돌격)·화이트큐레무(원거리 포격)로 변신'],g:['유전자쐐기','기본 → 블랙큐레무 → 화이트큐레무 → 기본 순서로 폼 체인지 (횟수 제한 없음 · 쿨타임 4초)']},
+ kyurem:{t:['프레셔 · 폼 체인지','4칸 안의 적은 장전 속도 -35% · 가젯으로 블랙큐레무(근접 돌격)·화이트큐레무(원거리 포격)로 변신'],g:['유전자쐐기','기본 → 블랙큐레무 → 화이트큐레무 → 기본 순서로 폼 체인지 (횟수 제한 없음 · 쿨타임 4초)']},
  shuckle:{t:['옹골참','받는 피해 -45% (파워트릭 중엔 반대로 +60%)'],g:['껍질에숨기','1.5초간 껍질에 숨어 받는 피해 크게 감소']},
  torkoal:{t:['하얀연기','필살기 연막 안의 아군은 투명해짐'],g:['철벽','2초간 받는 피해 -50%']},
  sableye:{t:['짓궂은마음 · 도둑질','공격으로 적의 필살기 게이지를 훔쳐 내 것으로'],g:['이상한빛','5칸 안 가장 가까운 적을 2.5초 혼란']},
@@ -3440,14 +3451,14 @@ const TRG={
  togepi:{t:['하늘의은총','손가락흔들기로 무작위 포켓몬의 필살기를 씀'],g:['행운','체력 20% 회복']},
  pachirisu:{t:['도우미','필살기 장판이 아군을 회복시킴'],g:['도우미','6칸 안 가장 다친 아군 체력 25% 회복']},
  trio:{t:['풍요의 삼신 · 교대','체력이 따로인 3마리가 한 캐릭터 · 가젯으로 볼트로스 → 토네로스 → 랜드로스 교대 · 대기 중엔 천천히 회복 · 한 마리가 쓰러지면 다음 포켓몬이 자동 등장 (셋 다 쓰러져야 탈락) · 필살기를 쓰면 영물폼이 되고 교대하기 전까지 유지'],g:['교대','다음 포켓몬으로 교대 (횟수 제한 없음 · 쿨타임 2.5초) · 나가는 포켓몬의 영물폼은 풀림']},
- calyrex:{t:['인마일체','필살기로 블리자포스(백마 · 좁고 긴 단일 딜러)나 레이스포스(흑마 · 넓은 광역 딜러)를 불러 올라탐 · 말을 타면 빨라지고 공격이 바뀜 · 말을 탄 채로 가젯을 쓰면 다른 말로 갈아탐 · 같은 팀에 블리자포스나 레이스포스가 있으면 그 말을 탄 채로 시작하고, 쓰러져도 탄 채로 부활'],g:['생명의물방울','말을 안 탔을 때: 4.5칸 안 아군 체력 20% 회복 + 5초 보호막 (쿨타임 6초) · 말을 탔을 때: 다른 말로 갈아타기 (쿨타임 2.5초)']},
+ calyrex:{t:['인마일체','필살기로 블리자포스(백마 · 좁고 긴 단일 딜러)나 레이스포스(흑마 · 넓은 광역 딜러)를 불러 올라탐 · 말을 타면 빨라지고 공격이 바뀜 · 말을 탄 채로 가젯을 쓰면 다른 말로 갈아탐 · 같은 팀에 블리자포스나 레이스포스가 있으면 그 말을 탄 채로 시작하고, 쓰러져도 탄 채로 부활'],g:['생명의물방울','말을 안 탔을 때: 4.5칸 안 아군 체력 25% 회복 + 5초 보호막(1200) (쿨타임 6초) · 말을 탔을 때: 다른 말로 갈아타기 (쿨타임 2.5초)']},
  glastrier:{t:['왕의 애마','같은 팀에 버드렉스가 있으면 공격 +20% · 받는 피해 -10% · 좁고 긴 단일 공격'],g:['철벽','2.5초간 받는 피해 절반']},
  spectrier:{t:['왕의 애마','같은 팀에 버드렉스가 있으면 공격 +20% · 받는 피해 -10% · 넓은 광역 공격'],g:['유령 질주','2초간 빨라지고 잠깐 무적']},
  hlil:{t:['히스이의 주인','체력이 처음 절반 아래로 떨어지면 4초간 각성 (공격 +25% · 빨라짐) · 승리의춤을 쓰면 체력 25% 회복 · 같은 팀 아르세우스를 강하게 만듦'],g:['꽃보라','주변 2.3칸에 꽃잎 폭풍 · 700 피해']},
  harc:{t:['히스이의 주인','체력이 처음 절반 아래로 떨어지면 4초간 각성 (공격 +25% · 빨라짐) · 같은 팀 아르세우스를 강하게 만듦'],g:['신속','1.6초간 빨라지고 잠깐 무적']},
  hele:{t:['히스이의 주인','체력이 처음 절반 아래로 떨어지면 4초간 각성 (공격 +25% · 빨라짐) · 클로로블라스트는 강하지만 체력을 깎음 · 같은 팀 아르세우스를 강하게 만듦'],g:['구르기','굴러서 4칸 돌진 · 부딪힌 적에게 피해']},
  hava:{t:['히스이의 주인','체력이 처음 절반 아래로 떨어지면 4초간 각성 (공격 +25% · 빨라짐) · 같은 팀 아르세우스를 강하게 만듦'],g:['철벽','3초간 받는 피해 절반']},
- arceus:{t:['창조신 · 주인의 주인','같은 팀에 히스이의 주인 포켓몬(사마자르 · 드레디어 · 윈디 · 붐볼 · 크레베이스)이 1마리 있을 때마다 공격 +12% · 받는 피해 -6% (최대 4마리 · 머리 위에 표시)'],g:['HP회복','체력 30% 회복']},
+ arceus:{t:['창조신 · 주인의 주인','같은 팀에 히스이의 주인 포켓몬(사마자르 · 드레디어 · 윈디 · 붐볼 · 크레베이스)이 1마리 있을 때마다 공격 +15% · 받는 피해 -6% (최대 4마리 · 머리 위에 표시) · 창조신이라 항상 받는 피해 -8%'],g:['HP회복','체력 35% 회복']},
  greattusk:{t:['고대활성','체력이 절반 이상이면 공격 +20% · 필살기 들이받기는 적과 부딪치거나 멈춘 자리에서 땅을 갈라 주변 적을 기절시킴'],g:['고속스핀','주변 적에게 피해 + 밀쳐내고, 둔화·화상·기절을 털어낸 뒤 1.5초간 빨라짐']},
  fluttermane:{t:['고대활성','체력이 절반 이상이면 이동속도 +20% · 공중에 떠서 물 위도 지나감 · 대신 체력이 낮음'],g:['이상한빛','5칸 안 가장 가까운 적을 2.5초간 혼란 + 둔화']},
  roaringmoon:{t:['고대활성','체력이 절반 이상이면 공격 +15% · 용의춤은 쓰러질 때까지 쌓임 (최대 3번, 1번마다 공격 +10% · 이동속도 +6%)'],g:['용의춤','용의춤을 1번 쌓고 2초간 빨라짐 (이미 3번이면 체력 15% 회복)']},
@@ -3457,9 +3468,9 @@ const TRG={
  enamorus:{t:['사랑의 힘','헤롱헤롱 상태의 적에게 주는 피해 +20% · 헤롱헤롱 상태인 적은 공격의 30%가 실패함 · 필살기 봄의폭풍을 쓰면 영물폼이 됨 (쓰러지면 화신폼으로)'],g:['천사의키스','4.5칸 안 가장 가까운 적에게 키스 · 2.5초 헤롱헤롱 + 최대 체력 12% 흡수']},
  steve:{t:['채굴 · 제작','뽑기로 얻을 수 없는 한정 캐릭터 · 태어날 때마다 옆에 제작대를 설치 · 제작대 근처에서 오른쪽 제작 칸을 눌러 도구를 만들고, 만든 도구는 핫바에 모여 눌러서 바꿔 들 수 있음 (PC: 숫자키 1~5로 바꿔 들기·제작, 마우스 휠로 넘기기) · 든 도구에 따라 공격이 바뀜 (돌3 → 돌 도끼 · 철2+돌1 → 활 · 금2 → 금 검 · 다이아2 → 다이아몬드 검) · 쓰러지면 만든 도구를 모두 잃음 (광물은 유지)'],g:['채굴','랜덤 광물 3개 채굴 (돌·철·금·다이아몬드 · 쿨타임 3초 · 횟수 제한 없음)']},
  lati:{t:['무한 · 교대','체력이 따로인 라티아스(저격)와 라티오스(근접)가 한 캐릭터 · 대기 중엔 천천히 회복 · 한 마리가 쓰러지면 다른 쪽이 자동 등장 (둘 다 쓰러져야 탈락) · 필살기를 쓰면 두 마리가 동시에 필살기 (용성군 + 러스터퍼지)'],g:['교대','라티아스 ↔ 라티오스 교대 (횟수 제한 없음 · 쿨타임 2.5초)']},
- giratina:{t:['반전세계','어나더폼으로 시작 · 적을 한 마리 쓰러뜨리면 오리진폼으로 변신 · 오리진폼은 지금까지 쓰러뜨린 포켓몬들의 그림자를 처치한 수만큼 연달아 날려 공격 (관통) · 쓰러지면 어나더폼으로'],g:['그림자 숨기','1.2초 동안 그림자 속에 숨어 무적 + 빨라짐']},
- necrozma:{t:['프리즘 · 합체','기본 폼에서 태양/달 모드를 고름 (스프라이트 옆에 표시) · 필살기를 쓰면 태양 모드는 황혼의갈기, 달 모드는 새벽의날개로 합체 → 다시 필살기로 울트라네크로즈마 · 쓰러지면 기본으로'],g:['프리즘 전환','태양 모드 ↔ 달 모드 전환 (기본 폼에서만 · 횟수 제한 없음)']},
- zygarde:{t:['스웜체인지','필살기를 쓸 때마다 10% → 50% → 퍼펙트폼으로 강해짐 (체력·이동·공격·필살기 모두 강화) · 필살기 게이지가 매우 빨리 참 · 쓰러지면 10%폼으로 돌아감'],g:['셀 흡수','필살기 게이지 35% 즉시 충전 + 체력 15% 회복']},
+ giratina:{t:['반전세계','어나더폼으로 시작 · 적을 한 마리 쓰러뜨리면 오리진폼으로 변신 · 오리진폼은 지금까지 쓰러뜨린 포켓몬들의 그림자를 처치한 수만큼 연달아 날려 공격 (관통) · 쓰러지면 어나더폼으로'],g:['그림자 숨기','1.8초 동안 그림자 속에 숨어 무적 + 빨라짐']},
+ necrozma:{t:['프리즘 · 합체','기본 폼에서 태양/달 모드를 고름 (스프라이트 옆에 표시) · 필살기를 쓰면 태양 모드는 황혼의갈기, 달 모드는 새벽의날개로 합체 → 다시 필살기로 울트라네크로즈마 · 합체할 때마다 체력 25% 회복 · 쓰러지면 기본으로'],g:['프리즘 전환','태양 모드 ↔ 달 모드 전환 (기본 폼에서만 · 횟수 제한 없음)']},
+ zygarde:{t:['스웜체인지','필살기를 쓸 때마다 10% → 50% → 퍼펙트폼으로 강해짐 (체력·이동·공격·필살기 모두 강화) · 필살기 게이지가 매우 빨리 참 · 쓰러지면 10%폼으로 돌아감'],g:['셀 흡수','필살기 게이지 45% 즉시 충전 + 체력 20% 회복']},
  meowscarada:{t:['눈속임','부쉬에서 나온 뒤 1.5초 동안 공격 피해 +50%'],g:['바꿔치기','2초간 투명해지고 빨라짐 (공격하면 풀림)']},
  tinkaton:{t:['망치 단련','적을 맞힐 때 필살기가 30% 더 빨리 참'],g:['자이로볼','망치를 들고 짧게 회전 돌진하며 부딪친 적에게 피해']},
  kleavor:{t:['히스이의 주인 · 날카로운 날','공격 피해 +10% · 암석액스가 함정을 남김 (최대 4개) · 체력이 처음 절반 아래로 떨어지면 4초간 각성 · 같은 팀 아르세우스를 강하게 만듦'],g:['손톱갈기','3초간 공격력 +25% · 이동속도 +25%']},
@@ -3470,7 +3481,7 @@ const TRG={
  drifblim:{t:['부유','벽·물·바위 위를 자유롭게 떠다님'],g:['바람 타기','2.5초간 이동속도 크게 증가']},
  aegislash:{t:['배틀스위치','공격하거나 필살기를 쓰면 블레이드폼 (피해 +50%, 받는 피해 +15%) · 실드폼 (받는 피해 -35%)으로는 가젯으로만 돌아감'],g:['킹실드','실드폼으로 돌아가며 1.2초간 받는 피해 90% 감소 (횟수 제한 없음 · 쿨타임 4초)']},
  darmanitan:{t:['달마모드','체력 50% 이하가 되면 달마모드(원거리 에스퍼, 받는 피해 -20%)로 · 70% 넘게 회복하면 노말폼으로'],g:['명상','즉시 모드를 바꾸고 5초간 고정 + 체력 15% 회복']},
- rayquaza:{t:['에어록 · 비행','물 위를 날아다님 · 지속 피해(화상·독·모래·소용돌이) 50% 감소'],g:['메가진화','8초간 메가레쿠쟈! 공격력 +40% · 이동속도 +20% · 몸이 커짐 (경기당 1회)']},
+ rayquaza:{t:['에어록 · 비행','물 위를 날아다님 · 지속 피해(화상·독·모래·소용돌이) 50% 감소'],g:['메가진화','10초간 메가레쿠쟈! 공격력 +40% · 이동속도 +20% · 몸이 커짐 (경기당 1회)']},
 };
 CH.forEach(c=>{const x=TRG[c.k];c.trait=x.t;c.gad=x.g;if(['gengar','gyarados','rayquaza','lapras','talonflame'].includes(c.k))c.swim=1;});
 Object.values(FORMS).forEach(F=>F.slice(1).forEach(f=>{f.trait=F[0].trait;f.gad=F[0].gad;f.swim=F[0].swim;}));
@@ -3504,7 +3515,7 @@ function pdxOn(e){if(!e||!PDXB[e.ch.k]||e.ch.ditto)return false;if(NET.on&&!NET.
 const pdxM=(e,b)=>{const q=PDXB[e.ch.k];return q&&q[0]===b&&pdxOn(e)?q[1]:0;};
 function pdxFx(e){const a=e.ch.pdx==='a',cc=a?['#fb923c','#fde047','#fff']:['#22d3ee','#a5f3fc','#fff'];P_({ring:1,x:e.x,y:e.y,rad:80,col:cc[0],t:.5});spark(e.x,e.y-40,cc,18,200,.6,5,{sh:a?'star':'plus'});addText(e.x,e.y-140,a?'고대활성!':'쿼크차지!',cc[0],1);}
 function dmgOut(src){
-  if(!src)return 1;let m=1;if(src.ch.k==='arceus'&&!src.ch.ditto)m*=1+.12*nobleN(src);if(horseB(src))m*=1.2;
+  if(!src)return 1;let m=1;if(src.ch.k==='arceus'&&!src.ch.ditto)m*=1+.15*nobleN(src);if(horseB(src))m*=1.2;
   if(src.ch.k==='charizard'&&src.hp<src.maxHp*.4)m*=1.3;
   if(src.ch.k==='lycanroc')m*=1.2;
   if(src.ch.k==='meowscarada'&&src.ambushT>0)m*=1.5;
@@ -3526,7 +3537,7 @@ function dmgOut(src){
   return m;
 }
 function dmgIn(src,tgt,dot){
-  let m=1;const k=tgt.ch.k;if(k==='arceus'&&!tgt.ch.ditto)m*=1-.06*nobleN(tgt);if(horseB(tgt))m*=.9;if(src&&src.ch.k==='enamorus'&&tgt.loveT>0)m*=1.2;
+  let m=1;const k=tgt.ch.k;if(k==='arceus'&&!tgt.ch.ditto)m*=.92-.06*nobleN(tgt);if(horseB(tgt))m*=.9;if(src&&src.ch.k==='enamorus'&&tgt.loveT>0)m*=1.2;
   if(PDXB[k])m*=1-pdxM(tgt,'def');
   if(k==='blastoise')m*=.85;if(k==='geodude')m*=.9;if(k==='magikarp'&&tgt.form===1)m*=.75;if(k==='umbreon'||k==='corviknight')m*=.85;if(k==='bewear')m*=.75;if(k==='shuckle')m*=tgt.trickT>0?1.6:.55;if(src&&src.ch.k==='darkrai'&&tgt.stun>0)m*=1.5;if(k==='minior'&&tgt.form===1)m*=1.2;if(k==='dachsbun'&&src&&src.ch.el==='fire')m*=.25;if(tgt.vulnT>0)m*=1.3;for(const z of G.zones)if(z.kind==='barrier'&&z.team===tgt.team&&Math.hypot(tgt.x-z.x,tgt.y-z.y)<z.r){m*=.6;break;}if(tgt.shellT>0)m*=.3;if(tgt.ironT>0)m*=.5;
   if(k==='snorlax'&&src&&src.ch.el==='fire')m*=.5;
@@ -3558,7 +3569,7 @@ function moveMul(e){
 }
 function reloadMul(e){
   let m=1;if(e.ch.k==='pikachu'&&Math.abs(e.vx||0)+Math.abs(e.vy||0)>20)m*=1.4;if(e.danceT>0)m*=2;
-  for(const o of G.ents)if(o.alive&&(o.ch.k==='mewtwo'||o.ch.k==='kyurem')&&o.team!==e.team&&Math.hypot(o.x-e.x,o.y-e.y)<3*T){m*=.7;break;}
+  for(const o of G.ents)if(o.alive&&(o.ch.k==='mewtwo'||o.ch.k==='kyurem')&&o.team!==e.team&&Math.hypot(o.x-e.x,o.y-e.y)<4*T){m*=.65;break;}
   return m;
 }
 const TIMERS=['shieldT','loveT','trickT','illusT','illusB','vulnT','silT','stretchT','confT','dittoT','bladeT','kingT','zenLock','ambushT','gmaxT','wishT','shellT','invisT','digT','danceT','ironT','weakT','reflT','howlT','megaT','bondT','gadCd','protT','sleepFx','pdxT'];
@@ -3611,7 +3622,7 @@ function useGadget(e,ang,d){
     case 'snorlax':heal(e,e.maxHp*.5);e.stun=Math.max(e.stun,1.5);e.sleepFx=1.5;break;
     case 'greninja':e.invisT=2.5;e.haste=Math.max(e.haste||0,2.5);break;
     case 'dragonite':case 'hydreigon':case 'kommoo':case 'koraidon':e.danceT=4;break;
-    case 'mewtwo':heal(e,e.maxHp*.35);break;
+    case 'mewtwo':heal(e,e.maxHp*.4);break;
     case 'gyarados':{const dd=clamp(d||4*T,0,6*T);addZone(e.x+ca*dd,e.y+sa*dd,2*T,3,e.team,e,0,150,'whirl');break;}
     case 'tyranitar':{const mine=G.items.filter(i=>i.ty==='rock'&&i.o===e);while(mine.length>3){const x=mine.shift();G.items.splice(G.items.indexOf(x),1);}
       for(let i=0;i<3;i++){const a=ang+(i-1)*1.3;G.items.push({ty:'rock',x:e.x+Math.cos(a)*T*1.7,y:e.y+Math.sin(a)*T*1.7,vx:0,vy:0,t:0,team:e.team,o:e});}
@@ -3643,7 +3654,7 @@ function useGadget(e,ang,d){
     case 'togepi':heal(e,e.maxHp*.2);spark(e.x,e.y-30,['#f9a8d4','#fde047','#60a5fa','#fff'],14,140,.5,5,{sh:'star'});break;
     case 'pachirisu':case 'maushold':{let b=null,bh=1;for(const o of G.ents)if(o.alive&&!o.safe&&o.team===e.team&&Math.hypot(o.x-e.x,o.y-e.y)<6*T&&o.hp/o.maxHp<bh){bh=o.hp/o.maxHp;b=o;}if(!b)return false;heal(b,b.maxHp*.25);P_({ring:1,x:b.x,y:b.y,rad:50,col:'#fde047',t:.4});break;}
     case 'calyrex':{if(e.form){const f=e.form===1?2:1;calyMount(e,f);e.gadCd=2.5;return true;}
-      let n=0;for(const o of G.ents)if(o.alive&&!o.safe&&o.team===e.team&&Math.hypot(o.x-e.x,o.y-e.y)<4.5*T){heal(o,o.maxHp*.2);o.shield=Math.max(o.shield||0,900);o.shieldT=Math.max(o.shieldT||0,5);n++;spark(o.x,o.y-40,['#86efac','#fff','#a7f3d0'],10,120,.6,5,{sh:'plus'});}
+      let n=0;for(const o of G.ents)if(o.alive&&!o.safe&&o.team===e.team&&Math.hypot(o.x-e.x,o.y-e.y)<4.5*T){heal(o,o.maxHp*.25);o.shield=Math.max(o.shield||0,1200);o.shieldT=Math.max(o.shieldT||0,5);n++;spark(o.x,o.y-40,['#86efac','#fff','#a7f3d0'],10,120,.6,5,{sh:'plus'});}
       P_({ring:1,x:e.x,y:e.y,rad:4.5*T,col:'#86efac',t:.5});addText(e.x,e.y-120,'생명의물방울! 보호막','#86efac',1);e.gadCd=6;return true;}
     case 'greattusk':{e.stun=0;e.slowT=0;e.burnT=0;e.haste=Math.max(e.haste||0,1.5);aoeHit(e,e.x,e.y,2.2*T,600,GSP.tspin,true);P_({ring:1,x:e.x,y:e.y,rad:2.2*T,col:'#d6a46a',t:.4});spark(e.x,e.y-20,['#d6a46a','#a78bfa','#fff'],20,260,.5,5,{sh:'plus'});break;}
     case 'fluttermane':{const t=nearEnemy(e,5);if(!t){if(e===P)addText(e.x,e.y-110,'가까운 적이 없어요','#fff');return false;}if(!immune(t)){t.confT=Math.max(t.confT||0,2.5);t.slowT=Math.max(t.slowT||0,2.5);t.slowM=.6;t.slowCol='#c084fc';addText(t.x,t.y-90,'혼란!','#f472b6');}P_({sh:'bolt',pts:[[e.x,e.y-40],[t.x,t.y-40]],col:'#c084fc',w:4,t:.25,x:e.x,y:e.y,vx:0,vy:0});spark(t.x,t.y-40,['#c084fc','#f9a8d4','#fff'],14,140,.6,5,{sh:'star'});break;}
@@ -3659,11 +3670,11 @@ function useGadget(e,ang,d){
     case 'harc':{e.haste=Math.max(e.haste||0,1.6);e.inv=Math.max(e.inv,.4);spark(e.x,e.y-20,['#f97316','#fde047','#fff'],16,200,.4,5,{sh:'plus'});addText(e.x,e.y-120,'신속!','#fdba74');gadUse(e);return true;}
     case 'hele':{bumpFz(e);e.dash={dx:ca,dy:sa,left:4*T,hit:new Set(),s:GSP.eroll};addText(e.x,e.y-120,'구르기!','#fde047');gadUse(e);return true;}
     case 'hava':{e.ironT=Math.max(e.ironT||0,3);P_({ring:1,x:e.x,y:e.y,rad:60,col:'#bae6fd',t:.4});addText(e.x,e.y-120,'철벽!','#bae6fd');gadUse(e);return true;}
-    case 'arceus':{heal(e,e.maxHp*.3);spark(e.x,e.y-30,['#fde68a','#fff'],16,150,.6,5,{sh:'plus'});addText(e.x,e.y-120,'HP회복!','#86efac');gadUse(e);return true;}
+    case 'arceus':{heal(e,e.maxHp*.35);spark(e.x,e.y-30,['#fde68a','#fff'],16,150,.6,5,{sh:'plus'});addText(e.x,e.y-120,'HP회복!','#86efac');gadUse(e);return true;}
     case 'enamorus':{let t=null,bd=4.5*T;for(const o of G.ents){if(!o.alive||!enemyOf(e,o)||o.safe||!visibleTo(o,e.team))continue;const d0=dist(e,o);if(d0<bd){bd=d0;t=o;}}if(!t){if(e===P)addText(e.x,e.y-110,'가까운 적이 없어요','#fff');return false;}
       t.loveT=Math.max(t.loveT||0,2.5);const d=Math.round(t.maxHp*.12);damage(e,t,d,true);heal(e,d);P_({sh:'bolt',pts:[[e.x,e.y-40],[t.x,t.y-40]],col:'#f472b6',w:4,t:.25,x:e.x,y:e.y,vx:0,vy:0});spark(t.x,t.y-40,['#f472b6','#fff'],14,140,.6,6,{sh:'heart'});addText(t.x,t.y-110,'천사의키스! 헤롱헤롱!','#f9a8d4',1);gadUse(e);return true;}
     case 'steve':{mineOre(e);e.gadCd=3;return true;}
-    case 'giratina':{e.inv=Math.max(e.inv,1.2);e.haste=Math.max(e.haste||0,1.2);P_({ring:1,x:e.x,y:e.y,rad:60,col:'#3b0764',t:.4});spark(e.x,e.y-20,['#1e0533','#7e22ce','#a855f7'],18,150,.6,5,{g:-100});addText(e.x,e.y-120,'그림자 숨기!','#d8b4fe');gadUse(e);return true;}
+    case 'giratina':{e.inv=Math.max(e.inv,1.8);e.haste=Math.max(e.haste||0,1.8);P_({ring:1,x:e.x,y:e.y,rad:60,col:'#3b0764',t:.4});spark(e.x,e.y-20,['#1e0533','#7e22ce','#a855f7'],18,150,.6,5,{g:-100});addText(e.x,e.y-120,'그림자 숨기!','#d8b4fe');gadUse(e);return true;}
     case 'trio':case 'lati':{if(e.ch.ditto)break;const m=trioNext(e);if(m<0){if(e===P)addText(e.x,e.y-110,'교대할 포켓몬이 없어요','#fff');return false;}trioSet(e,m,true);e.gadCd=2.5;return true;}
     case 'necrozma':{if(e.form||e.ch.ditto){if(e===P)addText(e.x,e.y-110,'합체 후에는 못 바꿔요','#fff');return false;}e.nzMode=e.nzMode===2?1:2;const sun=e.nzMode===1;spark(e.x,e.y-30,sun?['#fb923c','#fde68a','#fff']:['#38bdf8','#bae6fd','#fff'],16,150,.5,5,{sh:'star'});P_({ring:1,x:e.x,y:e.y,rad:60,col:sun?'#fb923c':'#38bdf8',t:.4});addText(e.x,e.y-118,sun?'태양 모드':'달 모드',sun?'#fdba74':'#7dd3fc',1);sfx('form',e.x,e.y);e.gadCd=.6;return true;}
     case 'sylveon':{let n=0;for(const o of G.ents)if(o.alive&&o.team!==e.team&&Math.hypot(o.x-e.x,o.y-e.y)<4*T){o.weakT=3;n++;spark(o.x,o.y-40,['#f9a8d4','#fff'],6,80,.5,4,{sh:'star'});}break;}
@@ -3682,7 +3693,7 @@ function useGadget(e,ang,d){
     case 'kleavor':e.howlT=3;break;
     case 'ogerpon':{e.form=((e.form||0)+1)%4;e.ch=OGF[e.form];const cc=[['#22c55e','#86efac'],['#38bdf8','#e0f2fe'],['#f97316','#fde047'],['#a8a29e','#e7e5e4']][e.form];
       P_({ring:1,x:e.x,y:e.y,rad:90,col:cc[0],t:.45});spark(e.x,e.y-40,cc.concat(['#fff']),20,220,.6,6,{sh:'star'});addText(e.x,e.y-125,e.ch.fnm+'!',cc[0],1);sfx('ready',e.x,e.y);break;}
-    case 'zygarde':e.sc=Math.min(1,e.sc+.35);heal(e,e.maxHp*.15);spark(e.x,e.y-30,['#84cc16','#bef264'],14,160,.5,5,{sh:'plus'});break;
+    case 'zygarde':e.sc=Math.min(1,e.sc+.45);heal(e,e.maxHp*.2);spark(e.x,e.y-30,['#84cc16','#bef264'],14,160,.5,5,{sh:'plus'});break;
     case 'deoxys':{if(e.ch.ditto)break;const old=e.ch;e.form=((e.form||0)+1)%4;e.ch=DXF[e.form];const f=e.hp/e.maxHp;e.maxHp+=Math.round((e.ch.hp-old.hp)*(e.baseMul||1));e.hp=Math.max(1,Math.round(e.maxHp*f));P_({ring:1,x:e.x,y:e.y,rad:70,col:e.ch.col,t:.4});spark(e.x,e.y-30,['#ea580c','#38bdf8','#fff'],16,180,.5,5,{sh:'star'});addText(e.x,e.y-120,e.ch.fnm+'!','#fdba74',1);sfx('form',e.x,e.y);e.gadCd=1.5;return true;}
     case 'kyurem':{e.form=((e.form||0)+1)%3;e.ch=KYF[e.form];const cc=e.form===1?['#fde047','#1f2937','#93c5fd']:e.form===2?['#fff','#93c5fd','#f97316']:['#bae6fd','#fff'];
       P_({ring:1,x:e.x,y:e.y,rad:100,col:cc[0],t:.5});P_({ring:1,x:e.x,y:e.y,rad:60,col:cc[1],t:.4});spark(e.x,e.y-40,cc,28,260,.7,6,{sh:'star'});addText(e.x,e.y-130,e.ch.nm+'!',cc[0],1);sfx('bigboom',e.x,e.y);if(e===P)G.shake=Math.max(G.shake,.25);break;}
@@ -3694,7 +3705,7 @@ function useGadget(e,ang,d){
     case 'lapras':{let n=0;for(const o of G.ents)if(o.alive&&o.team!==e.team&&!immune(o)&&Math.hypot(o.x-e.x,o.y-e.y)<4*T){o.slowT=2;o.slowM=.45;o.slowCol='#bae6fd';n++;spark(o.x,o.y-30,['#e0f2fe','#fff'],8,90,.5,4,{sh:'plus'});}P_({ring:1,x:e.x,y:e.y,rad:4*T,col:'#e0f2fe',t:.5});break;}
     case 'alakazam':case 'espeon':{bumpFz(e);spark(e.x,e.y-30,['#e879f9','#fff'],12,140,.4,5,{sh:'star'});const m=G.map;e.x=clamp(e.x+ca*4*T,T*.5,(m.C-.5)*T);e.y=clamp(e.y+sa*4*T,T*.5,(m.R-.5)*T);snapWalkable(e);spark(e.x,e.y-30,['#e879f9','#fff'],12,140,.4,5,{sh:'star'});break;}
     case 'talonflame':case 'gmoltres':heal(e,e.maxHp*.3);break;
-    case 'rayquaza':e.megaT=8;sfx('bigboom',e.x,e.y);P_({ring:1,x:e.x,y:e.y,rad:90,col:'#4ade80',t:.6});P_({ring:1,x:e.x,y:e.y,rad:140,col:'#fde047',t:.7});spark(e.x,e.y-50,['#4ade80','#fde047','#fff','#22d3ee'],30,280,.8,6,{sh:'star'});addText(e.x,e.y-130,'메가진화!','#4ade80',1);if(e===P)G.shake=Math.max(G.shake,.35);break;
+    case 'rayquaza':e.megaT=10;sfx('bigboom',e.x,e.y);P_({ring:1,x:e.x,y:e.y,rad:90,col:'#4ade80',t:.6});P_({ring:1,x:e.x,y:e.y,rad:140,col:'#fde047',t:.7});spark(e.x,e.y-50,['#4ade80','#fde047','#fff','#22d3ee'],30,280,.8,6,{sh:'star'});addText(e.x,e.y-130,'메가진화!','#4ade80',1);if(e===P)G.shake=Math.max(G.shake,.35);break;
   }
   e.gadN--;e.gadCd=4;e.lastAtk=G.t;
   sfx('gadget',e.x,e.y);P_({ring:1,x:e.x,y:e.y,rad:50,col:'#86efac',t:.35});if(G.mode!=='karp'||e===P)addText(e.x,e.y-100,e.ch.gad[0]+'!','#86efac');
