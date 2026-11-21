@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.15.9** (소스의 `const VER='...'`)
+- 현재 버전: **v1.15.10** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -79,3 +79,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - v1.15.7: 빠르모트·토게데마루·마릴리·바우첼·야돈 삭제(보유자 없었음). 부스터(열기 `heat`)·블래키(낙인 `markT`)·아머까오(미러아머·택시)·이븐곰(껴안기 `carryT`)·리피아(부쉬 게이지) 고유 능력 추가.
 - 랭킹 이름 숨김: pb_rank 가 2026-12-01 0시(KST) 전까지 본인·관리자 외 이름(u,n)을 null로 보냄 → 그 이후 자동 공개.
 - 설정의 AI 닉네임 순화 모드(SAVE.clean): 켜면 봇 이름이 CLEAN_VERB+포켓몬이름, 주식 전광판 동네 소식도 빠짐.
+- 새로 회원가입하는 계정은 순화 모드가 기본으로 켜짐 (applyAccount에서 nick이 있을 때 SAVE.clean=true). 기존 계정은 꺼진 상태 유지.
