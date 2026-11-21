@@ -507,7 +507,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.16.4';
+const VER='1.16.5';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -2756,7 +2756,7 @@ function drawAim(){
   if(s.ty==='lob'||s.ty==='zone'||s.ty==='leap'||s.ty==='sdive'||s.ty==='tele'||s.ty==='meteor'){
     const tx=P.x+Math.cos(ang)*R*f,ty=P.y+Math.sin(ang)*R*f,rad=((s.area?s.area+s.aoe:0)||s.aoe||s.zr||1)*T;
     if(s.ty==='tele'){ctx.strokeStyle=AC;ctx.lineWidth=5;ctx.setLineDash([12,9]);ctx.beginPath();ctx.moveTo(P.x,P.y);ctx.lineTo(tx,ty);ctx.stroke();ctx.setLineDash([]);}
-    else G.aimArc={x0:P.x,y0:P.y-18,x1:tx,y1:ty,sup,met:s.ty==='meteor'};
+    else if(!s.ebeam)G.aimArc={x0:P.x,y0:P.y-18,x1:tx,y1:ty,sup,met:s.ty==='meteor'};
     ctx.beginPath();ctx.arc(tx,ty,rad,0,7);ctx.fill();bs();
     ctx.strokeStyle=AC;ctx.lineWidth=4;ctx.globalAlpha=.5+.3*Math.sin(G.t*8);ctx.beginPath();ctx.arc(tx,ty,rad*.35,0,7);ctx.stroke();ctx.globalAlpha=1;return;}
   if(s.swing){ctx.save();ctx.translate(P.x,P.y-18);ctx.rotate(ang);ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,R,-s.swing/2,s.swing/2);ctx.closePath();ctx.fill();bs();ctx.restore();return;}
