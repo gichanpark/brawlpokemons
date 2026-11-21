@@ -507,7 +507,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.16.5';
+const VER='1.16.6';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -869,7 +869,7 @@ const CH=[
   sup:{nm:'인파이트',ds:'순간이동해 들이닥쳐 주변 적에게 큰 피해 · 반동으로 3초간 받는 피해 증가',ty:'tele',boom:'pop',el:'fight',range:6,aoe:1.9,dmg:1700,kb:.8,selfVuln:3,col:'#4ade80'}},
  {k:'eternatus',id:890,nm:'무한다이노',role:'포격 · 거다이맥스',el:'dragon',gr:'l',col:'#7e22ce',hp:5000,spd:.95,rl:1.15,charge:3000,
   atk:{nm:'다이맥스포',ds:'세 방향으로 뻗는 관통 레이저 · 체력이 많이 남은 적일수록 더 아픔 (최대 1.5배)',ty:'shot',fx:'dmax',el:'dragon',count:3,spread:.42,range:7.5,speed:24,dmg:1050,r:10,pierce:1,hiHp:.5,col:'#a855f7'},
-  sup:{nm:'무한다이빔',ds:'거다이맥스해 떠오른 뒤 지정한 원형 지점에 2.5초 동안 빔을 집중 · 주변 적을 원 중앙으로 끌어당김',gmax:.9,ebeam:2.5,ty:'lob',fx:'dmax',el:'dragon',range:8,aoe:1.8,pull:2.4,dmg:2600,col:'#dc2626'}},
+  sup:{nm:'무한다이빔',ds:'거다이맥스해 떠오른 뒤 지정한 원형 지점에 2.5초 동안 빔을 집중 · 원 안의 적은 행동불능, 주변 적은 원 중앙으로 끌려옴 · 쏘는 동안 무적',gmax:.9,ebeam:2.5,ty:'lob',fx:'dmax',el:'dragon',range:8,aoe:1.8,pull:2.4,dmg:2600,col:'#dc2626'}},
  {k:'steve',id:'steve',rface:1,nm:'스티브',fnm:'스티브 (맨손)',role:'한정 · 채굴과 제작',el:'normal',gr:'sp',col:'#22d3ee',hp:4200,spd:1.1,rl:1.0,charge:2600,
   atk:{nm:'주먹',ds:'맨손 주먹질 (도구를 만들면 공격이 바뀜)',ty:'shot',fx:'fist',el:'normal',range:1.8,speed:14,dmg:420,r:16,col:'#f5d0a9'},
   sup:{nm:'TNT',ds:'TNT를 던져 크게 폭발',ty:'lob',fx:'tnt',boom:'quake',el:'fire',range:7,dmg:1700,aoe:2.1,fl:.8,col:'#dc2626'}}
@@ -3601,10 +3601,11 @@ function traitTick(e,dt){
   if(k==='morpeko'&&e.form===1&&Math.random()<dt*4)P_({sh:'plus',x:e.x+rnd(-18,18),y:e.y-rnd(15,50),vx:0,vy:0,t:.18,col:'#a855f7',r:4});
   if(e.ch.ditto&&!(e.dittoT>0)&&!(NET.on&&!NET.host)){e.ch=chOf('ditto');e.form=0;spark(e.x,e.y-30,['#c4b5fd','#fff'],14,150,.5,5);addText(e.x,e.y-110,'변신 풀림','#c4b5fd');}
   if(k==='darmanitan'&&!e.ch.ditto&&!(e.zenLock>0)){if(!e.form&&e.hp<e.maxHp*.5)setForm(e,1);else if(e.form===1&&e.hp>e.maxHp*.7)setForm(e,0);}
-  if(e.ebeam){const B=e.ebeam;B.t-=dt;if(B.t<=0||!e.alive){e.ebeam=null;}else if(!(NET.on&&!NET.host)&&B.s){B.tk-=dt;
+  if(e.ebeam){const B=e.ebeam;B.t-=dt;if(B.t<=0||!e.alive){e.ebeam=null;}else if(!(NET.on&&!NET.host)&&B.s){B.tk-=dt;e.inv=Math.max(e.inv||0,B.t+.1);
       const s=B.s,rad=s.aoe*T,pr=rad*(s.pull||2.4);
       for(const o of G.ents){if(!o.alive||!enemyOf(e,o)||o.safe)continue;const dx=B.tx-o.x,dy=B.ty-o.y,dd=Math.hypot(dx,dy);
         if(dd<pr&&dd>4&&!immune(o)){const sp=T*(dd<rad?1.8:2.8)*dt;o.x+=dx/dd*Math.min(sp,dd);o.y+=dy/dd*Math.min(sp,dd);}
+        if(dd<rad+o.r&&!immune(o)){o.stun=Math.max(o.stun,.3);o.dash=null;}
         if(B.tk<=0&&dd<rad+o.r)hitEff(e,o,s,s.dmg/10,true,-dx,-dy);}
       if(B.tk<=0){B.tk=.25;const m=G.map,cx=Math.floor(B.tx/T),cy=Math.floor(B.ty/T),n=Math.ceil(s.aoe);for(let y=cy-n;y<=cy+n;y++)for(let x=cx-n;x<=cx+n;x++){if(x<0||y<0||x>=m.C||y>=m.R)continue;if(Math.hypot((x+.5)*T-B.tx,(y+.5)*T-B.ty)<rad&&m.g[y*m.C+x]===4)hitBox(y*m.C+x,s.dmg/10,null);}}}
     if(e.ebeam&&e===P)G.shake=Math.max(G.shake,.06);}
