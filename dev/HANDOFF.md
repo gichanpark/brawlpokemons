@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.16.24** (소스의 `const VER='...'`)
+- 현재 버전: **v1.16.25** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -93,3 +93,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - v1.16.22: 광물 확률 전부 25%, 채굴 6~7개(같은 광물 최대 2개), 다이아 압축 제거(ORE_PACK=[]), 처치 보상 +2
 - v1.16.23: 다이아 사용처 추가 — CRAFT2[0] 보호 인챈트(다이아2, e.prot dmgIn×0.85), CRAFT2[5] 효율 인챈트(다이아1+철1, e.eff 채굴 0.8초/쿨 1.2초). 제작칸이 슬롯 0~5 전부 사용, 황금사과 먹기 버튼은 핫바 왼쪽으로 이동. 스냅샷 a[33][10]=prot,[11]=eff
 - v1.16.24: 활 화살 = 마크 위키 Invicon_Arrow (fx 'mcarrow', MCI.arrow), 채굴 시 돌은 1회당 2개
+- v1.16.25: 따라큐 평타 → 치근거리기(키트식 달라붙기). atk.latch → `startLatch/latchTick/endLatch`, `e.lt` 상태(호스트에서 진행), 8연타×280 · 0.2초 간격 · 둔화. 플래그 1<<27(=e.ltOn) 먼지구름 연출
