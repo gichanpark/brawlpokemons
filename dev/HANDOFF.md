@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.16.16** (소스의 `const VER='...'`)
+- 현재 버전: **v1.16.17** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -85,3 +85,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - 돌 블록: 핫바 6번 칸(PC 6) → `steveBlock(e)`. 타일 4 재사용 + `G.map.stn[idx]=1`(Uint8Array, 지연 생성), HP `STONE_HP=1500`, 1인 최대 `STONE_MAX=6`(`e.blks` FIFO). 이벤트 `ev('SB',i)` 설치 / `ev('W',i)` 제거. `hitBox` 파괴 시 이제 `ev('W')`도 보냄(기존 상자 동기화 누락 수정). 돌 블록은 큐브 드롭 없음, AI 상자 타깃에서 제외. 원격 입력 `p.s===5`.
 - 도구 4개 완성 후 제작칸 → `CRAFT2`(방패 e.sblk=3 / 황금사과 / 날카로움 e.sharp dmgOut×1.2 / TNT sc+50%). `steveCraftT`가 allTools면 `steveCraft2`. 방패 판정 `steveShield(p,e)`(투사체 명중 직전, 바라보는 방향 `steveFace` 기준 ±70°). 사망 시 sblk·sharp 초기화. 스냅샷 a[33][7]=sblk, [8]=sharp.
 - ORE_PACK에서 돌 압축 제거.
+- v1.16.17: 다이아 과잉 → 광물 가중치 돌47·철28·금20(다이아 5%), ORE_PACK 철10·금8 (분당 다이아 약 19.5→6.5개)
