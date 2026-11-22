@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.16.17** (소스의 `const VER='...'`)
+- 현재 버전: **v1.16.18** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -86,3 +86,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - 도구 4개 완성 후 제작칸 → `CRAFT2`(방패 e.sblk=3 / 황금사과 / 날카로움 e.sharp dmgOut×1.2 / TNT sc+50%). `steveCraftT`가 allTools면 `steveCraft2`. 방패 판정 `steveShield(p,e)`(투사체 명중 직전, 바라보는 방향 `steveFace` 기준 ±70°). 사망 시 sblk·sharp 초기화. 스냅샷 a[33][7]=sblk, [8]=sharp.
 - ORE_PACK에서 돌 압축 제거.
 - v1.16.17: 다이아 과잉 → 광물 가중치 돌47·철28·금20(다이아 5%), ORE_PACK 철10·금8 (분당 다이아 약 19.5→6.5개)
+- v1.16.18: 제작대 옮기기 `steveMoveTab(e)` (제작대에서 멀 때 핫바 1번 아래 칸 / PC 7, 쿨 10초 `e.ctabT`, 원격 p.s===6)
