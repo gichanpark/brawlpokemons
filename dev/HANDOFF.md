@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.16.14** (소스의 `const VER='...'`)
+- 현재 버전: **v1.16.15** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
