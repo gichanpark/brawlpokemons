@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.16.20** (소스의 `const VER='...'`)
+- 현재 버전: **v1.16.21** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -89,3 +89,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - v1.16.18: 제작대 옮기기 `steveMoveTab(e)` (제작대에서 멀 때 핫바 1번 아래 칸 / PC 7, 쿨 10초 `e.ctabT`, 원격 p.s===6)
 - v1.16.19: 황금사과 보관 `e.gapN`(최대 3, 사망해도 유지) → `steveEat(e)` (돌 블록 칸 아래 버튼 / PC 8, 1초 간격, 원격 p.s===7, 스냅샷 a[33][9])
 - v1.16.20: 스티브 도구·방패를 손 위치(중심 ±18, 발밑 -16, bob 반영)에 정확히 배치. 날카로움 인챈트 시 도구·핫바 아이콘에 보라색 픽셀 글린트(`glintImg`/`drawGlint`) + 반짝이
+- v1.16.21: 스티브 처치 시 모든 광물 +1 (`kdCount`, 더미 제외)
