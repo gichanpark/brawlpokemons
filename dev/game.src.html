@@ -507,7 +507,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.16.25';
+const VER='1.16.26';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -568,7 +568,7 @@ const CH=[
   atk:{nm:'깨물어부수기',ds:'빠른 2연속 물기 · 체력 50% 이하 적에게 1.6배',ty:'shot',fx:'jaw',burst:2,gap:.1,range:3.5,speed:15,dmg:650,r:13,exec:1.6,col:'#e7e5e4'},
   sup:{nm:'액셀록',ds:'바위를 두르고 번개처럼 돌진',ty:'dash',fx:'rockdash',range:6,speed:24,dmg:1600,kb:2,col:'#a8a29e'}},
  {k:'mimikyu',id:778,nm:'따라큐',role:'근접 · 생존',el:'ghost',gr:'e',col:'#fde047',hp:4800,spd:1.15,rl:1.1,charge:2700,
-  atk:{nm:'치근거리기',ds:'앞쪽 적에게 달려들어 달라붙은 채 1.6초 동안 마구 때림 (8연타) · 맞는 동안 적이 느려짐',ty:'shot',fx:'rough',latch:1,el:'fairy',range:4.2,speed:22,dmg:280,r:14,col:'#f9a8d4'},
+  atk:{nm:'섀도클로',ds:'나란히 날아가는 그림자 발톱 3개 (관통) · 맞은 적을 끌어당김',ty:'shot',fx:'claw',count:3,spread:0,par:44,range:5.8,speed:14,dmg:480,r:11,pierce:1,pull:1.1,col:'#7e22ce'},
   sup:{nm:'탈',ds:'(특성) 탈을 써서 2.5초 무적 + 이동속도 증가',ty:'disguise',dur:2.5,col:'#fde047'}},
  {k:'scizor',id:212,nm:'핫삼',role:'근접 · 딜러',el:'steel',gr:'s',col:'#ef4444',hp:4200,spd:1.12,rl:.8,charge:2400,
   atk:{nm:'불릿펀치',ds:'빠른 강철 주먹 · 3번째 적중마다 2배 콤보',ty:'shot',fx:'fist',range:3.8,speed:18,dmg:700,r:12,combo:1,col:'#ef4444'},
@@ -1379,15 +1379,15 @@ function fireSuper(e,ang,d){
 function startLatch(e,s,ang,d){const R=s.range*T;let t=null,bs=1e9;for(const o of G.ents){if(!o.alive||o===e||!enemyOf(e,o)||o.safe||!visibleTo(o,e.team))continue;const dx=o.x-e.x,dy=o.y-e.y,dd=Math.hypot(dx,dy);if(dd>R+o.r)continue;
     let df=Math.abs(Math.atan2(dy,dx)-ang);if(df>Math.PI)df=2*Math.PI-df;if(df>.55&&dd>e.r+o.r+20)continue;const sc=dd+df*2*T;if(sc<bs){bs=sc;t=o;}}
   sfx('dash',e.x,e.y);fxSnd(s,e.x,e.y);
-  if(t)e.lt={o:t,s,on:0,jt:.45};else{const dd=Math.min(d??R,R*.6);e.lt={o:null,s,on:0,jt:.3,tx:e.x+Math.cos(ang)*dd,ty:e.y+Math.sin(ang)*dd};}}
+  const sup=e.ch.sup===s;if(t)e.lt={o:t,s,sup,on:0,jt:.5};else{const dd=Math.min(d??R,R*.6);e.lt={o:null,s,sup,on:0,jt:.3,tx:e.x+Math.cos(ang)*dd,ty:e.y+Math.sin(ang)*dd};}}
 function latchTick(e,dt){const L=e.lt,o=L.o;if(!e.alive||e.stun>0||o&&(!o.alive||o.invisT>0&&o.team!==e.team&&!L.on)){endLatch(e);return;}
   if(!L.on){const tx=o?o.x:L.tx,ty=o?o.y:L.ty,dx=tx-e.x,dy=ty-e.y,d=Math.hypot(dx,dy)||1,st=L.s.speed*T*dt;L.jt-=dt;e.fx=dx>0?1:-1;
     if(Math.random()<.5)P_({x:e.x+rnd(-10,10),y:e.y+rnd(-6,6),vx:0,vy:-30,t:.25,col:pick(['#e7e5e4','#d6d3d1']),r:rnd(5,9)});
-    if(o&&d<=e.r+o.r+6){L.on=1;L.t=1.6;L.tk=0;L.n=0;L.ox=(e.x-o.x)*.5;L.oy=(e.y-o.y)*.5;addText(o.x,o.y-120,'치근치근!','#f9a8d4');return;}
+    if(o&&d<=e.r+o.r+6){L.on=1;L.t=2;L.tk=0;L.n=0;L.ox=(e.x-o.x)*.5;L.oy=(e.y-o.y)*.5;addText(o.x,o.y-120,'치근치근!','#f9a8d4');return;}
     if(!o&&d<=st||L.jt<=0){endLatch(e);return;}e.x+=dx/d*Math.min(st,d);e.y+=dy/d*Math.min(st,d);return;}
   e.x=o.x+L.ox;e.y=o.y+L.oy;L.t-=dt;L.tk-=dt;
-  if(L.tk<=0){L.tk=.2;L.n++;damage(e,o,L.s.dmg,false);hitFx(L.s,o.x+rnd(-14,14),o.y-20+rnd(-14,10),GT(e));if(!immune(o)){o.slowT=Math.max(o.slowT||0,.4);o.slowM=.6;o.slowCol='#f9a8d4';}e.fx=-e.fx;}
-  if(L.t<=0||L.n>=8)endLatch(e);}
+  if(L.tk<=0){L.tk=.2;L.n++;damage(e,o,L.s.dmg,!!L.sup);hitFx(L.s,o.x+rnd(-14,14),o.y-20+rnd(-14,10),GT(e));if(!immune(o)){o.slowT=Math.max(o.slowT||0,.4);o.slowM=.4;o.slowCol='#f9a8d4';}e.fx=-e.fx;}
+  if(L.t<=0||L.n>=10)endLatch(e);}
 function endLatch(e){const L=e.lt;e.lt=null;if(L&&L.on&&L.o){const a=Math.atan2(e.y-L.o.y,e.x-L.o.x)||0;e.x=L.o.x+Math.cos(a)*(e.r+L.o.r+4);e.y=L.o.y+Math.sin(a)*(e.r+L.o.r+4);}collide(e);}
 function spawnShots(e,s,ang,d,sup){
   if(s.latch){startLatch(e,s,ang,d);return;}
@@ -3606,8 +3606,8 @@ const TRG={
 CH.forEach(c=>{const x=TRG[c.k];c.trait=x.t;c.gad=x.g;if(['gengar','gyarados','rayquaza','lapras','talonflame'].includes(c.k))c.swim=1;});
 Object.values(FORMS).forEach(F=>F.slice(1).forEach(f=>{f.trait=F[0].trait;f.gad=F[0].gad;f.swim=F[0].swim;}));
 function setForm(e,i){const F=FORMS[e.ch.k];if(!F||(e.form||0)===i)return;e.form=i;e.ch=F[i];sfx('form',e.x,e.y);P_({ring:1,x:e.x,y:e.y,rad:70,col:e.ch.col,t:.4});addText(e.x,e.y-120,e.ch.fnm+'!',i?'#fde047':'#e9d5ff',1);}
-// 따라큐 필살기 교체: 길동무
-(()=>{const m=chOf('mimikyu');Object.assign(m.sup,{nm:'길동무',ds:'5초간 받는 피해의 80%를 가장 가까운 적에게 되돌려줌 · 빨라짐',ty:'bond',dur:5,col:'#7e22ce'});})();
+// 따라큐 필살기 교체: 치근거리기 (키트식 달라붙기)
+(()=>{const m=chOf('mimikyu');for(const k in m.sup)delete m.sup[k];Object.assign(m.sup,{nm:'치근거리기',ds:'적에게 달려들어 달라붙은 채 2초 동안 마구 때림 (10연타) · 맞는 동안 적이 크게 느려짐 · 벽을 넘어 달려듦',ty:'shot',fx:'rough',latch:1,el:'fairy',range:6.5,speed:24,dmg:300,r:14,col:'#f9a8d4'});})();
 const GSP={
  petal:{el:'grass',col:'#f9a8d4'},
  eroll:{ty:'dash',fx:'impact',el:'elec',range:4,speed:26,dmg:500,kb:.6,col:'#fde047'},
