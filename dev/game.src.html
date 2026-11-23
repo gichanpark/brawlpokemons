@@ -507,7 +507,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.16.26';
+const VER='1.16.27';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -3607,7 +3607,7 @@ CH.forEach(c=>{const x=TRG[c.k];c.trait=x.t;c.gad=x.g;if(['gengar','gyarados','r
 Object.values(FORMS).forEach(F=>F.slice(1).forEach(f=>{f.trait=F[0].trait;f.gad=F[0].gad;f.swim=F[0].swim;}));
 function setForm(e,i){const F=FORMS[e.ch.k];if(!F||(e.form||0)===i)return;e.form=i;e.ch=F[i];sfx('form',e.x,e.y);P_({ring:1,x:e.x,y:e.y,rad:70,col:e.ch.col,t:.4});addText(e.x,e.y-120,e.ch.fnm+'!',i?'#fde047':'#e9d5ff',1);}
 // 따라큐 필살기 교체: 치근거리기 (키트식 달라붙기)
-(()=>{const m=chOf('mimikyu');for(const k in m.sup)delete m.sup[k];Object.assign(m.sup,{nm:'치근거리기',ds:'적에게 달려들어 달라붙은 채 2초 동안 마구 때림 (10연타) · 맞는 동안 적이 크게 느려짐 · 벽을 넘어 달려듦',ty:'shot',fx:'rough',latch:1,el:'fairy',range:6.5,speed:24,dmg:300,r:14,col:'#f9a8d4'});})();
+(()=>{const m=chOf('mimikyu');for(const k in m.sup)delete m.sup[k];Object.assign(m.sup,{nm:'치근거리기',ds:'적에게 달려들어 달라붙은 채 2초 동안 마구 때림 (10연타) · 맞는 동안 적이 크게 느려짐 · 벽을 넘어 달려듦',ty:'shot',fx:'rough',latch:1,el:'fairy',range:6.5,speed:24,dmg:500,r:14,col:'#f9a8d4'});})();
 const GSP={
  petal:{el:'grass',col:'#f9a8d4'},
  eroll:{ty:'dash',fx:'impact',el:'elec',range:4,speed:26,dmg:500,kb:.6,col:'#fde047'},
