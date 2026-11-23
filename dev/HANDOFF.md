@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.16.27** (소스의 `const VER='...'`)
+- 현재 버전: **v1.16.28** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -95,3 +95,6 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - v1.16.24: 활 화살 = 마크 위키 Invicon_Arrow (fx 'mcarrow', MCI.arrow), 채굴 시 돌은 1회당 2개
 - v1.16.25: 따라큐 평타 → 치근거리기(키트식 달라붙기). atk.latch → `startLatch/latchTick/endLatch`, `e.lt` 상태(호스트에서 진행), 8연타×280 · 0.2초 간격 · 둔화. 플래그 1<<27(=e.ltOn) 먼지구름 연출
 - v1.16.26: 따라큐 평타는 섀도클로로 복구, 필살기를 치근거리기(latch)로 교체(길동무 제거). 10연타×500, 2초, 사거리 6.5
+- v1.16.28 친선전 전수 점검(119종, 팀전·1대1 KO 2라운드): `dev/mptest/mp.py` (Supabase를 BroadcastChannel로 흉내 내는 fake.js + 두 탭). 사용: `python3 dev/mptest/mp.py <키,...> <병렬수> [gem|ko]`
+  - 수정: 바위 파편 스펙(shardSpec)이 호스트에서만 런타임 생성돼 SPECS 번호가 어긋남 → 시작 시 미리 생성 / 따라큐 필살기 스펙 _id 유실 / 따라큐 달라붙기 상태명 e.lt가 참가자 보간 타이머와 충돌 → e.lch / 사망 시 무한다이빔·달라붙기·채굴 정리 / KO 라운드 리셋 때 진행 중인 빔·대기열·대시·TNT 정리
+  - 남는 '실패'는 상태 조건 때문(거리 내 적 필요, 껍질·땅굴·잠 중 필살기 불가, 메타몽 변신 대상 없음)이라 정상
