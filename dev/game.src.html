@@ -507,7 +507,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.19.0';
+const VER='1.19.1';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1451,11 +1451,12 @@ function hitBox(idx,amt,src){
   const m=G.map;if(m.g[idx]!==4)return;
   m.bhp[idx]-=amt;if(src)src.sc=Math.min(1,src.sc+amt*.5/src.ch.charge);
   const x=(idx%m.C+.5)*T,y=((idx/m.C|0)+.5)*T;parts(x,y,4,'#a16207',120,.4,4);
-  if(m.bhp[idx]<=0){m.g[idx]=0;G.fields.clear();ev('W',idx);if(m.stn&&m.stn[idx]){m.stn[idx]=0;parts(x,y,16,'#78716c',200,.6,6);sfx('cube',x,y);return;}parts(x,y,20,'#b45309',220,.7,6);G.items.push({ty:'cube',x,y,vx:0,vy:0,t:0});}
+  if(m.bhp[idx]<=0){m.g[idx]=0;G.fields.clear();ev('W',idx);setRub(idx,m.stn&&m.stn[idx]?3:2);if(m.stn&&m.stn[idx]){m.stn[idx]=0;parts(x,y,16,'#78716c',200,.6,6);sfx('cube',x,y);return;}parts(x,y,20,'#b45309',220,.7,6);G.items.push({ty:'cube',x,y,vx:0,vy:0,t:0});}
 }
 function breakTile(tx,ty){
   const m=G.map;if(tx<0||ty<0||tx>=m.C||ty>=m.R)return;const i=ty*m.C+tx;
   if(m.g[i]===1||m.g[i]===4)ev('W',i);
+  if(m.g[i]===1||m.g[i]===4)setRub(i,m.g[i]===1?1:m.stn&&m.stn[i]?3:2);
   if(m.g[i]===1){m.g[i]=0;G.fields.clear();parts((tx+.5)*T,(ty+.5)*T,10,'#c08a5a',200,.6,6);}
   else if(m.g[i]===4){m.bhp[i]=0;m.g[i]=0;G.fields.clear();const x=(tx+.5)*T,y=(ty+.5)*T;if(m.stn&&m.stn[i]){m.stn[i]=0;parts(x,y,16,'#78716c',200,.6,6);return;}parts(x,y,20,'#b45309',220,.7,6);G.items.push({ty:'cube',x,y,vx:0,vy:0,t:0});}
 }
@@ -2401,6 +2402,13 @@ function drawFlower(x,y){ctx.fillStyle='#f9a8d4';for(const [dx,dy] of [[0,-4],[-
 function hsh(tx,ty){return ((tx*73856093)^(ty*19349663))>>>0;}
 function drawSpr(im,tx,ty,dy){if(!im||!im.complete)return;const w=im.width*3,h=im.height*3;ctx.drawImage(im,tx*T+T/2-w/2,ty*T+T+dy-h,w,h);}
 function drawWall(tx,ty){const h=hsh(tx,ty)%3;drawSpr(h===0?TI.pineA:h===1?TI.pineB:TI.pineC,tx,ty,8);}
+/* 부서진 지형의 잔해 (도트) */
+const RUBC={1:['#8a5a3a','#c08a5a','#5b3a24'],2:['#6b4b2a','#a16207','#3f2a14'],3:['#78716c','#a8a29e','#44403c']};
+function setRub(i,type){const m=G.map;if(!m.rub)m.rub=new Uint8Array(m.C*m.R);m.rub[i]=type;}
+function drawRubble(tx,ty,type){const X=tx*T,Y=ty*T,C=RUBC[type]||RUBC[1];let h=(tx*73856093^ty*19349663)>>>0;const rnd=()=>{h=(h*1103515245+12345)>>>0;return (h>>>8)/16777216;};
+  ctx.fillStyle='rgba(0,0,0,.18)';ctx.fillRect(X+6,Y+T-12,T-12,6);
+  for(let k=0;k<7;k++){const sz=(rnd()<.35?9:6),x=X+3+Math.floor(rnd()*(T-6-sz)/3)*3,y=Y+6+Math.floor(rnd()*(T-12-sz)/3)*3;ctx.fillStyle=C[2];ctx.fillRect(x,y+3,sz,3);ctx.fillStyle=C[k%2];ctx.fillRect(x,y,sz,sz-3);}
+  if(type===2){ctx.fillStyle='#d6a46a';ctx.fillRect(X+Math.floor(rnd()*8)*3+6,Y+21,12,3);}}
 function drawBox(tx,ty){const m=G.map;if(m.stn&&m.stn[ty*m.C+tx]){drawStone(tx,ty);return;}drawSpr(TI.rock,tx,ty,4);const X=tx*T,Y=ty*T;pix('cube',X+T/2,Y+T*.2,2);
   const hp=m.bhp[ty*m.C+tx];if(hp<2600){ctx.fillStyle='#111';ctx.fillRect(X+3,Y-33,T-6,9);ctx.fillStyle='#fbbf24';ctx.fillRect(X+6,Y-30,Math.round((T-12)*hp/2600/3)*3,3);}}
 function drawStone(tx,ty){const m=G.map,X=tx*T,Y=ty*T,i=ty*m.C+tx;ctx.save();ctx.imageSmoothingEnabled=false;
@@ -2457,6 +2465,7 @@ function render(){
   if(!G.floor)G.floor=buildFloor(m);
   ctx.drawImage(G.floor,-FM*T,-FM*T,G.floor.width*3,G.floor.height*3);
   for(let ty=y0;ty<=y1;ty++)for(let tx=x0;tx<=x1;tx++)if(m.g[ty*m.C+tx]===3){const X=tx*T,Y=ty*T,o=Math.floor(((G.t*12+tx*7)%T)/3)*3;ctx.fillStyle='rgba(255,255,255,.25)';ctx.fillRect(X+Math.floor(o*.6/3)*3,Y+15+(ty%2)*15,9,3);}
+  if(m.rub)for(let ty=y0;ty<=y1;ty++)for(let tx=x0;tx<=x1;tx++){const i=ty*m.C+tx;if(m.rub[i]&&(m.g[i]===0||m.g[i]===2))drawRubble(tx,ty,m.rub[i]);}
   // 바닥 이펙트 (저해상도)
   beginWorldFx(fxG);
   if(G.mode==='gem'){const g=m.mine;ctx.fillStyle='#3b1d5e';ctx.beginPath();ctx.ellipse(g.x,g.y,40,28,0,0,7);ctx.fill();ctx.strokeStyle='#a855f7';ctx.lineWidth=6;ctx.stroke();
@@ -3108,8 +3117,8 @@ function steveBlock(e){if(!e||!e.alive||!e.ores||!G||!G.map)return false;const m
     if(cx<0||cy<0||cx>=m.C||cy>=m.R||m.g[cy*m.C+cx]!==0)continue;const X=cx*T,Y=cy*T,ov=(x,y,r)=>x+r>X&&x-r<X+T&&y+r>Y&&y-r<Y+T;
     if(G.ents.some(o=>o.alive&&ov(o.x,o.y,o.r*.9))){why='누가 서 있어요';continue;}if(G.ball&&ov(G.ball.x,G.ball.y,20))continue;tx=cx;ty=cy;break;}
   if(tx<0){if(e===P)addText(e.x,e.y-110,why,'#fff');return false;}const X=tx*T,Y=ty*T;
-  const i=ty*m.C+tx;if(!m.stn)m.stn=new Uint8Array(m.C*m.R);e.ores[0]-=STONE_COST;m.g[i]=4;m.stn[i]=1;m.bhp[i]=STONE_HP;G.fields.clear();ev('SB',i);
-  if(!e.blks)e.blks=[];e.blks.push(i);while(e.blks.length>STONE_MAX){const o=e.blks.shift();if(m.g[o]===4&&m.stn[o]){m.g[o]=0;m.stn[o]=0;m.bhp[o]=0;G.fields.clear();ev('W',o);parts((o%m.C+.5)*T,((o/m.C|0)+.5)*T,10,'#78716c',160,.5,5);}}
+  const i=ty*m.C+tx;if(!m.stn)m.stn=new Uint8Array(m.C*m.R);e.ores[0]-=STONE_COST;if(m.rub)m.rub[i]=0;m.g[i]=4;m.stn[i]=1;m.bhp[i]=STONE_HP;G.fields.clear();ev('SB',i);
+  if(!e.blks)e.blks=[];e.blks.push(i);while(e.blks.length>STONE_MAX){const o=e.blks.shift();if(m.g[o]===4&&m.stn[o]){setRub(o,3);m.g[o]=0;m.stn[o]=0;m.bhp[o]=0;G.fields.clear();ev('W',o);parts((o%m.C+.5)*T,((o/m.C|0)+.5)*T,10,'#78716c',160,.5,5);}}
   e.blks=e.blks.filter(o=>m.g[o]===4&&m.stn[o]);parts(X+T/2,Y+T/2,10,'#a8a29e',160,.5,5);sfx('cube',X+T/2,Y+T/2);return true;}
 function steveCraft2(e,t){const c=CRAFT2[t];if(!c||!c2ok(e,t))return false;const r=c.r;if(!Object.keys(r).every(k=>e.ores[ORE.findIndex(o=>o.k===k)]>=r[k]))return false;
   Object.keys(r).forEach(k=>{e.ores[ORE.findIndex(o=>o.k===k)]-=r[k];});
@@ -3438,8 +3447,8 @@ function applyEv(v){
     case 'T':addText(v[1],v[2],v[3],v[4],v[5]);break;
     case 'F':{const mine=v[2]===P.nid||v[3]===P.nid;if(G.ents[v[3]])kdCount(v[2]>=0?G.ents[v[2]]:null,G.ents[v[3]]);const fe=G.ents[v[3]]?feedOf(v[2]>=0?G.ents[v[2]]:null,G.ents[v[3]]):{s:v[1],t:3.5,mine};G.feed.push(fe);const vic=G.ents[v[3]];if(vic){sfx('ko',vic.x,vic.y);parts(vic.x,vic.y,30,vic.ch.col,260,.8,6);}
       if(v[2]===P.nid&&v[3]!==P.nid){sfx('kill');G.hitstop=.1;G.slowT=.45;G.shake=.3;addText(vic.x,vic.y-90,'KO!','#fde047',1);}break;}
-    case 'SB':{const m=G.map;if(!m.stn)m.stn=new Uint8Array(m.C*m.R);m.g[v[1]]=4;m.stn[v[1]]=1;m.bhp[v[1]]=STONE_HP;G.fields.clear();parts((v[1]%m.C+.5)*T,((v[1]/m.C|0)+.5)*T,10,'#a8a29e',160,.5,5);break;}
-    case 'W':{const m=G.map;if(m.g[v[1]]===1||m.g[v[1]]===4){if(m.stn)m.stn[v[1]]=0;m.g[v[1]]=0;G.fields.clear();parts((v[1]%m.C+.5)*T,((v[1]/m.C|0)+.5)*T,10,'#c08a5a',200,.6,6);}break;}
+    case 'SB':{const m=G.map;if(!m.stn)m.stn=new Uint8Array(m.C*m.R);if(m.rub)m.rub[v[1]]=0;m.g[v[1]]=4;m.stn[v[1]]=1;m.bhp[v[1]]=STONE_HP;G.fields.clear();parts((v[1]%m.C+.5)*T,((v[1]/m.C|0)+.5)*T,10,'#a8a29e',160,.5,5);break;}
+    case 'W':{const m=G.map;if(m.g[v[1]]===1||m.g[v[1]]===4){setRub(v[1],m.g[v[1]]===1?1:m.stn&&m.stn[v[1]]?3:2);if(m.stn)m.stn[v[1]]=0;m.g[v[1]]=0;G.fields.clear();parts((v[1]%m.C+.5)*T,((v[1]/m.C|0)+.5)*T,10,'#c08a5a',200,.6,6);}break;}
     case 'TF':{TNTF.push({x:v[1],y:v[2],t:1,host:false,s:chOf('steve').sup});break;}
     case 'W2':{const e=G.ents[v[2]],s=SPECS[v[1]];if(e&&s)swingFx(e,s,v[3]/100,v[4]);break;}
     case 'S':{const e=G.ents[v[2]],s=SPECS[v[1]];if(!e||e===P)break;sfx('shot',e.x,e.y,s.el);fxSnd(s,e.x,e.y);break;}

@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.19.0** (소스의 `const VER='...'`)
+- 현재 버전: **v1.19.1** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -104,3 +104,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - v1.18.0: 초희귀 솔록(338) 추가 — 불꽃세례(화상) / 솔라빔(`windup` 0.6초 충전 후 발사, bq 사용·충전 중 태양 링 연출) / 특성 부유(swim)·태양의 힘(화상 적 +20%, dmgIn) / 가젯 쾌청(게이지 30%+빨라짐). 배너 notice/v1180.png
 - v1.19.0 '태암이 오다': 전설 솔가레오(791) — 사이코팽(shieldBreak: 보호막·리플렉터·철벽 제거 시 1.3배) / 메테오드라이브(돌진, 벽 파괴·기절·방어 무시) / 메탈프로텍트(hitEff 래퍼 → hitEff0, 둔화·방어/공격 하락·혼란 무효) / 아침햇살. 배너 notice/v1190.png
   - 버그 수정: v1.17.0에서 fireSuper의 refund/selfStun 줄이 dash if와 else-if 사슬 사이에 끼어, 돌진형 필살기가 투사체까지 쏘고(2배 피해) 갸라도스·개굴닌자 필살기가 안 나가던 문제. 돌진 접촉에 stun 적용 추가. 갑주무사 평타 firstImp 중복 제거(특성에 이미 있음)
+- v1.19.1: 부서진 지형 잔해 — `G.map.rub[i]`(1 벽·2 상자·3 돌 블록) → `drawRubble`(바닥 위 도트 조각, 타일 위치로 고정 난수). breakTile/hitBox/스티브 블록 제거/참가자 'W' 이벤트에서 `setRub`, 돌 블록을 놓으면 지움
