@@ -507,7 +507,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.17.0';
+const VER='1.18.0';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -636,6 +636,9 @@ const CH=[
  {k:'jolteon',id:135,nm:'쥬피썬더',role:'연사 · 빠름',el:'elec',gr:'s',col:'#fde047',hp:3200,spd:1.3,rl:.7,charge:2600,
   atk:{nm:'바늘미사일',ds:'전기 바늘 4연사 · 장전이 아주 빠름',ty:'shot',fx:'spark',el:'elec',burst:4,gap:.06,range:6.5,speed:22,dmg:200,r:8,col:'#fde047'},
   sup:{nm:'번개',ds:'번개 3줄기가 떨어짐 · 기절',ty:'meteor',boom:'quake',el:'elec',range:8,n:3,area:1.5,dmg:1100,aoe:1.3,fl:.6,stun:.5,col:'#fde047'}},
+ {k:'solrock',id:338,nm:'솔록',role:'중거리 · 태양',el:'rock',gr:'s',col:'#fb923c',hp:3900,spd:1,rl:1.1,charge:2600,swim:1,
+  atk:{nm:'불꽃세례',ds:'몸을 돌리며 작은 불꽃 3발을 부채꼴로 흩뿌림 · 화상',ty:'shot',fx:'fireball',el:'fire',count:3,spread:.38,range:6.5,speed:13,dmg:340,r:10,burn:{dps:120,t:1.5},col:'#fb923c'},
+  sup:{nm:'솔라빔',ds:'0.6초 동안 햇빛을 모았다가 굵은 광선을 일직선으로 발사 (관통 · 큰 피해)',ty:'shot',fx:'beam',el:'grass',windup:.6,range:10,speed:28,dmg:2200,r:26,pierce:1,col:'#fde047'}},
  {k:'vaporeon',id:134,nm:'샤미드',role:'탱커 · 회복',el:'water',gr:'s',col:'#38bdf8',hp:5200,spd:.95,rl:1.2,charge:2700,swim:1,
   atk:{nm:'하이드로펌프',ds:'밀쳐내는 강한 물줄기',ty:'shot',fx:'stream',el:'water',range:6,speed:14,dmg:640,r:12,kb:.4,col:'#38bdf8'},
   sup:{nm:'아쿠아링',ds:'아군 체력을 계속 회복시키는 물의 고리 장판',ty:'zone',zk:'aqua',el:'water',range:6,zr:2.5,zt:5,heal:420,zdmg:0,fl:.5,col:'#7dd3fc'}},
@@ -1373,6 +1376,7 @@ function fireSuper(e,ang,d){
   else if(s.ty==='illus'){const foes=G.ents.filter(o=>o.alive&&!o.safe&&!o.dummy&&o.team!==e.team);if(!foes.length)return false;const f=pick(foes);e.illusT=s.dur;e.illusK=f.ch.k;e.illusN=f.nid;e.illusName=f===P?(SAVE.nick||'나'):(f.name||f.ch.nm);spark(e.x,e.y-30,['#991b1b','#111','#fff'],20,200,.6,5);addText(e.x,e.y-120,'일루전!','#fca5a5',1);}
   else if(s.ty==='buff'){if(s.healPct)heal(e,e.maxHp*s.healPct);if(s.trick){e.trickT=s.trick;addText(e.x,e.y-130,'파워트릭!','#fde047',1);}if(s.hpCost){e.hp=Math.max(1,Math.round(e.hp-e.maxHp*s.hpCost));addText(e.x,e.y-130,'배북! 힘이 넘친다!','#93c5fd',1);}e.buffT=s.dur;e.haste=s.dur;e.ammo=3;parts(e.x,e.y,20,s.col,200,.6,5);}
   else if(s.gmax)e.bq.push({t:.78,ang,d,s,sup:true});
+  else if(s.windup){e.bq.push({t:s.windup,ang,d,s,sup:true});e.wind=s.windup;e.windA=ang;addText(e.x,e.y-130,s.nm+' 충전!',s.col,1);ev('T',Math.round(e.x),Math.round(e.y-130),s.nm+' 충전!',s.col,1);}
   else spawnShots(e,s,ang,d,true);
   if(e.recoil){e.stun=Math.max(e.stun,e.recoil);e.recoil=0;addText(e.x,e.y-125,'반동으로 움직일 수 없다!','#e5e7eb');}
   if(e.ch.k==='lati'&&!e.ch.ditto)latiDuo(e,ang,d);
@@ -2609,6 +2613,7 @@ function drawEntSprite(e){
   if(e.ch.k==='giratina'&&e.gfx0!=null&&G.t-e.gfx0<1.1&&im&&im.ok){const q=1-(G.t-e.gfx0)/1.1,sh=soulImg(e.form?'giratina_f1':'giratina');if(sh){const w=im.width*.75*(1+.6*(1-q)),h=im.height*.75*(1+.6*(1-q));ctx.globalAlpha=q*.7;ctx.drawImage(sh,e.x-w/2,e.y+e.r*.6-z-h,w,h);ctx.globalAlpha=1;}}
   if(e.ch.k==='lati'&&e.latiG!=null&&G.t-e.latiG<1.3){const q=G.t-e.latiG,fa=Math.min(1,q*6,(1.3-q)*3),i2=IMG['lati_f'+(1-(e.form||0))];if(i2&&i2.ok){const w=i2.width*.75,h=i2.height*.75;ctx.save();ctx.translate(Math.round(e.x-e.fx*60),Math.round(e.y-36+e.r*.6-Math.sin(q*5)*4));ctx.scale(e.fx>0?-1:1,1);ctx.globalAlpha=fa*.85;ctx.drawImage(i2,-w/2,-h+3,w,h);ctx.globalCompositeOperation='lighter';ctx.globalAlpha=fa*.3;ctx.drawImage(i2,-w/2,-h+3,w,h);ctx.restore();ctx.globalAlpha=1;}}
   if(e.shieldT>0&&e.shield>0){ctx.globalAlpha=.25+.1*Math.sin(G.t*6);ctx.fillStyle='#86efac';ctx.beginPath();ctx.arc(e.x,e.y-20-z,e.r+22,0,7);ctx.fill();ctx.globalAlpha=.8;ctx.strokeStyle='#bbf7d0';ctx.lineWidth=3;ctx.stroke();ctx.globalAlpha=1;}
+  if(e.bq&&e.bq.some(b=>b.s.windup)){const b=e.bq.find(q=>q.s.windup),k=1-b.t/b.s.windup,cx=e.x,cy=e.y-30-z,q=v=>Math.round(v/3)*3;for(let i=0;i<8;i++){const a=G.t*6+i*.785,r=q(46-30*k);ctx.fillStyle=i%2?'#fde047':'#fb923c';ctx.fillRect(q(cx+Math.cos(a)*r)-3,q(cy+Math.sin(a)*r)-3,6,6);}ctx.fillStyle='#fef9c3';const sz=q(6+12*k);ctx.fillRect(q(cx)-sz/2,q(cy)-sz/2,sz,sz);}
   if((e.lch&&e.lch.on)||e.ltOn){const cx=e.x,cy=e.y-28-z,q=v=>Math.round(v/3)*3;for(let i=0;i<7;i++){const a=G.t*9+i*.9,r=26+8*Math.sin(G.t*13+i*2),sz=q(15+6*Math.sin(G.t*11+i));ctx.fillStyle=i%3?'#e7e5e4':'#a8a29e';ctx.fillRect(q(cx+Math.cos(a)*r-sz/2),q(cy+Math.sin(a)*r*.7-sz/2),sz,sz);}
     for(let i=0;i<3;i++){const a=G.t*5+i*2.1,x=q(cx+Math.cos(a)*34),y=q(cy+Math.sin(a)*22-10);ctx.fillStyle=i%2?'#f9a8d4':'#fde047';ctx.fillRect(x-3,y-9,6,18);ctx.fillRect(x-9,y-3,18,6);}}
   if(e.loveT>0&&im&&im.ok){const hy=e.y+e.r*.6-z-im.height*.75-10;for(let i=0;i<3;i++){const a=G.t*3+i*2.094;heartPx(e.x+Math.cos(a)*18,hy+Math.sin(a)*5,2,i%2?'#f472b6':'#fbcfe8','#111');}}
@@ -3554,6 +3559,7 @@ const TRG={
  gallade:{t:['정의의마음','적을 쓰러뜨리면 체력 30% 회복'],g:['칼춤','3초간 공격 피해 +25%']},
  dragapult:{t:['클리어바디','둔화에 걸리지 않음 · 평타가 적을 따라감'],g:['고스트다이브','2초간 투명해짐']},
  corviknight:{t:['미러아머','기절·둔화에 걸리지 않고, 건 적에게 그대로 되돌려줌 · 받는 피해 -15%'],g:['아머까오 택시','3칸 안 가장 가까운 아군을 태우고 바라보는 쪽으로 최대 6칸 날아감 (둘 다 날아가는 동안 무적 · 착지 지점에 피해)']},
+ solrock:{t:['부유 · 태양의 힘','물 위를 지나다님 · 화상 입은 적에게 주는 피해 20% 증가'],g:['쾌청','필살기 게이지 30% 즉시 충전 + 3초간 빨라짐']},
  jolteon:{t:['축전 · 번개 같은 발','이동속도와 장전 속도가 매우 빠름'],g:['고속이동','2.5초간 이동속도 증가']},
  vaporeon:{t:['저수','물 위에 있으면 초당 체력 6% 회복 · 물 위 이동 가능'],g:['녹기','2초간 받는 피해 -50%']},
  flareon:{t:['타오르는불꽃','불꽃 피해를 받지 않고 오히려 열기 +2 · 평타를 맞히면 열기 +1 (최대 5) · 열기 1개당 공격 +6% · 3초 동안 못 맞히면 하나씩 식음'],g:['열폭주','열기를 5개로 가득 채우고 주변 적을 태움 (화상)']},
@@ -3732,6 +3738,7 @@ function dmgOut(src){
 function dmgIn(src,tgt,dot){
   let m=1;const k=tgt.ch.k;if(k==='arceus'&&!tgt.ch.ditto)m*=.92-.06*nobleN(tgt);if(horseB(tgt))m*=.9;if(src&&src.ch.k==='enamorus'&&tgt.loveT>0)m*=1.2;
   if(PDXB[k])m*=1-pdxM(tgt,'def');
+  if(src&&src.ch.k==='solrock'&&!src.ch.ditto&&tgt.burnT>0)m*=1.2;
   if(tgt.prot&&k==='steve'&&!tgt.ch.ditto)m*=.85;
   if(tgt.markT>0&&src&&src.team===tgt.markTm)m*=1.15;
   if(k==='flareon'&&!tgt.ch.ditto&&src&&src!==tgt&&src.ch.el==='fire'){if(!dot&&G.t-(tgt.ffT||-9)>.4){tgt.ffT=G.t;tgt.heat=Math.min(5,(tgt.heat||0)+2);tgt.heatT=3;addText(tgt.x,tgt.y-95,'타오르는불꽃!','#fdba74');}return 0;}
@@ -3846,6 +3853,7 @@ function useGadget(e,ang,d){
     case 'toxicroak':case 'meowth':case 'incineroar':{const t=nearEnemy(e,4);if(!t)return false;if(!immune(t))t.stun=Math.max(t.stun,.8);spark(t.x,t.y-30,['#fbbf24','#fff'],12,120,.5,5,{sh:'star'});break;}
     case 'diglett':e.digT=1.2;e.inv=Math.max(e.inv,1.2);break;
     case 'gastly':e.invisT=2;break;
+    case 'solrock':e.sc=Math.min(1,(e.sc||0)+.3);e.haste=Math.max(e.haste||0,3);spark(e.x,e.y-40,['#fde047','#fb923c','#fff'],16,170,.5,5,{sh:'star'});addText(e.x,e.y-130,'쾌청!','#fde047',1);break;
     case 'magnemite':case 'rattata':case 'jolteon':case 'clawitzer':case 'gzapdos':case 'palafin':case 'sharpedo':case 'magnezone':e.haste=Math.max(e.haste||0,2.5);break;
     case 'magikarp':e.haste=Math.max(e.haste||0,1.5);break;
     case 'hippowdon':case 'jynx':case 'primarina':case 'darkrai':{const t=nearEnemy(e,k==='jynx'||k==='primarina'||k==='darkrai'?4:5);if(!t)return false;if(!immune(t)){t.stun=Math.max(t.stun,1.2);t.sleepFx=1.2;}spark(t.x,t.y-30,['#f9a8d4','#fff'],12,120,.6,5,{sh:'star'});break;}
@@ -3973,6 +3981,7 @@ function aiGadget(e,t){
     case 'lapras':use=t&&d<4*T;break;
     case 'alakazam':use=low&&t&&d<4*T;break;
     case 'machamp':use=t&&d<4*T;break;
+    case 'solrock':use=e.sc<.7&&t&&d<8*T&&Math.random()<.05;break;
     case 'gengar':use=t&&d<5*T&&Math.random()<.4;break;
     case 'sylveon':use=t&&d<4*T&&Math.random()<.4;break;
     case 'gardevoir':use=low&&t&&d<7*T;break;

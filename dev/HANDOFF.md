@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.17.0** (소스의 `const VER='...'`)
+- 현재 버전: **v1.18.0** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -101,3 +101,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - v1.16.29: 교대형 너프 — 삼신(trio) 한 마리 체력 ×0.6, 라티 ×0.85 (TRF/LTF hp 직접 조정), 대기 회복 4%/초 → 1.5%/초
 - v1.17.0: 영웅·신화·전설 40종 평타/필살기에 원작 기술 효과 부여 (`// 영웅·신화·전설 기술 특색` 블록, U(k,'atk'|'sup',플래그,설명추가) — 같은 이름의 폼 스펙도 함께 수정). 능력치는 그대로.
   - 새 플래그: sleepBonus, gyro, rageFist(e.hitsTaken), firstImp(e.fiArm), bigBonus, thru(벽 통과, 이전엔 미구현), dashInv, refund, selfStun(e.recoil→stun), healPct(buff), 돌진 접촉 exec/ls/vulnC. 메타그로스도 recD 누적(counter).
+- v1.18.0: 초희귀 솔록(338) 추가 — 불꽃세례(화상) / 솔라빔(`windup` 0.6초 충전 후 발사, bq 사용·충전 중 태양 링 연출) / 특성 부유(swim)·태양의 힘(화상 적 +20%, dmgIn) / 가젯 쾌청(게이지 30%+빨라짐). 배너 notice/v1180.png
