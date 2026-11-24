@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.20.0** (소스의 `const VER='...'`)
+- 현재 버전: **v1.20.1** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -114,3 +114,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - v1.20.0 이로치 스킨: dev/assets/shiny.js (`SPRS`/`PORS`, 포켓몬 키별, 118종 — 볼트로스·라티·스티브 제외). 만든 방법: pokesprite regular↔shiny(없으면 공식 아트 일반↔이로치) 픽셀 대응으로 색 지도를 만들어 게임 스프라이트·초상화에 적용, 초상화는 PMDCollab 이로치(portrait/XXXX/0000/0001)가 있으면 그대로 사용 (/tmp 스크립트 → 재생성 시 같은 방식)
   - SAVE.shy(보유 배열), SAVE.sk({k:1} 장착). hasShy/skinOn/sprOf/porOf/entImg. 상자 칸마다 이로치 확률 BOXT.s(1~3%) → dropShy(보유 포켓몬 중 미보유 이로치). 선택창 상세에 스킨 버튼, 카드에 ✦
   - 멀티: myMeta.sk → 로스터 sk → e.skin. 봇은 nid·맵 해시로 1/33 확률(모든 화면 같음)
+- v1.20.1 테마 스킨: dev/assets/skins.js (`SKINX['k_id']={spr,por,gmax}`, `SOCCER` 축구공 도트). `THEMES={cinderace:[spurs 토트넘 에이스번, korea 국가대표 에이스번]}` (색만 바꾼 도트, ball:1 → 평타·필살기 투사체가 축구공, 거다이맥스도 축구공 무늬). 보유 SAVE.skn, 장착 SAVE.sk[k]='s'|테마id (예전 1=이로치). skinId/hasSkin/gmaxImg/ballSkin. 상자 스킨 드롭은 이로치+테마 통합(dropShy)
