@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.20.8** (소스의 `const VER='...'`)
+- 현재 버전: **v1.20.9** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -122,3 +122,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - v1.20.6: 백귀야행 기라티나 스킨(THEMES.giratina yako, skins.js spr·f1·por) — 칠흑+은빛+진홍. 테마 fx → SPECS에 스펙 복제(SKMAP, skSpec: spawnShots·fireSuper 에서 교체, palO로 pal() 덮어씀), 보라 하드코딩 색은 YK 표로 진홍 치환(yc/ycl: 섀도볼·영혼·섀도다이브·오리진 변신·가젯·화면 틴트 G.purpC). 폼 스킨 이미지 formImg. 스킨 공지 배너 notice/v1206.png (dev/tools/banner_v1206.py)
 - v1.20.7: 드레디어 '동백꽃 필 무렵' 스킨(THEMES.hlil dongbaek) — 흰 한복+검은 가지(등 뒤에서 뻗음)+노란 꽃, 캔버스 46x44 블록(×3). fx: palO 노랑, edge(리프블레이드 테두리 검정)+petal(노란 꽃잎 파티클, 승리의춤 때 꽃비). 생성 dev/tools/skin_hlil_dongbaek.py
 - v1.20.8: 스킨 필살기 때 스킨 이름 문구 제거 (동백꽃 필 무렵, 백귀야행 오리진폼 문구는 원래 문구로)
+- v1.20.9: 모바일 랭킹 창(모달)에서 줄을 눌러도 프로필이 안 열리던 문제 — 모달 안 .rk 에도 openPlayer 연결
