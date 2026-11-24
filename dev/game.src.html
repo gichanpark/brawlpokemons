@@ -105,6 +105,8 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .rk.r2:after{animation-delay:.4s}.rk.r3:after{animation-delay:.8s}
 .rk.r1 .no,.rk.r2 .no,.rk.r3 .no{width:18px;height:18px;line-height:18px;text-align:center;color:#111;background:var(--mc);border:2px solid #111;box-shadow:inset 2px 2px 0 var(--ml),inset -2px -2px 0 var(--md);font-size:11px;flex:none}
 .rk.r1 .tt,.rk.r2 .tt,.rk.r3 .tt{color:var(--ml)}.rk.me.r1 .tt,.rk.me.r2 .tt,.rk.me.r3 .tt{color:#111}
+/* 접속 중 표시: 초록 도트 (있으면 접속 중) */
+.rk .on{display:inline-block;vertical-align:-1px;width:10px;height:10px;margin-right:4px;box-sizing:border-box;background:#22c55e;border:2px solid #111;box-shadow:inset 2px 2px 0 #86efac;animation:rkon 1.4s steps(1) infinite}@keyframes rkon{50%{background:#16a34a;box-shadow:inset 2px 2px 0 #4ade80}}
 @keyframes rksh{0%{left:-40%}100%{left:130%}}@keyframes rkst{0%{opacity:1}50%{opacity:0}}
 .lb-rank .mine{border-top:2px solid #3b2d63;padding-top:3px;color:#a5f3fc}
 @media (max-height:340px){.lb-rank{display:none}}
@@ -517,7 +519,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.19.4';
+const VER='1.19.5';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -4534,12 +4536,13 @@ const EV_END=Date.parse('2026-12-01T00:00:00+09:00');
 function evOn(){return Date.now()<EV_END;}
 function otherAva(a,sel){try{if(a&&a.t==='img'&&PIMG[a.i])return [PIMG[a.i],1];if(a&&a.t==='por'&&a.k)return [formPor(a.k,a.f||0)||POR[chOf(a.k).id],1];if(a&&a.t==='pk'&&a.k)return [SPR[chOf(a.k).id],0];return [SPR[chOf(sel||'pikachu').id],0];}catch(e){return [SPR[25],0];}}
 let rankT=0;
-async function loadRank(force){if(!force&&Date.now()-rankT<20000)return;rankT=Date.now();
+async function loadRank(force){if(!force&&Date.now()-rankT<15000)return;rankT=Date.now();
   try{const r=await rpc('pb_rank',{p_token:ACC.token||null});if(!r||!r.ok)return;
-    $('#rkList').innerHTML=r.top.length?r.top.map((x,i)=>{const [src,ph]=otherAva(x.a,x.s);return `<div class="rk${x.me?' me':''}${i<3?' r'+(i+1):''}${x.n==null?' hid':''}" data-u="${esc(x.u||'')}"><span class="no">${i+1}</span><div class="ava fr-${/^[a-z]+$/.test(x.f||'')?x.f:'basic'}${ph?' ph':''}" style="--s:22px${abgS(x.a)}"><img src="${src}"></div><span class="nm">${x.n==null?'? ? ?':esc(x.n)}${x.me?' (나)':''}</span><span class="tt">${x.t}</span></div>`;}).join(''):'아직 기록이 없어요';
+    $('#rkList').innerHTML=r.top.length?r.top.map((x,i)=>{const [src,ph]=otherAva(x.a,x.s);return `<div class="rk${x.me?' me':''}${i<3?' r'+(i+1):''}${x.n==null?' hid':''}" data-u="${esc(x.u||'')}"><span class="no">${i+1}</span><div class="ava fr-${/^[a-z]+$/.test(x.f||'')?x.f:'basic'}${ph?' ph':''}" style="--s:22px${abgS(x.a)}"><img src="${src}"></div><span class="nm">${x.o||x.me?'<i class="on" title="접속 중"></i>':''}${x.n==null?'? ? ?':esc(x.n)}${x.me?' (나)':''}</span><span class="tt">${x.t}</span></div>`;}).join(''):'아직 기록이 없어요';
     $('#rkHide').style.display=r.hide?'':'none';
     document.querySelectorAll('#rkList .rk').forEach(el=>el.onclick=()=>{if(el.dataset.u)openPlayer(el.dataset.u);});
     $('#rkMine').textContent=r.admin?'관리자 계정은 랭킹에서 빠져요':r.my?`내 순위 ${r.my}위 · 트로피 ${r.mt}`:'';}catch(e){}}
+setInterval(()=>{try{if(!document.hidden&&(!G||G.over)&&$('#lbRank')&&$('#lbRank').offsetParent)loadRank();}catch(e){}},15000);
 /* ---------- 플레이어 정보 · 친구 · 초대 ---------- */
 async function openPlayer(u){modal(`<h2>트레이너 정보</h2><div style="font-size:11px">불러오는 중...</div>`);
   let r;try{r=await rpc('pb_profile',{p_token:ACC.token||null,p_user:u});}catch(e){}
