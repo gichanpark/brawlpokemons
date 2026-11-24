@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.20.6** (소스의 `const VER='...'`)
+- 현재 버전: **v1.20.7** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -120,3 +120,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - v1.20.4: 에이스번 테마 스킨 가슴에 등번호 7 (토트넘 네이비 / 국가대표 흰색) — skins.js spr 직접 수정(원본 1/3 해상도 x7~9, y23~26)
 - v1.20.5: 기라티나 그림자 부활 — kill에서 e.deadAt 기록, 기라티나(메타몽 제외)가 적을 쓰러뜨리면 `giraRevive`: 5초 안에 쓰러진 아군(가장 최근) 1명을 적이 쓰러진 자리에서 체력 50%로 부활, e.shadowRv(스냅샷 플래그 1<<28) → 보라 그림자 필터 + 도트 연기. 다음에 쓰러지면 해제
 - v1.20.6: 백귀야행 기라티나 스킨(THEMES.giratina yako, skins.js spr·f1·por) — 칠흑+은빛+진홍. 테마 fx → SPECS에 스펙 복제(SKMAP, skSpec: spawnShots·fireSuper 에서 교체, palO로 pal() 덮어씀), 보라 하드코딩 색은 YK 표로 진홍 치환(yc/ycl: 섀도볼·영혼·섀도다이브·오리진 변신·가젯·화면 틴트 G.purpC). 폼 스킨 이미지 formImg. 스킨 공지 배너 notice/v1206.png (dev/tools/banner_v1206.py)
+- v1.20.7: 드레디어 '동백꽃 필 무렵' 스킨(THEMES.hlil dongbaek) — 흰 한복+검은 가지(등 뒤에서 뻗음)+노란 꽃, 캔버스 46x44 블록(×3). fx: palO 노랑, edge(리프블레이드 테두리 검정)+petal(노란 꽃잎 파티클, 승리의춤 때 꽃비). 생성 dev/tools/skin_hlil_dongbaek.py
