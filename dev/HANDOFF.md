@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.19.7** (소스의 `const VER='...'`)
+- 현재 버전: **v1.20.0** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -111,3 +111,6 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - v1.19.5: 랭킹 접속 중 표시 — pb_rank 가 o(last_seen 30초 이내, 핑은 7초마다)를 보냄 → 이름 옆 초록 도트(.rk .on)
 - v1.19.6: 지형 파괴 타격감 — setRub에서 `crumble`(G.crumb) 호출: 나무는 번쩍 후 맞은 반대쪽으로 쓰러지며 착지 먼지·흔들림, 상자·돌은 흔들리다 터짐, 파편(중력)·나뭇잎 파티클, 'crash' 효과음
 - v1.19.7: 모바일 랭킹 창(모달)에서 1~3등 줄이 납작하게 찌그러지던 문제 — .rk 에 flex:none·min-height 38px
+- v1.20.0 이로치 스킨: dev/assets/shiny.js (`SPRS`/`PORS`, 포켓몬 키별, 118종 — 볼트로스·라티·스티브 제외). 만든 방법: pokesprite regular↔shiny(없으면 공식 아트 일반↔이로치) 픽셀 대응으로 색 지도를 만들어 게임 스프라이트·초상화에 적용, 초상화는 PMDCollab 이로치(portrait/XXXX/0000/0001)가 있으면 그대로 사용 (/tmp 스크립트 → 재생성 시 같은 방식)
+  - SAVE.shy(보유 배열), SAVE.sk({k:1} 장착). hasShy/skinOn/sprOf/porOf/entImg. 상자 칸마다 이로치 확률 BOXT.s(1~3%) → dropShy(보유 포켓몬 중 미보유 이로치). 선택창 상세에 스킨 버튼, 카드에 ✦
+  - 멀티: myMeta.sk → 로스터 sk → e.skin. 봇은 nid·맵 해시로 1/33 확률(모든 화면 같음)

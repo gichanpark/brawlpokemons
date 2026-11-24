@@ -95,6 +95,7 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .lb-rank h4{margin:0;font-weight:400;color:#fde047;display:flex;align-items:center;gap:4px;font-size:11px}.lb-rank .ev{color:#fdba74;font-size:11px;margin-bottom:2px}
 .lb-rank .rl{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
 .rk{display:flex;flex:none;min-height:38px;align-items:center;gap:7px;padding:3px 5px;cursor:pointer;border:2px solid transparent}.rk:hover{border-color:#fde047;background:#2a2140}.rk.me{background:#facc15;color:#111;border-color:#a16207}.rk.me .no{color:#111}.rk.me .tt{color:#111}.rk.hid{cursor:default}.rk.hid:hover{border-color:transparent;background:none}.rk.hid .nm{opacity:.55;letter-spacing:2px}.rk-hide{font-size:11px;color:#fde047;text-align:center;margin:2px 0 4px;animation:rkb 1s steps(2) infinite}@keyframes rkb{50%{color:#f97316}}.rk .no{width:18px;text-align:right;color:#c4b5fd}.rk.r1 .no{color:#fde047}.rk .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rk .tt{color:#fde047}
+.skrow{display:flex;align-items:center;gap:6px;margin:6px 0;font-size:11px;flex-wrap:wrap}.skrow>span{color:#c4b5fd}.skrow em{font-style:normal;opacity:.6;font-size:10px}.skb{font-family:inherit;font-size:11px;padding:4px 9px;background:#2a2140;color:#e5e7eb;border:2px solid #111;box-shadow:inset 0 -3px 0 #1a1430;cursor:pointer}.skb.on{background:#fde047;color:#111;box-shadow:inset 0 -3px 0 #a16207}.skb.shy.on{background:linear-gradient(90deg,#fde047,#f9a8d4,#7dd3fc);}.skb.lock{opacity:.55;cursor:default}.card .shyb{position:absolute;left:3px;bottom:22px;color:#fde047;font-size:12px;text-shadow:0 0 3px #111,1px 1px 0 #111}
 .rk .ava{--s:30px!important;border-width:2px}.rk .ava:after{display:none}
 /* 1~3등 금·은·동 반짝임 (도트) — 숫자 메달로도 구분 */
 .rk.r1{--mc:#facc15;--md:#a16207;--ml:#fef9c3}.rk.r2{--mc:#cbd5e1;--md:#64748b;--ml:#ffffff}.rk.r3{--mc:#f59e0b;--md:#92400e;--ml:#fed7aa}
@@ -517,9 +518,10 @@ select.minput{width:auto}
 /*BALLS*/
 /*TILES*/
 /*POR*/
+/*SHINY*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.19.7';
+const VER='1.20.0';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -908,7 +910,14 @@ addEventListener('resize',resize);resize();
 const TI={};for(const k in TIL){const im=new Image();im.src=TIL[k];TI[k]=im;}
 const GEM=new Image();GEM.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAPCAYAAADphp8SAAABGElEQVR4Xo2TLReCMBSGwUZbhMYqjWo06k8wUvlL/gs12rSSpG5No0kinvfqu7NN/HiKxzv28N67kSYRZVmOcW0Ka23q14M/kJw2G1lXeT4puF2vUp83TSCb8WlI+t3uq4QvMMOQ4Fk/vSTyJaAzZjIN0VnmElerlSRLYwmiF4tFMvT9x9aQqNbarUMmrTEBJSCrqjcR54NE3MNfEcGOApL4+DJK/Pawh8lm6A/RUDi9hh3LYglAe8DNKD61fdc5T6HUc/jWBvJcKVlbt627Au74mWxZ17KJkhhI5kURSEBwIQFO0RiTXA4HF5+JKIkvI3CJCJJprWXwOB3yTTIpApThM4Hsl+QnaPN+Po/H7Xb892P+CAT/SB6a1Jxp/0xPAwAAAABJRU5ErkJggg==';
 const IMG={};{const im=new Image();im.onload=()=>{im.ok=1};im.src=SPR[185];IMG.dummy=im;}
-CH.forEach(c=>{const im=new Image();im.onload=()=>{im.ok=1};im.src=SPR[c.id];IMG[c.k]=im;});['trio','lati'].forEach(k=>{const im=new Image();im.onload=()=>{im.ok=1};im.src=POR[k];IMG[k]=im;});
+CH.forEach(c=>{const im=new Image();im.onload=()=>{im.ok=1};im.src=SPR[c.id];IMG[c.k]=im;});
+/* 이로치 스킨: SPRS/PORS(포켓몬 키별), SAVE.shy=보유 목록, SAVE.sk={k:1}=장착 */
+const IMGS={};for(const k in SPRS){const im=new Image();im.onload=()=>{im.ok=1};im.src=SPRS[k];IMGS[k]=im;}
+const hasShy=k=>!!SPRS[k]&&(SAVE.shy||[]).includes(k);
+const skinOn=k=>hasShy(k)&&!!(SAVE.sk&&SAVE.sk[k]);
+const sprOf=k=>{const c=chOf(k);return skinOn(k)?SPRS[k]:SPR[c.id];};
+const porOf=k=>{const c=chOf(k);return skinOn(k)&&PORS[k]?PORS[k]:POR[c.id];};
+const entImg=e=>e.skin&&!e.ch.ditto&&IMGS[e.ch.k]&&IMGS[e.ch.k].ok?IMGS[e.ch.k]:IMG[e.ch.k];['trio','lati'].forEach(k=>{const im=new Image();im.onload=()=>{im.ok=1};im.src=POR[k];IMG[k]=im;});
 [['rayquaza_mega','mega384'],['cinderace_gmax','gmax815'],['eternatus_gmax','emax890'],['kyurem_f1','10022'],['kyurem_f2','10023'],['morpeko_f1','morpeko_h'],['zygarde','zy10'],['magikarp_f1','redgy'],['minior_f1','10136'],['deoxys_f1','10001'],['deoxys_f2','10002'],['deoxys_f3','10003'],['palafin_f1','pal1'],['trio_f0','642'],['calyrex_f1','cxice'],['calyrex_f2','cxsh'],['enamorus_f1','10249'],['lati_f0','380'],['lati_f1','381'],['giratina_f1','10007'],['trio_f1','10020'],['trio_f2','641'],['trio_f3','10019'],['trio_f4','645'],['trio_f5','10021'],['necrozma_f1','10155'],['necrozma_f2','10156'],['necrozma_f3','10157'],['zygarde_f1','718'],['zygarde_f2','zy100'],['ogerpon_f1','og1'],['ogerpon_f2','og2'],['ogerpon_f3','og3'],['aegislash_f1','10026'],['darmanitan_f1','10017']].forEach(([k,id])=>{const im=new Image();im.onload=()=>{im.ok=1};im.src=SPR[id];IMG[k]=im;});
 
 /* ---------- 저장 ---------- */
@@ -947,7 +956,7 @@ function buildGrid(){
   const hd=(t,n,col,sub)=>{const h=document.createElement('div');h.className='ghd';h.style.setProperty('--gc',col);h.innerHTML=`<b>${t}</b><i>${sub||''}${n}마리</i>`;g.appendChild(h);};
   const add=c=>{
     const d=document.createElement('div');d.className='card'+(c.k===SAVE.sel?' sel':'');d.style.borderBottomColor=GRADE[c.gr].c;
-    d.innerHTML=`<div class="tr">${owns(c.k)?"★"+tro(c.k):"잠김"}</div>${owns(c.k)?`<div class="lvb">Lv${lv(c.k)}</div>`:`<div class="lk">🔒</div>`}<img class="por" src="${POR[c.id]}">${c.noble?`<img class="nbadge" src="${NOBLEB}" title="히스이의 주인">`:c.horse?`<img class="nbadge hb" src="${HORSEB}" title="왕의 애마">`:''}<div class="n"><span>${c.nm}</span></div><div class="gd" style="background:${GRADE[c.gr].c}">${GRADE[c.gr].nm}</div>`;
+    d.innerHTML=`<div class="tr">${owns(c.k)?"★"+tro(c.k):"잠김"}</div>${owns(c.k)?`<div class="lvb">Lv${lv(c.k)}</div>`:`<div class="lk">🔒</div>`}<img class="por" src="${owns(c.k)?porOf(c.k):POR[c.id]}">${hasShy(c.k)?'<div class="shyb">✦</div>':''}${c.noble?`<img class="nbadge" src="${NOBLEB}" title="히스이의 주인">`:c.horse?`<img class="nbadge hb" src="${HORSEB}" title="왕의 애마">`:''}<div class="n"><span>${c.nm}</span></div><div class="gd" style="background:${GRADE[c.gr].c}">${GRADE[c.gr].nm}</div>`;
     if(!owns(c.k))d.classList.add('lock');if(isTmp(c.k))d.insertAdjacentHTML('beforeend',`<div class="tmpb">기간제 ${tmpLeft(c.k)}</div>`);
     d.onclick=()=>{if(viewK!==c.k)viewForm=0;viewK=c.k;if(owns(c.k)){SAVE.sel=c.k;save();}buildGrid();};
     g.appendChild(d);};
@@ -960,11 +969,13 @@ function buildGrid(){
   const c0=chOf(viewK||SAVE.sel),own=owns(c0.k),kf=typeof FORMS!=='undefined'&&FORMS[c0.k],c=kf?kf[Math.min(viewForm,kf.length-1)]:c0;
   const bar=(l,v,m)=>`<div class="stat"><em>${l}</em><div class="bar"><i style="width:${Math.min(100,v/m*100)}%"></i></div><span>${l==='속도'?spdNm(c.spd):l==='체력'?Math.round(c.hp*(1+.06*(lv(c.k)-1))):''}</span></div>`;
   const dps=c.atk.dmg*(c.atk.count||1)*(c.atk.burst||1)*(c.atk.dsc?1.5:1);
-  $('#detail').innerHTML=`<img class="dpor" src="${kf?formPor(c0.k,viewForm):POR[c.id]}"><h3>${c.nm} <span class="gd" style="display:inline-block;background:${GRADE[c.gr].c}">${GRADE[c.gr].nm}</span> ${c.noble?`<span class="nbtag"><img src="${NOBLEB}">히스이의 주인</span> `:c.horse?`<span class="nbtag hb"><img src="${HORSEB}">왕의 애마</span> `:''}<span class="ty" style="color:${EL[c.el].c[0]}">${EL[c.el].nm}</span></h3><div style="opacity:.75">${c.role}${isTmp(c0.k)?` · <b style="color:#67e8f9">기간제 · ${tmpLeft(c0.k)} 남음</b>`:''}</div>${ownP(c0.k)?'':c.gr==='sp'?'<div class="pw"><span style="color:#67e8f9">한정 캐릭터 · 뽑기·영입으로 얻을 수 없어요</span></div>':`<div class="pw"><button class="upbtn" id="bUnlock" ${(SAVE.gems||0)<UNLOCK_GEM[c.gr]?'disabled':''}>혜성조각 ${UNLOCK_GEM[c.gr]}개로 영입</button><span style="opacity:.7">보유 ${SAVE.gems||0} · 상자에서도 나와요</span></div>`}<div class="pw"${own?'':' style="display:none"'}><span class="lbv">파워 ${lv(c.k)}</span>${isTmp(c.k)?'<span style="color:#67e8f9">기간제 · 파워 9 고정 (강화 불가)</span>':lv(c.k)<11?`<button class="upbtn" id="bUp" ${SAVE.coins<upCost(lv(c.k))?'disabled':''}>강화 · 금구슬 ${upCost(lv(c.k))}</button>`:'<span>최대 레벨</span>'}<span style="opacity:.7">보유 금구슬 ${SAVE.coins}</span></div>`+
+  $('#detail').innerHTML=`<img class="dpor" src="${kf&&viewForm?formPor(c0.k,viewForm):porOf(c0.k)}"><h3>${c.nm} <span class="gd" style="display:inline-block;background:${GRADE[c.gr].c}">${GRADE[c.gr].nm}</span> ${c.noble?`<span class="nbtag"><img src="${NOBLEB}">히스이의 주인</span> `:c.horse?`<span class="nbtag hb"><img src="${HORSEB}">왕의 애마</span> `:''}<span class="ty" style="color:${EL[c.el].c[0]}">${EL[c.el].nm}</span></h3><div style="opacity:.75">${c.role}${isTmp(c0.k)?` · <b style="color:#67e8f9">기간제 · ${tmpLeft(c0.k)} 남음</b>`:''}</div>${ownP(c0.k)?'':c.gr==='sp'?'<div class="pw"><span style="color:#67e8f9">한정 캐릭터 · 뽑기·영입으로 얻을 수 없어요</span></div>':`<div class="pw"><button class="upbtn" id="bUnlock" ${(SAVE.gems||0)<UNLOCK_GEM[c.gr]?'disabled':''}>혜성조각 ${UNLOCK_GEM[c.gr]}개로 영입</button><span style="opacity:.7">보유 ${SAVE.gems||0} · 상자에서도 나와요</span></div>`}<div class="pw"${own?'':' style="display:none"'}><span class="lbv">파워 ${lv(c.k)}</span>${isTmp(c.k)?'<span style="color:#67e8f9">기간제 · 파워 9 고정 (강화 불가)</span>':lv(c.k)<11?`<button class="upbtn" id="bUp" ${SAVE.coins<upCost(lv(c.k))?'disabled':''}>강화 · 금구슬 ${upCost(lv(c.k))}</button>`:'<span>최대 레벨</span>'}<span style="opacity:.7">보유 금구슬 ${SAVE.coins}</span></div>`+
+    (SPRS[c0.k]&&own?`<div class="skrow"><span>스킨</span><button class="skb${skinOn(c0.k)?'':' on'}" data-s="0">기본</button><button class="skb shy${skinOn(c0.k)?' on':''}${hasShy(c0.k)?'':' lock'}" data-s="1">✦ 이로치${hasShy(c0.k)?'':' 🔒'}</button>${hasShy(c0.k)?'':'<em>상자에서 가끔 나와요</em>'}</div>`:'')+
     bar('체력',c.hp*(1+.06*(lv(c.k)-1)),7200)+bar('공격력',dps,2000)+bar('사거리',c.atk.range,10)+bar('속도',c.spd,1.3)+bar('장전',1/c.rl,1)+
     (kf?`<div class="ftabs">${kf.map((f,i)=>`<button class="ftab${i===viewForm?' on':''}" data-f="${i}">${f.fnm||f.nm}</button>`).join('')}</div>`:'')+
     `<div class="sk"><b>공격 · ${c.atk.nm}</b> <span style="color:${EL[c.atk.el].c[0]}">[${EL[c.atk.el].nm}]</span><br>${c.atk.ds}</div><div class="sk"><b>★ 필살기 · ${c.sup.nm}</b> <span style="color:${EL[c.sup.el].c[0]}">[${EL[c.sup.el].nm}]</span><br>${c.sup.ds}</div>`+`<div class="sk"><b>특성 · ${c.trait[0]}</b><br>${c.trait[1]}</div><div class="sk"><b style="color:#86efac">가젯 · ${c.gad[0]}</b> <span style="opacity:.7">(${GADN(c0.k)>5?'횟수 제한 없음 · 쿨타임 4초':'경기당 '+GADN(c0.k)+'회'})</span><br>${c.gad[1]}</div>`;
   document.querySelectorAll('.ftab').forEach(b=>b.onclick=()=>{viewForm=+b.dataset.f;sfx('ui');buildGrid();});
+  document.querySelectorAll('.skb').forEach(b=>b.onclick=()=>{const on=b.dataset.s==='1';if(on&&!hasShy(c0.k)){sfx('ui');return;}SAVE.sk=SAVE.sk||{};if(on)SAVE.sk[c0.k]=1;else delete SAVE.sk[c0.k];save();sfx('ui');buildGrid();try{refreshMenu();}catch(e){}});
   const ul=$('#bUnlock');if(ul)ul.onclick=()=>{const p=UNLOCK_GEM[c.gr];if((SAVE.gems||0)<p)return;SAVE.gems-=p;unlockPk(c.k);SAVE.sel=c.k;save();sfx('win');buildGrid();};
   const up=$('#bUp');if(up)up.onclick=()=>{if(isTmp(c.k))return;const l=lv(c.k),cost=upCost(l);if(SAVE.coins<cost||l>=11)return;SAVE.coins-=cost;SAVE.lv[c.k]=l+1;save();buildGrid();};
 }
@@ -1296,6 +1307,9 @@ function startGame(R){TNTF.length=0;
   }
   if(mode==='sd')G.ents[0].me=true;
   G.ents.forEach((e,i)=>e.nid=i);P=G.ents.find(e=>e.me)||G.ents[0];
+  {const RS=[...(R.blue||[]),...(R.red||[])];for(const e of G.ents){const k=e.ch.k;if(!SPRS[k]||e.dummy||e.safe){e.skin=0;continue;}
+    if(e.me)e.skin=skinOn(k)?1:0;else if(e.owner){const x=RS.find(q=>q.owner===e.owner);e.skin=x&&x.sk?1:0;}
+    else{let h=(e.nid+1)*2654435761+(R.mapId||0)*97;for(const ch of k)h=(h^ch.charCodeAt(0))*16777619>>>0;e.skin=h%33===0?1:0;}}}
   for(const e of G.ents)calyStart(e);
   if(!NET.on){const pool=shuffle(BOTNICK.slice());for(const e of G.ents)if(!e.me&&!e.dummy&&!e.safe&&!e.name&&!e.noName)e.name=SAVE.clean?cleanNick(e.ch):(pool.pop()||'트레이너');}
   else if(R.names){G.ents.forEach((e,i)=>{if(!e.name&&R.names[i])e.name=R.names[i];});}
@@ -2647,7 +2661,7 @@ function drawEntSprite(e){
   if(e.dvk>=0){drawDive(e,a);return;}
   if(e.ch.k==='giratina'&&e.form){const pu=.5+.5*Math.sin(G.t*4);ctx.globalAlpha=a*(.35+.2*pu);ctx.fillStyle='#1e0533';ctx.beginPath();ctx.ellipse(e.x,e.y+e.r*.6,34+pu*6,13+pu*2,0,0,7);ctx.fill();ctx.globalAlpha=1;if(Math.random()<.15)P_({x:e.x+rnd(-26,26),y:e.y+rnd(-50,10),vx:0,vy:rnd(-50,-20),t:.5,col:pick(['#1e0533','#7e22ce','#a855f7']),r:rnd(4,7)});}
   if(e.digT>0){ctx.fillStyle='#78350f';ctx.beginPath();ctx.ellipse(e.x,e.y+8,22,9,0,0,7);ctx.fill();ctx.fillStyle='#a16207';ctx.beginPath();ctx.ellipse(e.x,e.y+4,16,7,0,0,7);ctx.fill();return;}
-  const ilv=e.illusT>0&&e.illusK&&e.team!==P.team&&IMG[e.illusK],fm=ilv?IMG[e.illusK]:e.form||SETX[e.ch.k]?IMG[e.ch.k+'_f'+(e.form||0)]:e.megaT>0?IMG[e.ch.k+'_mega']:e.gmaxT>0?IMG[e.ch.k+'_gmax']:null,im=fm&&fm.ok?fm:IMG[e.ch.k],bob=Math.floor(Math.abs(Math.sin(e.walk))*2)*3;
+  const ilv=e.illusT>0&&e.illusK&&e.team!==P.team&&IMG[e.illusK],fm=ilv?IMG[e.illusK]:e.form||SETX[e.ch.k]?IMG[e.ch.k+'_f'+(e.form||0)]:e.megaT>0?IMG[e.ch.k+'_mega']:e.gmaxT>0?IMG[e.ch.k+'_gmax']:null,im=fm&&fm.ok?fm:entImg(e),bob=Math.floor(Math.abs(Math.sin(e.walk))*2)*3;
   ctx.save();ctx.translate(Math.round(e.x/3)*3,Math.round((e.y+e.r*.6-z)/3)*3-bob);
   if(e.dash)ctx.rotate(Math.round(Math.atan2(e.dash.dy,e.dash.dx)*.15*8)/8);
   if(e.sq>0){const q=e.sq/.14;ctx.scale(1+.18*q,1-.16*q);}
@@ -2938,7 +2952,7 @@ addEventListener('resize',()=>{try{renderAllies();}catch(e){}});
 function refreshMenu(){try{renderAllies();}catch(e){}try{invBadge();}catch(e){}
   cleanSave();
   const c=chOf(SAVE.sel),hi=$('#heroImg');
-  hi.onload=()=>{hi.style.width=(hi.naturalWidth*1.15)+'px';};hi.src=SPR[c.id];clearInterval(window._heroT);if(SETX[c.k]){const L=c.k==='trio'?['642','641','645']:['380','381'];let i=0;hi.src=SPR[L[0]];window._heroT=setInterval(()=>{if(!document.body.contains(hi)||chOf(SAVE.sel).k!==c.k){clearInterval(window._heroT);return;}i=(i+1)%L.length;hi.style.transition='opacity .15s';hi.style.opacity=0;setTimeout(()=>{hi.src=SPR[L[i]];hi.style.opacity=1;},150);},1600);}
+  hi.onload=()=>{hi.style.width=(hi.naturalWidth*1.15)+'px';};hi.src=sprOf(c.k);clearInterval(window._heroT);if(SETX[c.k]){const L=c.k==='trio'?['642','641','645']:['380','381'];let i=0;hi.src=SPR[L[0]];window._heroT=setInterval(()=>{if(!document.body.contains(hi)||chOf(SAVE.sel).k!==c.k){clearInterval(window._heroT);return;}i=(i+1)%L.length;hi.style.transition='opacity .15s';hi.style.opacity=0;setTimeout(()=>{hi.src=SPR[L[i]];hi.style.opacity=1;},150);},1600);}
   $('#heroName').textContent=c.nm;$('#heroLv').textContent='파워 '+lv(c.k);
   $('#heroRole').textContent=GRADE[c.gr].nm+' · '+EL[c.el].nm+' 타입 · '+c.role;
   $('#selTro').textContent=tro(c.k);
@@ -3230,7 +3244,7 @@ function drawDive(e,a){const k=e.dvk,y0=e.y+e.r*.6,pr=k<.15?k/.15:k>.85?(1-k)/.1
   ctx.globalAlpha=a*.85;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(e.x,y0,rx+6,(rx+6)*.38,0,0,7);ctx.fill();ctx.fillStyle='#3b0764';ctx.beginPath();ctx.ellipse(e.x,y0,rx,rx*.36,0,0,7);ctx.fill();ctx.fillStyle='#7e22ce';ctx.beginPath();ctx.ellipse(e.x,y0,rx*.5,rx*.18,0,0,7);ctx.fill();ctx.globalAlpha=1;
   if(Math.random()<.5)P_({x:e.x+rnd(-rx,rx),y:y0+rnd(-5,5),vx:rnd(-10,10),vy:rnd(-70,-30),t:.45,col:pick(['#1e0533','#7e22ce','#a855f7','#000']),r:rnd(4,8)});
   let sink=-1;if(k<.25)sink=k/.25;else if(k>.78)sink=(1-k)/.22;if(sink<0)return;
-  const fm=e.form?IMG[e.ch.k+'_f'+e.form]:null,im=fm&&fm.ok?fm:IMG[e.ch.k];if(!im||!im.ok)return;const w=im.width*.75,h=im.height*.75,key=e.form?e.ch.k+'_f'+e.form:e.ch.k,sh=soulImg(key);
+  const fm=e.form?IMG[e.ch.k+'_f'+e.form]:null,im=fm&&fm.ok?fm:entImg(e);if(!im||!im.ok)return;const w=im.width*.75,h=im.height*.75,key=e.form?e.ch.k+'_f'+e.form:e.ch.k,sh=soulImg(key);
   ctx.save();ctx.beginPath();ctx.rect(e.x-w,y0-h*1.5,w*2,h*1.5);ctx.clip();ctx.translate(Math.round(e.x),Math.round(y0+sink*h));ctx.scale(e.fx>0?-1:1,1);ctx.globalAlpha=a;ctx.drawImage(im,-w/2,-h+3,w,h);
   if(sh){ctx.globalAlpha=a*Math.min(1,sink*1.4);ctx.drawImage(sh,-w/2-3,-h,w+6,h+6);}ctx.restore();ctx.globalAlpha=1;}
 function trioSave(e){if(!SETX[e.ch.k]||e.ch.ditto)return false;e.tf[e.tm||0]=0;const m=trioNext(e);if(m<0)return false;addText(e.x,e.y-150,SETX[e.ch.k].N[e.tm||0]+' 쓰러짐!','#fff');trioSet(e,m,false);e.inv=Math.max(e.inv,.8);e.stun=0;e.slowT=0;e.burnT=0;return true;}
@@ -3265,7 +3279,7 @@ function ev(...a){if(NET.on&&NET.host&&G)NET.ev.push(a);}
 function loadSB(){return new Promise((res,rej)=>{if(window.supabase)return res();const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';s.onload=()=>res();s.onerror=()=>rej(new Error('load'));document.head.appendChild(s);});}
 async function sb(){if(SBC)return SBC;await loadSB();SBC=window.supabase.createClient(SB_URL,SB_KEY,{realtime:{params:{eventsPerSecond:40}}});return SBC;}
 function genCode(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<4;i++)s+=A[Math.floor(Math.random()*A.length)];return s;}
-function myMeta(team){const c=chOf(SAVE.sel);return {kind:NET.kind||'gem',user:ACC.user||null,coins:SAVE.coins||0,gems:SAVE.gems||0,id:NET.id,name:SAVE.nick||SAVE.name,ck:c.k,lv:lv(c.k),team,host:NET.host,t:NET.joinT,bots:(NET.myBots||[]).filter(k=>owns(k)).map(k=>({k,lv:lv(k)}))};}
+function myMeta(team){const c=chOf(SAVE.sel);return {kind:NET.kind||'gem',user:ACC.user||null,coins:SAVE.coins||0,gems:SAVE.gems||0,id:NET.id,name:SAVE.nick||SAVE.name,ck:c.k,lv:lv(c.k),sk:skinOn(c.k)?1:0,team,host:NET.host,t:NET.joinT,bots:(NET.myBots||[]).filter(k=>owns(k)).map(k=>({k,lv:lv(k)}))};}
 function bc(event,payload){if(NET.ch)NET.ch.send({type:'broadcast',event,payload});}
 
 /* 방 만들기 / 참가 */
@@ -3405,9 +3419,9 @@ function hostStart(){
   const ms=members();
   if(NET.kind==='ko'){const a=ms.find(m=>m.team===0),b=ms.find(m=>m.team===1);
     if(!a||!b){koMsg('상대가 들어와야 시작할 수 있어요');return;}if(!NET.bet||!NET.bet.locked){koMsg('판돈을 먼저 확정해 주세요');return;}
-    const R={kind:'ko',mapId:Math.floor(Math.random()*KOMAPS.length),blue:[{k:a.ck,lv:a.lv,owner:a.id,name:a.name}],red:[{k:b.ck,lv:b.lv,owner:b.id,name:b.name}]};bc('start',R);netStart(R);return;}const used=new Set(ms.map(m=>m.ck));ms.forEach(m=>(m.bots||[]).forEach(b=>used.add(b.k)));
+    const R={kind:'ko',mapId:Math.floor(Math.random()*KOMAPS.length),blue:[{k:a.ck,lv:a.lv,owner:a.id,name:a.name,sk:a.sk||0}],red:[{k:b.ck,lv:b.lv,owner:b.id,name:b.name,sk:b.sk||0}]};bc('start',R);netStart(R);return;}const used=new Set(ms.map(m=>m.ck));ms.forEach(m=>(m.bots||[]).forEach(b=>used.add(b.k)));
   const pool=shuffle(CH.filter(c=>!used.has(c.k)&&c.gr!=='sp'&&!c.paid));
-  const team=t=>{const a=teamList(ms,t).map(m=>m.bot?{k:m.k,lv:m.lv,owner:null,name:m.oname+'의 봇'}:{k:m.ck,lv:m.lv,owner:m.id,name:m.name});
+  const team=t=>{const a=teamList(ms,t).map(m=>m.bot?{k:m.k,lv:m.lv,owner:null,name:m.oname+'의 봇'}:{k:m.ck,lv:m.lv,owner:m.id,name:m.name,sk:m.sk||0});
     const avg=ms.length?Math.round(ms.reduce((s,m)=>s+m.lv,0)/ms.length):1;
     while(a.length<3){const c=pool.pop()||pick(CH);a.push({k:c.k,lv:clamp(avg+Math.floor(Math.random()*3)-1,1,11),owner:null,name:botNick(c)});}return a;};
   const R={blue:team(0),red:team(1),mapId:Math.floor(Math.random()*TMAPS.length)};
@@ -3415,7 +3429,7 @@ function hostStart(){
 }
 function netStart(Rw){
   closeModal();NET.started=true;NET.snaps=[];NET.ev=[];NET.acc=0;NET.inAcc=0;NET.fol=0;NET.lastFz=-1;
-  const conv=(x)=>({c:chOf(x.k),lv:x.lv,owner:x.owner,name:x.name,me:x.owner===NET.id});
+  const conv=(x)=>({c:chOf(x.k),lv:x.lv,owner:x.owner,name:x.name,sk:x.sk||0,me:x.owner===NET.id});
   const R={mode:Rw.kind||'gem',mapId:Rw.mapId,blue:Rw.blue.map(conv),red:Rw.red.map(conv)};
   // 입력 채널
   if(NET.host){for(const x of [...R.blue,...R.red])if(x.owner&&x.owner!==NET.id&&!NET.inCh[x.owner]){
@@ -4049,24 +4063,27 @@ const cIco=`<img class="ico" src="${ICO.coin}">`,gIco=`<img class="ico" src="${I
 const SHOP=[
  {id:'scout',sec:'today',nm:'스카우트',ds:'5마리 중 1마리를 골라 데려와요',cost:4000,cur:'coin',ball:'luxury-ball'},
  {id:'daily',sec:'today',nm:'오늘의 무료 선물',ds:'하루에 한 번 무료!',cost:0,cur:'free',ball:'premier-ball'},
- {id:'poke',sec:'box',nm:'몬스터볼 상자',ds:'보상 4개 · 칸마다 새 포켓몬 3%',cost:120,cur:'coin',ball:'poke-ball'},
- {id:'great',sec:'box',nm:'슈퍼볼 상자',ds:'보상 7개 · 칸마다 새 포켓몬 5%',cost:20,cur:'gem',ball:'great-ball'},
- {id:'ultra',sec:'box',nm:'하이퍼볼 상자',ds:'보상 10개 · 칸마다 새 포켓몬 6%',cost:45,cur:'gem',ball:'ultra-ball'},
- {id:'master',sec:'box',nm:'마스터볼 상자',ds:'보상 14개 · 칸마다 새 포켓몬 7%',cost:90,cur:'gem',ball:'master-ball'},
+ {id:'poke',sec:'box',nm:'몬스터볼 상자',ds:'보상 4개 · 칸마다 새 포켓몬 3% · 가끔 이로치',cost:120,cur:'coin',ball:'poke-ball'},
+ {id:'great',sec:'box',nm:'슈퍼볼 상자',ds:'보상 7개 · 칸마다 새 포켓몬 5% · 가끔 이로치',cost:20,cur:'gem',ball:'great-ball'},
+ {id:'ultra',sec:'box',nm:'하이퍼볼 상자',ds:'보상 10개 · 칸마다 새 포켓몬 6% · 가끔 이로치',cost:45,cur:'gem',ball:'ultra-ball'},
+ {id:'master',sec:'box',nm:'마스터볼 상자',ds:'보상 14개 · 칸마다 새 포켓몬 7% · 가끔 이로치',cost:90,cur:'gem',ball:'master-ball'},
  {id:'c1',sec:'coin',nm:'금구슬 꾸러미',ds:'금구슬 150개',cost:10,cur:'gem',give:{coin:150}},
  {id:'c2',sec:'coin',nm:'금구슬 상자',ds:'금구슬 900개',cost:50,cur:'gem',give:{coin:900}},
  {id:'slot',sec:'game',nm:'슬롯머신',ds:'금구슬이나 혜성조각을 걸고 돌려요',cost:0,cur:'slot'},
  {id:'stock',sec:'game',nm:'포켓증권',ds:'혜성조각으로 포켓몬 세계 기업의 주식을 사고팔아요',cost:0,cur:'stock'},
 ];
 function randPow(n){const out=[];for(let i=0;i<n;i++){const can=CH.filter(c=>ownP(c.k)&&lv(c.k)<11);if(!can.length)break;const c=pick(can);SAVE.lv[c.k]=lv(c.k)+1;out.push(c);}return out;}
-const BOXT={poke:{n:4,c:[.35,20,40],g:[.15,1,2],k:.03},great:{n:7,c:[.3,30,60],g:[.15,2,3],k:.05},
-  ultra:{n:10,c:[.3,40,80],g:[.15,2,4],k:.06},master:{n:14,c:[.3,60,100],g:[.15,3,5],k:.07}};
+const BOXT={poke:{n:4,c:[.35,20,40],g:[.15,1,2],k:.03,s:.01},great:{n:7,c:[.3,30,60],g:[.15,2,3],k:.05,s:.015},
+  ultra:{n:10,c:[.3,40,80],g:[.15,2,4],k:.06,s:.02},master:{n:14,c:[.3,60,100],g:[.15,3,5],k:.07,s:.03}};
+/* 이로치 스킨 드롭: 가진 포켓몬 중 아직 이로치가 없는 것에서 랜덤 */
+function dropShy(){const L=CH.filter(c=>ownP(c.k)&&SPRS[c.k]&&!hasShy(c.k));if(!L.length)return null;const c=pick(L);SAVE.shy=SAVE.shy||[];SAVE.shy.push(c.k);return c;}
 const rint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function openBox(id){
-  const R={coin:0,gem:0,pow:[],pks:[],cl:[],gl:[]};
+  const R={coin:0,gem:0,pow:[],pks:[],cl:[],gl:[],shy:[]};
   if(id==='daily'){R.coin=30+Math.floor(Math.random()*6)*10;if(Math.random()<.35)R.gem=2+Math.floor(Math.random()*3);}
   else{const B=BOXT[id];
     for(let i=0;i<B.n;i++){let x=Math.random();
+      if(Math.random()<B.s){const c=dropShy();if(c){R.shy.push(c);continue;}}
       if(x<B.k){const c=dropNew(1);if(c){R.pks.push(c);continue;}x=B.k+B.c[0];}
       x-=B.k;if(x<B.c[0]){const a=Math.round(rint(B.c[1],B.c[2])/10)*10;R.coin+=a;R.cl.push(a);continue;}
       x-=B.c[0];if(x<B.g[0]){const a=rint(B.g[1],B.g[2]);R.gem+=a;R.gl.push(a);continue;}
@@ -4315,7 +4332,7 @@ function boxAnim(it,R){
   const steps=[];if(R.cl&&R.cl.length)R.cl.forEach(a=>steps.push({k:'coin',a}));else if(R.coin)steps.push({k:'coin',a:R.coin});if(R.gl&&R.gl.length)R.gl.forEach(a=>steps.push({k:'gem',a}));else if(R.gem)steps.push({k:'gem',a:R.gem});
   const cnt={};R.pow.forEach(c=>cnt[c.k]=(cnt[c.k]||0)+1);const seen={};
   R.pow.forEach(c=>{seen[c.k]=(seen[c.k]||0)+1;steps.push({k:'pow',c,lv:lv(c.k)-(cnt[c.k]-seen[c.k])});});
-  R.pks.forEach(c=>steps.push({k:'pk',c}));
+  R.pks.forEach(c=>steps.push({k:'pk',c}));(R.shy||[]).forEach(c=>steps.push({k:'shy',c}));
   let idx=-1,busy=false,phase='closed';
   const left=n=>n>0?`<div class="bx-left"><img src="${BALL[it.ball]}"><span>${n}</span></div>`:'';
   const stage=(inner,rc,n,extra)=>{ov.innerHTML=`<div class="bx-stage" style="--rc:${rc}"><div class="bx-rays"></div>${inner}${left(n)}${extra||''}</div>`;ov.firstChild.onclick=tap;};
@@ -4324,11 +4341,13 @@ function boxAnim(it,R){
     if(st.k==='coin'){stage(`<div class="bx-item"><img src="${ICO.coin}"><b>+${st.a}</b><div class="nm">금구슬</div></div>`,'#facc15',n);sfx('cube');}
     else if(st.k==='gem'){stage(`<div class="bx-item"><img src="${ICO.gemc}"><b>+${st.a}</b><div class="nm">혜성조각</div></div>`,'#c084fc',n);sfx('gem');}
     else if(st.k==='pow'){stage(`<div class="bx-item"><img class="por" src="${POR[st.c.id]}"><b>파워 ${st.lv}!</b><div class="nm">${st.c.nm} 파워 업</div></div>`,'#4ade80',n);sfx('ready');}
+    else if(st.k==='shy'){stage(`<div class="bx-item"><img class="spr" src="${SPRS[st.c.k]}"><div class="gr" style="background:linear-gradient(90deg,#fde047,#f9a8d4,#7dd3fc);color:#111">✦ 이로치 스킨</div><b style="font-size:22px">${st.c.nm}</b><div class="nm">반짝이는 색다른 모습!</div></div>`,'#fde047',n);flash();sfx('win');}
     else if(st.k==='pk'){if(!st.rev){stage(`<div class="bx-item"><img class="spr sil" src="${SPR[st.c.id]}"><b>???</b><div class="nm">새 포켓몬!</div><div class="bx-hint">터치해서 확인</div></div>`,'#fff',n);sfx('count');}
       else{const g=GRADE[st.c.gr];stage(`<div class="bx-item"><img class="spr" src="${SPR[st.c.id]}"><div class="gr" style="background:${g.c}">${g.nm}</div><b style="font-size:22px">${st.c.nm}</b><div class="nm">새 포켓몬 획득!</div></div>`,g.c,n);flash();sfx('win');}}
   };
   const summary=()=>{phase='done';sfx('win');
     const items=[];R.pks.forEach(pk=>items.push(`<div class="rw newpk"><img class="sbig por2" src="${POR[pk.id]}"><b>새 포켓몬!</b><span>${pk.nm} · ${GRADE[pk.gr].nm}</span></div>`));
+    (R.shy||[]).forEach(c=>items.push(`<div class="rw newpk"><img class="sbig por2" src="${PORS[c.k]||SPRS[c.k]}"><b>✦ 이로치!</b><span>${c.nm} 스킨</span></div>`));
     if(R.coin)items.push(`<div class="rw"><img class="sbig" src="${ICO.coin}"><b>+${R.coin}</b><span>금구슬</span></div>`);
     if(R.gem)items.push(`<div class="rw"><img class="sbig" src="${ICO.gemc}"><b>+${R.gem}</b><span>혜성조각</span></div>`);
     R.pow.forEach(c=>items.push(`<div class="rw"><img class="sbig por2" src="${POR[c.id]}"><b>파워 업!</b><span>${c.nm} → ${lv(c.k)}</span></div>`));
@@ -4484,7 +4503,7 @@ function serverPush(){if(!ACC.token)return;clearTimeout(saveTimer);saveTimer=nul
 function adoptServer(sv){const L=SAVE,N=Object.assign(DEF_SAVE(),sv);
   if(L.own&&N.own)L.own.forEach(k=>{if(!N.own.includes(k)&&CH.some(c=>c.k===k))N.own.push(k);});else if(L.own&&!N.own)N.own=L.own.slice();
   for(const f of ['lv','tro'])if(L[f]){N[f]=N[f]||{};for(const k of Object.keys(L[f]))N[f][k]=Math.max(N[f][k]||0,L[f][k]||0);}
-  if(L.frOwn)N.frOwn=[...new Set([...(N.frOwn||[]),...L.frOwn])];  N.snd=L.snd;N.acct=ACC.user;SAVE=N;cleanSave();save();try{if(!G||G.over)refreshMenu();}catch(e){}}
+  if(L.frOwn)N.frOwn=[...new Set([...(N.frOwn||[]),...L.frOwn])];if(L.shy)N.shy=[...new Set([...(N.shy||[]),...L.shy])];if(L.sk&&!N.sk)N.sk=L.sk;  N.snd=L.snd;N.acct=ACC.user;SAVE=N;cleanSave();save();try{if(!G||G.over)refreshMenu();}catch(e){}}
 function flushSave(){if(!ACC.token||!SAVE.dirty)return;clearTimeout(saveTimer);saveTimer=null;try{fetch(API+'pb_save',{method:'POST',keepalive:true,headers:{apikey:APIKEY,'Content-Type':'application/json'},body:JSON.stringify({p_token:ACC.token,p_save:saveBody()})});}catch(e){}}
 addEventListener('pagehide',flushSave);document.addEventListener('visibilitychange',()=>{if(document.hidden)flushSave();else if(ACC.token&&SAVE.dirty)serverPush();});
 const DEF_SAVE=()=>({sel:'pikachu',mode:'gem',tro:{},coins:0,gems:0,lv:{},road:0,snd:1});
