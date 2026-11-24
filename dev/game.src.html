@@ -96,6 +96,16 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .lb-rank .rl{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
 .rk{display:flex;align-items:center;gap:7px;padding:3px 5px;cursor:pointer;border:2px solid transparent}.rk:hover{border-color:#fde047;background:#2a2140}.rk.me{background:#facc15;color:#111;border-color:#a16207}.rk.me .no{color:#111}.rk.me .tt{color:#111}.rk.hid{cursor:default}.rk.hid:hover{border-color:transparent;background:none}.rk.hid .nm{opacity:.55;letter-spacing:2px}.rk-hide{font-size:11px;color:#fde047;text-align:center;margin:2px 0 4px;animation:rkb 1s steps(2) infinite}@keyframes rkb{50%{color:#f97316}}.rk .no{width:18px;text-align:right;color:#c4b5fd}.rk.r1 .no{color:#fde047}.rk .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rk .tt{color:#fde047}
 .rk .ava{--s:30px!important;border-width:2px}.rk .ava:after{display:none}
+/* 1~3등 금·은·동 반짝임 (도트) — 숫자 메달로도 구분 */
+.rk.r1{--mc:#facc15;--md:#a16207;--ml:#fef9c3}.rk.r2{--mc:#cbd5e1;--md:#64748b;--ml:#ffffff}.rk.r3{--mc:#f59e0b;--md:#92400e;--ml:#fed7aa}
+.rk.r1,.rk.r2,.rk.r3{position:relative;overflow:hidden;border-color:var(--mc);background:linear-gradient(90deg,color-mix(in srgb,var(--mc) 32%,transparent),color-mix(in srgb,var(--mc) 8%,transparent));box-shadow:inset 0 2px 0 color-mix(in srgb,var(--ml) 45%,transparent)}
+.rk.r1:before,.rk.r2:before,.rk.r3:before{content:'';position:absolute;top:0;bottom:0;left:-40%;width:22%;background:linear-gradient(90deg,transparent 0 25%,color-mix(in srgb,var(--ml) 55%,transparent) 25% 45%,transparent 45% 60%,color-mix(in srgb,var(--ml) 35%,transparent) 60% 72%,transparent 72%);transform:skewX(-20deg);pointer-events:none;animation:rksh 2.6s steps(14) infinite}
+.rk.r2:before{animation-delay:.5s}.rk.r3:before{animation-delay:1s}
+.rk.r1:after,.rk.r2:after,.rk.r3:after{content:'';position:absolute;right:4px;top:3px;width:3px;height:3px;background:var(--ml);box-shadow:-3px 0 0 var(--mc),3px 0 0 var(--mc),0 -3px 0 var(--mc),0 3px 0 var(--mc),-38px 10px 0 var(--ml);pointer-events:none;animation:rkst 1.2s steps(1) infinite}
+.rk.r2:after{animation-delay:.4s}.rk.r3:after{animation-delay:.8s}
+.rk.r1 .no,.rk.r2 .no,.rk.r3 .no{width:18px;height:18px;line-height:18px;text-align:center;color:#111;background:var(--mc);border:2px solid #111;box-shadow:inset 2px 2px 0 var(--ml),inset -2px -2px 0 var(--md);font-size:11px;flex:none}
+.rk.r1 .tt,.rk.r2 .tt,.rk.r3 .tt{color:var(--ml)}.rk.me.r1 .tt,.rk.me.r2 .tt,.rk.me.r3 .tt{color:#111}
+@keyframes rksh{0%{left:-40%}100%{left:130%}}@keyframes rkst{0%{opacity:1}50%{opacity:0}}
 .lb-rank .mine{border-top:2px solid #3b2d63;padding-top:3px;color:#a5f3fc}
 @media (max-height:340px){.lb-rank{display:none}}
 .lb-mail,.lb-fr,.lb-snd{z-index:7}.lb-side{z-index:6}.lb-stage{z-index:1}
@@ -507,7 +517,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.19.2';
+const VER='1.19.3';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -4526,7 +4536,7 @@ function otherAva(a,sel){try{if(a&&a.t==='img'&&PIMG[a.i])return [PIMG[a.i],1];i
 let rankT=0;
 async function loadRank(force){if(!force&&Date.now()-rankT<20000)return;rankT=Date.now();
   try{const r=await rpc('pb_rank',{p_token:ACC.token||null});if(!r||!r.ok)return;
-    $('#rkList').innerHTML=r.top.length?r.top.map((x,i)=>{const [src,ph]=otherAva(x.a,x.s);return `<div class="rk${x.me?' me':''}${i===0?' r1':''}${x.n==null?' hid':''}" data-u="${esc(x.u||'')}"><span class="no">${i+1}</span><div class="ava fr-${/^[a-z]+$/.test(x.f||'')?x.f:'basic'}${ph?' ph':''}" style="--s:22px${abgS(x.a)}"><img src="${src}"></div><span class="nm">${x.n==null?'? ? ?':esc(x.n)}${x.me?' (나)':''}</span><span class="tt">${x.t}</span></div>`;}).join(''):'아직 기록이 없어요';
+    $('#rkList').innerHTML=r.top.length?r.top.map((x,i)=>{const [src,ph]=otherAva(x.a,x.s);return `<div class="rk${x.me?' me':''}${i<3?' r'+(i+1):''}${x.n==null?' hid':''}" data-u="${esc(x.u||'')}"><span class="no">${i+1}</span><div class="ava fr-${/^[a-z]+$/.test(x.f||'')?x.f:'basic'}${ph?' ph':''}" style="--s:22px${abgS(x.a)}"><img src="${src}"></div><span class="nm">${x.n==null?'? ? ?':esc(x.n)}${x.me?' (나)':''}</span><span class="tt">${x.t}</span></div>`;}).join(''):'아직 기록이 없어요';
     $('#rkHide').style.display=r.hide?'':'none';
     document.querySelectorAll('#rkList .rk').forEach(el=>el.onclick=()=>{if(el.dataset.u)openPlayer(el.dataset.u);});
     $('#rkMine').textContent=r.admin?'관리자 계정은 랭킹에서 빠져요':r.my?`내 순위 ${r.my}위 · 트로피 ${r.mt}`:'';}catch(e){}}
