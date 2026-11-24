@@ -94,14 +94,14 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .lb-rank{position:absolute;right:12px;top:96px;bottom:108px;width:262px;background:rgba(28,21,48,.92);border:3px solid #111;box-shadow:inset 0 3px 0 #3b2d63,0 4px 0 #111;padding:6px 8px;font-size:11px;display:flex;flex-direction:column;gap:3px;overflow:hidden}
 .lb-rank h4{margin:0;font-weight:400;color:#fde047;display:flex;align-items:center;gap:4px;font-size:11px}.lb-rank .ev{color:#fdba74;font-size:11px;margin-bottom:2px}
 .lb-rank .rl{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
-.rk{display:flex;align-items:center;gap:7px;padding:3px 5px;cursor:pointer;border:2px solid transparent}.rk:hover{border-color:#fde047;background:#2a2140}.rk.me{background:#facc15;color:#111;border-color:#a16207}.rk.me .no{color:#111}.rk.me .tt{color:#111}.rk.hid{cursor:default}.rk.hid:hover{border-color:transparent;background:none}.rk.hid .nm{opacity:.55;letter-spacing:2px}.rk-hide{font-size:11px;color:#fde047;text-align:center;margin:2px 0 4px;animation:rkb 1s steps(2) infinite}@keyframes rkb{50%{color:#f97316}}.rk .no{width:18px;text-align:right;color:#c4b5fd}.rk.r1 .no{color:#fde047}.rk .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rk .tt{color:#fde047}
+.rk{display:flex;flex:none;min-height:38px;align-items:center;gap:7px;padding:3px 5px;cursor:pointer;border:2px solid transparent}.rk:hover{border-color:#fde047;background:#2a2140}.rk.me{background:#facc15;color:#111;border-color:#a16207}.rk.me .no{color:#111}.rk.me .tt{color:#111}.rk.hid{cursor:default}.rk.hid:hover{border-color:transparent;background:none}.rk.hid .nm{opacity:.55;letter-spacing:2px}.rk-hide{font-size:11px;color:#fde047;text-align:center;margin:2px 0 4px;animation:rkb 1s steps(2) infinite}@keyframes rkb{50%{color:#f97316}}.rk .no{width:18px;text-align:right;color:#c4b5fd}.rk.r1 .no{color:#fde047}.rk .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rk .tt{color:#fde047}
 .rk .ava{--s:30px!important;border-width:2px}.rk .ava:after{display:none}
 /* 1~3등 금·은·동 반짝임 (도트) — 숫자 메달로도 구분 */
 .rk.r1{--mc:#facc15;--md:#a16207;--ml:#fef9c3}.rk.r2{--mc:#cbd5e1;--md:#64748b;--ml:#ffffff}.rk.r3{--mc:#f59e0b;--md:#92400e;--ml:#fed7aa}
 .rk.r1,.rk.r2,.rk.r3{position:relative;overflow:hidden;border-color:var(--mc);background:linear-gradient(90deg,color-mix(in srgb,var(--mc) 32%,transparent),color-mix(in srgb,var(--mc) 8%,transparent));box-shadow:inset 0 2px 0 color-mix(in srgb,var(--ml) 45%,transparent)}
 .rk.r1:before,.rk.r2:before,.rk.r3:before{content:'';position:absolute;top:0;bottom:0;left:-40%;width:22%;background:linear-gradient(90deg,transparent 0 25%,color-mix(in srgb,var(--ml) 55%,transparent) 25% 45%,transparent 45% 60%,color-mix(in srgb,var(--ml) 35%,transparent) 60% 72%,transparent 72%);transform:skewX(-20deg);pointer-events:none;animation:rksh 2.6s steps(14) infinite}
 .rk.r2:before{animation-delay:.5s}.rk.r3:before{animation-delay:1s}
-.rk.r1:after,.rk.r2:after,.rk.r3:after{content:'';position:absolute;right:4px;top:3px;width:3px;height:3px;background:var(--ml);box-shadow:-3px 0 0 var(--mc),3px 0 0 var(--mc),0 -3px 0 var(--mc),0 3px 0 var(--mc),-38px 10px 0 var(--ml);pointer-events:none;animation:rkst 1.2s steps(1) infinite}
+.rk.r1:after,.rk.r2:after,.rk.r3:after{content:'';position:absolute;right:4px;top:3px;width:3px;height:3px;background:var(--ml);box-shadow:-3px 0 0 var(--mc),3px 0 0 var(--mc),0 -3px 0 var(--mc),0 3px 0 var(--mc);pointer-events:none;animation:rkst 1.2s steps(1) infinite}
 .rk.r2:after{animation-delay:.4s}.rk.r3:after{animation-delay:.8s}
 .rk.r1 .no,.rk.r2 .no,.rk.r3 .no{width:18px;height:18px;line-height:18px;text-align:center;color:#111;background:var(--mc);border:2px solid #111;box-shadow:inset 2px 2px 0 var(--ml),inset -2px -2px 0 var(--md);font-size:11px;flex:none}
 .rk.r1 .tt,.rk.r2 .tt,.rk.r3 .tt{color:var(--ml)}.rk.me.r1 .tt,.rk.me.r2 .tt,.rk.me.r3 .tt{color:#111}
@@ -519,7 +519,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.19.6';
+const VER='1.19.7';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
