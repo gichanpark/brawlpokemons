@@ -522,7 +522,7 @@ select.minput{width:auto}
 /*SKINS*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.20.2';
+const VER='1.20.3';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -4380,10 +4380,12 @@ const ITEMS=(()=>{const o={};[['poke','몬스터볼'],['great','슈퍼볼'],['ul
   ['r','s','e','m','l'].forEach((g,i)=>{o['sel7_'+g]={nm:GRADE[g].nm+' 7일 선택권',ds:GRADE[g].nm+' 포켓몬 1마리를 골라 7일 동안 사용',g,days:7,o:5+i};o['sel_'+g]={nm:GRADE[g].nm+' 선택권',ds:GRADE[g].nm+' 포켓몬 1마리를 골라 영구히 데려와요',g,o:10+i};});
   o.fr_star={nm:'트로피 성좌 프레임',ds:'시즌 1등 보상 프레임 (받으면 바로 열림)',fr:'star',o:20};
   return o;})();
-const ITEMK=Object.keys(ITEMS).sort((a,b)=>ITEMS[a].o-ITEMS[b].o||a.localeCompare(b));
+/* 스킨 아이템 (관리자 우편용, 받으면 바로 열림): sk_<포켓몬키>_<s|테마id> */
+for(const c of CH){if(SPRS[c.k])ITEMS['sk_'+c.k+'_s']={nm:'이로치 '+c.nm+' 스킨',ds:'받으면 바로 열려요',skin:[c.k,'s'],o:30};for(const t of THEMES[c.k]||[])ITEMS['sk_'+c.k+'_'+t.id]={nm:t.nm+' 스킨',ds:'받으면 바로 열려요',skin:[c.k,t.id],o:31};}
+const ITEMK=Object.keys(ITEMS).filter(k=>!ITEMS[k].skin).sort((a,b)=>ITEMS[a].o-ITEMS[b].o||a.localeCompare(b));
 const invN=k=>(SAVE.inv&&SAVE.inv[k])||0;
-function invAdd(k,n){if(!ITEMS[k])return;if(ITEMS[k].fr){if(n>0){SAVE.frOwn=SAVE.frOwn||[];if(!SAVE.frOwn.includes(ITEMS[k].fr)){SAVE.frOwn.push(ITEMS[k].fr);setTimeout(()=>toast('새 프레임 「'+ITEMS[k].nm.replace(' 프레임','')+'」를 얻었어요! 프로필에서 바꿀 수 있어요'),300);}}return;}if(!SAVE.inv)SAVE.inv={};SAVE.inv[k]=Math.max(0,(SAVE.inv[k]||0)+(n||1));if(!SAVE.inv[k])delete SAVE.inv[k];}
-function itemPic(k,sm){const I=ITEMS[k];if(!I)return '';if(I.fr)return `<span style="display:inline-flex;vertical-align:middle;margin:${sm?'6px 4px 0':'14px 6px 4px'}">${avaHTML(sm?16:34,null,I.fr)}</span>`;if(I.g)return `<span class="tkt${sm?' sm':''}" style="--gc:${GRADE[I.g].c}">${I.days?I.days+'일':'영구'}</span>`;return `<img class="${sm?'ico':''}" src="${BALL[I.ball]}">`;}
+function invAdd(k,n){if(!ITEMS[k])return;if(ITEMS[k].skin){if(n>0){const [pk,id]=ITEMS[k].skin;if(!hasSkin(pk,id)){if(id==='s'){SAVE.shy=SAVE.shy||[];SAVE.shy.push(pk);}else{SAVE.skn=SAVE.skn||[];SAVE.skn.push(pk+'_'+id);}setTimeout(()=>toast('새 스킨 「'+skinNm(pk,id)+'」을 얻었어요! 포켓몬 선택창에서 바꿀 수 있어요'),300);}}return;}if(ITEMS[k].fr){if(n>0){SAVE.frOwn=SAVE.frOwn||[];if(!SAVE.frOwn.includes(ITEMS[k].fr)){SAVE.frOwn.push(ITEMS[k].fr);setTimeout(()=>toast('새 프레임 「'+ITEMS[k].nm.replace(' 프레임','')+'」를 얻었어요! 프로필에서 바꿀 수 있어요'),300);}}return;}if(!SAVE.inv)SAVE.inv={};SAVE.inv[k]=Math.max(0,(SAVE.inv[k]||0)+(n||1));if(!SAVE.inv[k])delete SAVE.inv[k];}
+function itemPic(k,sm){const I=ITEMS[k];if(!I)return '';if(I.skin){const [pk,id]=I.skin,src=id==='s'?SPRS[pk]:SKINX[pk+'_'+id].spr;return `<img class="${sm?'ico':''} px" style="${sm?'':'max-height:48px'}" src="${src}">`;}if(I.fr)return `<span style="display:inline-flex;vertical-align:middle;margin:${sm?'6px 4px 0':'14px 6px 4px'}">${avaHTML(sm?16:34,null,I.fr)}</span>`;if(I.g)return `<span class="tkt${sm?' sm':''}" style="--gc:${GRADE[I.g].c}">${I.days?I.days+'일':'영구'}</span>`;return `<img class="${sm?'ico':''}" src="${BALL[I.ball]}">`;}
 function invBadge(){const n=ITEMK.reduce((a,k)=>a+invN(k),0),b=$('#invBadge');if(b){b.textContent=n;b.style.display=n?'':'none';}const ic=$('#invIco');if(ic&&!ic.src)ic.src=BALL['premier-ball'];}
 function openInv(){
   const L=ITEMK.filter(k=>invN(k)>0);
@@ -4727,6 +4729,7 @@ async function adminPanel(target){
     <div class="arow"><span>포켓몬</span><input id="amQ" class="minput sm2" placeholder="이름 검색" style="flex:1;max-width:220px"><span class="apk-gr">${['all','r','s','e','m','l','sp'].map(g=>`<button data-g="${g}" class="${g==='all'?'on':''}" style="${g==='all'?'':'border-bottom:4px solid '+GRADE[g].c}">${g==='all'?'전체':GRADE[g].nm}</button>`).join('')}</span><button class="btn sm b2" id="amNone">선택 해제</button><label style="font-size:11px;display:flex;align-items:center;gap:4px;color:#67e8f9"><input type="checkbox" id="amTmp"> 기간제로</label><input id="amDays" class="minput sm2" type="number" min="1" max="365" value="7" style="width:60px"><span style="font-size:11px">일</span><b id="amCnt" style="font-size:12px;color:#fde047">0마리 선택</b></div>
     <div class="apk-grid" id="amPk">${sortCH(CH).map(c=>`<label class="apk" data-g="${c.gr}" data-n="${c.nm}"><input type="checkbox" value="${c.k}"><div class="apk-c" style="--gc:${GRADE[c.gr].c}"><img src="${POR[c.id]}"><span>${c.nm}</span><i>✔</i></div></label>`).join('')}</div>
     <div class="arow" style="flex-direction:column;align-items:stretch"><span>아이템 (개수)</span><div class="aitm">${ITEMK.map(k=>`<label>${itemPic(k,1)}<span style="flex:1">${ITEMS[k].nm}</span><input class="minput sm2" type="number" min="0" max="99" value="0" data-it="${k}"></label>`).join('')}</div></div>
+    <div class="arow" style="flex-wrap:wrap"><span>스킨</span><select id="amSkP" class="minput sm2">${sortCH(CH).filter(c=>SPRS[c.k]||THEMES[c.k]).map(c=>`<option value="${c.k}">${c.nm}</option>`).join('')}</select><select id="amSkI" class="minput sm2"></select><button class="btn sm b2" id="amSkAdd">추가</button><span id="amSkL" style="display:flex;gap:4px;flex-wrap:wrap;font-size:11px"></span></div>
     <div class="arow"><span>수령 가능 기간</span><input id="amDaysR" class="minput sm2" type="number" min="0" max="365" value="7" style="width:60px"><span style="font-size:11px">일 (0이면 무제한 · 전체 발송이면 이 기간 안에 새로 가입한 사람도 받을 수 있어요)</span></div>
     <div class="arow"><span>메시지</span><input id="amMsg" class="minput sm2" maxlength="200" placeholder="예) 점검 보상입니다!" style="flex:1"></div>
     <div class="arow"><button class="btn sm" id="amSend">보내기</button><span id="amRes" style="font-size:11px"></span></div></div>
@@ -4752,10 +4755,13 @@ async function adminPanel(target){
     try{const q=await rpc('pb_admin_tro',{p_token:ACC.token,p_target:to,p_pk:k,p_amt:n,p_keys:CH.map(c=>c.k)});$('#atRes').textContent=q.ok?`${q.n}명 · ${k==='__all'?'모든 포켓몬':chOf(k).nm} 트로피 ${all?'전부 차감':(n>0?'+':'')+n}`:({no_user:'없는 아이디예요',bad_amount:'수치를 확인해 주세요'}[q.err]||'실패했어요');
       if(q.ok&&(to===ACC.user||to==='*'))serverSave();}catch(e){$('#atRes').textContent='연결 실패';}
     $('#atGo').disabled=false;delete $('#atGo').dataset.ok;delete $('#atGo').dataset.ok2;atSync();};
+  {const sk=[],fill=()=>{const k=$('#amSkP').value;$('#amSkI').innerHTML=[...(SPRS[k]?[['s','✦ 이로치']]:[]),...(THEMES[k]||[]).map(t=>[t.id,t.nm])].map(([id,n])=>`<option value="${id}">${n}</option>`).join('');},
+    draw=()=>{$('#amSkL').innerHTML=sk.map((x,i)=>`<b data-i="${i}" style="background:#2a2140;border:2px solid #111;padding:2px 6px;cursor:pointer">${ITEMS[x].nm} ✕</b>`).join('');document.querySelectorAll('#amSkL b').forEach(b=>b.onclick=()=>{sk.splice(+b.dataset.i,1);draw();});};
+    $('#amSkP').onchange=fill;fill();$('#amSkAdd').onclick=()=>{const key='sk_'+$('#amSkP').value+'_'+$('#amSkI').value;if(ITEMS[key]&&!sk.includes(key)){sk.push(key);draw();}};window._amSk=sk;}
   $('#amSend').onclick=async()=>{
     const to=$('#amTo').value,c=Math.max(0,parseInt($('#amC').value)||0),g=Math.max(0,parseInt($('#amG').value)||0),msg=$('#amMsg').value.trim();
     const sel=[...document.querySelectorAll('#amPk input:checked')].map(i=>i.value),tmp=$('#amTmp').checked,days=Math.max(1,Math.min(365,parseInt($('#amDays').value)||7)),pks=tmp?[]:sel,tpks=tmp?sel:[];
-    const items=[];document.querySelectorAll('[data-it]').forEach(i=>{const n=Math.max(0,Math.min(99,parseInt(i.value)||0));for(let j=0;j<n;j++)items.push(i.dataset.it);});
+    const items=[];document.querySelectorAll('[data-it]').forEach(i=>{const n=Math.max(0,Math.min(99,parseInt(i.value)||0));for(let j=0;j<n;j++)items.push(i.dataset.it);});items.push(...(window._amSk||[]));
     if(!c&&!g&&!msg&&!sel.length&&!items.length){$('#amRes').textContent='금구슬·혜성조각·포켓몬·아이템·메시지 중 하나는 넣어 주세요';return;}
     if(to==='*'&&!$('#amSend').dataset.ok){$('#amSend').dataset.ok=1;$('#amSend').textContent='전체에게 보낼까요? 한 번 더';return;}
     $('#amSend').disabled=true;$('#amRes').textContent='보내는 중...';
