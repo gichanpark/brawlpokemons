@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.19.3** (소스의 `const VER='...'`)
+- 현재 버전: **v1.19.4** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -107,3 +107,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - v1.19.1: 부서진 지형 잔해 — `G.map.rub[i]`(1 벽·2 상자·3 돌 블록) → `drawRubble`(바닥 위 도트 조각, 타일 위치로 고정 난수). breakTile/hitBox/스티브 블록 제거/참가자 'W' 이벤트에서 `setRub`, 돌 블록을 놓으면 지움
 - v1.19.2: 시즌 1등 '트로피 성좌' 프레임(.fr-star) 도트 리디자인 — 금테 9-slice border-image(모서리 보석), 위에 1등 트로피, 반짝이 2프레임 교대, 금빛 drop-shadow 맥동 (이미지는 CSS data URI)
 - v1.19.3: 랭킹 이름 공개, 랭킹 1~3등 줄에 금·은·동 테두리·빛 줄기·도트 반짝이 + 숫자 메달(.rk.r1~r3)
+- v1.19.4: 11/30 랭킹 1위 이벤트 상품 문구를 '특별 프레임 + 한정 포켓몬'으로 변경 (로딩 화면 #ldEv, 랭킹 #rkEv)
