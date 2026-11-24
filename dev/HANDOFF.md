@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.20.1** (소스의 `const VER='...'`)
+- 현재 버전: **v1.20.2** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -115,3 +115,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
   - SAVE.shy(보유 배열), SAVE.sk({k:1} 장착). hasShy/skinOn/sprOf/porOf/entImg. 상자 칸마다 이로치 확률 BOXT.s(1~3%) → dropShy(보유 포켓몬 중 미보유 이로치). 선택창 상세에 스킨 버튼, 카드에 ✦
   - 멀티: myMeta.sk → 로스터 sk → e.skin. 봇은 nid·맵 해시로 1/33 확률(모든 화면 같음)
 - v1.20.1 테마 스킨: dev/assets/skins.js (`SKINX['k_id']={spr,por,gmax}`, `SOCCER` 축구공 도트). `THEMES={cinderace:[spurs 토트넘 에이스번, korea 국가대표 에이스번]}` (색만 바꾼 도트, ball:1 → 평타·필살기 투사체가 축구공, 거다이맥스도 축구공 무늬). 보유 SAVE.skn, 장착 SAVE.sk[k]='s'|테마id (예전 1=이로치). skinId/hasSkin/gmaxImg/ballSkin. 상자 스킨 드롭은 이로치+테마 통합(dropShy)
+- v1.20.2: 에이스번 테마 스킨 거다이맥스 불덩이를 직접 찍은 도트 축구공(구 음영·오각형 무늬, 정이십면체 투영)으로 교체, 투사체 공도 같은 방식. 생성 스크립트 dev/tools/skin_ball_gmax.py · skin_ball_small.py (skins.js 백업본 기준으로 실행)
