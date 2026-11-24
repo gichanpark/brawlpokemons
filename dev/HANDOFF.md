@@ -7,7 +7,7 @@
 - 배포: GitHub Pages → https://gichanpark.github.io/brawlpokemons/
 - 백엔드: Supabase 프로젝트 `fidocivflebjwpjndlue` (계정·저장·우편·공지·친구·랭킹·1대1 내기). 멀티는 Supabase Realtime 채널.
 - 관리자 계정: `outislove`
-- 현재 버전: **v1.18.0** (소스의 `const VER='...'`)
+- 현재 버전: **v1.19.0** (소스의 `const VER='...'`)
 
 ## 2. 파일 구조
 ```
@@ -102,3 +102,5 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - v1.17.0: 영웅·신화·전설 40종 평타/필살기에 원작 기술 효과 부여 (`// 영웅·신화·전설 기술 특색` 블록, U(k,'atk'|'sup',플래그,설명추가) — 같은 이름의 폼 스펙도 함께 수정). 능력치는 그대로.
   - 새 플래그: sleepBonus, gyro, rageFist(e.hitsTaken), firstImp(e.fiArm), bigBonus, thru(벽 통과, 이전엔 미구현), dashInv, refund, selfStun(e.recoil→stun), healPct(buff), 돌진 접촉 exec/ls/vulnC. 메타그로스도 recD 누적(counter).
 - v1.18.0: 초희귀 솔록(338) 추가 — 불꽃세례(화상) / 솔라빔(`windup` 0.6초 충전 후 발사, bq 사용·충전 중 태양 링 연출) / 특성 부유(swim)·태양의 힘(화상 적 +20%, dmgIn) / 가젯 쾌청(게이지 30%+빨라짐). 배너 notice/v1180.png
+- v1.19.0 '태암이 오다': 전설 솔가레오(791) — 사이코팽(shieldBreak: 보호막·리플렉터·철벽 제거 시 1.3배) / 메테오드라이브(돌진, 벽 파괴·기절·방어 무시) / 메탈프로텍트(hitEff 래퍼 → hitEff0, 둔화·방어/공격 하락·혼란 무효) / 아침햇살. 배너 notice/v1190.png
+  - 버그 수정: v1.17.0에서 fireSuper의 refund/selfStun 줄이 dash if와 else-if 사슬 사이에 끼어, 돌진형 필살기가 투사체까지 쏘고(2배 피해) 갸라도스·개굴닌자 필살기가 안 나가던 문제. 돌진 접촉에 stun 적용 추가. 갑주무사 평타 firstImp 중복 제거(특성에 이미 있음)

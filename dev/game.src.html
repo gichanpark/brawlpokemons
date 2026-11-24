@@ -507,7 +507,7 @@ select.minput{width:auto}
 /*POR*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.18.0';
+const VER='1.19.0';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -873,6 +873,9 @@ const CH=[
  {k:'eternatus',id:890,nm:'무한다이노',role:'포격 · 거다이맥스',el:'dragon',gr:'l',col:'#7e22ce',hp:5000,spd:.95,rl:1.15,charge:3000,
   atk:{nm:'다이맥스포',ds:'세 방향으로 뻗는 관통 레이저 · 체력이 많이 남은 적일수록 더 아픔 (최대 1.5배)',ty:'shot',fx:'dmax',el:'dragon',count:3,spread:.42,range:7.5,speed:24,dmg:1050,r:10,pierce:1,hiHp:.5,col:'#a855f7'},
   sup:{nm:'무한다이빔',ds:'거다이맥스해 떠오른 뒤 지정한 원형 지점에 2.5초 동안 빔을 집중 · 원 안의 적은 행동불능, 주변 적은 원 중앙으로 끌려옴 · 끝나면 크게 폭발하며 날려버림 · 쏘는 동안 무적',gmax:.9,ebeam:2.5,ty:'lob',fx:'dmax',el:'dragon',range:8,aoe:1.8,pull:2.4,dmg:3900,col:'#dc2626'}},
+ {k:'solgaleo',id:791,nm:'솔가레오',role:'돌격 · 태양의 사자',el:'psychic',gr:'l',col:'#fbbf24',hp:5200,spd:1.05,rl:1.15,charge:2800,
+  atk:{nm:'사이코팽',ds:'앞의 적을 강하게 물어뜯음 · 보호막·리플렉터·철벽 같은 방어 효과를 부수고 그때는 1.3배',ty:'shot',fx:'jaw',el:'psychic',range:3,speed:16,dmg:1100,r:22,shieldBreak:1,col:'#c084fc'},
+  sup:{nm:'메테오드라이브',ds:'태양처럼 빛나며 일직선으로 돌진 · 벽을 부수고 부딪힌 적의 방어 효과를 무시 · 기절 + 밀쳐냄',ty:'dash',fx:'rage',el:'steel',range:8,speed:24,dmg:2400,kb:1.2,stun:.6,brk:1,shieldBreak:1,col:'#fbbf24'}},
  {k:'steve',id:'steve',rface:1,nm:'스티브',fnm:'스티브 (맨손)',role:'한정 · 채굴과 제작',el:'normal',gr:'sp',col:'#22d3ee',hp:4200,spd:1.1,rl:1.0,charge:2600,
   atk:{nm:'주먹',ds:'맨손 주먹질 (도구를 만들면 공격이 바뀜)',ty:'shot',fx:'fist',el:'normal',range:1.8,speed:14,dmg:420,r:16,col:'#f5d0a9'},
   sup:{nm:'TNT',ds:'TNT를 던져 크게 폭발',ty:'lob',fx:'tnt',boom:'quake',el:'fire',range:7,dmg:1700,aoe:2.1,fl:.8,col:'#dc2626'}}
@@ -1347,9 +1350,9 @@ function fireSuper(e,ang,d){
   if(s.gmax){const was=e.gmaxT>0;e.gmaxT=s.gmax;e.gmaxD=s.gmax;if(!was){sfx('bigboom',e.x,e.y);addText(e.x,e.y-130,'거다이맥스!','#f87171',1);P_({ring:1,x:e.x,y:e.y,rad:110,col:'#dc2626',t:.6});P_({ring:1,x:e.x,y:e.y,rad:70,col:'#f87171',t:.45});spark(e.x,e.y-60,['#dc2626','#f87171','#fff'],26,260,.7,7);if(e===P)G.shake=Math.max(G.shake,.35);}}
   if(s.ty==='dash'||s.ty==='leap'||s.ty==='tele'||s.ty==='sdive')bumpFz(e);
   if(s.ty==='dash'&&s.ironS)e.ironT=Math.max(e.ironT||0,s.ironS);
-  if(s.ty==='dash'){sfx('dash',e.x,e.y);e.dash={dx:ca,dy:sa,left:s.range*T,hit:new Set(),s};if(s.dashInv)e.inv=Math.max(e.inv,s.range/s.speed+.15);}
   if(s.refund){e.ammo=Math.min(3,e.ammo+s.refund);addText(e.x,e.y-125,'탄 +'+s.refund,'#7dd3fc');}
   if(s.selfStun)e.recoil=s.selfStun;
+  if(s.ty==='dash'){sfx('dash',e.x,e.y);e.dash={dx:ca,dy:sa,left:s.range*T,hit:new Set(),s};if(s.dashInv)e.inv=Math.max(e.inv,s.range/s.speed+.15);}
   else if(s.ty==='sdive'){const dd=clamp(d??s.range*T,T,s.range*T);e.leap={sx:e.x,sy:e.y,tx:e.x+ca*dd,ty:e.y+sa*dd,t:0,dur:1.35,s,dive:1};e.dvk=0;e.inv=Math.max(e.inv,1.4);sfx('shot',e.x,e.y,'ghost');
     P_({ring:1,x:e.x,y:e.y,rad:70,col:'#3b0764',t:.5});spark(e.x,e.y-20,['#1e0533','#7e22ce','#a855f7'],24,160,.7,6,{g:-120});addText(e.x,e.y-130,'섀도다이브!','#d8b4fe',1);}
   else if(s.ty==='leap'){const dd=clamp(d??s.range*T,T,s.range*T);e.leap={sx:e.x,sy:e.y,tx:e.x+ca*dd,ty:e.y+sa*dd,t:0,dur:.7,s};e.inv=Math.max(e.inv,.7);sfx('leap',e.x,e.y);}
@@ -1604,7 +1607,7 @@ function moveEnt(e,dt){
     const bx=e.x,by=e.y;collide(e);if(Math.hypot(e.x-bx,e.y-by)>st*.5)D.left=0;
     dashFx(e,D.s);
     for(const o of G.ents){if(!o.alive||!enemyOf(e,o)||D.hit.has(o))continue;
-      if(Math.hypot(o.x-e.x,o.y-e.y)<e.r+o.r+6){D.hit.add(o);damage(e,o,D.s.dmg*(D.s.exec&&o.hp<o.maxHp*.5?D.s.exec:1),true);if(D.s.ls)heal(e,D.s.dmg*D.s.ls);if(D.s.vulnC&&!immune(o)&&o.alive){o.vulnT=Math.max(o.vulnT||0,D.s.vulnC.t);addText(o.x,o.y-95,'방어 하락!','#fca5a5');};if(D.s.grab&&o.alive&&!immune(o)&&!o.safe&&!o.carryT){o.carryBy=e;o.carryT=D.s.grab;o.stun=Math.max(o.stun,D.s.grab);D.left=0;addText(o.x,o.y-110,'꽉 껴안기!','#f9a8d4',1);}else if(!immune(o)){bumpFz(o);o.kbx=D.dx*D.s.kb*T*6;o.kby=D.dy*D.s.kb*T*6;}hitFx(D.s,o.x,o.y-20,GT(e));P_({ring:1,x:o.x,y:o.y,rad:40,col:D.s.col,t:.3});if(D.s.stopHit)D.left=0;}}
+      if(Math.hypot(o.x-e.x,o.y-e.y)<e.r+o.r+6){D.hit.add(o);if(D.s.shieldBreak){o.shield=0;o.reflT=0;o.ironT=0;}damage(e,o,D.s.dmg*(D.s.exec&&o.hp<o.maxHp*.5?D.s.exec:1),true);if(D.s.ls)heal(e,D.s.dmg*D.s.ls);if(D.s.stun&&!immune(o)&&o.alive)o.stun=Math.max(o.stun,D.s.stun);if(D.s.vulnC&&!immune(o)&&o.alive){o.vulnT=Math.max(o.vulnT||0,D.s.vulnC.t);addText(o.x,o.y-95,'방어 하락!','#fca5a5');};if(D.s.grab&&o.alive&&!immune(o)&&!o.safe&&!o.carryT){o.carryBy=e;o.carryT=D.s.grab;o.stun=Math.max(o.stun,D.s.grab);D.left=0;addText(o.x,o.y-110,'꽉 껴안기!','#f9a8d4',1);}else if(!immune(o)){bumpFz(o);o.kbx=D.dx*D.s.kb*T*6;o.kby=D.dy*D.s.kb*T*6;}hitFx(D.s,o.x,o.y-20,GT(e));P_({ring:1,x:o.x,y:o.y,rad:40,col:D.s.col,t:.3});if(D.s.stopHit)D.left=0;}}
     if(D.left<=0){e.dash=null;if(D.s.endAoe){aoeHit(e,e.x,e.y,D.s.endAoe*T,D.s.endDmg,GSP.tuskq,true);G.shake=Math.max(G.shake,e===P?.3:.1);sfx('land',e.x,e.y);}}
   }else{
     let mx=e.mvx,my=e.mvy;if(e.stun>0)mx=my=0;if(mx||my){e.mvA=Math.atan2(my,mx);e.mvAt=G.t;}
@@ -2119,11 +2122,17 @@ function boltPts(x0,y0,x1,y1,seg,jit){const pts=[];for(let i=0;i<=seg;i++){const
 
 /* 적중 처리 (공격 개성) */
 function hitEff(src,t,s,dmg,sup,dx,dy){
+  if(!t||t.ch.k!=='solgaleo'||t.ch.ditto)return hitEff0(src,t,s,dmg,sup,dx,dy);
+  /* 메탈프로텍트: 능력 하락(둔화·방어/공격 하락·혼란)에 걸리지 않음 */
+  const sv=[t.slowT||0,t.vulnT||0,t.weakT||0,t.confT||0];hitEff0(src,t,s,dmg,sup,dx,dy);
+  if((t.slowT||0)>sv[0]||(t.vulnT||0)>sv[1]||(t.weakT||0)>sv[2]||(t.confT||0)>sv[3]){t.slowT=sv[0];t.vulnT=sv[1];t.weakT=sv[2];t.confT=sv[3];if(G.t-(t.fmbT||-9)>.8){t.fmbT=G.t;addText(t.x,t.y-120,'메탈프로텍트!','#fde68a');}}}
+function hitEff0(src,t,s,dmg,sup,dx,dy){
   if(!t.alive)return;
   let m=1;
   if(s.crit&&Math.random()<s.crit){m*=2;addText(t.x,t.y-95,'급소!','#fde047');}
   if(s.exec&&t.hp<t.maxHp*.5)m*=s.exec;
   if(s.hiHp)m*=1+s.hiHp*Math.max(0,t.hp/t.maxHp);
+  if(s.shieldBreak){let br=false;if(t.shield>0&&t.shieldT>0){t.shield=0;br=true;}if(t.reflT>0){t.reflT=0;br=true;}if(t.ironT>0){t.ironT=0;br=true;}if(br){m*=1.3;addText(t.x,t.y-110,'방어 파괴!','#c084fc');}}
   if(s.sleepBonus&&(t.stun>0||t.sleepFx>0)){m*=s.sleepBonus;addText(t.x,t.y-95,'악몽!','#a78bfa');}
   if(s.gyro&&src)m*=clamp((t.ch.spd||1)/(src.ch.spd||1),1,1.5);
   if(s.rageFist&&src)m*=1+Math.min(.6,(src.hitsTaken||0)*.03);
@@ -3599,6 +3608,7 @@ const TRG={
  irontreads:{t:['쿼크차지','필살기를 쓰면 6초간 받는 피해 -25%'],g:['스텔스록','주변에 뾰족한 바위 3개를 깔아 둠 (밟은 적에게 피해)']},
  ironbundle:{t:['쿼크차지','필살기를 쓰면 6초간 이동속도 +30%'],g:['퀵턴','바라보는 방향으로 빠르게 미끄러지며 부딪친 적에게 피해 + 탄창 1칸 회복']},
  ironvaliant:{t:['쿼크차지','필살기를 쓰면 6초간 공격 +25%'],g:['그림자분신','2초간 투명해지고 빨라짐']},
+ solgaleo:{t:['메탈프로텍트','둔화·방어 하락·공격 하락·혼란에 걸리지 않음'],g:['아침햇살','체력 30% 회복 + 주변 4칸 아군 15% 회복']},
  eternatus:{t:['프레셔','4칸 안의 적은 장전 속도 -35%'],g:['무한존','4.5칸 안 아군(나 포함)의 탄환을 즉시 가득 채우고 필살기 게이지 +15%']},
  enamorus:{t:['사랑의 힘','헤롱헤롱 상태의 적에게 주는 피해 +20% · 헤롱헤롱 상태인 적은 공격의 30%가 실패함 · 필살기 봄의폭풍을 쓰면 영물폼이 됨 (쓰러지면 화신폼으로)'],g:['천사의키스','4.5칸 안 가장 가까운 적에게 키스 · 2.5초 헤롱헤롱 + 최대 체력 12% 흡수']},
  steve:{t:['채굴 · 제작','뽑기로 얻을 수 없는 한정 캐릭터 · 태어날 때마다 옆에 제작대를 설치 · 제작대 근처에서 오른쪽 제작 칸을 눌러 도구를 만들고, 만든 도구는 핫바에 모여 눌러서 바꿔 들 수 있음 (PC: 숫자키 1~5로 바꿔 들기·제작, 마우스 휠로 넘기기) · 제작대에서 멀리 있을 때 핫바 아래 옮기기 칸을 누르면 제작대를 내 옆으로 옮김 (쿨타임 10초 · PC: 숫자키 7) · 핫바 6번 칸 돌 블록: 돌 2개로 바라보는 방향 앞 칸에 조약돌 블록 설치 (이동·투사체를 막고 누구나 부술 수 있음 · 최대 6개, 넘으면 오래된 것부터 사라짐 · 쓰러져도 남음 · PC: 숫자키 6) · 든 도구에 따라 공격이 바뀜 (돌3 → 돌 도끼 · 철2+돌1 → 활 · 금2 → 금 검 · 다이아2 → 다이아몬드 검) · 도구 4개를 다 만들면 새 제작법이 열림: 방패(철2+돌1 · 정면 투사체 3번 막음) · 황금사과(금2 · 최대 3개까지 모아 두고 원할 때 먹기: 체력 30% 회복 + 4초 보호막 · PC: 숫자키 8) · 날카로움 인챈트(다이아1+금1 · 공격력 +20%) · TNT(돌3+금1 · 필살기 50% 충전) · 보호 인챈트(다이아2 · 받는 피해 15% 감소) · 효율 인챈트(다이아1+철1 · 채굴 0.8초, 쿨타임 1.2초) (PC: Shift+숫자키로 제작) · 적을 쓰러뜨리면 돌·철·금·다이아몬드 2개씩 획득 · 쓰러지면 만든 도구·방패·인챈트를 모두 잃음 (광물은 유지)'],g:['채굴','1.5초 동안 제자리에서 캐서 랜덤 광물 6~7번 획득 (돌·철·금·다이아몬드 모두 같은 확률 · 돌은 한 번에 2개씩 · 한 번에 같은 광물은 최대 2번 · 캐는 동안 못 움직임 · 쿨타임 2초 · 횟수 제한 없음)']},
@@ -3670,7 +3680,6 @@ function setForm(e,i){const F=FORMS[e.ch.k];if(!F||(e.form||0)===i)return;e.form
   U('palafin','atk',{vulnC:{c:.2,t:2}},'20% 확률로 방어 하락');
   U('palafin','sup',{refund:1},'쓰면 탄 1개 회복');
   U('annihilape','atk',{rageFist:1},'맞은 횟수만큼 강해짐 (1회당 +3%, 최대 +60%)');
-  U('golisopod','atk',{firstImp:1.8},'2초 이상 쉬었다가 치면 기습 (1.8배)');
   U('golisopod','sup',{vulnC:{c:1,t:2}},'부딪힌 적 2초간 방어 하락');
   U('zoroark','atk',{conf:{c:.25,t:1}},'25% 확률로 혼란');
   U('tinkaton','atk',{bigBonus:1.3},'체력 5000 이상인 큰 적에게 1.3배');
@@ -3887,6 +3896,7 @@ function useGadget(e,ang,d){
     case 'calyrex':{if(e.form){const f=e.form===1?2:1;calyMount(e,f);e.gadCd=2.5;return true;}
       let n=0;for(const o of G.ents)if(o.alive&&!o.safe&&o.team===e.team&&Math.hypot(o.x-e.x,o.y-e.y)<4.5*T){heal(o,o.maxHp*.25);o.shield=Math.max(o.shield||0,1200);o.shieldT=Math.max(o.shieldT||0,5);n++;spark(o.x,o.y-40,['#86efac','#fff','#a7f3d0'],10,120,.6,5,{sh:'plus'});}
       P_({ring:1,x:e.x,y:e.y,rad:4.5*T,col:'#86efac',t:.5});addText(e.x,e.y-120,'생명의물방울! 보호막','#86efac',1);e.gadCd=6;return true;}
+    case 'solgaleo':{heal(e,e.maxHp*.3);for(const o of G.ents)if(o!==e&&o.alive&&!o.safe&&o.team===e.team&&Math.hypot(o.x-e.x,o.y-e.y)<4*T)heal(o,o.maxHp*.15);P_({ring:1,x:e.x,y:e.y,rad:4*T,col:'#fde047',t:.5});spark(e.x,e.y-40,['#fde047','#fbbf24','#fff'],18,170,.6,5,{sh:'plus'});break;}
     case 'eternatus':{let n=0;for(const o of G.ents)if(o.alive&&!o.safe&&!o.dummy&&o.team===e.team&&Math.hypot(o.x-e.x,o.y-e.y)<4.5*T){o.ammo=o.ch.amax||3;o.sc=Math.min(1,(o.sc||0)+.15);n++;spark(o.x,o.y-40,['#a855f7','#dc2626','#fff'],10,140,.5,5,{sh:'plus'});}
       P_({ring:1,x:e.x,y:e.y,rad:4.5*T,col:'#a855f7',t:.5});P_({ring:1,x:e.x,y:e.y,rad:3*T,col:'#dc2626',t:.4});addText(e.x,e.y-130,'무한존!','#c084fc',1);break;}
     case 'greattusk':{e.stun=0;e.slowT=0;e.burnT=0;e.haste=Math.max(e.haste||0,1.5);aoeHit(e,e.x,e.y,2.2*T,600,GSP.tspin,true);P_({ring:1,x:e.x,y:e.y,rad:2.2*T,col:'#d6a46a',t:.4});spark(e.x,e.y-20,['#d6a46a','#a78bfa','#fff'],20,260,.5,5,{sh:'plus'});break;}
@@ -3961,6 +3971,7 @@ function aiGadget(e,t){
     case 'leafeon':use=(e.sc<.6&&Math.random()<.3)||(low&&t&&d<4*T);break;
     case 'corviknight':use=t&&d<8*T&&d>3*T&&Math.random()<.15;break;
     case 'bewear':use=t&&d<2.2*T;break;
+    case 'solgaleo':use=e.hp<e.maxHp*.5;break;
     case 'eternatus':use=G.ents.some(o=>o.alive&&o.team===e.team&&o!==e&&o.ammo<1.5&&Math.hypot(o.x-e.x,o.y-e.y)<4.5*T)||(e.ammo<1&&Math.random()<.3);break;
     case 'greattusk':use=e.stun>0||e.slowT>0||e.burnT>0||(t&&d<2.2*T);break;
     case 'fluttermane':use=t&&d<5*T&&!(t.confT>0);break;
