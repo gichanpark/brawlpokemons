@@ -522,7 +522,7 @@ select.minput{width:auto}
 /*SKINS*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.20.9';
+const VER='1.20.10';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -914,6 +914,8 @@ const IMG={};{const im=new Image();im.onload=()=>{im.ok=1};im.src=SPR[185];IMG.d
 CH.forEach(c=>{const im=new Image();im.onload=()=>{im.ok=1};im.src=SPR[c.id];IMG[c.k]=im;});
 /* 이로치 스킨: SPRS/PORS(포켓몬 키별), SAVE.shy=보유 목록, SAVE.sk={k:1}=장착 */
 const IMGS={};for(const k in SPRS){const im=new Image();im.onload=()=>{im.ok=1};im.src=SPRS[k];IMGS[k]=im;}
+/* 이로치 폼·메가·거다이맥스 스프라이트 (키: k_f1, k_gmax, k_mega) */
+const IMGSF={};for(const k in SPRSF){const im=new Image();im.onload=()=>{im.ok=1};im.src=SPRSF[k];IMGSF[k]=im;}
 const hasShy=k=>!!SPRS[k]&&(SAVE.shy||[]).includes(k);
 /* 테마 스킨: SKINX['k_id']={spr,por,gmax}, 보유 SAVE.skn=['k_id'], 장착 SAVE.sk[k]='s'(이로치,예전 값 1)|테마id */
 const THEMES={cinderace:[{id:'spurs',nm:'토트넘 에이스번',ball:1},{id:'korea',nm:'국가대표 에이스번',ball:1}],hlil:[{id:'dongbaek',nm:'동백꽃 필 무렵',fx:{palO:['#facc15','#fef9c3','#9a3412'],col:'#facc15',edge:'#16181c',petal:1}}],giratina:[{id:'yako',nm:'백귀야행 기라티나',fx:{palO:['#dc2626','#fecaca','#1a0505'],col:'#dc2626',yako:1}}]};
@@ -930,8 +932,9 @@ const skinNm=(k,id)=>id==='s'?'이로치 '+chOf(k).nm:(themeOf(k,id)||{}).nm||ch
 const sprOf=k=>{const c=chOf(k),id=skinId(k);return id==='s'?SPRS[k]:id?SKINX[k+'_'+id].spr:SPR[c.id];};
 const porOf=k=>{const c=chOf(k),id=skinId(k);return id==='s'?(PORS[k]||POR[c.id]):id?SKINX[k+'_'+id].por:POR[c.id];};
 const entImg=e=>{if(!e.skin||e.ch.ditto)return IMG[e.ch.k];const im=e.skin==='s'?IMGS[e.ch.k]:IMGX[e.ch.k+'_'+e.skin];return im&&im.ok?im:IMG[e.ch.k];};
-const formImg=e=>{const k=e.ch.k+'_f'+(e.form||0),im=e.skin&&e.skin!=='s'&&!e.ch.ditto?IMGX[e.ch.k+'_'+e.skin+'_f'+(e.form||0)]:null;return im&&im.ok?im:IMG[k];};
-const gmaxImg=e=>{const im=e.skin&&e.skin!=='s'&&!e.ch.ditto?IMGX[e.ch.k+'_'+e.skin+'_gmax']:null;return im&&im.ok?im:IMG[e.ch.k+'_gmax'];};
+const formImg=e=>{const k=e.ch.k+'_f'+(e.form||0),im=!e.skin||e.ch.ditto?null:e.skin==='s'?IMGSF[k]:IMGX[e.ch.k+'_'+e.skin+'_f'+(e.form||0)];return im&&im.ok?im:IMG[k];};
+const megaImg=e=>{const im=e.skin==='s'&&!e.ch.ditto?IMGSF[e.ch.k+'_mega']:null;return im&&im.ok?im:IMG[e.ch.k+'_mega'];};
+const gmaxImg=e=>{const im=!e.skin||e.ch.ditto?null:e.skin==='s'?IMGSF[e.ch.k+'_gmax']:IMGX[e.ch.k+'_'+e.skin+'_gmax'];return im&&im.ok?im:IMG[e.ch.k+'_gmax'];};
 const ballSkin=p=>{const o=p.o||G.ents.find(e=>e.team===p.team&&e.ch&&(e.ch.atk===p.s||e.ch.sup===p.s));return !!(o&&o.skin&&o.skin!=='s'&&!o.ch.ditto&&(themeOf(o.ch.k,o.skin)||{}).ball);};
 [['rayquaza_mega','mega384'],['cinderace_gmax','gmax815'],['eternatus_gmax','emax890'],['kyurem_f1','10022'],['kyurem_f2','10023'],['morpeko_f1','morpeko_h'],['zygarde','zy10'],['magikarp_f1','redgy'],['minior_f1','10136'],['deoxys_f1','10001'],['deoxys_f2','10002'],['deoxys_f3','10003'],['palafin_f1','pal1'],['trio_f0','642'],['calyrex_f1','cxice'],['calyrex_f2','cxsh'],['enamorus_f1','10249'],['lati_f0','380'],['lati_f1','381'],['giratina_f1','10007'],['trio_f1','10020'],['trio_f2','641'],['trio_f3','10019'],['trio_f4','645'],['trio_f5','10021'],['necrozma_f1','10155'],['necrozma_f2','10156'],['necrozma_f3','10157'],['zygarde_f1','718'],['zygarde_f2','zy100'],['ogerpon_f1','og1'],['ogerpon_f2','og2'],['ogerpon_f3','og3'],['aegislash_f1','10026'],['darmanitan_f1','10017']].forEach(([k,id])=>{const im=new Image();im.onload=()=>{im.ok=1};im.src=SPR[id];IMG[k]=im;});
 
@@ -2685,11 +2688,11 @@ function drawEntSprite(e){
   if(e.dvk>=0){drawDive(e,a);return;}
   if(e.ch.k==='giratina'&&e.form){const pu=.5+.5*Math.sin(G.t*4);ctx.globalAlpha=a*(.35+.2*pu);ctx.fillStyle='#1e0533';ctx.beginPath();ctx.ellipse(e.x,e.y+e.r*.6,34+pu*6,13+pu*2,0,0,7);ctx.fill();ctx.globalAlpha=1;if(Math.random()<.15)P_({x:e.x+rnd(-26,26),y:e.y+rnd(-50,10),vx:0,vy:rnd(-50,-20),t:.5,col:pick(['#1e0533','#7e22ce','#a855f7']),r:rnd(4,7)});}
   if(e.digT>0){ctx.fillStyle='#78350f';ctx.beginPath();ctx.ellipse(e.x,e.y+8,22,9,0,0,7);ctx.fill();ctx.fillStyle='#a16207';ctx.beginPath();ctx.ellipse(e.x,e.y+4,16,7,0,0,7);ctx.fill();return;}
-  const ilv=e.illusT>0&&e.illusK&&e.team!==P.team&&IMG[e.illusK],fm=ilv?IMG[e.illusK]:e.form||SETX[e.ch.k]?formImg(e):e.megaT>0?IMG[e.ch.k+'_mega']:e.gmaxT>0?gmaxImg(e):null,im=fm&&fm.ok?fm:entImg(e),bob=Math.floor(Math.abs(Math.sin(e.walk))*2)*3;
+  const ilv=e.illusT>0&&e.illusK&&e.team!==P.team&&IMG[e.illusK],fm=ilv?IMG[e.illusK]:e.form||SETX[e.ch.k]?formImg(e):e.megaT>0?megaImg(e):e.gmaxT>0?gmaxImg(e):null,im=fm&&fm.ok?fm:entImg(e),bob=Math.floor(Math.abs(Math.sin(e.walk))*2)*3;
   ctx.save();ctx.translate(Math.round(e.x/3)*3,Math.round((e.y+e.r*.6-z)/3)*3-bob);
   if(e.dash)ctx.rotate(Math.round(Math.atan2(e.dash.dy,e.dash.dx)*.15*8)/8);
   if(e.sq>0){const q=e.sq/.14;ctx.scale(1+.18*q,1-.16*q);}
-  if(e.megaT>0&&im===IMG[e.ch.k])ctx.scale(1.3,1.3);if(e.gmaxT>0&&im!==IMG[e.ch.k]){const g=gmaxK(e);ctx.scale(g,g);}if(e.shellT>0)ctx.scale(1,.8);
+  if(e.megaT>0&&im===entImg(e))ctx.scale(1.3,1.3);if(e.gmaxT>0&&im!==entImg(e)){const g=gmaxK(e);ctx.scale(g,g);}if(e.shellT>0)ctx.scale(1,.8);
   ctx.scale((e.fx>0)!==!!e.ch.rface?-1:1,1);ctx.globalAlpha=a;
   if(im&&im.ok){const w=im.width*.75,h=im.height*.75;if(e.shadowRv){ctx.filter='brightness(.42) sepia(1) hue-rotate(220deg) saturate(3.2) contrast(1.3)';ctx.drawImage(im,-w/2,-h+3,w,h);ctx.filter='none';const q=v=>Math.round(v/3)*3;for(let i=0;i<5;i++){const t=(G.t*.9+i*.2)%1,x=q(Math.sin(i*2.3+G.t*2)*w*.35),y=q(-h*.2-t*h*.8);ctx.globalAlpha=(1-t)*.8;ctx.fillStyle=i%2?'#7c3aed':'#1e1b4b';ctx.fillRect(x-3,y-3,6,6);}ctx.globalAlpha=a;}else ctx.drawImage(im,-w/2,-h+3,w,h);
     if(e.hf>0){ctx.globalCompositeOperation='lighter';ctx.globalAlpha=Math.min(1,e.hf*6);ctx.drawImage(im,-w/2,-h+3,w,h);ctx.drawImage(im,-w/2,-h+3,w,h);ctx.globalCompositeOperation='source-over';}}
