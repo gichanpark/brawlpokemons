@@ -544,7 +544,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.20.15';
+const VER='1.20.16';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -4541,8 +4541,16 @@ function itemPic(k,sm){const I=ITEMS[k];if(!I)return '';if(I.skin){const [pk,id]
 function invBadge(){const n=ITEMK.reduce((a,k)=>a+invN(k),0),b=$('#invBadge');if(b){b.textContent=n;b.style.display=n?'':'none';}const ic=$('#invIco');if(ic&&!ic.src)ic.src=BALL['premier-ball'];}
 function openInv(){
   const L=ITEMK.filter(k=>invN(k)>0);
-  modal(`<h2>가방 <span class="cur">아이템 ${L.reduce((a,k)=>a+invN(k),0)}개</span></h2>`+(L.length?`<div class="invg">${L.map(k=>{const I=ITEMS[k];return `<div class="ivc">${itemPic(k)}<b>${I.nm}</b><span>${I.ds}</span><div class="ivn">× ${invN(k)}</div><button class="btn sm" data-k="${k}">사용</button></div>`;}).join('')}</div>`:'<div style="font-size:11px;opacity:.7;padding:14px">가방이 비어 있어요<br>우편으로 받은 티켓·선택권이 여기에 들어와요</div>')+`<div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`);
-  document.querySelectorAll('.ivc button').forEach(b=>b.onclick=()=>{sfx('ui');useItem(b.dataset.k);});}
+  modal(`<h2>가방 <span class="cur">아이템 ${L.reduce((a,k)=>a+invN(k),0)}개</span></h2>`+(L.length?`<div class="invg">${L.map(k=>{const I=ITEMS[k];return `<div class="ivc">${itemPic(k)}<b>${I.nm}</b><span>${I.ds}</span><div class="ivn">× ${invN(k)}</div><div style="display:flex;gap:4px;justify-content:center"><button class="btn sm" data-k="${k}">사용</button>${sellP(k)?`<button class="btn b2 sm" data-sell="${k}">팔기</button>`:''}</div></div>`;}).join('')}</div>`:'<div style="font-size:11px;opacity:.7;padding:14px">가방이 비어 있어요<br>우편으로 받은 티켓·선택권이 여기에 들어와요</div>')+`<div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`);
+  document.querySelectorAll('.ivc button[data-k]').forEach(b=>b.onclick=()=>{sfx('ui');useItem(b.dataset.k);});
+  document.querySelectorAll('.ivc button[data-sell]').forEach(b=>b.onclick=()=>{sfx('ui');sellItem(b.dataset.sell);});}
+/* 가방 아이템 되팔기: 상점가의 40% (같은 재화) */
+function sellP(k){const it=SHOP.find(x=>x.tk===k)||(ITEMS[k]&&ITEMS[k].box?SHOP.find(x=>x.id===ITEMS[k].box):null);if(!it||!it.cost||(it.cur!=='coin'&&it.cur!=='gem'))return null;return {cur:it.cur,v:Math.max(1,Math.round(it.cost*.4))};}
+function sellItem(k){const I=ITEMS[k],P=sellP(k),n=invN(k);if(!I||!P||n<1)return;const ic=`<img class="ico" src="${P.cur==='coin'?ICO.coin:ICO.gemc}">`;
+  modal(`<h2>팔기 <span class="cur">${I.nm}</span></h2><div style="font-size:12px;line-height:1.9">${itemPic(k)}<br>1개에 ${ic} <b>${P.v}</b> (상점가의 40%)<br>가진 개수: ${n}개</div>
+    <div class="mrow"><button class="btn sm" id="slOne">1개 팔기 (${ic} ${P.v})</button>${n>1?`<button class="btn sm" id="slAll">전부 팔기 (${ic} ${P.v*n})</button>`:''}<button class="btn b2 sm" id="slBk">돌아가기</button></div>`);
+  const go=m=>{if(invN(k)<m)return;invAdd(k,-m);if(P.cur==='coin')SAVE.coins+=P.v*m;else SAVE.gems=(SAVE.gems||0)+P.v*m;save();invBadge();refreshMenu();sfx('cube');toast(`${I.nm} ${m}개를 팔아 ${P.cur==='coin'?'금구슬':'혜성조각'} ${P.v*m}개를 받았어요`);openInv();};
+  $('#slOne').onclick=()=>go(1);const a=$('#slAll');if(a)a.onclick=()=>go(invN(k));$('#slBk').onclick=openInv;}
 function useItem(k){const I=ITEMS[k];if(!I||invN(k)<1)return;
   if(I.box){invAdd(k,-1);const it=SHOP.find(x=>x.id===I.box);closeModal();const R=openBox(I.box);save();invBadge();boxAnim(it,R);return;}
   if(k==='scout'){invAdd(k,-1);save();invBadge();closeModal();scoutAnim();return;}
