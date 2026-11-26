@@ -164,3 +164,10 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 
 ## v1.20.17
 - 정지 기간: pb_users.ban_until, `pb_admin_ban(token,user,msg,p_hours)` (0=영구). 기간 지나면 pb_login 에서 자동 해제. 로그인 거절 시 'until'(ms) 반환 → 남은 기간 표시. 관리자 목록에 '정지 · N일 남음/영구'
+
+## v1.20.18
+- 정지 즉시 반영: pb_admin_ban 이 ban_token 에 마지막 토큰 저장 → pb_ping(p_token,p_ver) 가 banned 정보 반환 → banKick (로그아웃 + 정지 안내)
+- 강제 업데이트: pb_cfg('ver'). 관리자가 새 버전으로 접속해 ping 하면 자동 갱신 → 낮은 버전 클라는 판 밖에서 '새 버전' 안내 후 4초 뒤 새로고침 (verCheck)
+- 몰수에 가방 추가: pb_take_apply(u,c,g,pks,items jsonb,vals jsonb,msg) 공용 — 서버 저장에서 아이템 빼고, 모자라면 vals(상점가) 만큼 재화 차감. take_items 컬럼 → pb_save 'ti' / login·session note 'i' → 클라 takeItemsLocal 같은 규칙 ('@k' = 기간제 포켓몬, 스킨·프레임·패스도 회수)
+- 전체우편 회수: pb_admin_bc_list / pb_admin_recall(token, created_at, msg, vals). 안 받은 우편 삭제 + pb_mail_bc 삭제, 받은 사람은 pb_take_apply. 이제 전체 발송은 항상 pb_mail_bc 기록(until null 허용)
+- 되팔기 25%

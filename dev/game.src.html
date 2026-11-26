@@ -544,7 +544,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.20.17';
+const VER='1.20.18';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -4544,10 +4544,12 @@ function openInv(){
   modal(`<h2>가방 <span class="cur">아이템 ${L.reduce((a,k)=>a+invN(k),0)}개</span></h2>`+(L.length?`<div class="invg">${L.map(k=>{const I=ITEMS[k];return `<div class="ivc">${itemPic(k)}<b>${I.nm}</b><span>${I.ds}</span><div class="ivn">× ${invN(k)}</div><div style="display:flex;gap:4px;justify-content:center"><button class="btn sm" data-k="${k}">사용</button>${sellP(k)?`<button class="btn b2 sm" data-sell="${k}">팔기</button>`:''}</div></div>`;}).join('')}</div>`:'<div style="font-size:11px;opacity:.7;padding:14px">가방이 비어 있어요<br>우편으로 받은 티켓·선택권이 여기에 들어와요</div>')+`<div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`);
   document.querySelectorAll('.ivc button[data-k]').forEach(b=>b.onclick=()=>{sfx('ui');useItem(b.dataset.k);});
   document.querySelectorAll('.ivc button[data-sell]').forEach(b=>b.onclick=()=>{sfx('ui');sellItem(b.dataset.sell);});}
-/* 가방 아이템 되팔기: 상점가의 40% (같은 재화) */
-function sellP(k){const it=SHOP.find(x=>x.tk===k)||(ITEMS[k]&&ITEMS[k].box?SHOP.find(x=>x.id===ITEMS[k].box):null);if(!it||!it.cost||(it.cur!=='coin'&&it.cur!=='gem'))return null;return {cur:it.cur,v:Math.max(1,Math.round(it.cost*.4))};}
+/* 가방 아이템 되팔기: 상점가의 25% (같은 재화) */
+function itemVal(k){const it=SHOP.find(x=>x.tk===k)||(ITEMS[k]&&ITEMS[k].box?SHOP.find(x=>x.id===ITEMS[k].box):null);if(it&&it.cost&&(it.cur==='coin'||it.cur==='gem'))return [it.cur,it.cost];if(ITEMS[k]&&(ITEMS[k].skin||ITEMS[k].fr))return ['gem',300];if(ITEMS[k]&&ITEMS[k].pass)return ['coin',29000];return null;}
+function itemVals(){const o={};for(const k in ITEMS){const v=itemVal(k);if(v)o[k]=v;}return o;}
+function sellP(k){const it=SHOP.find(x=>x.tk===k)||(ITEMS[k]&&ITEMS[k].box?SHOP.find(x=>x.id===ITEMS[k].box):null);if(!it||!it.cost||(it.cur!=='coin'&&it.cur!=='gem'))return null;return {cur:it.cur,v:Math.max(1,Math.round(it.cost*.25))};}
 function sellItem(k){const I=ITEMS[k],P=sellP(k),n=invN(k);if(!I||!P||n<1)return;const ic=`<img class="ico" src="${P.cur==='coin'?ICO.coin:ICO.gemc}">`;
-  modal(`<h2>팔기 <span class="cur">${I.nm}</span></h2><div style="font-size:12px;line-height:1.9">${itemPic(k)}<br>1개에 ${ic} <b>${P.v}</b> (상점가의 40%)<br>가진 개수: ${n}개</div>
+  modal(`<h2>팔기 <span class="cur">${I.nm}</span></h2><div style="font-size:12px;line-height:1.9">${itemPic(k)}<br>1개에 ${ic} <b>${P.v}</b> (상점가의 25%)<br>가진 개수: ${n}개</div>
     <div class="mrow"><button class="btn sm" id="slOne">1개 팔기 (${ic} ${P.v})</button>${n>1?`<button class="btn sm" id="slAll">전부 팔기 (${ic} ${P.v*n})</button>`:''}<button class="btn b2 sm" id="slBk">돌아가기</button></div>`);
   const go=m=>{if(invN(k)<m)return;invAdd(k,-m);if(P.cur==='coin')SAVE.coins+=P.v*m;else SAVE.gems=(SAVE.gems||0)+P.v*m;save();invBadge();refreshMenu();sfx('cube');toast(`${I.nm} ${m}개를 팔아 ${P.cur==='coin'?'금구슬':'혜성조각'} ${P.v*m}개를 받았어요`);openInv();};
   $('#slOne').onclick=()=>go(1);const a=$('#slAll');if(a)a.onclick=()=>go(invN(k));$('#slBk').onclick=openInv;}
@@ -4657,14 +4659,22 @@ async function rpc(fn,args){const r=await fetch(API+fn,{method:'POST',headers:{a
 let saveTimer=null;
 function applyGrant(r){const c=r.gc||0,g=r.gg||0,gt=r.gt&&typeof r.gt==='object'?r.gt:{},tk=Object.keys(gt).filter(k=>CH.find(x=>x.k===k)&&gt[k]);if(!c&&!g&&!tk.length)return false;SAVE.coins+=c;SAVE.gems=(SAVE.gems||0)+g;if(!SAVE.tro)SAVE.tro={};const dl={};tk.forEach(k=>{const b0=SAVE.tro[k]||0;SAVE.tro[k]=Math.max(0,b0+(+gt[k]||0));dl[k]=SAVE.tro[k]-b0;});const neg=tk.length&&tk.every(k=>dl[k]<=0)&&!c&&!g;try{refreshMenu();}catch(e){}setTimeout(()=>modal(`<h2>${neg?'관리자 트로피 차감 안내':'관리자 선물 도착!'}</h2><div class="rws">${tk.filter(k=>dl[k]).map(k=>`<div class="rw"><img class="sbig por2" src="${POR[chOf(k).id]}"><b style="color:${dl[k]<0?'#f87171':'#fde047'}">${dl[k]>0?'+':''}${dl[k]}</b><span>${chOf(k).nm} 트로피</span></div>`).join('')}${c?`<div class="rw"><img class="sbig" src="${ICO.coin}"><b>+${c}</b><span>금구슬</span></div>`:''}${g?`<div class="rw"><img class="sbig" src="${ICO.gemc}"><b>+${g}</b><span>혜성조각</span></div>`:''}</div><div class="mrow"><button class="btn sm" onclick="closeModal()">확인</button></div>`),300);return true;}
 function fmtTake(n){return n>=999999999?'전부':n;}
-function showTakeNote(n){const pk=(n.p||[]).map(k=>chOf(k).nm);
-  modal(`<h2>관리자 회수 안내</h2><div style="font-size:11px;line-height:1.8">${n.c?`금구슬 ${fmtTake(n.c)} · `:''}${n.g?`혜성조각 ${fmtTake(n.g)} · `:''}${pk.length?`포켓몬 ${pk.join(', ')}`:''}<br>사유: ${(n.m||'').replace(/</g,'&lt;')}</div><div class="mrow"><button class="btn sm" onclick="closeModal()">확인</button></div>`);}
-function applyTake(r){const tc=r.tc||0,tg=r.tg||0,tp=r.tp||[];if(!tc&&!tg&&!tp.length)return false;
-  SAVE.coins=Math.max(0,SAVE.coins-tc);SAVE.gems=Math.max(0,(SAVE.gems||0)-tg);
+function showTakeNote(n){const pk=(n.p||[]).map(k=>chOf(k).nm),its=Object.entries(n.i||{}).filter(([k])=>k[0]!=='@'&&ITEMS[k]).map(([k,v])=>ITEMS[k].nm+(v>1?' ×'+v:''));
+  modal(`<h2>관리자 회수 안내</h2><div style="font-size:11px;line-height:1.8">${n.c?`금구슬 ${fmtTake(n.c)} · `:''}${n.g?`혜성조각 ${fmtTake(n.g)} · `:''}${pk.length?`포켓몬 ${pk.join(', ')}`:''}${its.length?`<br>아이템 ${its.join(', ')} <span style="opacity:.7">(이미 쓴 아이템은 그 값만큼 재화로 회수)</span>`:''}<br>사유: ${(n.m||'').replace(/</g,'&lt;')}</div><div class="mrow"><button class="btn sm" onclick="closeModal()">확인</button></div>`);}
+function takeItemsLocal(ti){let xc=0,xg=0;const got=[];for(const k in ti||{}){const n=+ti[k]||0;if(!n)continue;
+    if(k[0]==='@'){if(SAVE.tmp)delete SAVE.tmp[k.slice(1)];continue;}const I=ITEMS[k];
+    if(I&&I.skin){const [pk,id]=I.skin;if(id==='s')SAVE.shy=(SAVE.shy||[]).filter(x=>x!==pk);else SAVE.skn=(SAVE.skn||[]).filter(x=>x!==pk+'_'+id);if(SAVE.sk&&SAVE.sk[pk]===(id==='s'?'s':id))delete SAVE.sk[pk];continue;}
+    if(I&&I.fr){SAVE.frOwn=(SAVE.frOwn||[]).filter(x=>x!==I.fr);if(SAVE.frm===I.fr)SAVE.frm='basic';continue;}
+    if(I&&I.pass){if(SAVE.pass)SAVE.pass.paid=0;continue;}
+    const have=invN(k),rm=Math.min(have,n),sh=n-rm;if(rm)invAdd(k,-rm);if(sh){const v=itemVal(k);if(v){if(v[0]==='coin')xc+=v[1]*sh;else xg+=v[1]*sh;}}}
+  return {xc,xg};}
+function applyTake(r){const tc=r.tc||0,tg=r.tg||0,tp=r.tp||[],ti=r.ti||{};if(!tc&&!tg&&!tp.length&&!Object.keys(ti).length)return false;
+  const X=takeItemsLocal(ti);
+  SAVE.coins=Math.max(0,SAVE.coins-tc-X.xc);SAVE.gems=Math.max(0,(SAVE.gems||0)-tg-X.xg);
   if(tp.length&&SAVE.lv)tp.forEach(k=>delete SAVE.lv[k]);
   if(SAVE.own&&tp.length){SAVE.own=SAVE.own.filter(k=>!tp.includes(k));if(!SAVE.own.length)delete SAVE.own;else if(!SAVE.own.includes(SAVE.sel))SAVE.sel=SAVE.own[0];}
   try{refreshMenu();}catch(e){}
-  if(!G){if(!SAVE.own)setTimeout(showStarter,300);else setTimeout(()=>showTakeNote({c:tc,g:tg,p:tp,m:r.tm}),300);}
+  if(!G){if(!SAVE.own)setTimeout(showStarter,300);else setTimeout(()=>showTakeNote({c:tc,g:tg,p:tp,i:ti,m:r.tm}),300);}
   return true;}
 let saveSeq=0;
 function saveBody(){const o=Object.assign({},SAVE);delete o.dirty;if(o.rev==null)o.rev=0;return o;}
@@ -4786,7 +4796,18 @@ async function inviteFriend(u,n,kind){
     if(q&&q.ok)toast(`${esc(n)}님에게 ${kind==='ko'?'친선전':'젬 그랩'} 초대를 보냈어요`);else toast('초대를 보내지 못했어요 (친구만 초대할 수 있어요)');},1600);}
 function toast(h,btns){const t=$('#invToast');t.innerHTML=`<span>${h}</span>${btns||''}`;t.classList.add('on');clearTimeout(t._t);if(!btns)t._t=setTimeout(()=>t.classList.remove('on'),3500);return t;}
 const SEENINV=new Set();let pingT=null;
-async function pingNow(){if(!ACC.token)return;let r;try{r=await rpc('pb_ping',{p_token:ACC.token});}catch(e){return;}if(!r||!r.ok)return;
+function verNum(v){return String(v||'0').split('.').map(x=>+x||0).reduce((a,x)=>a*1000+x,0);}
+let VERASK=0;function verCheck(lv){if(!lv||verNum(lv)<=verNum(VER)||VERASK)return;if(G&&!G.over){return;}VERASK=1;
+  modal(`<h2>새 버전이 나왔어요!</h2><div style="font-size:12px;line-height:1.8">지금 버전 v${VER} → 새 버전 v${esc(lv)}<br>잠시 후 자동으로 새로고침돼요.</div><div class="mrow"><button class="btn sm" onclick="location.reload()">지금 새로고침</button></div>`);
+  try{serverPush();}catch(e){}setTimeout(()=>location.reload(),4000);}
+function banKick(r){if(window._banned)return;window._banned=1;try{if(G){G.over=true;}}catch(e){}
+  try{ACC.user=ACC.token=null;ACC.admin=false;localStorage.removeItem('pb_token');}catch(e){}
+  try{showScr('login');}catch(e){}
+  modal(`<h2>이용이 정지된 계정이에요</h2><div style="font-size:12px;margin-bottom:8px">${r.until?`정지 해제까지 <b>${banLeft(r.until)}</b> 남았어요`:'<b>영구 정지</b>'}</div>${r.msg?`<div class="amail" style="white-space:pre-wrap;line-height:1.7"><b>관리자의 편지</b><br>${esc(r.msg)}</div>`:''}<div class="mrow"><button class="btn sm" onclick="location.reload()">확인</button></div>`);
+  $('#modal').onclick=null;}
+async function pingNow(){if(!ACC.token)return;let r;try{r=await rpc('pb_ping',{p_token:ACC.token,p_ver:VER});}catch(e){return;}if(!r)return;
+  if(!r.ok){if(r.banned)banKick(r);return;}
+  verCheck(r.ver);
   const bd=$('#frBadge');if(bd){bd.textContent=r.freq;bd.style.display=r.freq?'':'none';}
   const busy=G&&!G.over;
   for(const v of r.inv){if(SEENINV.has(v.id)||busy)continue;SEENINV.add(v.id);sfx('found');
@@ -4879,24 +4900,34 @@ function banForm(u){
 }
 function takeForm(x){
   const sv=x.save||{},own=sv.own||[];
-  modal(`<h2>재화·포켓몬 몰수 · ${x.u}</h2>
+  modal(`<h2>재화·포켓몬·가방 몰수 · ${x.u}</h2>
   <div class="amail"><div class="arow"><span><img class="ico" src="${ICO.coin}"> 금구슬 (보유 ${sv.coins||0})</span><input id="tkC" class="minput sm2" type="number" min="0" value="0"><label><input type="checkbox" id="tkCA"> 전부</label></div>
   <div class="arow"><span><img class="ico" src="${ICO.gemc}"> 혜성조각 (보유 ${sv.gems||0})</span><input id="tkG" class="minput sm2" type="number" min="0" value="0"><label><input type="checkbox" id="tkGA"> 전부</label></div>
   <div class="arow" style="align-items:flex-start"><span>포켓몬</span><div class="tkpk">${own.length?own.slice().sort((a,b)=>byGrade(chOf(a),chOf(b))).map(k=>`<label class="tkp"><input type="checkbox" value="${k}"><img src="${POR[chOf(k).id]}"><span>${chOf(k).nm}</span></label>`).join(''):'<span style="opacity:.6">가진 포켓몬 정보가 없어요</span>'}</div></div>
+  <div class="arow" style="align-items:flex-start"><span>가방</span><div style="display:flex;flex-wrap:wrap;gap:6px">${Object.keys(sv.inv||{}).filter(k=>ITEMS[k]&&sv.inv[k]>0).map(k=>`<label style="display:flex;align-items:center;gap:4px;font-size:11px;border:2px solid #111;padding:2px 5px;background:#1e1b2e">${itemPic(k,1)}${ITEMS[k].nm} (${sv.inv[k]})<input class="minput sm2 tki" data-k="${k}" type="number" min="0" max="${sv.inv[k]}" value="0" style="width:48px"></label>`).join('')||'<span style="opacity:.6;font-size:11px">가방이 비어 있어요 (서버 저장 기준)</span>'}</div></div>
   <div class="arow"><span>사유</span><input id="tkMsg" class="minput sm2" maxlength="200" placeholder="예) 버그 악용" style="flex:1"></div>
   <div class="arow"><button class="btn sm" id="tkGo" style="background:#dc2626;color:#fff">몰수하기</button><button class="btn b2 sm" id="tkBack">돌아가기</button><span id="tkRes" style="font-size:11px"></span></div></div>
   <div style="font-size:11px;opacity:.7">포켓몬을 모두 몰수하면 그 회원은 다음 접속 때 스타팅 포켓몬을 다시 고르게 돼요. 회원이 접속 중이면 다음 저장 때 바로 반영돼요.</div>`);
   $('#tkBack').onclick=()=>adminPanel(x.u);
   $('#tkGo').onclick=async()=>{
     const c=$('#tkCA').checked?-1:Math.max(0,parseInt($('#tkC').value)||0),g=$('#tkGA').checked?-1:Math.max(0,parseInt($('#tkG').value)||0);
-    const pks=[...document.querySelectorAll('.tkp input:checked')].map(i=>i.value);
-    if(!c&&!g&&!pks.length){$('#tkRes').textContent='몰수할 것을 골라 주세요';return;}
+    const pks=[...document.querySelectorAll('.tkp input:checked')].map(i=>i.value),its={};document.querySelectorAll('.tki').forEach(i=>{const v=Math.max(0,parseInt(i.value)||0);if(v)its[i.dataset.k]=v;});
+    if(!c&&!g&&!pks.length&&!Object.keys(its).length){$('#tkRes').textContent='몰수할 것을 골라 주세요';return;}
     if(!$('#tkGo').dataset.ok){$('#tkGo').dataset.ok=1;$('#tkGo').textContent='정말 몰수할까요?';return;}
     $('#tkGo').disabled=true;$('#tkRes').textContent='처리 중...';
-    try{const q=await rpc('pb_admin_take',{p_token:ACC.token,p_user:x.u,p_coins:c,p_gems:g,p_pks:pks,p_msg:$('#tkMsg').value});
+    try{const q=await rpc('pb_admin_take',{p_token:ACC.token,p_user:x.u,p_coins:c,p_gems:g,p_pks:pks,p_msg:$('#tkMsg').value,p_items:its,p_vals:itemVals()});
       if(q.ok){$('#tkRes').textContent='몰수했어요';sfx('ko');setTimeout(()=>adminPanel(x.u),700);}else $('#tkRes').textContent='실패했어요';}catch(e){$('#tkRes').textContent='연결 실패';}
     $('#tkGo').disabled=false;};
 }
+async function bcList(target){const el=$('#bcList');el.innerHTML='<span style="font-size:11px">불러오는 중...</span>';let r;try{r=await rpc('pb_admin_bc_list',{p_token:ACC.token});}catch(e){}
+  if(!r||!r.ok){el.innerHTML='<span style="font-size:11px">불러오기 실패</span>';return;}
+  if(!r.bc.length){el.innerHTML='<span style="font-size:11px;opacity:.7">최근 60일 안에 보낸 전체우편이 없어요</span>';return;}
+  el.innerHTML=r.bc.map((b,i)=>{const its=(b.it||[]).map(k=>ITEMS[k]?ITEMS[k].nm:k),pks=(b.p||[]).map(k=>{try{return chOf(k).nm}catch(e){return k}});
+    return `<div class="arow" style="font-size:11px;border-top:2px solid #111;padding-top:4px"><span style="flex:1">${new Date(b.at).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit'})} · <b>${esc(b.msg||'(메시지 없음)')}</b><br>${b.c?`<img class="ico" src="${ICO.coin}"> ${b.c} `:''}${b.g?`<img class="ico" src="${ICO.gemc}"> ${b.g} `:''}${pks.length?'포켓몬 '+pks.join(', ')+' ':''}${(b.tp||[]).length?'기간제 '+(b.tp||[]).length+'마리 ':''}${its.length?'아이템 '+its.join(', '):''} · 받은 사람 ${b.cl}/${b.n}</span><button class="btn sm" data-rc="${i}" style="background:#dc2626;color:#fff">회수</button></div>`;}).join('');
+  el.querySelectorAll('[data-rc]').forEach(btn=>btn.onclick=async()=>{const b=r.bc[+btn.dataset.rc];
+    if(!btn.dataset.ok){btn.dataset.ok=1;btn.textContent='정말 회수?';return;}btn.disabled=true;btn.textContent='회수 중...';
+    let q;try{q=await rpc('pb_admin_recall',{p_token:ACC.token,p_at:b.at,p_msg:b.msg,p_vals:itemVals()});}catch(e){}
+    if(q&&q.ok){btn.textContent=`완료 (안 받은 ${q.deleted}통 삭제 · ${q.taken}명 회수)`;sfx('ko');setTimeout(()=>bcList(target),1500);}else{btn.disabled=false;btn.textContent='실패';}});}
 async function adminPanel(target){
   modal(`<h2>관리자 메뉴</h2><div style="font-size:11px">불러오는 중...</div>`);
   let r;try{r=await rpc('pb_admin_list',{p_token:ACC.token});}catch(e){r={ok:false};}
@@ -4922,9 +4953,11 @@ async function adminPanel(target){
     <div class="arow"><span>수령 가능 기간</span><input id="amDaysR" class="minput sm2" type="number" min="0" max="365" value="7" style="width:60px"><span style="font-size:11px">일 (0이면 무제한 · 전체 발송이면 이 기간 안에 새로 가입한 사람도 받을 수 있어요)</span></div>
     <div class="arow"><span>메시지</span><input id="amMsg" class="minput sm2" maxlength="200" placeholder="예) 점검 보상입니다!" style="flex:1"></div>
     <div class="arow"><button class="btn sm" id="amSend">보내기</button><span id="amRes" style="font-size:11px"></span></div></div>
+  <div class="amail"><div class="arow"><b>보낸 전체우편</b><button class="btn sm b2" id="bcLoad">불러오기</button><span style="font-size:11px;opacity:.7">회수하면 안 받은 우편은 사라지고, 이미 받은 사람에게선 받은 만큼 가져가요 (쓴 아이템은 상점가만큼 재화로)</span></div><div id="bcList"></div></div>
   <table class="adt"><tr><th>아이디</th><th>트로피</th><th>금구슬</th><th>혜성조각</th><th>관리</th></tr>${rows}</table>
   <div style="font-size:11px;opacity:.7;margin-top:6px">삭제는 두 번 눌러야 실행돼요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);
   $('#mbox').classList.add('wide','afull');
+  {const b=$('#bcLoad');if(b)b.onclick=()=>bcList(target);}
   {let gsel='all';const flt=()=>{const q=$('#amQ').value.trim();document.querySelectorAll('#amPk .apk').forEach(l=>{l.style.display=(gsel==='all'||l.dataset.g===gsel)&&(!q||l.dataset.n.includes(q))?'':'none';});};
    const cnt=()=>{$('#amCnt').textContent=document.querySelectorAll('#amPk input:checked').length+'마리 선택';};
    $('#amQ').oninput=flt;document.querySelectorAll('.apk-gr button').forEach(b=>b.onclick=()=>{gsel=b.dataset.g;document.querySelectorAll('.apk-gr button').forEach(x=>x.classList.toggle('on',x===b));flt();});
