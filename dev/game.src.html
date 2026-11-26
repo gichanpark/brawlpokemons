@@ -544,7 +544,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.20.16';
+const VER='1.20.17';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -4706,7 +4706,7 @@ async function doAuth(kind){
   loginErr(kind==='up'?'가입하는 중...':'로그인하는 중...');
   try{const r=await rpc(kind==='up'?'pb_signup':'pb_login',{p_user:u,p_pw:p});
     if(r.ok){$('#lgPw').value='';nk.value='';nk.style.display='none';applyAccount(r,kind==='up',kind==='up'?nick:null);sfx('found');return;}
-    if(r.err==='banned'){loginErr('이용이 정지된 계정이에요');modal(`<h2>이용이 정지된 계정이에요</h2>${r.msg?`<div class="amail" style="white-space:pre-wrap;line-height:1.7"><b>관리자의 편지</b><br>${esc(r.msg)}</div>`:''}<div class="mrow"><button class="btn sm" onclick="closeModal()">확인</button></div>`);return;}
+    if(r.err==='banned'){loginErr('이용이 정지된 계정이에요');modal(`<h2>이용이 정지된 계정이에요</h2><div style="font-size:12px;margin-bottom:8px">${r.until?`정지 해제까지 <b>${banLeft(r.until)}</b> 남았어요 (${new Date(r.until).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit'})})`:'<b>영구 정지</b>'}</div>${r.msg?`<div class="amail" style="white-space:pre-wrap;line-height:1.7"><b>관리자의 편지</b><br>${esc(r.msg)}</div>`:''}<div class="mrow"><button class="btn sm" onclick="closeModal()">확인</button></div>`);return;}
     loginErr({exists:'이미 있는 아이디예요',wrong:'아이디 또는 비밀번호가 틀렸어요',banned:'이용이 정지된 계정이에요',bad_id:'아이디 형식이 올바르지 않아요',bad_pw:'비밀번호는 4자 이상이에요'}[r.err]||'오류가 났어요. 다시 시도해 주세요');
   }catch(e){loginErr('서버에 연결하지 못했어요. 인터넷을 확인해 주세요');}
 }
@@ -4858,16 +4858,22 @@ function openProfile(tab){
   $('#pfNickGo').onclick=()=>{const n=$('#pfNick').value.trim();if(!okNick(n)){$('#pfErr').textContent='한글·영문·숫자·_ 로 2~10자로 정해 주세요';return;}SAVE.nick=n;SAVE.name=n;save();refreshMenu();sfx('found');$('#pfErr').textContent='닉네임을 바꿨어요!';};
   $('#bLogout').onclick=logout;if(ACC.admin)$('#bAdmin').onclick=adminPanel;
 }
+function banDur(h){return h%24===0?h/24+'일':h+'시간';}
+function banLeft(ms){const m=Math.max(0,ms-Date.now())/6e4;return m>=1440?Math.ceil(m/1440)+'일':m>=60?Math.ceil(m/60)+'시간':Math.ceil(m)+'분';}
 function banForm(u){
   modal(`<h2>계정 정지 · ${esc(u)}</h2>
   <div class="amail"><div class="arow" style="align-items:flex-start"><span>편지</span><textarea id="bnMsg" class="minput sm2" maxlength="300" rows="4" placeholder="정지된 회원이 로그인할 때 보게 될 내용 (비워도 돼요)" style="flex:1;resize:none"></textarea></div>
+  <div class="arow"><span>기간</span><div id="bnDur" style="display:flex;gap:4px;flex-wrap:wrap">${[[1,'1시간'],[24,'1일'],[72,'3일'],[168,'7일'],[720,'30일'],[0,'영구']].map(([h,t])=>`<button class="upbtn" data-h="${h}" data-t="${t}" style="${h===24?'background:#dc2626;color:#fff':''}">${h===24?'✓ ':''}${t}</button>`).join('')}<input id="bnH" class="minput sm2" type="number" min="1" placeholder="직접(시간)" style="width:90px"></div></div>
   <div class="arow"><button class="btn sm" id="bnGo" style="background:#dc2626;color:#fff">정지하기</button><button class="btn b2 sm" id="bnBack">돌아가기</button><span id="bnRes" style="font-size:11px"></span></div></div>
-  <div style="font-size:11px;opacity:.7">정지하면 바로 로그아웃되고, 다시 로그인하려 할 때 이 편지가 보여요.</div>`);
+  <div style="font-size:11px;opacity:.7">정지하면 바로 로그아웃되고, 다시 로그인하려 할 때 이 편지와 남은 기간이 보여요. 기간이 지나면 로그인할 때 자동으로 풀려요.</div>`);
+  let hrs=24;const durUI=()=>document.querySelectorAll('#bnDur [data-h]').forEach(b=>{const on=+b.dataset.h===hrs&&!$('#bnH').value;b.style.background=on?'#dc2626':'';b.style.color=on?'#fff':'';b.textContent=(on?'✓ ':'')+b.dataset.t;});
+  document.querySelectorAll('#bnDur [data-h]').forEach(b=>b.onclick=()=>{hrs=+b.dataset.h;$('#bnH').value='';durUI();});
+  $('#bnH').oninput=()=>{const v=Math.floor(+$('#bnH').value||0);if(v>0)hrs=v;durUI();};
   $('#bnBack').onclick=()=>adminPanel(u);
   $('#bnGo').onclick=async()=>{
-    if(!$('#bnGo').dataset.ok){$('#bnGo').dataset.ok=1;$('#bnGo').textContent='정말 정지할까요?';return;}
+    if(!$('#bnGo').dataset.ok){$('#bnGo').dataset.ok=1;$('#bnGo').textContent=(hrs?banDur(hrs)+' ':'영구 ')+'정지할까요?';return;}
     $('#bnGo').disabled=true;$('#bnRes').textContent='처리 중...';
-    try{const q=await rpc('pb_admin_ban',{p_token:ACC.token,p_user:u,p_msg:$('#bnMsg').value});
+    try{const q=await rpc('pb_admin_ban',{p_token:ACC.token,p_user:u,p_msg:$('#bnMsg').value,p_hours:hrs});
       if(q.ok){adminPanel(u);return;}$('#bnRes').textContent=({protected:'보호된 계정이에요',no_user:'없는 아이디예요'}[q.err]||'실패했어요');}catch(e){$('#bnRes').textContent='연결 실패';}
     $('#bnGo').disabled=false;};
 }
@@ -4897,7 +4903,7 @@ async function adminPanel(target){
   if(!r.ok){modal(`<h2>관리자 메뉴</h2><div style="font-size:11px">권한이 없거나 연결에 실패했어요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
   const opts=`<option value="*">전체 회원 (${r.users.filter(x=>!x.banned).length}명)</option>`+r.users.map(x=>`<option value="${x.u}"${target===x.u?' selected':''}>${x.u}</option>`).join('');
   const rows=r.users.map(x=>{const t=Object.values((x.save&&x.save.tro)||{}).reduce((a,b)=>a+b,0),c=(x.save&&x.save.coins)||0;
-    return `<tr><td>${x.u}${x.save&&x.save.nick?` <span style="opacity:.7">(${esc(x.save.nick)})</span>`:''}${x.admin?' <span class="adm">관리자</span>':''}${x.banned?' <span class="ban">정지</span>':''}</td><td>${t}</td><td>${c}</td><td>${(x.save&&x.save.gems)||0}</td><td class="acts">
+    return `<tr><td>${x.u}${x.save&&x.save.nick?` <span style="opacity:.7">(${esc(x.save.nick)})</span>`:''}${x.admin?' <span class="adm">관리자</span>':''}${x.banned?` <span class="ban">정지${x.until?' · '+banLeft(x.until)+' 남음':' · 영구'}</span>`:''}</td><td>${t}</td><td>${c}</td><td>${(x.save&&x.save.gems)||0}</td><td class="acts">
     <button data-a="mailto" data-u="${x.u}">우편</button><button data-a="take" data-u="${x.u}" class="del">몰수</button><button data-a="${x.banned?'unban':'ban'}" data-u="${x.u}">${x.banned?'정지 해제':'정지'}</button>
     <button data-a="${x.admin?'unadmin':'admin'}" data-u="${x.u}">${x.admin?'관리자 해제':'관리자 지정'}</button><button data-a="delete" data-u="${x.u}" class="del">삭제</button></td></tr>`;}).join('');
   modal(`<h2>관리자 메뉴 · 회원 ${r.users.length}명</h2>
