@@ -522,7 +522,7 @@ select.minput{width:auto}
 /*SKINS*/
 const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5}};
-const VER='1.20.11';
+const VER='1.20.12';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1200,12 +1200,17 @@ function getField(goal){
       const j=Y*m.C+X;if(f[j]>f[i]+1&&walkable(m.g[j])){f[j]=f[i]+1;q.push(j);}}}
   G.fields.set(goal,f);return f;
 }
+function walkGoal(gx,gy){const m=G.map,tx=clamp(Math.floor(gx/T),0,m.C-1),ty=clamp(Math.floor(gy/T),0,m.R-1);if(walkable(m.g[ty*m.C+tx]))return ty*m.C+tx;
+  for(let r=1;r<7;r++){let best=-1,bd=1e9;for(let dy=-r;dy<=r;dy++)for(let dx=-r;dx<=r;dx++){if(Math.max(Math.abs(dx),Math.abs(dy))!==r)continue;const X=tx+dx,Y=ty+dy;if(X<0||Y<0||X>=m.C||Y>=m.R||!walkable(m.g[Y*m.C+X]))continue;const q=dx*dx+dy*dy;if(q<bd){bd=q;best=Y*m.C+X;}}if(best>=0)return best;}
+  return ty*m.C+tx;}
+function fNext(f,cx,cy){const m=G.map;let best=f[cy*m.C+cx],r=null;if(best<=0)return null;
+  for(let oy=-1;oy<=1;oy++)for(let ox=-1;ox<=1;ox++){if(!ox&&!oy)continue;const X=cx+ox,Y=cy+oy;if(X<0||Y<0||X>=m.C||Y>=m.R)continue;
+    if(ox&&oy&&(!walkable(tileAt(cx+ox,cy))||!walkable(tileAt(cx,cy+oy))))continue;const v=f[Y*m.C+X]+(ox&&oy?.4:0);if(v<best){best=v;r=[X,Y];}}return r;}
 function steer(e,gx,gy){
   const m=G.map,dx=gx-e.x,dy=gy-e.y,d=Math.hypot(dx,dy);
   if(d<10)return [0,0];
   if(d<T*5&&clearPath(e.x,e.y,gx,gy,e.r))return [dx/d,dy/d];
-  const gtx=clamp(Math.floor(gx/T),0,m.C-1),gty=clamp(Math.floor(gy/T),0,m.R-1);
-  const f=getField(gty*m.C+gtx);
+  const f=getField(walkGoal(gx,gy));
   const cx=Math.floor(e.x/T),cy=Math.floor(e.y/T);
   if(cx<0||cy<0||cx>=m.C||cy>=m.R)return [dx/d,dy/d];
   let best=f[cy*m.C+cx],bx=cx,by=cy;
@@ -1215,6 +1220,7 @@ function steer(e,gx,gy){
     const v=f[Y*m.C+X]+(ox&&oy?.4:0);if(v<best){best=v;bx=X;by=Y;}
   }
   if(bx===cx&&by===cy)return [dx/d,dy/d];
+  {let px=bx,py=by;for(let k=0;k<6;k++){const n=fNext(f,px,py);if(!n)break;px=n[0];py=n[1];if(clearPath(e.x,e.y,(px+.5)*T,(py+.5)*T,e.r*1.35)){bx=px;by=py;}else break;}}
   const tx=(bx+.5)*T-e.x,ty=(by+.5)*T-e.y,tl=Math.hypot(tx,ty)||1;
   return [tx/tl,ty/tl];
 }
@@ -1337,7 +1343,7 @@ function startGame(R){TNTF.length=0;
   else if(R.names){G.ents.forEach((e,i)=>{if(!e.name&&R.names[i])e.name=R.names[i];});}
   G.tour=mode==='train'||mode==='karp'?0:3.8;G.tourT=0;
   {const d=mode==='karp'?.55:clamp(tro(P.ch.k)/500,0,1);G.diff=d;for(const e of G.ents){if(e===P||e.owner||e.dummy||e.safe)continue;const foe=e.team!==P.team||mode==='sd',dd=foe?d:Math.max(.45,d);
-    e.ai.err=(.34-.26*dd)+Math.random()*.08;e.ai.react=.42-.24*dd;e.ai.fg=1.7-.7*dd;e.ai.supP=.35+.65*dd;e.botMul=foe?.72+.28*dd:.9+.1*dd;}}G.cam.x=P.x;G.cam.y=P.y;G.floor=null;
+    e.ai.err=(.34-.26*dd)+Math.random()*.08;e.ai.react=.42-.24*dd;e.ai.fg=1.7-.7*dd;e.ai.supP=.35+.65*dd;}}G.cam.x=P.x;G.cam.y=P.y;G.floor=null;
   IN.mv=IN.atk=IN.sup=null;
   showScr(null);
 }
@@ -1828,16 +1834,18 @@ function showResult(){
 function ai(e,dt){
   const A=e.ai;A.th-=dt;A.fcd-=dt;A.str+=dt;
   if(A.th<=0){A.th=(A.react||.18)+Math.random()*.15;decide(e);}
-  let mx=0,my=0;
-  if(A.gx!=null){[mx,my]=steer(e,A.gx,A.gy);}
+  let mx=0,my=0,sv=null;
+  if(A.gx!=null){sv=steer(e,A.gx,A.gy);[mx,my]=sv;}
   A.stT=(A.stT||0)+dt;
   if(A.stT>.9){const moved=Math.hypot(e.x-(A.lx??e.x),e.y-(A.ly??e.y)),far=A.gx!=null&&Math.hypot(A.gx-e.x,A.gy-e.y)>T*1.2;
-    if(moved<T*.35&&far&&e.stun<=0&&!e.dash&&!e.leap){A.unstuck=.8+Math.random()*.6;const a=Math.random()*6.283;A.ux=Math.cos(a);A.uy=Math.sin(a);}
+    if(moved<T*.35&&far&&e.stun<=0&&!e.dash&&!e.leap){A.unstuck=.5+Math.random()*.4;const sg=Math.random()<.5?1:-1;if(sv&&(sv[0]||sv[1])){A.ux=-sv[1]*sg*.8+sv[0]*.2;A.uy=sv[0]*sg*.8+sv[1]*.2;}else{const a=Math.random()*6.283;A.ux=Math.cos(a);A.uy=Math.sin(a);}}
     A.lx=e.x;A.ly=e.y;A.stT=0;}
   if(A.unstuck>0){A.unstuck-=dt;mx=A.ux;my=A.uy;const nx=e.x+mx*T*.6,ny=e.y+my*T*.6;if(blocksMove(tAtP(nx,ny))){A.ux=-A.uy;A.uy=mx;}}
   if((A.mode==='fight'||A.mode==='hold')&&A.tgt){const dx=A.tgt.x-e.x,dy=A.tgt.y-e.y,d=Math.hypot(dx,dy)||1,s=Math.sin(A.str*A.sf+A.ph);mx+=-dy/d*s*.75;my+=dx/d*s*.75;}
   for(const o of G.ents)if(o!==e&&o.alive&&o.team===e.team){const dx=e.x-o.x,dy=e.y-o.y,d=Math.hypot(dx,dy);if(d<40&&d>0){mx+=dx/d*.5;my+=dy/d*.5;}}
   const l=Math.hypot(mx,my);if(l>1){mx/=l;my/=l;}
+  if(G.safes&&(mx||my))for(const q of G.safes){if(!q.alive)continue;const dx=q.x-e.x,dy=q.y-e.y,d=Math.hypot(dx,dy)||1,rr=q.r+e.r+T*.9;if(d<rr&&(mx*dx+my*dy)/d>.2){const sg=(mx*dy-my*dx)>0?1:-1;const tx=dy/d*sg,ty=-dx/d*sg;mx=tx*.9-dx/d*.1;my=ty*.9-dy/d*.1;}}
+  if(sv&&!(A.unstuck>0)&&(mx||my)){const pr=(e.r||14)+8;if(blocksMove(tAtP(e.x+mx*pr,e.y+my*pr))){mx=sv[0];my=sv[1];if(blocksMove(tAtP(e.x+mx*pr,e.y+my*pr))){const f=getField(walkGoal(A.gx,A.gy)),cx=Math.floor(e.x/T),cy=Math.floor(e.y/T),n=fNext(f,cx,cy);if(n){const tx=(n[0]+.5)*T-e.x,ty=(n[1]+.5)*T-e.y,tl=Math.hypot(tx,ty)||1;mx=tx/tl;my=ty/tl;}}}}
   if(e.confT>0){const a=G.t*2.3+e.nid;mx=Math.cos(a);my=Math.sin(a);}
   e.mvx=mx;e.mvy=my;
   aiGadget(e,A.tgt);
