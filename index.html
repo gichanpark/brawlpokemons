@@ -243,9 +243,10 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .lb-sq{position:relative}
 .rs-h{display:flex;gap:8px;align-items:center}.rs-h img{width:48px;height:48px;border:3px solid #111;image-rendering:pixelated}
 .rs-bar{position:relative;height:20px;background:#1e1b2e;border:3px solid #111;margin:6px 0}.rs-bar i{display:block;height:100%;background:#94a3b8;box-shadow:inset 0 -4px 0 #64748b}.rs-bar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;gap:4px;text-shadow:1px 1px 0 #111}
-.rs-shop{display:flex;flex-wrap:wrap;gap:6px}.rs-it{width:96px;display:flex;flex-direction:column;align-items:center;gap:3px;background:#1e1b2e;border:3px solid #111;padding:5px;font-size:10px;text-align:center}.rs-it.big{width:130px;background:#334155}.rs-it.got{opacity:.6}.rs-it>img,.rs-it>span img{max-height:30px}.rs-it .btn{font-size:10px;padding:3px 6px}
+.rs-shop{display:grid;grid-template-columns:repeat(auto-fill,112px);gap:6px;justify-content:center}.rs-it{width:112px;height:122px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:3px;background:#1e1b2e;border:3px solid #111;padding:6px 4px;font-size:10px;text-align:center}.rs-it>b{flex:1;display:flex;align-items:center;font-weight:normal}.rs-it.big{background:#334155;border-color:#c084fc}
+.lb-rs{background:#475569!important;box-shadow:inset 0 -6px 0 #334155,inset 0 3px 0 #cbd5e1,0 5px 0 #111!important}.rs-it.got{opacity:.6}.rs-it>img,.rs-it>span img{max-height:30px}.rs-it .btn{font-size:10px;padding:3px 6px}
 .au-pk{display:flex;flex-wrap:wrap;gap:4px;max-height:220px;overflow:auto}.au-p{display:flex;align-items:center;gap:4px;background:#1e1b2e;border:2px solid #111;padding:2px 5px 2px 2px;font-size:10px}.au-p img{width:26px;height:26px;image-rendering:pixelated}.au-p b{font-weight:normal}.au-p i{font-style:normal;opacity:.75}.au-p.no{opacity:.45}
-.lowh .lb-logo{display:none}.lowh .lb-ver{left:110px}
+.lowh .lb-logo{display:none}.lowh .lb-side{gap:7px}.lowh .lb-sq{height:46px;gap:2px}.lowh .lb-sq img{height:20px}.lowh .lb-ev{height:52px!important}.lowh .lb-ev img{height:24px!important}.lowh .lb-ver{left:110px}
 .lb-ev{height:76px!important;background:#facc15!important;color:#111!important;box-shadow:inset 0 -6px 0 #ca8a04,inset 0 3px 0 #fef9c3,0 5px 0 #111!important;font-weight:bold;animation:lbev 1.6s steps(2) infinite}.lb-ev img{height:34px!important}
 @keyframes lbev{50%{box-shadow:inset 0 -6px 0 #ca8a04,inset 0 3px 0 #fff,0 5px 0 #111,0 0 0 3px #fde047}}
 .lball{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:var(--bc);color:#111;font-size:13px;font-weight:bold;border:3px solid #111;clip-path:polygon(25% 0,75% 0,100% 25%,100% 75%,75% 100%,25% 100%,0 75%,0 25%);box-shadow:inset 3px 3px 0 rgba(255,255,255,.55),inset -3px -3px 0 rgba(0,0,0,.25);margin:2px;cursor:default;flex:none}
@@ -496,7 +497,8 @@ select.minput{width:auto}
   <div class="lb-side">
     <button class="lb-sq" id="bBrawlers"><img id="lbSqImg" class="px" alt=""><span>포켓몬</span></button>
     <button class="lb-sq" id="bShop" style="background:#f97316;box-shadow:inset 0 -6px 0 #c2410c,inset 0 3px 0 #fed7aa,0 5px 0 #111"><img class="ico px big" data-ico="gemc" alt=""><span>상점</span></button>
-    <button class="lb-sq lb-ev" id="bEvent"><img class="ico px big" data-ico="lotto" alt=""><span>이벤트</span><i class="sqb" style="background:#94a3b8;color:#111">구출</i></button>
+    <button class="lb-sq lb-ev" id="bEvent"><img class="ico px big" data-ico="lotto" alt=""><span>이벤트</span><i class="sqb" style="background:#facc15;color:#111">로또</i></button>
+    <button class="lb-sq lb-rs" id="bRescue"><img class="px big" id="rsIco" alt=""><span>뮤츠 구출</span><i class="sqb" id="rsBadge" style="background:#94a3b8;color:#111">0</i></button>
   </div>
   <div class="lb-rank" id="lbRank"><h4><img class="ico px" data-ico="trophy" alt="">트로피 랭킹</h4><div class="ev" id="rkEv">11/30까지 1위 · 특별 프레임 + 한정 포켓몬!</div><div class="rk-hide" id="rkHide" style="display:none">11월 30일 1위 공개!!</div><div class="rl" id="rkList">불러오는 중...</div><div class="mine" id="rkMine"></div></div>
   <div class="lb-ally" id="ally0" data-i="0"></div><div class="lb-ally" id="ally1" data-i="1"></div>
@@ -582,7 +584,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.1';
+const VER='1.21.2';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -3210,6 +3212,7 @@ function refreshMenu(){try{renderAllies();}catch(e){}try{invBadge();}catch(e){}
   $('#selTro').textContent=tro(c.k);
   const tt=totTro();$('#totTro').textContent=tt;$('#lbCoin').textContent=SAVE.coins;$('#lbGem').textContent=SAVE.gems||0;
   $('#lbName').innerHTML=esc(SAVE.nick||ACC.user||SAVE.name)+(ACC.admin?' <span class="adm">관리자</span>':'');$('#lbAva').src=avaSrc();{const w=$('#lbAvaW');w.style.setProperty('--abg',abg(SAVE.ava)||'#0d0a1f');w.className='ava fr-'+(SAVE.frm||'basic')+(SAVE.ava&&(SAVE.ava.t==='img'&&PIMG[SAVE.ava.i]||SAVE.ava.t==='por'&&owns(SAVE.ava.k))?' ph':'');}$('#lbSqImg').src=POR[c.id];
+  {const ri=$('#rsIco');if(ri&&!ri.src)ri.src=SPR.armewtwo;const rb=$('#rsBadge');if(rb){const n=SAVE.ashard||0,got=(SAVE.own||[]).includes('armewtwo');rb.textContent=got?'✓':Math.min(100,Math.floor(n/10))+'%';}}
   {const ps=passS(),lv=passLv();$('#lpBar').style.width=(lv>=PASS_N?100:(ps.xp%PASS_XP)/PASS_XP*100)+'%';$('#lpLv').textContent='Lv '+lv+(lv>=PASS_N?' MAX':'');$('#lpXp').textContent=lv>=PASS_N?'최대 레벨':(ps.xp%PASS_XP)+' / '+PASS_XP+' 경험치';passBadge();}
   $('#bSnd').textContent='⚙ 설정';
   if(typeof checkMail==='function')checkMail();if(typeof checkNotice==='function')checkNotice();
@@ -3234,6 +3237,7 @@ function pickAlly(i,fromLobby){const own=sortCH(CH.filter(c=>owns(c.k)&&c.k!==SA
   $('#alOk').onclick=()=>{if(sel==null)return;SAVE.ally=(SAVE.ally||[null,null]).slice(0,2);while(SAVE.ally.length<2)SAVE.ally.push(null);SAVE.ally[i]=sel||null;if(sel&&SAVE.ally[1-i]===sel)SAVE.ally[1-i]=null;save();refreshMenu();sfx('found');if(fromLobby)closeModal();else $('#bMode').onclick();};}
 $('#bRoad').onclick=()=>openPass();
 $('#bEvent').onclick=()=>{sfx('ui');openLotto();};
+$('#bRescue').onclick=()=>{sfx('ui');openRescue();};
 
 /* 매치메이킹 + VS 화면 */
 function pickRoster(){
@@ -4626,13 +4630,14 @@ function lLeft(ms){const m=Math.max(0,ms-Date.now())/6e4;return m>=1440?Math.flo
 const ASH_SHOP=[{id:'armewtwo',nm:'아머드 뮤츠',cost:1000,pk:'armewtwo'},{id:'box_poke',cost:30},{id:'box_great',cost:80},{id:'box_ultra',cost:150},{id:'box_master',cost:300},{id:'scout',cost:250},{id:'c500',nm:'금구슬 500',cost:40,c:500},{id:'g20',nm:'혜성조각 20',cost:60,g:20},{id:'sel7_l',cost:350}];
 const ASH_ICO=(()=>{const rows=['....kkkk....','..kkggggkk..','.kgwwggggdk.','kgwggggggdgk','kgggkkkkggdk','kggk....kgdk','kggk....kgdk','.kgk....kdk.','..kk....kk..'],P={k:'#111',g:'#94a3b8',w:'#e2e8f0',d:'#475569'},c=document.createElement('canvas');c.width=12;c.height=9;const x=c.getContext('2d');rows.forEach((r,j)=>{for(let i=0;i<12;i++)if(r[i]!=='.'){x.fillStyle=P[r[i]];x.fillRect(i,j,1,1);}});return c.toDataURL();})();
 function rescueHTML(){const n=SAVE.ashard||0,own=ownP('armewtwo')&&(SAVE.own||[]).includes('armewtwo'),c=chOf('armewtwo');
-  return `<div class="lt-sec rsq"><div class="rs-h"><img class="px" src="${POR[c.id]}"><div><b>아머드 뮤츠 구출</b><br><span style="font-size:11px;opacity:.85">게임을 할 때마다 갑옷 조각을 10~50개 모아요. 1000개를 모으면 아머드 뮤츠를 구출할 수 있어요!</span></div></div>
+  return `<div class="rsq"><div class="rs-h"><img class="px" src="${POR[c.id]}"><div><b>아머드 뮤츠 구출</b><br><span style="font-size:11px;opacity:.85">게임을 할 때마다 갑옷 조각을 10~50개 모아요. 1000개를 모으면 아머드 뮤츠를 구출할 수 있어요!</span></div></div>
     <div class="rs-bar"><i style="width:${Math.min(100,n/10)}%"></i><span><img class="px" style="height:12px" src="${ASH_ICO}"> ${n.toLocaleString()} / 1,000</span></div>
     <div class="rs-shop">${ASH_SHOP.map((it,i)=>{const isPk=!!it.pk,got=isPk&&own,nm=it.nm||(ITEMS[it.id]?ITEMS[it.id].nm:it.id),pic=isPk?`<img class="px" src="${SPR[c.id]}" style="max-height:44px">`:it.c?`<img class="ico" src="${ICO.coin}">`:it.g?`<img class="ico" src="${ICO.gemc}">`:itemPic(it.id);
       return `<div class="rs-it${isPk?' big':''}${got?' got':''}">${pic}<b>${nm}</b><button class="btn sm" data-ash="${i}" ${got||n<it.cost?'disabled':''}>${got?'✓ 구출 완료':`<img class="px" style="height:12px;vertical-align:-2px" src="${ASH_ICO}"> ${it.cost}`}</button></div>`;}).join('')}</div></div>`;}
+function openRescue(){const draw=()=>{$('#mbox').innerHTML=`<h2>이벤트 · 아머드 뮤츠 구출</h2>${rescueHTML()}<div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`;$('#mbox').classList.add('wide');rescueBind(draw);};draw();$('#modal').classList.add('on');}
 function rescueBind(redraw){document.querySelectorAll('[data-ash]').forEach(b=>b.onclick=()=>{const it=ASH_SHOP[+b.dataset.ash];if((SAVE.ashard||0)<it.cost)return;
   if(it.pk){if((SAVE.own||[]).includes(it.pk))return;SAVE.ashard-=it.cost;unlockPk(it.pk);save();refreshMenu();sfx('win');const c=chOf(it.pk);
-    modal(`<h2>구출 성공!</h2><div class="rws"><div class="rw newpk"><img class="sbig por2" src="${POR[c.id]}"><b>새 포켓몬!</b><span>${c.nm} · ${GRADE[c.gr].nm}</span></div></div><div class="mrow"><button class="btn sm" id="rsOk">확인</button></div>`);$('#rsOk').onclick=()=>openLotto();return;}
+    modal(`<h2>구출 성공!</h2><div class="rws"><div class="rw newpk"><img class="sbig por2" src="${POR[c.id]}"><b>새 포켓몬!</b><span>${c.nm} · ${GRADE[c.gr].nm}</span></div></div><div class="mrow"><button class="btn sm" id="rsOk">확인</button></div>`);$('#rsOk').onclick=()=>openRescue();return;}
   SAVE.ashard-=it.cost;if(it.c)SAVE.coins+=it.c;else if(it.g)SAVE.gems=(SAVE.gems||0)+it.g;else invAdd(it.id,1);save();refreshMenu();invBadge();sfx('cube');toast((it.nm||ITEMS[it.id].nm)+' 교환 완료!'+(it.c||it.g?'':' 가방에 넣었어요'));redraw();});}
 async function openLotto(){if(!ACC.token){modal(`<h2>조롤 로또</h2><div style="font-size:12px">로그인해야 참여할 수 있어요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
   modal(`<h2>조롤 로또</h2><div style="font-size:11px">불러오는 중...</div>`);let r;try{r=await rpc('pb_lotto_info',{p_token:ACC.token});}catch(e){}
@@ -4648,12 +4653,10 @@ async function openLotto(){if(!ACC.token){modal(`<h2>조롤 로또</h2><div styl
     <div class="mrow" style="justify-content:flex-start;margin-top:6px"><button class="btn b2 sm" id="ltAuto">자동</button><button class="btn sm" id="ltBuy" ${pick.length===3&&SAVE.coins>=LOTTO_PRICE?'':'disabled'}>구매 · <img class="ico" src="${ICO.coin}"> ${LOTTO_PRICE.toLocaleString()}</button><span class="lg-err" id="ltE"></span></div>
     ${r.mine.length?`<div class="lt-sec"><b>내 번호 (${r.mine.length}/10장)</b>${r.mine.map(t=>`<div class="lt-row">${t.map(n=>lball(n)).join('')}</div>`).join('')}</div>`:''}
     ${lastHTML}
-    ${rescueHTML()}
     <div style="font-size:10px;opacity:.7;margin-top:6px;line-height:1.6">모든 사람이 낸 금구슬을 모아서 3개 맞춤 60% · 2개 맞춤 30% · 1개 맞춤 10%를 맞힌 사람끼리 나눠 가져요. 맞힌 사람이 없는 몫은 다음 주로 이월돼요. 당첨금은 우편함으로 와요. 한 주에 10장까지.</div>
     <div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`;
     $('#mbox').classList.add('wide');
     document.querySelectorAll('.lt-grid .lball').forEach(el=>el.onclick=()=>{const n=+el.dataset.n;if(pick.includes(n))pick=pick.filter(x=>x!==n);else if(pick.length<3)pick.push(n);sfx('ui');draw();});
-    rescueBind(draw);
     $('#ltAuto').onclick=()=>{pick=shuffle(Array.from({length:20},(_,i)=>i+1)).slice(0,3);sfx('ui');draw();};
     $('#ltBuy').onclick=async()=>{if(pick.length!==3)return;const E=$('#ltE');$('#ltBuy').disabled=true;E.textContent='구매 중...';await flushSaveNow();
       let q=null;try{q=await rpc('pb_lotto_buy',{p_token:ACC.token,p_nums:pick});}catch(e){}
