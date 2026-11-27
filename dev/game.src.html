@@ -585,7 +585,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.6';
+const VER='1.21.7';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -985,11 +985,19 @@ const IMGSF={};for(const k in SPRSF){const im=new Image();im.onload=()=>{im.ok=1
 const hasShy=k=>!!SPRS[k]&&(SAVE.shy||[]).includes(k);
 /* 테마 스킨: SKINX['k_id']={spr,por,gmax}, 보유 SAVE.skn=['k_id'], 장착 SAVE.sk[k]='s'(이로치,예전 값 1)|테마id */
 const THEMES={cinderace:[{id:'spurs',nm:'토트넘 에이스번',ball:1},{id:'korea',nm:'국가대표 에이스번',ball:1}],hlil:[{id:'dongbaek',nm:'동백꽃 필 무렵',fx:{palO:['#facc15','#fef9c3','#9a3412'],col:'#facc15',edge:'#16181c',petal:1}}],giratina:[{id:'yako',nm:'백귀야행 기라티나',fx:{palO:['#dc2626','#fecaca','#1a0505'],col:'#dc2626',yako:1}}],
+  mewtwo:[{id:'obsid',nm:'흑요석 뮤츠',fx:{palO:['#d946ef','#fae8ff','#3a0d3d'],col:'#d946ef'}}],
+  rayquaza:[{id:'gold',nm:'황금룡 레쿠쟈',fx:{palO:['#facc15','#fef9c3','#4a2a02'],col:'#facc15'}}],
+  kyurem:[{id:'magma',nm:'마그마 큐레무',fx:{palO:['#f97316','#fde68a','#4a0e04'],col:'#f97316'}}],
+  zygarde:[{id:'order',nm:'순백 질서 지가르데',fx:{palO:['#22d3ee','#cffafe','#0b3a4a'],col:'#22d3ee'}}],
+  necrozma:[{id:'eclipse',nm:'일식 네크로즈마',fx:{palO:['#fbbf24','#fffbeb','#3d2a02'],col:'#fbbf24'}}],
+  arceus:[{id:'abyss',nm:'심연 아르세우스',fx:{palO:['#fbbf24','#fef3c7','#3d2a02'],col:'#fbbf24'}}],
+  calyrex:[{id:'sakura',nm:'벚꽃 버드렉스',fx:{palO:['#f472b6','#fdf2f8','#5b1235'],col:'#f472b6'}}],
+  solgaleo:[{id:'lunar',nm:'월식 솔가레오',fx:{palO:['#a5b4fc','#eef2ff','#1e1b4b'],col:'#a5b4fc'}}],
   eternatus:[{id:'galaxy',nm:'은하수 무한다이노',pass:1,fx:{palO:['#a855f7','#a5f3fc','#0b0720'],col:'#a855f7'}},{id:'aurora',nm:'오로라 무한다이노',pass:1,fx:{palO:['#10b981','#a7f3d0','#062420'],col:'#10b981'}},{id:'plat',nm:'백금 무한다이노',pass:1,fx:{palO:['#fcd34d','#ffffff','#3b2f4a'],col:'#fcd34d'}}]};
 /* 백귀야행 색 바꾸기: 보라 계열 → 진홍·칠흑 */
 const YK={'#3b0764':'#450a0a','#7e22ce':'#b91c1c','#a855f7':'#ef4444','#c084fc':'#fca5a5','#1e0533':'#0a0000','#581c87':'#7f1d1d','#d8b4fe':'#fecaca','#e9d5ff':'#fee2e2','#2e1065':'#3f0a0a'};
 const yc=(s,c)=>s&&s.yako?YK[c]||c:c;const ycl=(s,L)=>s&&s.yako?L.map(c=>YK[c]||c):L;
-const IMGX={};for(const key in SKINX)for(const f of ['spr','gmax','f1']){if(!SKINX[key][f])continue;const im=new Image();im.onload=()=>{im.ok=1};im.src=SKINX[key][f];IMGX[key+(f==='spr'?'':'_'+f)]=im;}
+const IMGX={};for(const key in SKINX)for(const f of Object.keys(SKINX[key]).filter(x=>x!=='por')){if(!SKINX[key][f])continue;const im=new Image();im.onload=()=>{im.ok=1};im.src=SKINX[key][f];IMGX[key+(f==='spr'?'':'_'+f)]=im;}
 const SOCIMG=(()=>{const im=new Image();im.onload=()=>{im.ok=1};im.src=SOCCER;return im;})();
 const hasSkin=(k,id)=>id==='s'?hasShy(k):!!SKINX[k+'_'+id]&&(SAVE.skn||[]).includes(k+'_'+id);
 const skinId=k=>{const v=SAVE.sk&&SAVE.sk[k];if(!v)return 0;const id=v===1?'s':v;return hasSkin(k,id)?id:0;};
@@ -1000,7 +1008,7 @@ const sprOf=k=>{const c=chOf(k),id=skinId(k);return id==='s'?SPRS[k]:id?SKINX[k+
 const porOf=k=>{const c=chOf(k),id=skinId(k);return id==='s'?(PORS[k]||POR[c.id]):id?SKINX[k+'_'+id].por:POR[c.id];};
 const entImg=e=>{if(!e.skin||e.ch.ditto)return IMG[e.ch.k];const im=e.skin==='s'?IMGS[e.ch.k]:IMGX[e.ch.k+'_'+e.skin];return im&&im.ok?im:IMG[e.ch.k];};
 const formImg=e=>{const k=e.ch.k+'_f'+(e.form||0),im=!e.skin||e.ch.ditto?null:e.skin==='s'?IMGSF[k]:IMGX[e.ch.k+'_'+e.skin+'_f'+(e.form||0)];return im&&im.ok?im:IMG[k];};
-const megaImg=e=>{const im=e.skin==='s'&&!e.ch.ditto?IMGSF[e.ch.k+'_mega']:null;return im&&im.ok?im:IMG[e.ch.k+'_mega'];};
+const megaImg=e=>{const im=!e.skin||e.ch.ditto?null:e.skin==='s'?IMGSF[e.ch.k+'_mega']:IMGX[e.ch.k+'_'+e.skin+'_mega'];return im&&im.ok?im:IMG[e.ch.k+'_mega'];};
 const gmaxImg=e=>{const im=!e.skin||e.ch.ditto?null:e.skin==='s'?IMGSF[e.ch.k+'_gmax']:IMGX[e.ch.k+'_'+e.skin+'_gmax'];return im&&im.ok?im:IMG[e.ch.k+'_gmax'];};
 const ballSkin=p=>{const o=p.o||G.ents.find(e=>e.team===p.team&&e.ch&&(e.ch.atk===p.s||e.ch.sup===p.s));return !!(o&&o.skin&&o.skin!=='s'&&!o.ch.ditto&&(themeOf(o.ch.k,o.skin)||{}).ball);};
 [['rayquaza_mega','mega384'],['cinderace_gmax','gmax815'],['eternatus_gmax','emax890'],['kyurem_f1','10022'],['kyurem_f2','10023'],['morpeko_f1','morpeko_h'],['zygarde','zy10'],['magikarp_f1','redgy'],['minior_f1','10136'],['deoxys_f1','10001'],['deoxys_f2','10002'],['deoxys_f3','10003'],['palafin_f1','pal1'],['trio_f0','642'],['calyrex_f1','cxice'],['calyrex_f2','cxsh'],['enamorus_f1','10249'],['lati_f0','380'],['lati_f1','381'],['giratina_f1','10007'],['trio_f1','10020'],['trio_f2','641'],['trio_f3','10019'],['trio_f4','645'],['trio_f5','10021'],['necrozma_f1','10155'],['necrozma_f2','10156'],['necrozma_f3','10157'],['zygarde_f1','718'],['zygarde_f2','zy100'],['ogerpon_f1','og1'],['ogerpon_f2','og2'],['ogerpon_f3','og3'],['aegislash_f1','10026'],['darmanitan_f1','10017']].forEach(([k,id])=>{const im=new Image();im.onload=()=>{im.ok=1};im.src=SPR[id];IMG[k]=im;});
@@ -4629,7 +4637,7 @@ const lbCol=n=>n<=5?'#facc15':n<=10?'#3b82f6':n<=15?'#ef4444':'#22c55e';
 const lball=(n,o)=>`<span class="lball${o&&o.on?' on':''}${o&&o.hit?' hit':''}${o&&o.dim?' dim':''}" style="--bc:${lbCol(n)}"${o&&o.k?` data-n="${n}"`:''}>${n}</span>`;
 function lLeft(ms){const m=Math.max(0,ms-Date.now())/6e4;return m>=1440?Math.floor(m/1440)+'일 '+Math.floor(m%1440/60)+'시간':m>=60?Math.floor(m/60)+'시간 '+Math.floor(m%60)+'분':Math.ceil(m)+'분';}
 /* ---------- 이벤트: 아머드 뮤츠 구출 (갑옷 조각) ---------- */
-const ASH_SHOP=[{id:'armewtwo',nm:'아머드 뮤츠',cost:1000,pk:'armewtwo'},{id:'box_poke',cost:30},{id:'box_great',cost:80},{id:'box_ultra',cost:150},{id:'box_master',cost:300},{id:'scout',cost:250},{id:'c500',nm:'금구슬 500',cost:40,c:500},{id:'g20',nm:'혜성조각 20',cost:60,g:20},{id:'sel7_l',cost:350},{id:'maxlv',cost:500},{id:'pull10',cost:400}];
+const ASH_SHOP=[{id:'armewtwo',nm:'아머드 뮤츠',cost:1000,pk:'armewtwo'},{id:'box_poke',cost:30},{id:'box_great',cost:80},{id:'box_ultra',cost:150},{id:'box_master',cost:300},{id:'scout',cost:250},{id:'c500',nm:'금구슬 500',cost:40,c:500},{id:'g20',nm:'혜성조각 20',cost:60,g:20},{id:'sel7_l',cost:350},{id:'maxlv',cost:700},{id:'pull10',cost:1500}];
 const ASH_ICO=(()=>{const rows=['....kkkk....','..kkggggkk..','.kgwwggggdk.','kgwggggggdgk','kgggkkkkggdk','kggk....kgdk','kggk....kgdk','.kgk....kdk.','..kk....kk..'],P={k:'#111',g:'#94a3b8',w:'#e2e8f0',d:'#475569'},c=document.createElement('canvas');c.width=12;c.height=9;const x=c.getContext('2d');rows.forEach((r,j)=>{for(let i=0;i<12;i++)if(r[i]!=='.'){x.fillStyle=P[r[i]];x.fillRect(i,j,1,1);}});return c.toDataURL();})();
 function rescueHTML(){const n=SAVE.ashard||0,own=ownP('armewtwo')&&(SAVE.own||[]).includes('armewtwo'),c=chOf('armewtwo');
   return `<div class="rsq"><div class="rs-h"><img class="px" src="${POR[c.id]}"><div><b>아머드 뮤츠 구출</b><br><span style="font-size:11px;opacity:.85">게임을 할 때마다 갑옷 조각을 10~50개 모아요. 1000개를 모으면 아머드 뮤츠를 구출할 수 있어요!</span></div></div>
