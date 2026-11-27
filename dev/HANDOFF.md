@@ -216,3 +216,10 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
   - 기존 계정: 저장 간 증가량 허용치 = 우편 수령(claimed_at 이후)+지급 + 6000+1500×분 + 기존 잔액×3(슬롯). 넘으면 pb_flag 'jump', 허용치+30만(혜성 +3만) 넘으면 깎고 'fix' 반환. 포켓몬 +8(+우편) 넘게 늘면 기록
 - pb_signup: 가입 IP 기록만 (signup_ip). 하루 3계정 제한은 사용자 요청으로 해제
 - pb_mail.claimed_at, pb_users.saved_at/signup_ip, pb_flag 테이블, pb_admin_flags(의심 기록 + 같은 트로피 해시 묶음) → 관리자 메뉴 '의심 기록'
+
+## v1.20.29 세이브 봉인
+- sealPay(s)/sealOf(s) (md5s, 키 SLK = pb_cfg 'seal') ↔ 서버 pb_seal_pay(jsonb). 서명 대상: 금구슬|혜성조각|own(정렬)|lv합|tro합|이로치수|스킨수|가방(정렬 k:n)|프레임수|패스xp|패스유료
+- saveLocal/saveBody 가 sg 를 붙임. 로딩 시 localStorage 서명이 안 맞으면 버림(계정은 서버 세이브 사용, 게스트는 초기화). 로그인 시 로컬 우선은 서명 맞을 때만
+- pb_save: pb_cfg seal_on='1' 이면 sg 없거나 틀리면 거부 {seal:true, save:서버} + pb_flag 'seal'(10분 1회) → 클라는 서버 세이브로 교체
+- 새 버전 강제 새로고침은 ?v= 붙여 캐시 우회
+- 한계: 개발자 도구 콘솔로 메모리 값을 고친 뒤 저장하는 건 못 막음(키가 클라에 있음) → 급증 감시(jump/clamp)로 보완

@@ -579,7 +579,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.20.28';
+const VER='1.20.29';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -997,9 +997,29 @@ const ballSkin=p=>{const o=p.o||G.ents.find(e=>e.team===p.team&&e.ch&&(e.ch.atk=
 [['rayquaza_mega','mega384'],['cinderace_gmax','gmax815'],['eternatus_gmax','emax890'],['kyurem_f1','10022'],['kyurem_f2','10023'],['morpeko_f1','morpeko_h'],['zygarde','zy10'],['magikarp_f1','redgy'],['minior_f1','10136'],['deoxys_f1','10001'],['deoxys_f2','10002'],['deoxys_f3','10003'],['palafin_f1','pal1'],['trio_f0','642'],['calyrex_f1','cxice'],['calyrex_f2','cxsh'],['enamorus_f1','10249'],['lati_f0','380'],['lati_f1','381'],['giratina_f1','10007'],['trio_f1','10020'],['trio_f2','641'],['trio_f3','10019'],['trio_f4','645'],['trio_f5','10021'],['necrozma_f1','10155'],['necrozma_f2','10156'],['necrozma_f3','10157'],['zygarde_f1','718'],['zygarde_f2','zy100'],['ogerpon_f1','og1'],['ogerpon_f2','og2'],['ogerpon_f3','og3'],['aegislash_f1','10026'],['darmanitan_f1','10017']].forEach(([k,id])=>{const im=new Image();im.onload=()=>{im.ok=1};im.src=SPR[id];IMG[k]=im;});
 
 /* ---------- 저장 ---------- */
+/* 세이브 봉인: 기기에서 고친 세이브를 알아보는 서명 (서버 pb_seal_pay 와 같은 규칙) */
+function md5s(str){const k=[],r=[7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,6,10,15,21,6,10,15,21,6,10,15,21,6,10,15,21];
+  for(let i=0;i<64;i++)k[i]=Math.floor(Math.abs(Math.sin(i+1))*4294967296)>>>0;
+  const b=unescape(encodeURIComponent(str)),n=b.length,nb=((n+8)>>6)+1,w=new Array(nb*16).fill(0);
+  for(let i=0;i<n;i++)w[i>>2]|=b.charCodeAt(i)<<((i%4)*8);w[n>>2]|=0x80<<((n%4)*8);w[nb*16-2]=n*8;
+  let a0=0x67452301,b0=0xefcdab89,c0=0x98badcfe,d0=0x10325476;
+  for(let j=0;j<w.length;j+=16){let A=a0,B=b0,C=c0,D=d0;
+    for(let i=0;i<64;i++){let F,g;if(i<16){F=(B&C)|(~B&D);g=i;}else if(i<32){F=(D&B)|(~D&C);g=(5*i+1)%16;}else if(i<48){F=B^C^D;g=(3*i+5)%16;}else{F=C^(B|~D);g=(7*i)%16;}
+      const t=D;D=C;C=B;const x=(A+F+k[i]+w[j+g])|0;B=(B+((x<<r[i])|(x>>>(32-r[i]))))|0;A=t;}
+    a0=(a0+A)|0;b0=(b0+B)|0;c0=(c0+C)|0;d0=(d0+D)|0;}
+  return [a0,b0,c0,d0].map(v=>{let s='';for(let i=0;i<4;i++)s+=((v>>>(i*8))&255).toString(16).padStart(2,'0');return s;}).join('');}
+const SLK=['4eaca8860c33','8ec3e789cbaa'].map(x=>x.split('').reverse().join('')).join('');
+function sealPay(s){const R=x=>Math.round(+x||0),sum=o=>o&&typeof o==='object'?Object.values(o).filter(v=>/^-?[0-9.]+$/.test(String(v))).reduce((a,v)=>a+R(v),0):0;
+  const own=Array.isArray(s.own)?s.own.slice().sort().join(','):'*';
+  const inv=s.inv&&typeof s.inv==='object'?Object.keys(s.inv).filter(k=>/^-?[0-9.]+$/.test(String(s.inv[k]))&&R(s.inv[k])).sort().map(k=>k+':'+R(s.inv[k])).join(','):'';
+  const pd=s.pass&&s.pass.paid;
+  return [R(s.coins),R(s.gems),own,sum(s.lv),sum(s.tro),Array.isArray(s.shy)?s.shy.length:0,Array.isArray(s.skn)?s.skn.length:0,inv,Array.isArray(s.frOwn)?s.frOwn.length:0,R(s.pass&&s.pass.xp),pd&&pd!=='0'&&pd!=='false'?1:0].join('|');}
+const sealOf=s=>md5s(SLK+'#'+sealPay(s));
 let SAVE={sel:'pikachu',mode:'gem',tro:{}};
-try{const s=JSON.parse(localStorage.getItem('pokebrawl1'));if(s)SAVE=Object.assign(SAVE,s);}catch(e){}
-function saveLocal(){try{localStorage.setItem('pokebrawl1',JSON.stringify(SAVE))}catch(e){}}
+try{const s=JSON.parse(localStorage.getItem('pokebrawl1'));if(s){if(s.sg&&s.sg===sealOf(s))SAVE=Object.assign(SAVE,s);
+  else if(!s.sg&&!s.acct)SAVE=Object.assign(SAVE,s);/* 예전 게스트 세이브 */
+  else{SAVE=Object.assign(SAVE,{acct:s.acct,snd:s.snd,vol:s.vol,unsealed:1});}}}catch(e){}
+function saveLocal(){try{delete SAVE.unsealed;SAVE.sg=sealOf(SAVE);localStorage.setItem('pokebrawl1',JSON.stringify(SAVE))}catch(e){}}
 var dirtyN=0;function save(){dirtyN++;try{if(ACC.token)SAVE.dirty=1;}catch(e){}saveLocal();if(typeof serverSave==='function')serverSave();}
 const tro=k=>SAVE.tro[k]||0;
 function cleanSave(){if(!SAVE||!SAVE.own)return;if(SAVE.tmp)for(const k of Object.keys(SAVE.tmp))if(!(SAVE.tmp[k]>Date.now())||ownP(k))delete SAVE.tmp[k];if(!owns(SAVE.sel))SAVE.sel=SAVE.own[0]||'pikachu';const ok=k=>CH.some(c=>c.k===k);SAVE.own=SAVE.own.filter(ok);if(SAVE.lv)for(const k of Object.keys(SAVE.lv))if(!ok(k))delete SAVE.lv[k];if(SAVE.tro)for(const k of Object.keys(SAVE.tro))if(!ok(k)&&!SAVE.tro[k])delete SAVE.tro[k];if(!ok(SAVE.sel))SAVE.sel=SAVE.own[0]||'pikachu';}
@@ -4812,10 +4832,11 @@ function applyTake(r){const tc=r.tc||0,tg=r.tg||0,tp=r.tp||[],ti=r.ti||{};if(!tc
   if(!G){if(!SAVE.own)setTimeout(showStarter,300);else setTimeout(()=>showTakeNote({c:tc,g:tg,p:tp,i:ti,m:r.tm}),300);}
   return true;}
 let saveSeq=0;
-function saveBody(){const o=Object.assign({},SAVE);delete o.dirty;if(o.rev==null)o.rev=0;return o;}
+function saveBody(){const o=Object.assign({},SAVE);delete o.dirty;delete o.unsealed;if(o.rev==null)o.rev=0;o.sg=sealOf(o);return o;}
 function serverSave(){if(!ACC.token)return;clearTimeout(saveTimer);saveTimer=setTimeout(serverPush,1200);}
 function serverPush(){if(!ACC.token)return;clearTimeout(saveTimer);saveTimer=null;const seq=++saveSeq,tk=ACC.token,dn=dirtyN;
   rpc('pb_save',{p_token:tk,p_save:saveBody()}).then(r=>{if(!r||tk!==ACC.token)return;
+    if(r.seal&&r.save){SAVE=Object.assign(DEF_SAVE(),r.save);SAVE.acct=ACC.user;saveLocal();try{if(!G||G.over)refreshMenu();}catch(e){}toast('저장 데이터가 올바르지 않아 서버 기록으로 되돌렸어요');return;}
     if(r.stale&&r.save){adoptServer(r.save);return;}
     if(!r.ok)return;if(r.rev!=null)SAVE.rev=r.rev;if(seq===saveSeq&&dn===dirtyN)delete SAVE.dirty;
     if(r.reset){SAVE=Object.assign(DEF_SAVE(),r.reset);if(!SAVE.name)SAVE.name=SAVE.nick||ACC.user;saveLocal();try{if(!G||G.over){showStarter();}}catch(e){}return;}
@@ -4833,7 +4854,7 @@ function applyAccount(r,carry,nick){
   ACC.user=r.user;ACC.token=r.token;ACC.admin=!!r.admin;
   try{localStorage.setItem('pb_token',r.token);}catch(e){}
   let sv=r.save&&Object.keys(r.save).length?r.save:null;const loc=SAVE;
-  if(sv&&loc&&loc.dirty&&loc.acct===r.user&&(loc.rev||0)>=(sv.rev||0))sv=Object.assign({},loc);
+  if(sv&&loc&&loc.dirty&&loc.acct===r.user&&(loc.rev||0)>=(sv.rev||0)&&loc.sg&&loc.sg===sealOf(loc))sv=Object.assign({},loc);
   if(sv)SAVE=Object.assign(DEF_SAVE(),sv);else if(!carry||SAVE.acct)SAVE=DEF_SAVE();SAVE.acct=r.user;
   if(!SAVE.lv)SAVE.lv={};if(!SAVE.tro)SAVE.tro={};
   if(nick){SAVE.nick=nick;if(SAVE.clean==null)SAVE.clean=true;}SAVE.name=SAVE.nick||ACC.user;applyGrant(r);if(SAVE.own&&!SAVE.own.length)delete SAVE.own;save();
@@ -4936,8 +4957,8 @@ function toast(h,btns){const t=$('#invToast');t.innerHTML=`<span>${h}</span>${bt
 const SEENINV=new Set();let pingT=null;
 function verNum(v){return String(v||'0').split('.').map(x=>+x||0).reduce((a,x)=>a*1000+x,0);}
 let VERASK=0;function verCheck(lv){if(!lv||verNum(lv)<=verNum(VER)||VERASK)return;if(G&&!G.over){return;}VERASK=1;
-  modal(`<h2>새 버전이 나왔어요!</h2><div style="font-size:12px;line-height:1.8">지금 버전 v${VER} → 새 버전 v${esc(lv)}<br>잠시 후 자동으로 새로고침돼요.</div><div class="mrow"><button class="btn sm" onclick="location.reload()">지금 새로고침</button></div>`);
-  try{serverPush();}catch(e){}setTimeout(()=>location.reload(),4000);}
+  modal(`<h2>새 버전이 나왔어요!</h2><div style="font-size:12px;line-height:1.8">지금 버전 v${VER} → 새 버전 v${esc(lv)}<br>잠시 후 자동으로 새로고침돼요.</div><div class="mrow"><button class="btn sm" onclick="location.replace(location.pathname+'?v='+encodeURIComponent('${esc(lv)}'))">지금 새로고침</button></div>`);
+  try{serverPush();}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(lv)),4000);}
 function banKick(r){if(window._banned)return;window._banned=1;try{if(G){G.over=true;}}catch(e){}
   try{ACC.user=ACC.token=null;ACC.admin=false;localStorage.removeItem('pb_token');}catch(e){}
   try{showScr('login');}catch(e){}
@@ -4957,7 +4978,7 @@ async function pingNow(){if(!ACC.token)return;let r;try{r=await rpc('pb_ping',{p
     break;}}
 setInterval(()=>{if(ACC.token&&!document.hidden)pingNow();},7000);
 /* ---------- 친구 선물 (재화 보내기) / 후원하기 ---------- */
-async function flushSaveNow(){if(!ACC.token)return;clearTimeout(saveTimer);saveTimer=null;try{const r=await rpc('pb_save',{p_token:ACC.token,p_save:saveBody()});if(r&&r.stale&&r.save)adoptServer(r.save);else if(r&&r.ok){if(r.rev!=null)SAVE.rev=r.rev;delete SAVE.dirty;saveLocal();let ch=applyGrant(r);if(applyTake(r))ch=true;if(ch)await flushSaveNow();}}catch(e){}}
+async function flushSaveNow(){if(!ACC.token)return;clearTimeout(saveTimer);saveTimer=null;try{const r=await rpc('pb_save',{p_token:ACC.token,p_save:saveBody()});if(r&&r.seal&&r.save){SAVE=Object.assign(DEF_SAVE(),r.save);SAVE.acct=ACC.user;saveLocal();}else if(r&&r.stale&&r.save)adoptServer(r.save);else if(r&&r.ok){if(r.rev!=null)SAVE.rev=r.rev;delete SAVE.dirty;saveLocal();let ch=applyGrant(r);if(applyTake(r))ch=true;if(ch)await flushSaveNow();}}catch(e){}}
 function giftOpen(u,n,o){o=o||{};
   modal(`<h2>${o.title||'선물 보내기'} <span class="cur">${esc(n)} @${esc(u)}</span></h2>
     ${o.note?`<div style="font-size:12px;margin-bottom:8px;color:#fde047">${o.note}</div>`:''}
