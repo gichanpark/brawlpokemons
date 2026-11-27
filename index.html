@@ -561,7 +561,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.20.22';
+const VER='1.20.23';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1525,6 +1525,7 @@ function spawnShots(e,s,ang,d,sup){
 function damage(src,tgt,amt,sup,dot){
   if(!tgt.alive||tgt.inv>0||G.over)return;
   if(tgt.ebeam&&amt>0)amt*=.5;
+  if(tgt.ai&&src&&src!==tgt&&src.team!==tgt.team&&!src.safe){tgt.ai.rev=src;tgt.ai.revT=G.t;}
   if(src===P&&P&&tgt.team!==P.team&&amt>0)G.pDmg=(G.pDmg||0)+amt;
   if(tgt.disg&&!dot&&amt>0){tgt.disg=false;tgt.disgCd=10;tgt.haste=Math.max(tgt.haste||0,2);addText(tgt.x,tgt.y-90,'탈이 벗겨졌다!','#fde047',1);spark(tgt.x,tgt.y-30,['#fde047','#78350f','#fff'],14,180,.5,5);sfx('hit',tgt.x,tgt.y);tgt.hf=.15;return;}
   amt=Math.round(amt*(src?src.dmgMul*(src.buffT>0?1.5:1)*(src.ch.bers&&src.hp<src.maxHp*.5?1.25:1)*dmgOut(src):1)*dmgIn(src,tgt,dot));
@@ -1852,7 +1853,7 @@ function endMatch(mode,res){
   G.result={big,sub,d,coin,road,gem,pxp,qd};
   setTimeout(()=>sfx(d>0||res==='win'?'win':(tm&&res==='draw')?'ui':'lose'),700);
 }
-const psTag=e=>{const k=e.ai&&e.ai.ps;return k&&k!=='norm'&&e!==P&&!e.owner?`<span style="font-size:9px;color:#111;background:${PERSONA[k].col};padding:0 3px;margin-right:3px;border:1px solid #111">${PERSONA[k].sh}</span>`:'';};
+const psTag=e=>'';const psTag0=e=>{const k=e.ai&&e.ai.ps;return k&&k!=='norm'&&e!==P&&!e.owner?`<span style="font-size:9px;color:#111;background:${PERSONA[k].col};padding:0 3px;margin-right:3px;border:1px solid #111">${PERSONA[k].sh}</span>`:'';};
 function kdHtml(){const L=G.ents.filter(e=>!e.safe&&!e.dummy);if(!L.length)return '';
   const row=e=>`<tr class="${e===P?'me':''}"><td><img src="${SPR[chOf(e.ch.k).id]}"></td><td class="n">${e===P?'▶ ':''}${psTag(e)}${esc(e===P?(SAVE.nick||'나'):(e.name||e.ch.nm))}</td><td class="k">${e.kills||0}</td><td class="d">${e.deaths||0}</td></tr>`;
   const tb=(t,a)=>`<table><tr><th></th><th style="text-align:left">${t}</th><th>킬</th><th>데스</th></tr>${a.sort((x,y)=>(y.kills||0)-(x.kills||0)||(x.deaths||0)-(y.deaths||0)).map(row).join('')}</table>`;
@@ -1876,11 +1877,20 @@ function showResult(){
 
 /* ---------- AI ---------- */
 /* AI 성격: 보통 / 상남자형 / 쫄보형 / 잘하는형 */
-const PERSONA={norm:{nm:'보통',w:40},brave:{nm:'상남자형',sh:'상남자',w:20,col:'#f87171'},shy:{nm:'쫄보형',sh:'쫄보',w:20,col:'#93c5fd'},pro:{nm:'잘하는형',sh:'고수',w:20,col:'#fde047'}};
-function aiPersona(e){const A=e.ai;let r=Math.random()*100,k='norm';for(const [id,v] of Object.entries(PERSONA)){if((r-=v.w)<0){k=id;break;}}A.ps=k;
+const PERSONA={norm:{nm:'보통',w:25},brave:{nm:'상남자형',sh:'상남자',w:12,col:'#f87171'},shy:{nm:'쫄보형',sh:'쫄보',w:12,col:'#93c5fd'},pro:{nm:'잘하는형',sh:'고수',w:12,col:'#fde047'},
+  bush:{nm:'숨숨형',sh:'숨숨',w:10,col:'#4ade80'},loot:{nm:'수집가형',sh:'수집가',w:10,col:'#fbbf24'},revenge:{nm:'복수형',sh:'복수',w:7,col:'#fb7185'},team:{nm:'팀플형',sh:'팀플',w:7,col:'#60a5fa',tm:1},chaos:{nm:'똘끼형',sh:'똘끼',w:5,col:'#e879f9'}};
+function aiPersona(e){const A=e.ai,L=Object.entries(PERSONA).filter(([id,v])=>!v.tm||TM());let r=Math.random()*L.reduce((a,[,v])=>a+v.w,0),k='norm';for(const [id,v] of L){if((r-=v.w)<0){k=id;break;}}A.ps=k;
   if(k==='brave'){A.pref=.45;A.flee=.12;A.eng=1.6;A.supP=Math.min(1,A.supP+.25);A.err+=.04;A.fg*=.8;A.stf=.5;}
   else if(k==='shy'){A.pref=.95;A.flee=.55;A.eng=.8;A.supP*=.7;A.fg*=1.1;A.stf=.9;A.kite=1;}
-  else if(k==='pro'){A.pref=.75;A.flee=.3;A.eng=1.15;A.err*=.55;A.react=Math.max(.12,A.react*.7);A.stf=1.15;A.focus=.55;A.supSmart=1;}}
+  else if(k==='pro'){A.pref=.75;A.flee=.3;A.eng=1.15;A.err*=.55;A.react=Math.max(.12,A.react*.7);A.stf=1.15;A.focus=.55;A.supSmart=1;}
+  else if(k==='bush'){A.pref=.55;A.eng=.7;A.flee=.4;A.stf=.4;}
+  else if(k==='loot'){A.eng=.65;A.flee=.45;A.loot=1;}
+  else if(k==='revenge'){A.eng=1.1;A.flee=.2;A.focus=.9;}
+  else if(k==='team'){A.eng=1;A.flee=.35;}
+  else if(k==='chaos'){A.err+=.06;A.supP=1;A.stf=1.4;A.flee=Math.random()<.5?.08:.6;A.pref=.3+Math.random()*.7;}}
+function aiBush(e,A){const m=G.map;if(A.bushI!=null&&m.g[A.bushI]===2&&Math.random()>.02)return A.bushI;let bi=null,bd=1e9;const cx=e.x/T,cy=e.y/T;
+  for(let i=0;i<m.g.length;i++){if(m.g[i]!==2)continue;const x=i%m.C+.5,y=(i/m.C|0)+.5;if(G.mode==='sd'&&(x<G.gas+2||y<G.gas+2||x>m.C-G.gas-2||y>m.R-G.gas-2))continue;const d=Math.hypot(x-cx,y-cy)+Math.random()*2;if(d<bd){bd=d;bi=i;}}
+  A.bushI=bi!=null&&bd<14?bi:null;return A.bushI;}
 function ai(e,dt){
   const A=e.ai;A.th-=dt;A.fcd-=dt;A.str+=dt;
   if(A.th<=0){A.th=(A.react||.18)+Math.random()*.15;decide(e);}
@@ -1937,6 +1947,8 @@ function decide(e){
   let ne=null,nd=1e9;
   for(const o of G.ents){if(!o.alive||o.team===e.team||!visibleTo(o,e.team))continue;if(o.illusT>0&&dist(e,o)>1.6*T)continue;let d=dist(e,o);if(o.hp<o.maxHp*.4)d*=(A.focus??.8);if(d<nd){nd=d;ne=o;}}
   const rng=e.ch.atk.range*T,pref=Math.max(rng*(A.pref??.7),T*1.3);
+  if(A.ps==='revenge'&&A.rev&&A.rev.alive&&G.t-(A.revT||0)<12&&visibleTo(A.rev,e.team)){ne=A.rev;nd=dist(e,ne)*.6;}
+  if(A.ps==='chaos'&&Math.random()<.12){A.mode='move';A.tgt=null;A.gx=e.x+(Math.random()-.5)*8*T;A.gy=e.y+(Math.random()-.5)*8*T;return;}
   A.tgt=ne&&nd<Math.max(rng*1.5,6*T)*(A.eng??1)?ne:null;A.box=null;
   const low=e.hp<e.maxHp*(G.mode==='heist'?.22:(A.flee??.33))&&ne&&nd<rng*1.4;
   if(G.mode==='sd'){
@@ -1974,6 +1986,8 @@ function decide(e){
     if(e.ch.atk.ty!=='lob'&&!los(e.x,e.y,ne.x,ne.y)){A.gx=ne.x;A.gy=ne.y;}else{A.gx=ne.x+dx/l*pref;A.gy=ne.y+dy/l*pref;}return;}
   A.mode='move';
   if(A.gx==null||Math.hypot(A.gx-e.x,A.gy-e.y)<T*.8||!A.jit||Math.random()<.04)A.jit=[(Math.random()-.5)*3*T,(Math.random()-.5)*3*T];
+  if(A.ps==='team'&&TM()&&!['heist','ball'].includes(G.mode)){const al=G.ents.filter(o=>o!==e&&o.alive&&!o.safe&&o.team===e.team).sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0];if(al&&Math.hypot(al.x-e.x,al.y-e.y)>2.5*T){A.gx=al.x+A.jit[0]*.4;A.gy=al.y+A.jit[1]*.4;return;}}
+  if(A.ps==='bush'&&!['heist','ball','bounty'].includes(G.mode)&&!(G.mode==='gem'&&e.gems>=1)){const bi=aiBush(e,A);if(bi!=null&&!(G.items.some(it=>Math.hypot(it.x-e.x,it.y-e.y)<3*T))){A.gx=(bi%m.C+.5)*T;A.gy=((bi/m.C|0)+.5)*T;return;}}
   let best=null,bd=1e9;
   for(const it of G.items){if(G.mode==='gem'&&it.ty!=='gem')continue;const d=Math.hypot(it.x-e.x,it.y-e.y);if(d<bd){bd=d;best=it;}}
   if(G.mode==='heist'){const es=G.safes[1-e.team],dx=e.x-es.x,dy=e.y-es.y,l=Math.hypot(dx,dy)||1,k=Math.min(pref,l);
@@ -1987,7 +2001,7 @@ function decide(e){
     const dir=e.team===0?1:-1,off=[[0,1.5],[-4,2.5],[4,2.5]][A.slot];
     A.gx=m.mine.x-off[1]*T*dir+A.jit[0];A.gy=m.mine.y+off[0]*T+A.jit[1];return;
   }
-  if(best&&bd<10*T){A.gx=best.x;A.gy=best.y;return;}
+  if(best&&bd<(A.loot?22:10)*T){A.gx=best.x;A.gy=best.y;return;}
   let bb=null;bd=1e9;
   for(let i=0;i<m.g.length;i++)if(m.g[i]===4&&!(m.stn&&m.stn[i])){const x=(i%m.C+.5)*T,y=((i/m.C|0)+.5)*T,d=Math.hypot(x-e.x,y-e.y);if(d<bd){bd=d;bb={i,x,y};}}
   if(bb){A.box=bb;const dx=e.x-bb.x,dy=e.y-bb.y,l=Math.hypot(dx,dy)||1,k=Math.min(pref,l);if(e.ch.atk.ty!=='lob'&&!los(e.x,e.y,bb.x,bb.y,bb.i)){A.gx=bb.x;A.gy=bb.y;}else{A.gx=bb.x+dx/l*k;A.gy=bb.y+dy/l*k;}return;}
