@@ -584,7 +584,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.3';
+const VER='1.21.4';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -4378,7 +4378,7 @@ function renderShop(){
   });
 }
 /* ---------- 슬롯머신 ---------- */
-function slotBanned(){let v=SAVE.slotBan;if(!v)return false;if(v===1||v===true){v=SAVE.slotBan=Date.now()+3*864e5;save();}if(v<=Date.now()){delete SAVE.slotBan;save();return false;}return true;}
+function slotBanned(){let v=SAVE.slotBan;if(!v)return false;if(v===1||v===true||v>Date.now()+36e5){v=SAVE.slotBan=Date.now()+36e5;save();}if(v<=Date.now()){delete SAVE.slotBan;save();return false;}return true;}
 const SLOTI=(()=>{const mk=(rows,P)=>{const c=document.createElement('canvas');c.width=rows[0].length;c.height=rows.length;const x=c.getContext('2d');rows.forEach((r,y)=>{for(let i=0;i<r.length;i++){const ch=r[i];if(ch!=='.'){x.fillStyle=P[ch];x.fillRect(i,y,1,1);}}});return c.toDataURL();};
   const seven=mk(['................','..kkkkkkkkkkkk..','..krrrrrrrrrrk..','..krhhhhhhhrrk..','..kkkkkkkkrrdk..','.........krrdk..','........krrdk...','.......krrdk....','......krrdk.....','......krrdk.....','.....krrdk......','.....krrdk......','.....krrdk......','.....kkkkk......','................','................'],{k:'#111',r:'#ef4444',h:'#fecaca',d:'#991b1b'});
   const icon=mk(['................','..kkkkkkkkkkk...','..kyyyyyyyyyk...','..kykkkkkkkyk.k.','..kykwkwkwkykkyk','..kykwkwkwkyk.k.','..kykkkkkkkyk.k.','..kyyyyyyyyykkk.','..kyokkokkoyk...','..kyyyyyyyyyk...','..kddddddddddk..','..kdkkkkkkkkdk..','..kdddddddddddk.','..kkkkkkkkkkkkk.','................','................'],{k:'#111',y:'#facc15',w:'#fff',o:'#ef4444',d:'#a16207'});
@@ -4425,7 +4425,7 @@ function slotOpen(){const ov=$('#shOv');ov.classList.add('on');let spin=false;
     SAVE.coins-=c;SAVE.gems=(SAVE.gems||0)-g;
     const res=slotSpin(c+g*SLOT_GEMV),J=slotJudge(res);
     const pc=Math.floor(c*J.m),pg=Math.floor(g*J.m);if(J.m){SAVE.coins+=pc;SAVE.gems+=pg;}if(J.tkt)invAdd('sel_l',1);
-    let ban=null;if(!J.m&&!J.tkt&&SAVE.coins<=0&&(SAVE.gems||0)<=0){ban={c:Math.round(c*.75),g:Math.round(g*.75)};SAVE.coins+=ban.c;SAVE.gems=(SAVE.gems||0)+ban.g;SAVE.slotBan=Date.now()+3*864e5;}save();
+    let ban=null;if(!J.m&&!J.tkt&&SAVE.coins<=0&&(SAVE.gems||0)<=0){ban={c:Math.round(c*.75),g:Math.round(g*.75)};SAVE.coins+=ban.c;SAVE.gems=(SAVE.gems||0)+ban.g;SAVE.slotBan=Date.now()+36e5;}save();
     spin=true;ui();$('#slMsg').textContent='두근두근...';$('#slMsg').className='sl-msg';sfx('go');
     const R=[0,1,2].map(i=>$('#slR'+i)),stopAt=[700,1150,1600],t0=performance.now();let last=0;
     const tick=now=>{const el=now-t0;if(now-last>65){last=now;R.forEach(r=>{if(r._stop)return;const d=r.children;d[2].innerHTML=d[1].innerHTML;d[1].innerHTML=d[0].innerHTML;d[0].innerHTML=reelH(slotRoll());r.classList.toggle('sh',!r.classList.contains('sh'));});}
@@ -4436,7 +4436,7 @@ function slotOpen(){const ov=$('#shOv');ov.classList.add('on');let spin=false;
       const m=$('#slMsg');m.textContent=J.msg+(got?` (${got})`:'');m.className='sl-msg '+(J.big?'big':J.m>1?'win':J.m?'even':'lose');
       sfx(J.big?'win':J.m>1?'gem':J.m?'ui':'hurt');if(J.big){$('.slot').classList.add('jack');setTimeout(()=>{const s=$('.slot');if(s)s.classList.remove('jack');},1500);}
       if(J.tkt){invBadge();setTimeout(()=>toast('전설 선택권이 가방에 들어갔어요!'),400);}ui();
-      if(ban)setTimeout(()=>{ov.classList.remove('on');ov.innerHTML='';renderShop();modal(`<h2>슬롯머신 출입 금지</h2><div style="font-size:12px;line-height:1.8">금구슬과 혜성조각을 모두 잃었어요.<br>마지막으로 건 돈의 75%를 돌려드릴게요.<br><b><img class="ico" src="${ICO.coin}"> ${ban.c} · <img class="ico" src="${ICO.gemc}"> ${ban.g}</b><br><span style="opacity:.75">대신 3일 동안 슬롯머신을 할 수 없어요.</span></div><div class="mrow"><button class="btn sm" onclick="closeModal();refreshMenu()">확인</button></div>`);},1300);};
+      if(ban)setTimeout(()=>{ov.classList.remove('on');ov.innerHTML='';renderShop();modal(`<h2>슬롯머신 출입 금지</h2><div style="font-size:12px;line-height:1.8">금구슬과 혜성조각을 모두 잃었어요.<br>마지막으로 건 돈의 75%를 돌려드릴게요.<br><b><img class="ico" src="${ICO.coin}"> ${ban.c} · <img class="ico" src="${ICO.gemc}"> ${ban.g}</b><br><span style="opacity:.75">대신 1시간 동안 슬롯머신을 할 수 없어요.</span></div><div class="mrow"><button class="btn sm" onclick="closeModal();refreshMenu()">확인</button></div>`);},1300);};
     requestAnimationFrame(tick);};
   ui();}
 /* ---------- 포켓증권 (주식) ---------- */
