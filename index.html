@@ -592,7 +592,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.13';
+const VER='1.21.14';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1399,7 +1399,9 @@ function updBall(dt){if(G.over)return;const B=G.ball,m=G.map;
     else{endMatch('ball',a>b?'win':a<b?'lose':'draw');return;}}}
   if(B.npT>0)B.npT-=dt;
   if(B.z>0||B.vz>0){B.vz-=900*dt;B.z+=B.vz*dt;if(B.z<=0){B.z=0;if(B.vz<-120){B.vz=-B.vz*.45;sfx('ui',B.x,B.y);parts(B.x,B.y+8,4,'#e7e5e4',70,.3,4);}else B.vz=0;}}
-  if(B.h){if(!B.h.alive){B.h=null;B.vx=B.vy=0;}else{B.x=B.h.x+(B.h.fx||1)*16;B.y=B.h.y+8;B.z=0;B.sk=0;return;}}
+  if(B.h){if(!B.h.alive){B.h=null;B.vx=B.vy=0;}else{const e=B.h;B.x=e.x+(e.fx||1)*16;B.y=e.y+8;B.z=0;B.sk=0;
+    if(Math.abs(e.y/T-m.R/2)<2.5){if(e.team===1&&Math.min(e.x,B.x)<T*.8){B.kk=e;B.x=Math.min(B.x,T*.4);ballGoal(1);return;}if(e.team===0&&Math.max(e.x,B.x)>m.C*T-T*.8){B.kk=e;B.x=Math.max(B.x,m.C*T-T*.4);ballGoal(0);return;}}
+    return;}}
   const r=13,sp=Math.hypot(B.vx,B.vy);
   if(sp>1){const steps=Math.max(1,Math.ceil(sp*dt/8));let hit=0;for(let k=0;k<steps;k++){
     let nx=B.x+B.vx*dt/steps,ny=B.y+B.vy*dt/steps;const cyT=m.R/2,inMouth=Math.abs(ny/T-cyT)<2.5;
@@ -1450,6 +1452,7 @@ function drawBallField(){const m=G.map,cy=m.R*T/2,MW=m.C*T;
     ctx.fillStyle='#111';ctx.fillRect(ox-3,cy-2.5*T,6,5*T);ctx.fillStyle='#f8fafc';ctx.fillRect(ox-1,cy-2.5*T,2,5*T);}}
 /* 브롤볼 HUD 연출 */
 function drawBallHUD(tx,IMQ){const cx=Math.round(W/2),B=G.ball;
+  if(B&&B.h===P&&P.alive&&G.goalT<=0&&!G.over){const pu=.75+.25*Math.sin(G.t*5);for(let i=0;i<6;i++){const w=6,al=(.34-i*.05)*pu;ctx.fillStyle=`rgba(96,165,250,${al})`;const o=i*w;ctx.fillRect(o,o,W-2*o,w);ctx.fillRect(o,H-o-w,W-2*o,w);ctx.fillRect(o,o+w,w,H-2*o-2*w);ctx.fillRect(W-o-w,o+w,w,H-2*o-2*w);}}
   // 마지막 10초 비프
   if(G.intro<=0&&!G.over&&G.goalT<=0&&G.time<=10){const sN=Math.ceil(G.time);if(G.lastSec!==sN){G.lastSec=sN;if(sN>0)sfx('count');}}
   // 화면 밖 공 방향 화살표
