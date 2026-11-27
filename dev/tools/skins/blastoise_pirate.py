@@ -87,28 +87,11 @@ def portrait():
             elif s>=.12 and 15<Hh<60:q[x,y]=ramp(CREAM,(l-.35)/.55)
             elif s<.12 and l>.6 and l<.95:q[x,y]=ramp(CREAM,(l-.35)/.55)
     P=lambda x,y,c:q.__setitem__((x,y),H(c)) if 0<=x<w and 0<=y<h else None
-    # 삼각 해적 모자 (검정 + 금테두리 + 해골)
-    hat=['....kkk...................kkk.....',
-         '...kbbbk.....kkkkkkkk.....kbbbk....',
-         '...kbbbbkkkkkbbbbbbbbkkkkkbbbbk....',
-         '....kbbbbbbbbbbbbbbbbbbbbbbbbbk....',
-         '....kbbbbbbbbbbbwwwbbbbbbbbbbk.....',
-         '.....kbbbbbbbbbwkwkwbbbbbbbbk......',
-         '.....kbbbbbbbbbbwwwbbbbbbbbbk......',
-         '....kggggggggggbwbwbgggggggggk.....',
-         '...kgyyyyyyyyyyyyyyyyyyyyyyyygk....',
-         '...kkkkkkkkkkkkkkkkkkkkkkkkkkkk....']
-    C={'k':'#0b0b10','b':'#1f1f2e','g':'#a16207','y':'#fde047','w':'#f8fafc'}
-    for j,row in enumerate(hat):
-        for i,ch in enumerate(row):
-            if ch!='.':P(i+2,j-2,C[ch])
-    # 모자 하이라이트
-    for i in range(9,16):P(i,1,'#2e2e44')
     # 안대 (왼쪽 눈) + 끈
     for y,(x0,x1) in {10:(15,19),11:(14,20),12:(14,20),13:(15,19)}.items():
         for x in range(x0,x1+1):P(x,y,'#0a0a0a')
     P(16,11,'#3f3f46');P(17,11,'#27272a')
-    for (x,y) in [(13,12),(12,12),(11,13),(10,13),(9,14),(21,10),(22,9),(23,8)]:P(x,y,'#0a0a0a')
+    for (x,y) in [(13,12),(12,12),(11,13),(10,13),(9,14),(21,10),(22,9),(23,8),(24,7),(25,6),(26,5),(27,5),(28,4)]:P(x,y,'#0a0a0a')
     # 금 귀걸이
     P(6,17,'#fde047');P(6,18,'#a16207');P(5,18,'#fde047')
     return o
