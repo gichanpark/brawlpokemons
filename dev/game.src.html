@@ -241,9 +241,10 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .rcoin{font-size:22px;color:#fde047;margin:-8px 0 14px;display:flex;gap:6px;align-items:center}
 .rroad{font-size:11px;color:#d8b4fe;margin:-6px 0 14px}
 .lb-sq{position:relative}
+.p10g{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-height:62vh;overflow:auto}.p10c{display:flex;flex-direction:column;align-items:center;gap:2px;background:#1e1b2e;border:3px solid var(--gc);padding:5px 3px;font-size:10px;text-align:center;animation:bxpop .45s steps(6) both}.p10c img{width:54px;height:54px;border:2px solid #111;image-rendering:pixelated}.p10c i{font-style:normal;background:var(--gc);color:#111;padding:0 5px;font-size:9px}.p10c b{font-weight:normal;font-size:11px}.p10c span{color:#fde047}
 .rs-h{display:flex;gap:8px;align-items:center}.rs-h img{width:48px;height:48px;border:3px solid #111;image-rendering:pixelated}
 .rs-bar{position:relative;height:20px;background:#1e1b2e;border:3px solid #111;margin:6px 0}.rs-bar i{display:block;height:100%;background:#94a3b8;box-shadow:inset 0 -4px 0 #64748b}.rs-bar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;gap:4px;text-shadow:1px 1px 0 #111}
-.rs-shop{display:grid;grid-template-columns:repeat(auto-fill,112px);gap:6px;justify-content:center}.rs-it{width:112px;height:122px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:3px;background:#1e1b2e;border:3px solid #111;padding:6px 4px;font-size:10px;text-align:center}.rs-it>b{flex:1;display:flex;align-items:center;font-weight:normal}.rs-it.big{background:#334155;border-color:#c084fc}
+.rs-shop{display:grid;grid-template-columns:repeat(auto-fill,112px);gap:6px;justify-content:center}.rs-it{width:112px;height:140px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:3px;background:#1e1b2e;border:3px solid #111;padding:6px 4px;font-size:10px;text-align:center}.rs-it>b{flex:1;display:flex;align-items:center;font-weight:normal}.rs-it.big{background:#334155;border-color:#c084fc}
 .lb-rs{background:#475569!important;box-shadow:inset 0 -6px 0 #334155,inset 0 3px 0 #cbd5e1,0 5px 0 #111!important}.rs-it.got{opacity:.6}.rs-it>img,.rs-it>span img{max-height:30px}.rs-it .btn{font-size:10px;padding:3px 6px}
 .au-pk{display:flex;flex-wrap:wrap;gap:4px;max-height:220px;overflow:auto}.au-p{display:flex;align-items:center;gap:4px;background:#1e1b2e;border:2px solid #111;padding:2px 5px 2px 2px;font-size:10px}.au-p img{width:26px;height:26px;image-rendering:pixelated}.au-p b{font-weight:normal}.au-p i{font-style:normal;opacity:.75}.au-p.no{opacity:.45}
 .lowh .lb-logo{display:none}.lowh .lb-side{gap:7px}.lowh .lb-sq{height:46px;gap:2px}.lowh .lb-sq img{height:20px}.lowh .lb-ev{height:52px!important}.lowh .lb-ev img{height:24px!important}.lowh .lb-ver{left:110px}
@@ -584,7 +585,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.5';
+const VER='1.21.6';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -4628,15 +4629,23 @@ const lbCol=n=>n<=5?'#facc15':n<=10?'#3b82f6':n<=15?'#ef4444':'#22c55e';
 const lball=(n,o)=>`<span class="lball${o&&o.on?' on':''}${o&&o.hit?' hit':''}${o&&o.dim?' dim':''}" style="--bc:${lbCol(n)}"${o&&o.k?` data-n="${n}"`:''}>${n}</span>`;
 function lLeft(ms){const m=Math.max(0,ms-Date.now())/6e4;return m>=1440?Math.floor(m/1440)+'일 '+Math.floor(m%1440/60)+'시간':m>=60?Math.floor(m/60)+'시간 '+Math.floor(m%60)+'분':Math.ceil(m)+'분';}
 /* ---------- 이벤트: 아머드 뮤츠 구출 (갑옷 조각) ---------- */
-const ASH_SHOP=[{id:'armewtwo',nm:'아머드 뮤츠',cost:1000,pk:'armewtwo'},{id:'box_poke',cost:30},{id:'box_great',cost:80},{id:'box_ultra',cost:150},{id:'box_master',cost:300},{id:'scout',cost:250},{id:'c500',nm:'금구슬 500',cost:40,c:500},{id:'g20',nm:'혜성조각 20',cost:60,g:20},{id:'sel7_l',cost:350}];
+const ASH_SHOP=[{id:'armewtwo',nm:'아머드 뮤츠',cost:1000,pk:'armewtwo'},{id:'box_poke',cost:30},{id:'box_great',cost:80},{id:'box_ultra',cost:150},{id:'box_master',cost:300},{id:'scout',cost:250},{id:'c500',nm:'금구슬 500',cost:40,c:500},{id:'g20',nm:'혜성조각 20',cost:60,g:20},{id:'sel7_l',cost:350},{id:'maxlv',cost:500},{id:'pull10',cost:400}];
 const ASH_ICO=(()=>{const rows=['....kkkk....','..kkggggkk..','.kgwwggggdk.','kgwggggggdgk','kgggkkkkggdk','kggk....kgdk','kggk....kgdk','.kgk....kdk.','..kk....kk..'],P={k:'#111',g:'#94a3b8',w:'#e2e8f0',d:'#475569'},c=document.createElement('canvas');c.width=12;c.height=9;const x=c.getContext('2d');rows.forEach((r,j)=>{for(let i=0;i<12;i++)if(r[i]!=='.'){x.fillStyle=P[r[i]];x.fillRect(i,j,1,1);}});return c.toDataURL();})();
 function rescueHTML(){const n=SAVE.ashard||0,own=ownP('armewtwo')&&(SAVE.own||[]).includes('armewtwo'),c=chOf('armewtwo');
   return `<div class="rsq"><div class="rs-h"><img class="px" src="${POR[c.id]}"><div><b>아머드 뮤츠 구출</b><br><span style="font-size:11px;opacity:.85">게임을 할 때마다 갑옷 조각을 10~50개 모아요. 1000개를 모으면 아머드 뮤츠를 구출할 수 있어요!</span></div></div>
     <div class="rs-bar"><i style="width:${Math.min(100,n/10)}%"></i><span><img class="px" style="height:12px" src="${ASH_ICO}"> ${n.toLocaleString()} / 1,000</span></div>
     <div class="rs-shop">${ASH_SHOP.map((it,i)=>{const isPk=!!it.pk,got=isPk&&own,nm=it.nm||(ITEMS[it.id]?ITEMS[it.id].nm:it.id),pic=isPk?`<img class="px" src="${SPR[c.id]}" style="max-height:44px">`:it.c?`<img class="ico" src="${ICO.coin}">`:it.g?`<img class="ico" src="${ICO.gemc}">`:itemPic(it.id);
-      return `<div class="rs-it${isPk?' big':''}${got?' got':''}">${pic}<b>${nm}</b><button class="btn sm" data-ash="${i}" ${got||n<it.cost?'disabled':''}>${got?'✓ 구출 완료':`<img class="px" style="height:12px;vertical-align:-2px" src="${ASH_ICO}"> ${it.cost}`}</button></div>`;}).join('')}</div></div>`;}
+      return `<div class="rs-it${isPk?' big':''}${got?' got':''}">${pic}<b>${nm}</b><button class="btn sm" data-ash="${i}" ${got||n<it.cost?'disabled':''}>${got?'✓ 구출 완료':`<img class="px" style="height:12px;vertical-align:-2px" src="${ASH_ICO}"> ${it.cost}`}</button>${!isPk&&n>=it.cost*2?`<button class="btn sm b2" data-ashq="${i}" style="font-size:9px;padding:2px 5px">여러 개</button>`:''}</div>`;}).join('')}</div></div>`;}
 function openRescue(){const draw=()=>{$('#mbox').innerHTML=`<h2>이벤트 · 아머드 뮤츠 구출</h2>${rescueHTML()}<div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`;$('#mbox').classList.add('wide');rescueBind(draw);};draw();$('#modal').classList.add('on');}
-function rescueBind(redraw){document.querySelectorAll('[data-ash]').forEach(b=>b.onclick=()=>{const it=ASH_SHOP[+b.dataset.ash];if((SAVE.ashard||0)<it.cost)return;
+function rescueQty(i,redraw){const it=ASH_SHOP[i],nm=it.nm||ITEMS[it.id].nm,mx=Math.floor((SAVE.ashard||0)/it.cost);let q=Math.min(10,mx);
+  const ui=()=>{$('#mbox').innerHTML=`<h2>여러 개 교환 <span class="cur">${nm}</span></h2><div style="display:flex;align-items:center;gap:8px;justify-content:center;font-size:14px;margin:10px 0"><button class="btn sm b2" data-d="-10">-10</button><button class="btn sm b2" data-d="-1">-1</button><b style="font-size:24px;min-width:60px;text-align:center">${q}</b><button class="btn sm b2" data-d="1">+1</button><button class="btn sm b2" data-d="10">+10</button><button class="btn sm b2" data-d="max">최대 ${mx}</button></div>
+    <div style="text-align:center;font-size:12px">필요한 갑옷 조각 <b>${(q*it.cost).toLocaleString()}</b> / 보유 ${(SAVE.ashard||0).toLocaleString()}</div>
+    <div class="mrow"><button class="btn sm" id="rqGo" ${q<1?'disabled':''}>${q}개 교환</button><button class="btn b2 sm" id="rqBk">돌아가기</button></div>`;
+    document.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const d=b.dataset.d;q=d==='max'?mx:clamp(q+(+d),1,mx);sfx('ui');ui();});
+    $('#rqBk').onclick=redraw;
+    $('#rqGo').onclick=()=>{if(q<1||(SAVE.ashard||0)<q*it.cost)return;SAVE.ashard-=q*it.cost;if(it.c)SAVE.coins+=it.c*q;else if(it.g)SAVE.gems=(SAVE.gems||0)+it.g*q;else invAdd(it.id,q);save();refreshMenu();invBadge();sfx('cube');toast(nm+' '+q+'개 교환 완료!'+(it.c||it.g?'':' 가방에 넣었어요'));redraw();};};
+  ui();}
+function rescueBind(redraw){document.querySelectorAll('[data-ashq]').forEach(b=>b.onclick=()=>rescueQty(+b.dataset.ashq,redraw));document.querySelectorAll('[data-ash]').forEach(b=>b.onclick=()=>{const it=ASH_SHOP[+b.dataset.ash];if((SAVE.ashard||0)<it.cost)return;
   if(it.pk){if((SAVE.own||[]).includes(it.pk))return;SAVE.ashard-=it.cost;unlockPk(it.pk);save();refreshMenu();sfx('win');const c=chOf(it.pk);
     modal(`<h2>구출 성공!</h2><div class="rws"><div class="rw newpk"><img class="sbig por2" src="${POR[c.id]}"><b>새 포켓몬!</b><span>${c.nm} · ${GRADE[c.gr].nm}</span></div></div><div class="mrow"><button class="btn sm" id="rsOk">확인</button></div>`);$('#rsOk').onclick=()=>openRescue();return;}
   SAVE.ashard-=it.cost;if(it.c)SAVE.coins+=it.c;else if(it.g)SAVE.gems=(SAVE.gems||0)+it.g;else invAdd(it.id,1);save();refreshMenu();invBadge();sfx('cube');toast((it.nm||ITEMS[it.id].nm)+' 교환 완료!'+(it.c||it.g?'':' 가방에 넣었어요'));redraw();});}
@@ -4711,6 +4720,7 @@ function boxAnim(it,R){
 /* ---------- 가방 (인벤토리) ---------- */
 const ITEMS=(()=>{const o={};[['poke','몬스터볼'],['great','슈퍼볼'],['ultra','하이퍼볼'],['master','마스터볼']].forEach(([b,n],i)=>{const it=SHOP.find(x=>x.id===b);o['box_'+b]={nm:n+' 상자 티켓',ds:'상자를 무료로 1번 열어요',ball:it.ball,box:b,o:i};});
   o.scout={nm:'스카우트 무료 티켓',ds:'스카우트를 무료로 1번 해요',ball:'luxury-ball',o:4};
+  o.maxlv={nm:'만렙 티켓',ds:'가진 포켓몬 1마리를 바로 파워 11(만렙)로 만들어요',ball:'master-ball',maxlv:1,o:4.2};o.pull10={nm:'10연속 추출 티켓',ds:'포켓몬을 10번 연속으로 뽑아요 (새 포켓몬 또는 파워 업)',ball:'luxury-ball',pull:1,o:4.4};
   ['r','s','e','m','l'].forEach((g,i)=>{o['sel7_'+g]={nm:GRADE[g].nm+' 7일 선택권',ds:GRADE[g].nm+' 포켓몬 1마리를 골라 7일 동안 사용',g,days:7,o:5+i};o['sel_'+g]={nm:GRADE[g].nm+' 선택권',ds:GRADE[g].nm+' 포켓몬 1마리를 골라 영구히 데려와요',g,o:10+i};});
   o.sel7_u={nm:'궁극 7일 선택권',ds:'모든 포켓몬(스페셜·크로마틱 제외) 중 1마리를 골라 7일 동안 사용',g:'u',days:7,o:15.5};o.sel_u={nm:'궁극 선택권',ds:'모든 포켓몬(스페셜·크로마틱 제외) 중 1마리를 골라 영구히 데려와요',g:'u',o:15.6};
   o.fr_star={nm:'트로피 성좌 프레임',ds:'시즌 1등 보상 프레임 (받으면 바로 열림)',fr:'star',o:20};
@@ -4722,7 +4732,7 @@ for(const c of CH){if(SPRS[c.k])ITEMS['sk_'+c.k+'_s']={nm:'이로치 '+c.nm+' �
 const ITEMK=Object.keys(ITEMS).filter(k=>!ITEMS[k].skin&&!ITEMS[k].pass).sort((a,b)=>ITEMS[a].o-ITEMS[b].o||a.localeCompare(b));
 const invN=k=>(SAVE.inv&&SAVE.inv[k])||0;
 function invAdd(k,n){if(!ITEMS[k])return;if(ITEMS[k].pass){if(n>0){passS().paid=1;setTimeout(()=>toast('조롤패스 프리미엄이 열렸어요!'),300);passBadge();}return;}if(ITEMS[k].skin){if(n>0){const [pk,id]=ITEMS[k].skin;if(!hasSkin(pk,id)){if(id==='s'){SAVE.shy=SAVE.shy||[];SAVE.shy.push(pk);}else{SAVE.skn=SAVE.skn||[];SAVE.skn.push(pk+'_'+id);}setTimeout(()=>toast('새 스킨 「'+skinNm(pk,id)+'」을 얻었어요! 포켓몬 선택창에서 바꿀 수 있어요'),300);}}return;}if(ITEMS[k].fr){if(n>0){SAVE.frOwn=SAVE.frOwn||[];if(!SAVE.frOwn.includes(ITEMS[k].fr)){SAVE.frOwn.push(ITEMS[k].fr);setTimeout(()=>toast('새 프레임 「'+ITEMS[k].nm.replace(' 프레임','')+'」를 얻었어요! 프로필에서 바꿀 수 있어요'),300);}}return;}if(!SAVE.inv)SAVE.inv={};SAVE.inv[k]=Math.max(0,(SAVE.inv[k]||0)+(n||1));if(!SAVE.inv[k])delete SAVE.inv[k];}
-function itemPic(k,sm){const I=ITEMS[k];if(!I)return '';if(I.skin){const [pk,id]=I.skin,src=id==='s'?SPRS[pk]:SKINX[pk+'_'+id].spr;return `<img class="${sm?'ico':''} px" style="${sm?'':'max-height:48px'}" src="${src}">`;}if(I.fr)return `<span style="display:inline-flex;vertical-align:middle;margin:${sm?'6px 4px 0':'14px 6px 4px'}">${avaHTML(sm?16:34,null,I.fr)}</span>`;if(I.g)return `<span class="tkt${sm?' sm':''}${I.g==='u'?' ult':''}" style="--gc:${GRX(I.g).c}">${I.days?I.days+'일':'영구'}</span>`;return `<img class="${sm?'ico':''}" src="${BALL[I.ball]}">`;}
+function itemPic(k,sm){const I=ITEMS[k];if(!I)return '';if(I.skin){const [pk,id]=I.skin,src=id==='s'?SPRS[pk]:SKINX[pk+'_'+id].spr;return `<img class="${sm?'ico':''} px" style="${sm?'':'max-height:48px'}" src="${src}">`;}if(I.fr)return `<span style="display:inline-flex;vertical-align:middle;margin:${sm?'6px 4px 0':'14px 6px 4px'}">${avaHTML(sm?16:34,null,I.fr)}</span>`;if(I.maxlv||I.pull)return `<span class="tkt${sm?' sm':''}" style="--gc:${I.maxlv?'#facc15':'#22d3ee'}">${I.maxlv?'MAX':'×10'}</span>`;if(I.g)return `<span class="tkt${sm?' sm':''}${I.g==='u'?' ult':''}" style="--gc:${GRX(I.g).c}">${I.days?I.days+'일':'영구'}</span>`;return `<img class="${sm?'ico':''}" src="${BALL[I.ball]}">`;}
 function invBadge(){const n=ITEMK.reduce((a,k)=>a+invN(k),0),b=$('#invBadge');if(b){b.textContent=n;b.style.display=n?'':'none';}const ic=$('#invIco');if(ic&&!ic.src)ic.src=BALL['premier-ball'];}
 function openInv(){
   const L=ITEMK.filter(k=>invN(k)>0);
@@ -4752,7 +4762,27 @@ function sellItem(k){const I=ITEMS[k],P=sellP(k),n=invN(k);if(!I||!P||n<1)return
 function useItem(k){const I=ITEMS[k];if(!I||invN(k)<1)return;
   if(I.box){invAdd(k,-1);const it=SHOP.find(x=>x.id===I.box);closeModal();const R=openBox(I.box);save();invBadge();boxAnim(it,R);return;}
   if(k==='scout'){invAdd(k,-1);save();invBadge();closeModal();scoutAnim();return;}
+  if(I.maxlv){maxLvPick(k);return;}
+  if(I.pull){pull10(k);return;}
   if(I.g)selPick(k);}
+/* 만렙 티켓 · 10연속 추출 티켓 */
+function maxLvPick(k){const L=sortCH(CH.filter(c=>ownP(c.k)&&(SAVE.own||[]).includes(c.k)&&lv(c.k)<11));
+  if(!L.length){modal(`<h2>${ITEMS[k].nm}</h2><div style="font-size:12px;padding:10px">이미 모든 포켓몬이 만렙(파워 11)이에요!</div><div class="mrow"><button class="btn b2 sm" id="mlBk">돌아가기</button></div>`);$('#mlBk').onclick=openInv;return;}
+  let sel=null;
+  modal(`<h2>${ITEMS[k].nm} <span class="cur">파워 11로 만들 포켓몬을 골라 주세요</span></h2><div class="selg">${L.map(c=>`<div class="selc" data-k="${c.k}"><img src="${POR[c.id]}"><b>${c.nm}</b><i>파워 ${lv(c.k)}</i></div>`).join('')}</div>
+    <div class="mrow"><button class="btn sm" id="mlOk" disabled>선택하기</button><button class="btn b2 sm" id="mlBk">돌아가기</button></div>`);
+  document.querySelectorAll('.selc').forEach(el=>el.onclick=()=>{sel=el.dataset.k;document.querySelectorAll('.selc').forEach(x=>x.classList.toggle('on',x===el));$('#mlOk').disabled=false;$('#mlOk').textContent='✓ '+chOf(sel).nm+' 만렙으로!';sfx('ui');});
+  $('#mlBk').onclick=openInv;
+  $('#mlOk').onclick=()=>{if(!sel||invN(k)<1)return;invAdd(k,-1);const c=chOf(sel),l0=lv(sel);SAVE.lv[sel]=11;save();invBadge();refreshMenu();sfx('win');
+    modal(`<h2>${c.nm} 만렙!</h2><div class="rws"><div class="rw newpk"><img class="sbig por2" src="${POR[c.id]}"><b>파워 ${l0} → 11</b><span>${c.nm}</span></div></div><div class="mrow"><button class="btn sm" id="mlDone">확인</button></div>`);$('#mlDone').onclick=openInv;};}
+function pull10(k){if(invN(k)<1)return;invAdd(k,-1);const w={r:40,s:30,e:18,m:9,l:3},pool=CH.filter(c=>!LTD(c.gr)&&!c.paid),res=[];
+  for(let i=0;i<10;i++){const tot=pool.reduce((a,c)=>a+w[c.gr],0);let x=Math.random()*tot,c=pool[0];for(const p of pool){x-=w[p.gr];if(x<=0){c=p;break;}}res.push(givePk(c));}
+  save();invBadge();refreshMenu();sfx('win');const GO={l:4,m:3,e:2,s:1,r:0};
+  const cells=res.map((r,i)=>`<div class="p10c" style="--gc:${GRADE[r.c.gr].c};animation-delay:${i*.08}s"><img class="px" src="${POR[r.c.id]}"><i>${GRADE[r.c.gr].nm}</i><b>${r.c.nm}</b><span>${r.neu?'★ 새 포켓몬!':r.pow?'파워 '+r.pow:'금구슬 +'+r.coin}</span></div>`);
+  const best=res.slice().sort((a,b)=>GO[b.c.gr]-GO[a.c.gr])[0];
+  modal(`<h2>10연속 추출! <span class="cur">최고 등급: ${GRADE[best.c.gr].nm}</span></h2><div class="p10g">${cells.join('')}</div><div class="mrow"><button class="btn sm" id="p10Ok">확인</button></div>`);
+  $('#mbox').classList.add('wide');$('#p10Ok').onclick=openInv;}
+
 function selPick(k){const I=ITEMS[k],L=sortCH(CH.filter(c=>(I.g==='u'?!LTD(c.gr):c.gr===I.g)&&!ownP(c.k)&&!c.paid));
   if(!L.length){modal(`<h2>${I.nm}</h2><div style="font-size:12px;padding:10px">${I.g==='u'?'받을 수 있는':GRX(I.g).nm} 포켓몬을 이미 모두 가지고 있어요!</div><div class="mrow"><button class="btn b2 sm" id="spBack">돌아가기</button></div>`);$('#spBack').onclick=openInv;return;}
   let sel=null;
