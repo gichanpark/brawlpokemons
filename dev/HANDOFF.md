@@ -210,3 +210,9 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - flushSave 이름 충돌 수정: 선물·로또용은 flushSaveNow (pagehide keepalive flushSave 복구)
 - 조사(11/27): 회원가입 세이브 이어받기로 만든 복제 계정 군 — yunsung1107→jackpot1~4, suki→suuk*/sexy*/riri(10개), dicksuck→dicksuck2~6. 대부분 정지됨. 선물·판돈으로 본계정에 옮긴 흔적 없음
 - 서버 세이브 검증(pb_save 급증 감지/제한, pb_flag)은 자동 승인 거부로 미적용 — 사용자 확인 필요
+
+## v1.20.28 (서버 저장 검증)
+- pb_save: 관리자 제외. 새 계정 첫 저장이 다른 계정 데이터처럼 보이면(금구슬>3000, 혜성조각>100, 포켓몬>5, 트로피>80, 스킨 보유, acct 다름) 빈 세이브로 초기화 → 'reset' 반환(클라 스타팅 선택) + pb_flag 'clone_reset'
+  - 기존 계정: 저장 간 증가량 허용치 = 우편 수령(claimed_at 이후)+지급 + 6000+1500×분 + 기존 잔액×3(슬롯). 넘으면 pb_flag 'jump', 허용치+30만(혜성 +3만) 넘으면 깎고 'fix' 반환. 포켓몬 +8(+우편) 넘게 늘면 기록
+- pb_signup: 같은 IP(x-forwarded-for, pb_req_ip) 하루 3계정 제한 → 'too_many', signup_ip 저장
+- pb_mail.claimed_at, pb_users.saved_at/signup_ip, pb_flag 테이블, pb_admin_flags(의심 기록 + 같은 트로피 해시 묶음) → 관리자 메뉴 '의심 기록'
