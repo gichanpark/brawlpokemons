@@ -616,7 +616,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.31';
+const VER='1.21.32';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -4761,9 +4761,10 @@ function lLeft(ms){const m=Math.max(0,ms-Date.now())/6e4;return m>=1440?Math.flo
 /* ---------- 이벤트: 아머드 뮤츠 구출 (갑옷 조각) ---------- */
 const ASH_SHOP=[{id:'armewtwo',nm:'아머드 뮤츠',cost:1000,pk:'armewtwo'},{id:'box_poke',cost:30},{id:'box_great',cost:80},{id:'box_ultra',cost:150},{id:'box_master',cost:300},{id:'scout',cost:250},{id:'c500',nm:'금구슬 500',cost:40,c:500},{id:'g20',nm:'혜성조각 20',cost:60,g:20},{id:'sel7_l',cost:350},{id:'maxlv',cost:700},{id:'pull10',cost:1500}];
 const ASH_ICO=(()=>{const rows=['....kkkk....','..kkggggkk..','.kgwwggggdk.','kgwggggggdgk','kgggkkkkggdk','kggk....kgdk','kggk....kgdk','.kgk....kdk.','..kk....kk..'],P={k:'#111',g:'#94a3b8',w:'#e2e8f0',d:'#475569'},c=document.createElement('canvas');c.width=12;c.height=9;const x=c.getContext('2d');rows.forEach((r,j)=>{for(let i=0;i<12;i++)if(r[i]!=='.'){x.fillStyle=P[r[i]];x.fillRect(i,j,1,1);}});return c.toDataURL();})();
-/* 아머드 뮤츠 구출 이벤트 기간: 2026-11-30 23:59 (한국 시간)까지 */
-const RESCUE_END=Date.parse('2026-11-30T23:59:59+09:00');const rescueOn=()=>Date.now()<RESCUE_END;
-function rescueLeft(){const t=Math.max(0,RESCUE_END-Date.now()),d=Math.floor(t/864e5),h=Math.floor(t%864e5/36e5),m=Math.floor(t%36e5/6e4);return d?`${d}일 ${h}시간`:h?`${h}시간 ${m}분`:`${m}분`;}
+/* 아머드 뮤츠 구출 이벤트 기간: 2026-11-30 23:59 (한국 시간)까지 · 서버 시각(pb_ping now) 기준 */
+var SRVOFF=0,SRVOK=0;function srvNow(){return Date.now()+SRVOFF;}
+const RESCUE_END=Date.parse('2026-11-30T23:59:59+09:00');const rescueOn=()=>srvNow()<RESCUE_END;
+function rescueLeft(){const t=Math.max(0,RESCUE_END-srvNow()),d=Math.floor(t/864e5),h=Math.floor(t%864e5/36e5),m=Math.floor(t%36e5/6e4);return d?`${d}일 ${h}시간`:h?`${h}시간 ${m}분`:`${m}분`;}
 function rescueHTML(){const n=SAVE.ashard||0,own=ownP('armewtwo')&&(SAVE.own||[]).includes('armewtwo'),c=chOf('armewtwo');
   return `<div class="rsq"><div class="rs-h"><img class="px" src="${POR[c.id]}"><div><b>아머드 뮤츠 구출</b><br><span style="font-size:11px;opacity:.85">게임을 할 때마다 갑옷 조각을 10~50개 모아요. 1000개를 모으면 아머드 뮤츠를 구출할 수 있어요!</span><br><b style="font-size:11px;color:#fca5a5">11월 30일(월) 밤 12시에 끝나요 · 남은 시간 ${rescueLeft()} · 끝나면 남은 갑옷 조각은 못 써요</b></div></div>
     <div class="rs-bar"><i style="width:${Math.min(100,n/10)}%"></i><span><img class="px" style="height:12px" src="${ASH_ICO}"> ${n.toLocaleString()} / 1,000</span></div>
@@ -5184,7 +5185,7 @@ function banKick(r){if(window._banned)return;window._banned=1;try{if(G){G.over=t
   try{showScr('login');}catch(e){}
   modal(`<h2>이용이 정지된 계정이에요</h2><div style="font-size:12px;margin-bottom:8px">${r.until?`정지 해제까지 <b>${banLeft(r.until)}</b> 남았어요`:'<b>영구 정지</b>'}</div>${r.msg?`<div class="amail" style="white-space:pre-wrap;line-height:1.7"><b>관리자의 편지</b><br>${esc(r.msg)}</div>`:''}<div class="mrow"><button class="btn sm" onclick="location.reload()">확인</button></div>`);
   $('#modal').onclick=null;}
-async function pingNow(){if(!ACC.token)return;let r;try{r=await rpc('pb_ping',{p_token:ACC.token,p_ver:VER});}catch(e){return;}if(!r)return;
+async function pingNow(){if(!ACC.token)return;let r;try{r=await rpc('pb_ping',{p_token:ACC.token,p_ver:VER});}catch(e){return;}if(!r)return;if(r.now){SRVOFF=r.now-Date.now();if(!SRVOK){SRVOK=1;try{refreshMenu();}catch(e){}}}
   if(!r.ok){if(r.banned)banKick(r);return;}
   verCheck(r.ver);
   const bd=$('#frBadge');if(bd){bd.textContent=r.freq;bd.style.display=r.freq?'':'none';}
