@@ -578,7 +578,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.20.25';
+const VER='1.20.26';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -5015,8 +5015,8 @@ function openProfile(tab){
 }
 function banDur(h){return h%24===0?h/24+'일':h+'시간';}
 function banLeft(ms){const m=Math.max(0,ms-Date.now())/6e4;return m>=1440?Math.ceil(m/1440)+'일':m>=60?Math.ceil(m/60)+'시간':Math.ceil(m)+'분';}
-function banForm(u){
-  modal(`<h2>계정 정지 · ${esc(u)}</h2>
+function banForm(u){const many=Array.isArray(u);if(many&&u.length===1){u=u[0];return banForm(u);}
+  modal(`<h2>계정 정지 · ${many?u.length+'명':esc(u)}</h2>${many?`<div style="font-size:11px;opacity:.8;margin-bottom:6px;max-height:60px;overflow:auto">${u.map(esc).join(', ')}</div>`:''}
   <div class="amail"><div class="arow" style="align-items:flex-start"><span>편지</span><textarea id="bnMsg" class="minput sm2" maxlength="300" rows="4" placeholder="정지된 회원이 로그인할 때 보게 될 내용 (비워도 돼요)" style="flex:1;resize:none"></textarea></div>
   <div class="arow"><span>기간</span><div id="bnDur" style="display:flex;gap:4px;flex-wrap:wrap">${[[1,'1시간'],[24,'1일'],[72,'3일'],[168,'7일'],[720,'30일'],[0,'영구']].map(([h,t])=>`<button class="upbtn" data-h="${h}" data-t="${t}" style="${h===24?'background:#dc2626;color:#fff':''}">${h===24?'✓ ':''}${t}</button>`).join('')}<input id="bnH" class="minput sm2" type="number" min="1" placeholder="직접(시간)" style="width:90px"></div></div>
   <div class="arow"><button class="btn sm" id="bnGo" style="background:#dc2626;color:#fff">정지하기</button><button class="btn b2 sm" id="bnBack">돌아가기</button><span id="bnRes" style="font-size:11px"></span></div></div>
@@ -5024,12 +5024,12 @@ function banForm(u){
   let hrs=24;const durUI=()=>document.querySelectorAll('#bnDur [data-h]').forEach(b=>{const on=+b.dataset.h===hrs&&!$('#bnH').value;b.style.background=on?'#dc2626':'';b.style.color=on?'#fff':'';b.textContent=(on?'✓ ':'')+b.dataset.t;});
   document.querySelectorAll('#bnDur [data-h]').forEach(b=>b.onclick=()=>{hrs=+b.dataset.h;$('#bnH').value='';durUI();});
   $('#bnH').oninput=()=>{const v=Math.floor(+$('#bnH').value||0);if(v>0)hrs=v;durUI();};
-  $('#bnBack').onclick=()=>adminPanel(u);
+  $('#bnBack').onclick=()=>adminPanel(many?null:u);
   $('#bnGo').onclick=async()=>{
-    if(!$('#bnGo').dataset.ok){$('#bnGo').dataset.ok=1;$('#bnGo').textContent=(hrs?banDur(hrs)+' ':'영구 ')+'정지할까요?';return;}
+    if(!$('#bnGo').dataset.ok){$('#bnGo').dataset.ok=1;$('#bnGo').textContent=(many?u.length+'명 ':'')+(hrs?banDur(hrs)+' ':'영구 ')+'정지할까요?';return;}
     $('#bnGo').disabled=true;$('#bnRes').textContent='처리 중...';
-    try{const q=await rpc('pb_admin_ban',{p_token:ACC.token,p_user:u,p_msg:$('#bnMsg').value,p_hours:hrs});
-      if(q.ok){adminPanel(u);return;}$('#bnRes').textContent=({protected:'보호된 계정이에요',no_user:'없는 아이디예요'}[q.err]||'실패했어요');}catch(e){$('#bnRes').textContent='연결 실패';}
+    try{const q=many?await rpc('pb_admin_ban_many',{p_token:ACC.token,p_users:u,p_msg:$('#bnMsg').value,p_hours:hrs}):await rpc('pb_admin_ban',{p_token:ACC.token,p_user:u,p_msg:$('#bnMsg').value,p_hours:hrs});
+      if(q.ok){if(many)toast(q.n+'명을 정지했어요 (관리자는 제외)');adminPanel(many?null:u);return;}$('#bnRes').textContent=({protected:'보호된 계정이에요',no_user:'없는 아이디예요'}[q.err]||'실패했어요');}catch(e){$('#bnRes').textContent='연결 실패';}
     $('#bnGo').disabled=false;};
 }
 function takeForm(x){
@@ -5068,7 +5068,7 @@ async function adminPanel(target){
   if(!r.ok){modal(`<h2>관리자 메뉴</h2><div style="font-size:11px">권한이 없거나 연결에 실패했어요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
   const opts=`<option value="*">전체 회원 (${r.users.filter(x=>!x.banned).length}명)</option>`+r.users.map(x=>`<option value="${x.u}"${target===x.u?' selected':''}>${x.u}</option>`).join('');
   const rows=r.users.map(x=>{const t=Object.values((x.save&&x.save.tro)||{}).reduce((a,b)=>a+b,0),c=(x.save&&x.save.coins)||0;
-    return `<tr><td>${x.u}${x.save&&x.save.nick?` <span style="opacity:.7">(${esc(x.save.nick)})</span>`:''}${x.admin?' <span class="adm">관리자</span>':''}${x.banned?` <span class="ban">정지${x.until?' · '+banLeft(x.until)+' 남음':' · 영구'}</span>`:''}</td><td>${t}</td><td>${c}</td><td>${(x.save&&x.save.gems)||0}</td><td class="acts">
+    return `<tr><td><input type="checkbox" class="adk" value="${x.u}" ${x.admin||x.u==='outislove'?'disabled':''}></td><td>${x.u}${x.save&&x.save.nick?` <span style="opacity:.7">(${esc(x.save.nick)})</span>`:''}${x.admin?' <span class="adm">관리자</span>':''}${x.banned?` <span class="ban">정지${x.until?' · '+banLeft(x.until)+' 남음':' · 영구'}</span>`:''}</td><td>${t}</td><td>${c}</td><td>${(x.save&&x.save.gems)||0}</td><td class="acts">
     <button data-a="mailto" data-u="${x.u}">우편</button><button data-a="take" data-u="${x.u}" class="del">몰수</button><button data-a="${x.banned?'unban':'ban'}" data-u="${x.u}">${x.banned?'정지 해제':'정지'}</button>
     <button data-a="${x.admin?'unadmin':'admin'}" data-u="${x.u}">${x.admin?'관리자 해제':'관리자 지정'}</button><button data-a="delete" data-u="${x.u}" class="del">삭제</button></td></tr>`;}).join('');
   modal(`<h2>관리자 메뉴 · 회원 ${r.users.length}명</h2>
@@ -5088,10 +5088,16 @@ async function adminPanel(target){
     <div class="arow"><span>메시지</span><input id="amMsg" class="minput sm2" maxlength="200" placeholder="예) 점검 보상입니다!" style="flex:1"></div>
     <div class="arow"><button class="btn sm" id="amSend">보내기</button><span id="amRes" style="font-size:11px"></span></div></div>
   <div class="amail"><div class="arow"><b>보낸 전체우편</b><button class="btn sm b2" id="bcLoad">불러오기</button><span style="font-size:11px;opacity:.7">회수하면 안 받은 우편은 사라지고, 이미 받은 사람에게선 받은 만큼 가져가요 (쓴 아이템은 상점가만큼 재화로)</span></div><div id="bcList"></div></div>
-  <table class="adt"><tr><th>아이디</th><th>트로피</th><th>금구슬</th><th>혜성조각</th><th>관리</th></tr>${rows}</table>
+  <div class="arow" style="margin:6px 0"><label style="font-size:11px"><input type="checkbox" id="adkAll"> 전체 선택</label><button class="btn sm" id="adBan" style="background:#dc2626;color:#fff" disabled>선택 정지</button><button class="btn sm b2" id="adUnban" disabled>선택 정지 해제</button><span id="adkN" style="font-size:11px"></span></div>
+  <table class="adt"><tr><th></th><th>아이디</th><th>트로피</th><th>금구슬</th><th>혜성조각</th><th>관리</th></tr>${rows}</table>
   <div style="font-size:11px;opacity:.7;margin-top:6px">삭제는 두 번 눌러야 실행돼요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);
   $('#mbox').classList.add('wide','afull');
   {const b=$('#bcLoad');if(b)b.onclick=()=>bcList(target);}
+  {const sel=()=>[...document.querySelectorAll('.adk:checked')].map(i=>i.value),up=()=>{const n=sel().length;$('#adkN').textContent=n?n+'명 선택':'';$('#adBan').disabled=!n;$('#adUnban').disabled=!n;$('#adBan').textContent=n?`✓ 선택 정지 (${n})`:'선택 정지';};
+   document.querySelectorAll('.adk').forEach(i=>i.onchange=up);$('#adkAll').onchange=()=>{document.querySelectorAll('.adk:not(:disabled)').forEach(i=>i.checked=$('#adkAll').checked);up();};
+   $('#adBan').onclick=()=>banForm(sel());
+   $('#adUnban').onclick=async()=>{const L=sel();if(!L.length)return;const b=$('#adUnban');if(!b.dataset.ok){b.dataset.ok=1;b.textContent=L.length+'명 정지 해제할까요?';return;}
+     try{const q=await rpc('pb_admin_unban_many',{p_token:ACC.token,p_users:L});if(q.ok){toast(q.n+'명 정지를 풀었어요');adminPanel(target);return;}}catch(e){}b.textContent='실패';};}
   {let gsel='all';const flt=()=>{const q=$('#amQ').value.trim();document.querySelectorAll('#amPk .apk').forEach(l=>{l.style.display=(gsel==='all'||l.dataset.g===gsel)&&(!q||l.dataset.n.includes(q))?'':'none';});};
    const cnt=()=>{$('#amCnt').textContent=document.querySelectorAll('#amPk input:checked').length+'마리 선택';};
    $('#amQ').oninput=flt;document.querySelectorAll('.apk-gr button').forEach(b=>b.onclick=()=>{gsel=b.dataset.g;document.querySelectorAll('.apk-gr button').forEach(x=>x.classList.toggle('on',x===b));flt();});
