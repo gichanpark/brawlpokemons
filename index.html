@@ -240,7 +240,16 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .card .lvb{position:absolute;top:46px;right:3px;font-size:11px;color:#f5d0fe;background:#111;padding:0 2px}
 .rcoin{font-size:22px;color:#fde047;margin:-8px 0 14px;display:flex;gap:6px;align-items:center}
 .rroad{font-size:11px;color:#d8b4fe;margin:-6px 0 14px}
-.lb-sq{position:relative}.sqb{position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;border:2px solid #111;font-style:normal;font-size:11px;min-width:18px;height:18px;line-height:14px;text-align:center}
+.lb-sq{position:relative}
+.lowh .lb-logo{display:none}.lowh .lb-ver{left:110px}
+.lb-ev{height:76px!important;background:#facc15!important;color:#111!important;box-shadow:inset 0 -6px 0 #ca8a04,inset 0 3px 0 #fef9c3,0 5px 0 #111!important;font-weight:bold;animation:lbev 1.6s steps(2) infinite}.lb-ev img{height:34px!important}
+@keyframes lbev{50%{box-shadow:inset 0 -6px 0 #ca8a04,inset 0 3px 0 #fff,0 5px 0 #111,0 0 0 3px #fde047}}
+.lball{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:var(--bc);color:#111;font-size:13px;font-weight:bold;border:3px solid #111;clip-path:polygon(25% 0,75% 0,100% 25%,100% 75%,75% 100%,25% 100%,0 75%,0 25%);box-shadow:inset 3px 3px 0 rgba(255,255,255,.55),inset -3px -3px 0 rgba(0,0,0,.25);margin:2px;cursor:default;flex:none}
+.lt-grid .lball{cursor:pointer;opacity:.45}.lt-grid .lball.on{opacity:1;border-color:#fff;transform:translateY(-4px) scale(1.12)}
+.lball.dim{opacity:.35}.lball.hit{border-color:#fff}
+.lt-grid{display:grid;grid-template-columns:repeat(10,auto);justify-content:start;gap:2px}
+.lt-pot{display:flex;flex-direction:column;align-items:center;background:#1e1b2e;border:3px solid #111;padding:8px;gap:2px}.lt-pot b{font-size:30px;color:#fde047;text-shadow:3px 3px 0 #111}.lt-pot span{font-size:11px;opacity:.85}
+.lt-sec{border-top:2px solid #3f3f46;margin-top:8px;padding-top:6px;font-size:12px}.lt-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}.lt-row>span{font-size:11px;margin-left:6px}.sqb{position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;border:2px solid #111;font-style:normal;font-size:11px;min-width:18px;height:18px;line-height:14px;text-align:center}
 .jp{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px}
 .jpc{flex:0 0 86px;display:flex;flex-direction:column;gap:5px}
 .jpn{text-align:center;font-size:12px;background:#111;border:2px solid #3f3f46;padding:2px 0}.jpc.sp .jpn{background:#7e22ce;border-color:#facc15;color:#fde047}.jpc.jnow .jpn{outline:2px solid #fde047}
@@ -483,6 +492,7 @@ select.minput{width:auto}
   <div class="lb-side">
     <button class="lb-sq" id="bBrawlers"><img id="lbSqImg" class="px" alt=""><span>포켓몬</span></button>
     <button class="lb-sq" id="bShop" style="background:#f97316;box-shadow:inset 0 -6px 0 #c2410c,inset 0 3px 0 #fed7aa,0 5px 0 #111"><img class="ico px big" data-ico="gemc" alt=""><span>상점</span></button>
+    <button class="lb-sq lb-ev" id="bEvent"><img class="ico px big" data-ico="lotto" alt=""><span>이벤트</span><i class="sqb" style="background:#facc15;color:#111">로또</i></button>
   </div>
   <div class="lb-rank" id="lbRank"><h4><img class="ico px" data-ico="trophy" alt="">트로피 랭킹</h4><div class="ev" id="rkEv">11/30까지 1위 · 특별 프레임 + 한정 포켓몬!</div><div class="rk-hide" id="rkHide" style="display:none">11월 30일 1위 공개!!</div><div class="rl" id="rkList">불러오는 중...</div><div class="mine" id="rkMine"></div></div>
   <div class="lb-ally" id="ally0" data-i="0"></div><div class="lb-ally" id="ally1" data-i="1"></div>
@@ -568,7 +578,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.20.24';
+const VER='1.20.25';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -949,7 +959,7 @@ let W=0,H=0,DPR=1;
 let ROT=false;const APP=document.getElementById('app');
 function resize(){DPR=Math.min(2,window.devicePixelRatio||1);const vw=innerWidth,vh=innerHeight;ROT=vh>vw;
   if(ROT){W=vh;H=vw;APP.style.width=W+'px';APP.style.height=H+'px';APP.style.transform='translateX('+vw+'px) rotate(90deg)';}
-  else{W=vw;H=vh;APP.style.width=W+'px';APP.style.height=H+'px';APP.style.transform='none';}APP.classList.toggle('short',H<=350);APP.classList.toggle('vshort',H<=340);
+  else{W=vw;H=vh;APP.style.width=W+'px';APP.style.height=H+'px';APP.style.transform='none';}APP.classList.toggle('short',H<=350);APP.classList.toggle('lowh',H<=470);APP.classList.toggle('vshort',H<=340);
   cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);}
 function pt(ev){return ROT?{x:ev.clientY,y:innerWidth-ev.clientX}:{x:ev.clientX,y:ev.clientY};}
 addEventListener('resize',resize);resize();
@@ -3029,6 +3039,7 @@ function drawAim(){
 }
 /* ---------- 로비 / 로딩 / 매치메이킹 ---------- */
 const ICON_ROWS={
+ lotto:['...kkkkk...','..kyywyyk..','.kywwyyyyk.','kyykkkkkyyk','kyyyyykkyyk','kyyyykkyyyk','kyyyykyyyyk','.kyyykyyyk.','..kyyyyyk..','...kkkkk...'],
  pass:['kkkkkkkkkkkk','kbbbbbbbbbbk','kbwwwbkbbyyk','kbwkkwkbyyyk','kbwwwbkbbyyk','kbwbbbkbbybk','kbwbbbkbbbbk','kbbbbbbbbbbk','kkkkkkkkkkkk'],
  mail:['kkkkkkkkkk','kwkwwwwkwk','kwwkwwkwwk','kwwwkkwwwk','kwwwwwwwwk','kwwwwwwwwk','kkkkkkkkkk'],
  trophy:['.kkkkkkk.','kyyyywyyk','kyyyywyyk','kyyyyyyyk','.kyyyyyk.','..kyyyk..','...kyk...','...kyk...','..kkkkk..','..kyyyk..','..kkkkk..'],
@@ -3194,6 +3205,7 @@ function pickAlly(i,fromLobby){const own=sortCH(CH.filter(c=>owns(c.k)&&c.k!==SA
   $('#alBack').onclick=()=>fromLobby?closeModal():$('#bMode').onclick();
   $('#alOk').onclick=()=>{if(sel==null)return;SAVE.ally=(SAVE.ally||[null,null]).slice(0,2);while(SAVE.ally.length<2)SAVE.ally.push(null);SAVE.ally[i]=sel||null;if(sel&&SAVE.ally[1-i]===sel)SAVE.ally[1-i]=null;save();refreshMenu();sfx('found');if(fromLobby)closeModal();else $('#bMode').onclick();};}
 $('#bRoad').onclick=()=>openPass();
+$('#bEvent').onclick=()=>{sfx('ui');openLotto();};
 
 /* 매치메이킹 + VS 화면 */
 function pickRoster(){
@@ -4572,6 +4584,36 @@ const BXFX={c:null,x:null,P:[],RG:[],on:false,im:{},
     x.globalAlpha=1;requestAnimationFrame(t=>this.loop(t));},
   stop(){this.on=false;this.P.length=0;this.RG.length=0;this.c=null;}};
 const RAINBOW=['#f87171','#fb923c','#fde047','#4ade80','#60a5fa','#c084fc','#f9a8d4'];
+/* ---------- 이벤트: 조롤 로또 ---------- */
+const LOTTO_PRICE=5000;
+const lbCol=n=>n<=5?'#facc15':n<=10?'#3b82f6':n<=15?'#ef4444':'#22c55e';
+const lball=(n,o)=>`<span class="lball${o&&o.on?' on':''}${o&&o.hit?' hit':''}${o&&o.dim?' dim':''}" style="--bc:${lbCol(n)}"${o&&o.k?` data-n="${n}"`:''}>${n}</span>`;
+function lLeft(ms){const m=Math.max(0,ms-Date.now())/6e4;return m>=1440?Math.floor(m/1440)+'일 '+Math.floor(m%1440/60)+'시간':m>=60?Math.floor(m/60)+'시간 '+Math.floor(m%60)+'분':Math.ceil(m)+'분';}
+async function openLotto(){if(!ACC.token){modal(`<h2>조롤 로또</h2><div style="font-size:12px">로그인해야 참여할 수 있어요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
+  modal(`<h2>조롤 로또</h2><div style="font-size:11px">불러오는 중...</div>`);let r;try{r=await rpc('pb_lotto_info',{p_token:ACC.token});}catch(e){}
+  if(!r||!r.ok){modal(`<h2>조롤 로또</h2><div style="font-size:11px">불러오기 실패</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
+  let pick=[];const L=r.last;
+  const lastHTML=L?`<div class="lt-sec"><b>${L.id}회 당첨 번호</b> <span class="lt-row">${(L.nums||[]).map(n=>lball(n)).join('')}</span><div style="font-size:11px;opacity:.85;margin-top:4px">총 <img class="ico" src="${ICO.coin}"> ${(L.pot||0).toLocaleString()} · 3개 ${L.res.c3}명${L.res.p3?` (${L.res.p3.toLocaleString()})`:''} · 2개 ${L.res.c2}명${L.res.p2?` (${L.res.p2.toLocaleString()})`:''} · 1개 ${L.res.c1}명${L.res.p1?` (${L.res.p1.toLocaleString()})`:''}${L.res.carry?` · 이월 ${L.res.carry.toLocaleString()}`:''}</div>
+    ${L.mine.length?`<div class="lt-my">${L.mine.map(t=>`<div class="lt-row">${t.n.map(n=>lball(n,{hit:(L.nums||[]).includes(n),dim:!(L.nums||[]).includes(n)})).join('')}<span>${t.h?t.h+'개 맞춤 · <img class="ico" src="'+ICO.coin+'"> '+(+t.p).toLocaleString()+' (우편함)':'꽝'}</span></div>`).join('')}</div>`:''}</div>`:'';
+  const draw=()=>{
+    $('#mbox').innerHTML=`<h2>조롤 로또 <span class="cur">${r.id}회 · 매주 월요일 오전 10시 추첨</span></h2>
+    <div class="lt-pot"><span>이번 주 상금</span><b><img class="ico" src="${ICO.coin}"> ${(+r.pot).toLocaleString()}</b><span>추첨까지 ${lLeft(r.at)} · 참여 ${r.n}장${r.carry?` · 이월 ${(+r.carry).toLocaleString()} 포함`:''}</span></div>
+    <div style="font-size:11px;margin:6px 0 4px">1~20 중 번호 3개를 고르세요 (${pick.length}/3)</div>
+    <div class="lt-grid">${Array.from({length:20},(_,i)=>lball(i+1,{k:1,on:pick.includes(i+1)})).join('')}</div>
+    <div class="mrow" style="justify-content:flex-start;margin-top:6px"><button class="btn b2 sm" id="ltAuto">자동</button><button class="btn sm" id="ltBuy" ${pick.length===3&&SAVE.coins>=LOTTO_PRICE?'':'disabled'}>구매 · <img class="ico" src="${ICO.coin}"> ${LOTTO_PRICE.toLocaleString()}</button><span class="lg-err" id="ltE"></span></div>
+    ${r.mine.length?`<div class="lt-sec"><b>내 번호 (${r.mine.length}/10장)</b>${r.mine.map(t=>`<div class="lt-row">${t.map(n=>lball(n)).join('')}</div>`).join('')}</div>`:''}
+    ${lastHTML}
+    <div style="font-size:10px;opacity:.7;margin-top:6px;line-height:1.6">모든 사람이 낸 금구슬을 모아서 3개 맞춤 60% · 2개 맞춤 30% · 1개 맞춤 10%를 맞힌 사람끼리 나눠 가져요. 맞힌 사람이 없는 몫은 다음 주로 이월돼요. 당첨금은 우편함으로 와요. 한 주에 10장까지.</div>
+    <div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`;
+    $('#mbox').classList.add('wide');
+    document.querySelectorAll('.lt-grid .lball').forEach(el=>el.onclick=()=>{const n=+el.dataset.n;if(pick.includes(n))pick=pick.filter(x=>x!==n);else if(pick.length<3)pick.push(n);sfx('ui');draw();});
+    $('#ltAuto').onclick=()=>{pick=shuffle(Array.from({length:20},(_,i)=>i+1)).slice(0,3);sfx('ui');draw();};
+    $('#ltBuy').onclick=async()=>{if(pick.length!==3)return;const E=$('#ltE');$('#ltBuy').disabled=true;E.textContent='구매 중...';await flushSave();
+      let q=null;try{q=await rpc('pb_lotto_buy',{p_token:ACC.token,p_nums:pick});}catch(e){}
+      if(!q||!q.ok){E.textContent=!q?'서버 연결 실패':{funds:'금구슬이 부족해요 (서버 저장 기준)',limit:'이번 주는 10장까지만 살 수 있어요',bad_nums:'번호를 다시 골라 주세요'}[q.err]||'구매 실패';$('#ltBuy').disabled=false;return;}
+      SAVE.coins-=LOTTO_PRICE;SAVE.rev=q.rev;saveLocal();refreshMenu();sfx('cube');
+      r.mine.push(pick.slice().sort((a,b)=>a-b));r.pot=+r.pot+LOTTO_PRICE;r.n++;pick=[];draw();toast('로또를 샀어요! 월요일 오전 10시에 추첨해요');};};
+  draw();}
 function boxAnim(it,R){
   const ov=$('#shOv');ov.classList.add('on');
   const BC={'poke-ball':'#ef4444','great-ball':'#3b82f6','ultra-ball':'#facc15','master-ball':'#a855f7','premier-ball':'#f8fafc'}[it.ball]||'#fde047';

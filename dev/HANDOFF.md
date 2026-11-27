@@ -193,3 +193,10 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 ## v1.20.24
 - 랭킹 프레임 정리: 아바타 34px·테두리 3px 통일, 무지개/물결/도트/은하수/하이퍼볼 프레임은 :after(안쪽 배경) 유지 → 무늬가 사진 뒤를 덮던 문제 해결, 바깥 무늬 inset -3px, 나뭇잎·이로치·성좌 장식은 랭킹에서 숨김
 - .fr-master:after 안쪽 배경 추가(전역), 1~3위 반짝임 띠가 글자·아바타 위를 덮지 않게 .rk>* z-index:1, 접속 점 없는 줄도 자리 확보(.on.off)
+
+## v1.20.25
+- 이벤트: 조롤 로또. 로비 왼쪽 노란 '이벤트' 버튼(#bEvent) → openLotto
+  - DB: pb_lotto_round(draw_at, nums, carry, pot, drawn, res), pb_lotto_ticket(round_id, username, nums, hit, prize)
+  - pb_lotto_tick(): 추첨 시간 지난 회차 추첨(1~20 중 3개 랜덤) → 3개 60%/2개 30%/1개 10% 맞힌 사람끼리 나눔(우편 '조롤 로또'), 당첨자 없는 몫은 다음 회차 carry. 다음 회차 = 다음 월요일 10:00 KST(pb_lotto_next_draw). pb_ping·pb_lotto_info 에서 호출(lazy)
+  - pb_lotto_buy(token, nums[3]): 5000 금구슬 서버 차감+rev, 회차당 10장
+- 키 작은 화면(H<=470, .lowh)은 로비 로고 숨김
