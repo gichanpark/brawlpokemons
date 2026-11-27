@@ -579,7 +579,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.20.29';
+const VER='1.20.30';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1017,7 +1017,7 @@ function sealPay(s){const R=x=>Math.round(+x||0),sum=o=>o&&typeof o==='object'?O
 const sealOf=s=>md5s(SLK+'#'+sealPay(s));
 let SAVE={sel:'pikachu',mode:'gem',tro:{}};
 try{const s=JSON.parse(localStorage.getItem('pokebrawl1'));if(s){if(s.sg&&s.sg===sealOf(s))SAVE=Object.assign(SAVE,s);
-  else if(!s.sg&&!s.acct)SAVE=Object.assign(SAVE,s);/* 예전 게스트 세이브 */
+  else if(!s.sg)SAVE=Object.assign(SAVE,s);/* 봉인 전 예전 세이브: 그대로 이어감 (서버 급증 감시가 보완) */
   else{SAVE=Object.assign(SAVE,{acct:s.acct,snd:s.snd,vol:s.vol,unsealed:1});}}}catch(e){}
 function saveLocal(){try{delete SAVE.unsealed;SAVE.sg=sealOf(SAVE);localStorage.setItem('pokebrawl1',JSON.stringify(SAVE))}catch(e){}}
 var dirtyN=0;function save(){dirtyN++;try{if(ACC.token)SAVE.dirty=1;}catch(e){}saveLocal();if(typeof serverSave==='function')serverSave();}
@@ -4854,7 +4854,7 @@ function applyAccount(r,carry,nick){
   ACC.user=r.user;ACC.token=r.token;ACC.admin=!!r.admin;
   try{localStorage.setItem('pb_token',r.token);}catch(e){}
   let sv=r.save&&Object.keys(r.save).length?r.save:null;const loc=SAVE;
-  if(sv&&loc&&loc.dirty&&loc.acct===r.user&&(loc.rev||0)>=(sv.rev||0)&&loc.sg&&loc.sg===sealOf(loc))sv=Object.assign({},loc);
+  if(sv&&loc&&loc.dirty&&loc.acct===r.user&&(loc.rev||0)>=(sv.rev||0)&&(!loc.sg||loc.sg===sealOf(loc)))sv=Object.assign({},loc);
   if(sv)SAVE=Object.assign(DEF_SAVE(),sv);else if(!carry||SAVE.acct)SAVE=DEF_SAVE();SAVE.acct=r.user;
   if(!SAVE.lv)SAVE.lv={};if(!SAVE.tro)SAVE.tro={};
   if(nick){SAVE.nick=nick;if(SAVE.clean==null)SAVE.clean=true;}SAVE.name=SAVE.nick||ACC.user;applyGrant(r);if(SAVE.own&&!SAVE.own.length)delete SAVE.own;save();
