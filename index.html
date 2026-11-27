@@ -615,7 +615,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.27';
+const VER='1.21.28';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -730,7 +730,7 @@ const CH=[
   atk:{nm:'돌떨구기',ds:'벽 너머로 돌을 던짐',ty:'lob',boom:'quake',el:'rock',range:6,dmg:640,aoe:.9,fl:.5,col:'#a8a29e'},
   sup:{nm:'대폭발',ds:'주변을 통째로 날려버리는 엄청난 폭발 · 벽 파괴 · 나도 쓰러짐!',ty:'nova',boom:'dai',el:'normal',aoe:3.2,dmg:2600,brk:1,selfKO:1,col:'#f97316'}},
  {k:'wobbuffet',id:202,nm:'마자용',role:'탱커 · 반격',el:'psychic',gr:'r',col:'#60a5fa',hp:5000,spd:.85,rl:1.5,charge:2400,
-  atk:{nm:'염동력',ds:'약한 염동 구체',ty:'shot',fx:'psyorb',el:'psychic',range:5,speed:11,dmg:300,r:14,col:'#93c5fd'},
+  atk:{nm:'카운터',ds:'몸을 부풀려 주변을 휩쓰는 반격 파동 (내 주위 범위 공격)',ty:'nova',boom:'psy',el:'psychic',aoe:2.2,range:2.2,dmg:430,col:'#93c5fd'},
   sup:{nm:'카운터',ds:'최근 받은 피해의 1.5배를 주변에 되돌려줌',ty:'nova',boom:'psy',el:'psychic',aoe:2.6,dmg:400,counter:1.5,col:'#60a5fa'}},
  {k:'magikarp',id:129,nm:'잉어킹',role:'진화 대기 · ???',el:'water',gr:'r',col:'#f97316',hp:2600,spd:1.0,rl:1.0,charge:1800,
   atk:{nm:'몸통박치기',ds:'파닥파닥 부딪치기 · 피해는 딱 1 (대신 맞히면 필살기가 22%씩 참 · 가만히 있어도 12초면 참)',ty:'shot',fx:'impact',range:2.5,speed:14,dmg:300,r:14,col:'#fdba74'},
@@ -754,10 +754,10 @@ const CH=[
   atk:{nm:'화염방사',ds:'짧은 불꽃 4갈래 · 관통 + 화상',ty:'shot',fx:'flame',flame:1,el:'fire',count:4,spread:.3,range:4,speed:12,dmg:210,r:12,pierce:1,col:'#f97316',burn:{dps:140,t:2}},
   sup:{nm:'플레어드라이브',ds:'불꽃을 두르고 돌진 · 화상 + 밀쳐냄',ty:'dash',fx:'rage',el:'fire',range:6,speed:24,dmg:1600,kb:1,col:'#f97316',burn:{dps:220,t:2.5}}},
  {k:'espeon',id:196,nm:'에브이',role:'저격 · 예지',el:'psychic',gr:'s',col:'#e879f9',hp:3000,spd:1.1,rl:1.2,charge:2700,
-  atk:{nm:'사이코키네시스',ds:'멀리 날아가는 강한 염동 구체',ty:'shot',fx:'psyorb',el:'psychic',range:9,speed:16,dmg:760,r:12,col:'#e879f9'},
+  atk:{nm:'사이코키네시스',ds:'적을 꿰뚫는 염동 구체 · 멀리 맞힐수록 강해짐 (최대 1.8배)',ty:'shot',fx:'psyorb',el:'psychic',range:9,speed:16,dmg:560,dsc:1.8,pierce:1,r:12,col:'#e879f9'},
   sup:{nm:'미래예지',ds:'잠시 뒤 목표 지점에 엄청난 염동 폭발',ty:'meteor',boom:'psy',el:'psychic',range:9,n:1,area:0,dmg:2400,aoe:1.7,fl:1.4,col:'#e879f9'}},
  {k:'umbreon',id:197,nm:'블래키',role:'탱커 · 달빛',el:'dark',gr:'s',col:'#fde047',hp:5600,spd:.95,rl:1.3,charge:2600,
-  atk:{nm:'속임수',ds:'어둠의 구체',ty:'shot',fx:'shadow',el:'dark',range:5,speed:13,dmg:520,r:13,col:'#facc15'},
+  atk:{nm:'속임수',ds:'그림자처럼 짧게 돌진하며 앞의 적을 들이받음',ty:'dash',el:'dark',range:2.6,speed:16,dmg:560,col:'#facc15'},
   sup:{nm:'달빛',ds:'달빛을 받아 체력 50% 회복 + 주변에 피해',ty:'nova',boom:'moon',el:'fairy',aoe:2,dmg:500,selfHeal:.5,col:'#fef08a'}},
  {k:'leafeon',id:470,nm:'리피아',role:'근접 · 저격 궁',el:'grass',gr:'s',col:'#86efac',hp:4000,spd:1.15,rl:1.0,charge:2700,
   atk:{nm:'리프블레이드',ds:'잎사귀 칼날 2갈래 · 관통',ty:'shot',fx:'blade',el:'grass',count:2,spread:.2,range:4,speed:16,dmg:420,r:12,pierce:1,col:'#4ade80'},
@@ -787,13 +787,13 @@ const CH=[
   atk:{nm:'물대포',ds:'거대한 물줄기 · 밀쳐냄',ty:'shot',fx:'stream',el:'water',range:6,speed:12,dmg:650,r:16,kb:.6,col:'#38bdf8'},
   sup:{nm:'해수스파우팅',ds:'주변에 거대한 물기둥 · 체력이 많을수록 강함 (최대 2400)',ty:'nova',boom:'splash',el:'water',aoe:3.5,dmg:600,hpDmg:1800,kb:1.4,col:'#7dd3fc'}},
  {k:'sharpedo',id:319,nm:'샤크니아',role:'가속 · 암살',el:'water',gr:'e',col:'#1d4ed8',hp:3600,spd:1.15,rl:1.0,charge:2500,swim:1,
-  atk:{nm:'깨물어부수기',ds:'날카로운 이빨로 물어뜯기',ty:'shot',fx:'jaw',el:'dark',range:3,speed:15,dmg:620,r:14,col:'#fff'},
+  atk:{nm:'깨물어부수기',ds:'앞으로 휙 돌진하며 물어뜯기',ty:'dash',el:'dark',range:3,speed:18,dmg:620,col:'#ffffff'},
   sup:{nm:'아쿠아제트',ds:'아주 멀리, 아주 빠르게 돌진',ty:'dash',fx:'speed',el:'water',range:8,speed:32,dmg:1300,kb:1,col:'#38bdf8'}},
  {k:'magnezone',id:462,nm:'자포코일',role:'견제 · 자력',el:'elec',gr:'e',col:'#94a3b8',hp:4400,spd:.9,rl:1.2,charge:2700,
   atk:{nm:'방전',ds:'적 사이를 2번 튀는 전기',ty:'shot',fx:'spark',el:'elec',chain:2,range:6.5,speed:18,dmg:460,r:11,col:'#fde047'},
   sup:{nm:'자기장조작',ds:'주변 4칸의 적을 끌어당겨 감전 + 기절',ty:'nova',boom:'quake',el:'elec',aoe:4,dmg:900,pull:1.6,stun:.6,col:'#fde047'}},
  {k:'ferrothorn',id:598,nm:'너트령',role:'탱커 · 가시',el:'steel',gr:'e',col:'#4ade80',hp:5600,spd:.8,rl:1.4,charge:2700,
-  atk:{nm:'자이로볼',ds:'묵직하게 굴러가는 강철 공',ty:'shot',fx:'cannon',el:'steel',range:5.5,speed:10,dmg:720,r:14,col:'#94a3b8'},
+  atk:{nm:'자이로볼',ds:'굴러가다 벽이나 사거리 끝에서 가시 파편으로 터지는 강철 공',ty:'shot',fx:'cannon',el:'steel',range:5.5,speed:10,dmg:620,r:14,shatter:1,col:'#94a3b8'},
   sup:{nm:'압정뿌리기',ds:'밟으면 아픈 압정을 넓게 뿌림 (오래 남음)',ty:'zone',zk:'spike',el:'steel',range:6.5,zr:2.8,zt:7,heal:0,zdmg:320,fl:.5,col:'#94a3b8'}},
  {k:'whimsicott',id:547,nm:'엘풍',role:'서포터 · 순풍',el:'fairy',gr:'e',col:'#fef3c7',hp:3200,spd:1.2,rl:1.0,charge:2400,
   atk:{nm:'목화포자',ds:'느리게 떠가는 솜 3개 · 둔화',ty:'shot',fx:'psyorb',el:'grass',count:3,spread:.5,range:5,speed:9,dmg:280,r:13,col:'#fef9c3',slow:{t:1,m:.6}},
@@ -829,10 +829,10 @@ const CH=[
   atk:{nm:'거품광선',ds:'물거품 3갈래 · 살짝 둔화',ty:'shot',fx:'cannon',el:'water',count:3,spread:.3,range:6,speed:13,dmg:330,r:11,col:'#7dd3fc',slow:{t:.6,m:.75}},
   sup:{nm:'물거품아리아',ds:'노래로 주변 적에게 피해 + 주변 아군 체력 900 회복',ty:'nova',boom:'splash',el:'water',aoe:3,dmg:1100,hAoe:900,col:'#93c5fd'}},
  {k:'pyukumuku',id:771,nm:'해무기',role:'탱커 · 복수',el:'water',gr:'r',col:'#1f2937',hp:4400,spd:.7,rl:1.3,charge:2600,swim:1,
-  atk:{nm:'물대포',ds:'짧은 물줄기',ty:'shot',fx:'stream',el:'water',range:4.5,speed:12,dmg:420,r:11,col:'#38bdf8'},
+  atk:{nm:'물대포',ds:'쏘았다가 되돌아오는 물줄기 (갈 때·올 때 두 번 타격)',ty:'shot',fx:'stream',el:'water',range:4.5,speed:12,dmg:300,r:12,boomer:1,col:'#38bdf8'},
   sup:{nm:'HP회복',ds:'체력 60% 회복 + 주변에 약한 피해',ty:'nova',boom:'splash',el:'normal',aoe:2,dmg:400,selfHeal:.6,col:'#f9a8d4'}},
  {k:'minior',id:774,nm:'메테노',fnm:'유성의 모습',role:'폼 체인지 · 운석',el:'rock',gr:'s',col:'#78716c',hp:3800,spd:1.0,rl:1.2,charge:2600,
-  atk:{nm:'파워젬',ds:'반짝이는 보석 광선',ty:'shot',fx:'rock',el:'rock',range:6.5,speed:16,dmg:480,r:11,col:'#d6d3d1'},
+  atk:{nm:'파워젬',ds:'반짝이는 보석 3개를 부채꼴로 흩뿌림',ty:'shot',fx:'rock',el:'rock',count:3,spread:.35,range:6.5,speed:16,dmg:230,r:10,col:'#d6d3d1'},
   sup:{nm:'스톤샤워',ds:'바위 4개가 목표 지점에 쏟아짐 · 기절',ty:'meteor',boom:'quake',el:'rock',range:7.5,n:4,area:1.8,dmg:800,aoe:1.3,fl:.6,stun:.4,col:'#a8a29e'}},
  {k:'bewear',id:760,nm:'이븐곰',role:'탱커 · 포옹',el:'normal',gr:'e',col:'#f472b6',hp:6000,spd:1.0,rl:1.2,charge:2700,
   atk:{nm:'드레인펀치',ds:'때린 피해의 40%만큼 회복',ty:'shot',fx:'impact',el:'fight',range:3.2,speed:15,dmg:600,r:15,ls:.4,col:'#fb7185'},
@@ -841,7 +841,7 @@ const CH=[
   atk:{nm:'스케일노이즈',ds:'비늘을 부딪쳐 내는 소리 3갈래 · 관통',ty:'shot',fx:'pulse',el:'dragon',count:3,spread:.6,range:4.5,speed:15,dmg:360,r:13,pierce:1,col:'#fde047'},
   sup:{nm:'소울비트',ds:'체력 30%를 깎고 6초간 공격력 1.5배 + 빨라짐 + 탄약 충전',ty:'buff',dur:6,hpCost:.3,col:'#eab308'}},
  {k:'tapukoko',id:785,nm:'카푸꼬꼬꼭',role:'수호신 · 전기',el:'elec',gr:'m',col:'#facc15',hp:4200,spd:1.3,rl:1.0,charge:2700,
-  atk:{nm:'볼트체인지',ds:'빠른 전기 탄 · 맞히면 잠깐 빨라짐',ty:'shot',fx:'spark',el:'elec',range:6,speed:20,dmg:520,r:11,col:'#fde047'},
+  atk:{nm:'볼트체인지',ds:'적 사이를 2번 튀는 빠른 전기 탄 · 맞히면 잠깐 빨라짐',ty:'shot',fx:'spark',el:'elec',chain:2,range:6,speed:20,dmg:430,r:11,col:'#fde047'},
   sup:{nm:'자연의분노',ds:'주변 4칸 적에게 피해 + 남은 체력의 35%만큼 추가 피해',ty:'nova',boom:'quake',el:'fairy',aoe:4,dmg:500,pct:.35,col:'#facc15'}},
  {k:'marshadow',id:802,nm:'마샤도',role:'암살 · 강탈',el:'fight',gr:'m',col:'#525252',hp:3800,spd:1.3,rl:.9,charge:2500,
   atk:{nm:'섀도펀치',ds:'빠른 그림자 주먹 2연타',ty:'shot',fx:'impact',el:'ghost',burst:2,gap:.08,range:3.2,speed:17,dmg:400,r:13,col:'#4ade80'},
@@ -862,7 +862,7 @@ const CH=[
   atk:{nm:'원념의칼',ds:'불꽃 칼날 · 준 피해의 40%만큼 회복',ty:'shot',fx:'blade',el:'fire',range:3.5,speed:16,dmg:560,r:15,pierce:1,ls:.4,col:'#a855f7'},
   sup:{nm:'고스트다이브',ds:'그림자로 숨어 목표 지점에서 튀어나와 베기',ty:'tele',boom:'ghost',el:'ghost',range:6.5,dmg:1600,aoe:1.6,col:'#7c3aed'}},
  {k:'palafin',id:964,nm:'돌핀맨',fnm:'제로폼',role:'변신 히어로',el:'water',gr:'e',col:'#38bdf8',hp:3000,spd:1.15,rl:1.0,charge:2500,swim:1,
-  atk:{nm:'아쿠아브레이크',ds:'물을 두른 박치기',ty:'shot',fx:'stream',el:'water',range:3.5,speed:15,dmg:380,r:12,col:'#7dd3fc'},
+  atk:{nm:'아쿠아브레이크',ds:'물을 두르고 앞으로 돌진하며 박치기',ty:'dash',el:'water',range:2.6,speed:17,dmg:400,col:'#7dd3fc'},
   sup:{nm:'퀵턴',ds:'물살을 타고 짧게 돌진',ty:'dash',fx:'speed',el:'water',range:5,speed:26,dmg:800,kb:.5,col:'#38bdf8'}},
  {k:'annihilape',id:979,nm:'저승갓숭',role:'근접 · 분노',el:'fight',gr:'e',col:'#9ca3af',hp:5000,spd:1.05,rl:1.1,charge:2600,
   atk:{nm:'분노의주먹',ds:'분노의 주먹 2연타 · 맞을수록 강해짐',ty:'shot',fx:'impact',el:'ghost',burst:2,gap:.1,range:3.2,speed:16,dmg:380,r:14,col:'#e5e7eb'},
@@ -964,7 +964,7 @@ const CH=[
   atk:{nm:'인파이트',ds:'커다란 엄니를 좌우로 두 번 휘두르는 연타 (범위 안 적 모두)',ty:'shot',swing:1.7,art:'tusk',el:'fight',burst:2,gap:.18,range:2.3,speed:16,dmg:640,r:18,col:'#fdba74'},
   sup:{nm:'들이받기',ds:'벽을 부수며 돌진 · 적과 부딪치면 멈추고 땅이 갈라져 주변 적 기절',ty:'dash',fx:'rage',el:'ground',range:6.5,speed:22,dmg:1200,kb:.4,brk:1,stopHit:1,endAoe:1.9,endDmg:800,col:'#d6a46a'}},
  {k:'fluttermane',id:987,nm:'날개치는머리',pdx:'a',fly:1,role:'저격 · 탄막',el:'ghost',gr:'m',col:'#c084fc',hp:3200,spd:1.3,rl:.95,charge:2500,
-  atk:{nm:'섀도볼',ds:'아주 멀리 날아가는 그림자 구체',ty:'shot',fx:'shadow',el:'ghost',range:9.5,speed:17,dmg:820,r:13,col:'#7c3aed'},
+  atk:{nm:'섀도볼',ds:'아주 멀리 날아가는 그림자 구체 3갈래 탄막',ty:'shot',fx:'shadow',el:'ghost',count:3,spread:.2,range:9.5,speed:17,dmg:360,r:12,col:'#7c3aed'},
   sup:{nm:'매지컬샤인',ds:'사방으로 빛의 탄막 16발을 흩뿌림 (관통)',ty:'shot',fx:'moon',el:'fairy',count:16,spread:5.89,range:6.5,speed:12,dmg:700,r:14,pierce:1,col:'#f9a8d4'}},
  {k:'roaringmoon',id:1005,nm:'고동치는달',pdx:'a',role:'암살 · 용의춤',el:'dragon',gr:'m',col:'#38bdf8',hp:4800,spd:1.15,rl:1.0,charge:2600,
   atk:{nm:'깨물어부수기',ds:'가까운 적을 세게 물어뜯음 · 30% 확률로 3초간 방어 하락',ty:'shot',fx:'jaw',el:'dark',range:2.6,speed:14,dmg:980,r:18,vulnC:{c:.3,t:3},col:'#1c1917'},
@@ -982,7 +982,7 @@ const CH=[
   atk:{nm:'다이맥스포',ds:'세 방향으로 뻗는 관통 레이저 · 체력이 많이 남은 적일수록 더 아픔 (최대 1.3배)',ty:'shot',fx:'dmax',el:'dragon',count:3,spread:.42,range:7,speed:24,dmg:880,r:10,pierce:1,hiHp:.3,col:'#a855f7'},
   sup:{nm:'무한다이빔',ds:'거다이맥스해 떠오른 뒤 지정한 원형 지점에 2초 동안 빔을 집중 · 원 안의 적은 행동불능, 주변 적은 원 중앙으로 끌려옴 · 끝나면 크게 폭발하며 날려버림 · 쏘는 동안 받는 피해 50% 감소',gmax:.9,ebeam:2,ty:'lob',fx:'dmax',el:'dragon',range:7.5,aoe:1.6,pull:1.9,dmg:3300,col:'#dc2626'}},
  {k:'solgaleo',id:791,nm:'솔가레오',role:'돌격 · 태양의 사자',el:'psychic',gr:'l',col:'#fbbf24',hp:5200,spd:1.05,rl:1.15,charge:2800,
-  atk:{nm:'사이코팽',ds:'앞의 적을 강하게 물어뜯음 · 보호막·리플렉터·철벽 같은 방어 효과를 부수고 그때는 1.3배',ty:'shot',fx:'jaw',el:'psychic',range:3,speed:16,dmg:1100,r:22,shieldBreak:1,col:'#c084fc'},
+  atk:{nm:'사이코팽',ds:'앞으로 돌진하며 강하게 물어뜯음 · 보호막·리플렉터·철벽 같은 방어 효과를 부숨',ty:'dash',el:'psychic',range:3,speed:18,dmg:1000,shieldBreak:1,col:'#fde68a'},
   sup:{nm:'메테오드라이브',ds:'태양처럼 빛나며 일직선으로 돌진 · 벽을 부수고 부딪힌 적의 방어 효과를 무시 · 기절 + 밀쳐냄',ty:'dash',fx:'rage',el:'steel',range:8,speed:24,dmg:2400,kb:1.2,stun:.6,brk:1,shieldBreak:1,col:'#fbbf24'}},
  {k:'steve',id:'steve',rface:1,nm:'스티브',fnm:'스티브 (맨손)',role:'한정 · 채굴과 제작',el:'normal',gr:'sp',col:'#22d3ee',hp:4200,spd:1.1,rl:1.0,charge:2600,
   atk:{nm:'주먹',ds:'맨손 주먹질 (도구를 만들면 공격이 바뀜)',ty:'shot',fx:'fist',el:'normal',range:1.8,speed:14,dmg:420,r:16,col:'#f5d0a9'},
@@ -1656,6 +1656,8 @@ function endLatch(e){const L=e.lch;e.lch=null;if(L&&L.on&&L.o){const a=Math.atan
 function spawnShots(e,s,ang,d,sup){
   s=skSpec(e,s);
   if(s.latch){startLatch(e,s,ang,d);return;}
+  if(!sup&&s.ty==='dash'){sfx('dash',e.x,e.y);bumpFz(e);e.dash={dx:Math.cos(ang),dy:Math.sin(ang),left:s.range*T,hit:new Set(),s,atk:1};e.face=ang;e.fx=Math.cos(ang)>0?1:-1;ev('S',s._id,e.nid);return;}
+  if(!sup&&s.ty==='nova'){sfx('shot',e.x,e.y,s.el);ev('S',s._id,e.nid);P_({ring:1,x:e.x,y:e.y,rad:s.aoe*T,col:s.col,t:.35});P_({ring:1,x:e.x,y:e.y,rad:s.aoe*T*.6,col:'#fff',t:.25});aoeHit(e,e.x,e.y,s.aoe*T,s.dmg,s,false);if(e===P)G.shake=Math.max(G.shake,.12);return;}
   if(s.ebeam){const dd=clamp(d??s.range*T,T,s.range*T);e.ebeam={t:s.ebeam,ang,s,tk:0,tx:e.x+Math.cos(ang)*dd,ty:e.y+Math.sin(ang)*dd};e.gmaxT=s.ebeam+.25;e.gmaxD=e.gmaxT+.8;sfx('bigboom',e.x,e.y);addText(e.x,e.y-170,'무한다이빔!','#f87171',1);if(e===P)G.shake=Math.max(G.shake,.35);return;}
   sfx('shot',e.x,e.y,s.el);fxSnd(s,e.x,e.y);ev('S',s._id,e.nid);
   if(e===P&&G.kick){G.kick.x-=Math.cos(ang)*7;G.kick.y-=Math.sin(ang)*7;}
@@ -1872,7 +1874,7 @@ function moveEnt(e,dt){
     const bx=e.x,by=e.y;collide(e);if(Math.hypot(e.x-bx,e.y-by)>st*.5)D.left=0;
     dashFx(e,D.s);
     for(const o of G.ents){if(!o.alive||!enemyOf(e,o)||D.hit.has(o))continue;
-      if(Math.hypot(o.x-e.x,o.y-e.y)<e.r+o.r+6){D.hit.add(o);if(D.s.shieldBreak){o.shield=0;o.reflT=0;o.ironT=0;}damage(e,o,D.s.dmg*(D.s.exec&&o.hp<o.maxHp*.5?D.s.exec:1),true);if(D.s.ls)heal(e,D.s.dmg*D.s.ls);if(D.s.stun&&!immune(o)&&o.alive)o.stun=Math.max(o.stun,D.s.stun);if(D.s.vulnC&&!immune(o)&&o.alive){o.vulnT=Math.max(o.vulnT||0,D.s.vulnC.t);addText(o.x,o.y-95,'방어 하락!','#fca5a5');};if(D.s.grab&&o.alive&&!immune(o)&&!o.safe&&!o.carryT){o.carryBy=e;o.carryT=D.s.grab;o.stun=Math.max(o.stun,D.s.grab);D.left=0;addText(o.x,o.y-110,'꽉 껴안기!','#f9a8d4',1);}else if(!immune(o)){bumpFz(o);o.kbx=D.dx*D.s.kb*T*6;o.kby=D.dy*D.s.kb*T*6;}hitFx(D.s,o.x,o.y-20,GT(e));P_({ring:1,x:o.x,y:o.y,rad:40,col:D.s.col,t:.3});if(D.s.stopHit)D.left=0;}}
+      if(Math.hypot(o.x-e.x,o.y-e.y)<e.r+o.r+6){D.hit.add(o);if(D.s.shieldBreak){o.shield=0;o.reflT=0;o.ironT=0;}damage(e,o,D.s.dmg*(D.s.exec&&o.hp<o.maxHp*.5?D.s.exec:1),!D.atk);if(D.s.ls)heal(e,D.s.dmg*D.s.ls);if(D.s.stun&&!immune(o)&&o.alive)o.stun=Math.max(o.stun,D.s.stun);if(D.s.vulnC&&!immune(o)&&o.alive&&Math.random()<(D.s.vulnC.c??1)){o.vulnT=Math.max(o.vulnT||0,D.s.vulnC.t);addText(o.x,o.y-95,'방어 하락!','#fca5a5');};if(D.s.grab&&o.alive&&!immune(o)&&!o.safe&&!o.carryT){o.carryBy=e;o.carryT=D.s.grab;o.stun=Math.max(o.stun,D.s.grab);D.left=0;addText(o.x,o.y-110,'꽉 껴안기!','#f9a8d4',1);}else if(!immune(o)){bumpFz(o);o.kbx=D.dx*D.s.kb*T*6;o.kby=D.dy*D.s.kb*T*6;}hitFx(D.s,o.x,o.y-20,GT(e));P_({ring:1,x:o.x,y:o.y,rad:40,col:D.s.col,t:.3});if(D.s.stopHit)D.left=0;}}
     if(D.left<=0){e.dash=null;if(D.s.endAoe){aoeHit(e,e.x,e.y,D.s.endAoe*T,D.s.endDmg,GSP.tuskq,true);G.shake=Math.max(G.shake,e===P?.3:.1);sfx('land',e.x,e.y);}}
   }else{
     let mx=e.mvx,my=e.mvy;if(e.stun>0)mx=my=0;if(mx||my){e.mvA=Math.atan2(my,mx);e.mvAt=G.t;}
