@@ -261,6 +261,16 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .lball.dim{opacity:.35}.lball.hit{border-color:#fff}
 .lt-grid{display:grid;grid-template-columns:repeat(10,auto);justify-content:start;gap:2px}
 .lt-pot{display:flex;flex-direction:column;align-items:center;background:#1e1b2e;border:3px solid #111;padding:8px;gap:2px}.lt-pot b{font-size:30px;color:#fde047;text-shadow:3px 3px 0 #111}.lt-pot span{font-size:11px;opacity:.85}
+.lb-mail.lb-stk{right:384px;background:#7f1d1d;box-shadow:inset 0 3px 0 #ef4444,0 3px 0 #111}.lb-stk img{width:18px;height:16px;image-rendering:pixelated}
+.stk-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;background:#120d24;border:2px solid #111;padding:6px 8px;margin-bottom:6px}.stk-top b{font-size:13px}.stk-top .cd{margin-left:auto;color:#fde047}
+.stk-l{display:flex;flex-direction:column;gap:5px}.stk-r{display:grid;grid-template-columns:100px 1fr auto;align-items:center;gap:8px;background:#1c1530;border:2px solid #111;box-shadow:inset 0 2px 0 #3b2d63;padding:5px 8px;cursor:pointer;text-align:left}
+.stk-r:hover{background:#261d40}.stk-r canvas,.stk-big{image-rendering:pixelated;display:block}.stk-nm{font-size:12px;font-weight:bold}.stk-nm i{font-style:normal;font-size:9px;opacity:.6;margin-left:4px}
+.stk-sub{font-size:9px;opacity:.75;margin-top:2px}.stk-px{text-align:right;font-size:13px;font-weight:bold}.stk-px small{display:block;font-size:10px;font-weight:normal}
+.up{color:#f87171}.dn{color:#60a5fa}.fl{color:#d4d4d8}
+.stk-bar{display:flex;height:6px;margin-top:3px;border:1px solid #111;background:#3f3f46;width:110px}.stk-bar b{background:#ef4444}.stk-bar u{background:#3b82f6;margin-left:auto}
+.stk-d{font-size:11px}.stk-d .row2{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0}.stk-q{display:flex;gap:4px;align-items:center;flex-wrap:wrap}.stk-q input{width:84px}
+.stk-news{background:#120d24;border:2px solid #111;padding:5px 8px;font-size:11px;margin:6px 0}
+.btn.buy{background:#dc2626;box-shadow:inset 0 -4px 0 #7f1d1d,inset 0 2px 0 #fca5a5,0 3px 0 #111;color:#fff}.btn.sell{background:#2563eb;box-shadow:inset 0 -4px 0 #1e3a8a,inset 0 2px 0 #93c5fd,0 3px 0 #111;color:#fff}
 .lt-sec{border-top:2px solid #3f3f46;margin-top:8px;padding-top:6px;font-size:12px}.lt-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}.lt-row>span{font-size:11px;margin-left:6px}.sqb{position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;border:2px solid #111;font-style:normal;font-size:11px;min-width:18px;height:18px;line-height:14px;text-align:center}
 .jp{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px}
 .jpc{flex:0 0 86px;display:flex;flex-direction:column;gap:5px}
@@ -499,6 +509,7 @@ select.minput{width:auto}
   <button class="lb-fr lb-nt" id="bNotice">공지<i id="ntBadge" style="display:none">N</i></button>
   <div class="lb-ver" id="lbVer"></div>
   <button class="lb-fr" id="bFriend">친구<i id="frBadge" style="display:none">0</i></button>
+  <button class="lb-mail lb-stk" id="bStock"><img id="stkIco" alt=""><span>주식</span></button>
   <button class="lb-mail lb-inv" id="bInv"><img class="px" id="invIco" alt=""><span>가방</span><i id="invBadge" style="display:none">0</i></button>
   <button class="lb-mail" id="bMail"><img class="px" data-ico="mail" alt=""><span>우편함</span><i id="mailBadge" style="display:none">0</i></button>
   <div class="lb-side">
@@ -592,7 +603,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.15';
+const VER='1.21.16';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -3303,7 +3314,7 @@ function refreshMenu(){try{renderAllies();}catch(e){}try{invBadge();}catch(e){}
   $('#selTro').textContent=tro(c.k);
   const tt=totTro();$('#totTro').textContent=tt;$('#lbCoin').textContent=SAVE.coins;$('#lbGem').textContent=SAVE.gems||0;
   $('#lbName').innerHTML=esc(SAVE.nick||ACC.user||SAVE.name)+(ACC.admin?' <span class="adm">관리자</span>':'');$('#lbAva').src=avaSrc();{const w=$('#lbAvaW');w.style.setProperty('--abg',abg(SAVE.ava)||'#0d0a1f');w.className='ava fr-'+(SAVE.frm||'basic')+(SAVE.ava&&(SAVE.ava.t==='img'&&PIMG[SAVE.ava.i]||SAVE.ava.t==='por'&&owns(SAVE.ava.k))?' ph':'');}$('#lbSqImg').src=POR[c.id];
-  {const ri=$('#rsIco');if(ri&&!ri.src)ri.src=SPR.armewtwo;const rb=$('#rsBadge');if(rb){const n=SAVE.ashard||0,got=(SAVE.own||[]).includes('armewtwo');rb.textContent=got?'✓':Math.min(100,Math.floor(n/10))+'%';}}
+  {const si=$('#stkIco');if(si&&!si.src&&window.STK_ICO)si.src=STK_ICO;}{const ri=$('#rsIco');if(ri&&!ri.src)ri.src=SPR.armewtwo;const rb=$('#rsBadge');if(rb){const n=SAVE.ashard||0,got=(SAVE.own||[]).includes('armewtwo');rb.textContent=got?'✓':Math.min(100,Math.floor(n/10))+'%';}}
   {const ls=$('#lpSkins');if(ls&&!ls.dataset.ok){ls.dataset.ok=1;const L=['galaxy','aurora','plat'].filter(id=>SKINX['eternatus_'+id]);let i=0;
     ls.innerHTML=`<div class="lps"><img class="px" alt=""><i></i></div>`;const im=ls.querySelector('img'),lb=ls.querySelector('i');
     const show=()=>{const id=L[i%L.length],t=(THEMES.eternatus||[]).find(x=>x.id===id);im.src=SKINX['eternatus_'+id].spr;lb.textContent=t?t.nm:'';im.classList.remove('sw');void im.offsetWidth;im.classList.add('sw');i++;};
@@ -3333,6 +3344,7 @@ function pickAlly(i,fromLobby){const own=sortCH(CH.filter(c=>owns(c.k)&&c.k!==SA
 $('#bRoad').onclick=()=>openPass();
 $('#bEvent').onclick=()=>{sfx('ui');openLotto();};
 $('#bRescue').onclick=()=>{sfx('ui');openRescue();};
+$('#bStock').onclick=()=>{sfx('ui');openStock();};
 
 /* 매치메이킹 + VS 화면 */
 function pickRoster(){
@@ -4746,6 +4758,65 @@ function rescueBind(redraw){document.querySelectorAll('[data-ashq]').forEach(b=>
   if(it.pk){if((SAVE.own||[]).includes(it.pk))return;SAVE.ashard-=it.cost;unlockPk(it.pk);save();refreshMenu();sfx('win');const c=chOf(it.pk);
     modal(`<h2>구출 성공!</h2><div class="rws"><div class="rw newpk"><img class="sbig por2" src="${POR[c.id]}"><b>새 포켓몬!</b><span>${c.nm} · ${GRADE[c.gr].nm}</span></div></div><div class="mrow"><button class="btn sm" id="rsOk">확인</button></div>`);$('#rsOk').onclick=()=>openRescue();return;}
   SAVE.ashard-=it.cost;if(it.c)SAVE.coins+=it.c;else if(it.g)SAVE.gems=(SAVE.gems||0)+it.g;else invAdd(it.id,1);save();refreshMenu();invBadge();sfx('cube');toast((it.nm||ITEMS[it.id].nm)+' 교환 완료!'+(it.c||it.g?'':' 가방에 넣었어요'));redraw();});}
+/* ---------- 주식 (서버: pb_stock_list / pb_stock_trade, 10분마다 가격 결정) ---------- */
+var STK_ICO=(()=>{const c=document.createElement('canvas');c.width=16;c.height=14;const x=c.getContext('2d');
+  const R=(a,b,w,h,col)=>{x.fillStyle=col;x.fillRect(a,b,w,h);};R(0,13,16,1,'#111');R(0,0,1,14,'#111');
+  [[2,8,4,'#3b82f6'],[5,5,5,'#ef4444'],[8,7,4,'#3b82f6'],[11,2,7,'#ef4444']].forEach(([a,b,h,col])=>{R(a,b,2,h,col);R(a,b-1,2,1,'#111');});
+  R(13,1,2,1,'#fde047');R(14,0,1,3,'#fde047');return c.toDataURL();})();
+const STKE={funds:'금구슬이 부족해요 (서버 저장 기준)',hold:'가진 주식보다 많이 팔 수 없어요',cap:'한 종목은 이만큼까지만 가질 수 있어요',qty:'수량을 확인해 주세요',auth:'다시 로그인해 주세요',sid:'없는 종목이에요'};
+function stkPct(a,b){if(!b)return {t:'0.00%',c:'fl',a:'-'};const v=(a-b)/b*100;return {t:(v>0?'+':v<0?'−':'')+Math.abs(v).toFixed(2)+'%',c:v>0?'up':v<0?'dn':'fl',a:v>0?'▲':v<0?'▼':'-'};}
+function stkChart(cv,h,o){o=o||{};const x=cv.getContext('2d'),W=cv.width,H=cv.height,u=o.u||2;x.imageSmoothingEnabled=false;x.fillStyle=o.bg||'#0d0a1c';x.fillRect(0,0,W,H);
+  if(!h||h.length<2)return;const mn=Math.min(...h),mx=Math.max(...h),rg=Math.max(1,mx-mn),pd=o.pad||3;
+  if(o.grid){x.fillStyle='rgba(255,255,255,.07)';for(let i=1;i<4;i++)x.fillRect(0,Math.round(H*i/4/u)*u,W,u);for(let i=1;i<6;i++)x.fillRect(Math.round(W*i/6/u)*u,0,u,H);}
+  const up=h[h.length-1]>=h[0],col=up?'#ef4444':'#3b82f6',fillc=up?'rgba(239,68,68,.18)':'rgba(59,130,246,.18)';
+  const Y=v=>Math.round((pd+(1-(v-mn)/rg)*(H-2*pd*u))/u)*u,X=i=>Math.round(i/(h.length-1)*(W-u)/u)*u;
+  let py=Y(h[0]);for(let i=0;i<h.length;i++){const xx=X(i),yy=Y(h[i]),nx=i<h.length-1?X(i+1):W;
+    x.fillStyle=fillc;x.fillRect(xx,yy,nx-xx,H-yy);x.fillStyle=col;x.fillRect(xx,Math.min(py,yy),u,Math.abs(yy-py)+u);x.fillRect(xx,yy,nx-xx,u);py=yy;}
+  if(o.dot){const yy=Y(h[h.length-1]);x.fillStyle='#111';x.fillRect(W-3*u,yy-u,3*u,3*u);x.fillStyle='#fde047';x.fillRect(W-2*u,yy,u,u);}}
+async function openStock(){if(!ACC.token){modal(`<h2>포켓 주식</h2><div style="font-size:12px">로그인해야 할 수 있어요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
+  let D=null,view=null,qty=1,busy=false,tmr=null,skew=0;
+  const load=async()=>{let r=null;try{r=await rpc('pb_stock_list',{p_token:ACC.token});}catch(e){}if(r&&r.ok){D=r;skew=new Date(r.now)-Date.now();}return r&&r.ok;};
+  modal(`<h2>포켓 주식</h2><div style="font-size:11px">불러오는 중...</div>`);$('#mbox').classList.add('wide');
+  if(!await load()){modal(`<h2>포켓 주식</h2><div style="font-size:11px">불러오기 실패</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
+  const left=()=>Math.max(0,Math.floor((new Date(D.next)-Date.now()-skew)/1000));
+  const fmtCd=t=>Math.floor(t/60)+':'+String(t%60).padStart(2,'0');
+  const coin=n=>`<img class="ico" src="${ICO.coin}"> ${Math.round(n).toLocaleString()}`;
+  const tick=async()=>{if(!$('#stkCd')){clearInterval(tmr);return;}const t=left();$('#stkCd').textContent=fmtCd(t);if(t<=0&&!busy){busy=true;await new Promise(r=>setTimeout(r,1500));await load();busy=false;if($('#stkCd')){draw();toast('주식 가격이 새로 정해졌어요!');sfx('ready');}}};
+  const top=()=>{const ev=D.st.reduce((a,x)=>a+x.mq*x.price,0),cost=D.st.reduce((a,x)=>a+(+x.mc),0),pl=stkPct(ev,cost);
+    return `<div class="stk-top"><span>내 금구슬 <b>${coin(SAVE.coins||0)}</b></span><span>주식 평가 <b>${coin(ev)}</b>${cost?` <span class="${pl.c}">${pl.a} ${pl.t}</span>`:''}</span><span class="cd">다음 가격까지 <b id="stkCd">${fmtCd(left())}</b></span></div>`;};
+  const listHTML=()=>`${top()}<div class="stk-l">${D.st.map((x,i)=>{const c=stkPct(x.price,x.prev),d=stkPct(x.price,x.p24||(x.hist||[])[0]),tot=(+x.vb)+(+x.vs),bw=tot?Math.round(x.vb/tot*100):0;
+      return `<button class="stk-r" data-i="${i}"><canvas width="100" height="40" style="width:100px;height:40px"></canvas><div><div class="stk-nm">${esc(x.nm)}<i>${x.sym}</i></div><div class="stk-sub">이번 10분: 산 사람 ${x.nb}명 · 판 사람 ${x.ns}명${x.mq?` · <b style="color:#fde047">내 주식 ${x.mq}주</b>`:''}</div><div class="stk-bar">${tot?`<b style="width:${bw}%"></b><u style="width:${100-bw}%"></u>`:''}</div></div>
+        <div class="stk-px">${coin(x.price)}<small class="${c.c}">${c.a} ${c.t}</small><small class="${d.c}" style="opacity:.8">24시간 ${d.t}</small></div></button>`;}).join('')}</div>
+    <div style="font-size:10px;opacity:.75;margin-top:6px;line-height:1.6">10분마다 가격이 새로 정해져요. 그 10분 동안 <b class="up">사는 사람이 많으면 ▲ 오르고</b> <b class="dn">파는 사람이 많으면 ▼ 내려요</b>. 가끔 뉴스(호재·악재)가 터져요. 사고팔 때 수수료 1%.</div>
+    <div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`;
+  const detailHTML=x=>{const c=stkPct(x.price,x.prev),pl=x.mq?stkPct(x.mq*x.price,x.mc):null,val=qty*x.price,fee=Math.max(1,Math.ceil(val*.01)),mn=Math.min(...(x.hist||[x.price])),mx=Math.max(...(x.hist||[x.price]));
+    const nw=x.news?x.news.split('|'):null,nOld=x.news_at&&(Date.now()+skew-new Date(x.news_at))>36e5*3;
+    return `${top()}<div class="stk-d"><div class="row2"><b style="font-size:15px">${esc(x.nm)}</b><span style="opacity:.6">${x.sym}</span><span style="opacity:.75">${esc(x.ds||'')}</span></div>
+      <div class="row2"><b style="font-size:20px">${coin(x.price)}</b><span class="${c.c}" style="font-size:13px">${c.a} ${c.t} <span style="opacity:.7">(지난 10분)</span></span></div>
+      <canvas class="stk-big" width="560" height="160" style="width:100%;height:auto;border:2px solid #111"></canvas>
+      <div class="row2" style="font-size:10px;opacity:.8;justify-content:space-between"><span>24시간 차트 · 최저 ${mn.toLocaleString()} · 최고 ${mx.toLocaleString()}</span><span>주주 ${x.holders}명</span></div>
+      ${nw&&!nOld?`<div class="stk-news"><b class="${nw[0]==='+'?'up':'dn'}">${nw[0]==='+'?'▲ 호재':'▼ 악재'}</b> ${esc(nw[1])}</div>`:''}
+      <div class="row2">이번 10분: <b class="up">산 사람 ${x.nb}명 (${(+x.vb).toLocaleString()})</b> · <b class="dn">판 사람 ${x.ns}명 (${(+x.vs).toLocaleString()})</b></div>
+      <div class="row2">내 주식: <b>${x.mq}주</b>${x.mq?` · 산 값 ${coin(x.mc)} → 지금 ${coin(x.mq*x.price)} <b class="${pl.c}">${pl.a} ${pl.t}</b>`:''} <span style="opacity:.6">(최대 ${x.fl}주)</span></div>
+      <div class="stk-q"><button class="btn b2 sm" data-q="-10">-10</button><button class="btn b2 sm" data-q="-1">-1</button><input class="minput sm2" id="stkQ" type="number" min="1" value="${qty}"><button class="btn b2 sm" data-q="1">+1</button><button class="btn b2 sm" data-q="10">+10</button><button class="btn b2 sm" data-m="buy">살 수 있는 최대</button><button class="btn b2 sm" data-m="sell">가진 만큼</button></div>
+      <div class="row2">금액 ${coin(val)} · 수수료 ${coin(fee)}</div>
+      <div class="row2"><button class="btn buy" id="stkB">사기 · ${coin(val+fee)}</button><button class="btn sell" id="stkS" ${x.mq>=qty?'':'disabled'}>팔기 · ${coin(val-fee)} 받기</button><span class="lg-err" id="stkE"></span></div></div>
+      <div class="mrow"><button class="btn b2 sm" id="stkBack">목록으로</button><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`;};
+  const draw=()=>{const mb=$('#mbox');if(!mb)return;
+    if(view==null){mb.innerHTML=`<h2>포켓 주식</h2>`+listHTML();mb.querySelectorAll('.stk-r').forEach(b=>{const x=D.st[+b.dataset.i];stkChart(b.querySelector('canvas'),x.hist,{u:2});b.onclick=()=>{sfx('ui');view=x.id;qty=1;draw();};});}
+    else{const x=D.st.find(o=>o.id===view);if(!x){view=null;return draw();}mb.innerHTML=`<h2>포켓 주식</h2>`+detailHTML(x);stkChart(mb.querySelector('.stk-big'),x.hist,{u:4,grid:1,dot:1,pad:2});
+      const maxBuy=()=>{let n=Math.floor((SAVE.coins||0)/(x.price*1.01));while(n>0&&n*x.price+Math.max(1,Math.ceil(n*x.price*.01))>(SAVE.coins||0))n--;return Math.max(1,Math.min(n,x.fl-x.mq));};
+      const setQ=n=>{qty=Math.max(1,Math.min(1000000,Math.floor(n)||1));draw();};
+      mb.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{sfx('ui');setQ(qty+(+b.dataset.q));});
+      mb.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{sfx('ui');setQ(b.dataset.m==='buy'?maxBuy():Math.max(1,x.mq));});
+      $('#stkQ').onchange=e=>setQ(+e.target.value);$('#stkBack').onclick=()=>{sfx('ui');view=null;draw();};
+      const trade=async q=>{if(busy)return;busy=true;const E=$('#stkE');$('#stkB').disabled=$('#stkS').disabled=true;E.textContent='거래 중...';await flushSaveNow();
+        let r=null;try{r=await rpc('pb_stock_trade',{p_token:ACC.token,p_sid:x.id,p_qty:q});}catch(e){}busy=false;
+        if(!r||!r.ok){E.textContent=!r?'서버 연결 실패':(STKE[r.err]||'거래 실패')+(r.err==='cap'?` (최대 ${r.cap}주)`:'');$('#stkB').disabled=false;$('#stkS').disabled=!(x.mq>=qty);return;}
+        SAVE.coins=+r.coins;SAVE.rev=r.rev;saveLocal();refreshMenu();x.mq=+r.mq;x.mc=+r.mc;sfx(q>0?'cube':'gem');
+        toast(q>0?`${x.nm} ${q}주를 샀어요!`:`${x.nm} ${-q}주를 팔았어요!`);if(q<0&&qty>x.mq)qty=Math.max(1,x.mq);await load();draw();};
+      $('#stkB').onclick=()=>trade(qty);$('#stkS').onclick=()=>trade(-qty);}};
+  draw();clearInterval(tmr);tmr=setInterval(tick,1000);}
 async function openLotto(){if(!ACC.token){modal(`<h2>조롤 로또</h2><div style="font-size:12px">로그인해야 참여할 수 있어요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
   modal(`<h2>조롤 로또</h2><div style="font-size:11px">불러오는 중...</div>`);let r;try{r=await rpc('pb_lotto_info',{p_token:ACC.token});}catch(e){}
   if(!r||!r.ok){modal(`<h2>조롤 로또</h2><div style="font-size:11px">불러오기 실패</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}

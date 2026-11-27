@@ -279,3 +279,9 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 ## v1.21.15
 - 아머드 뮤츠 상향: HP 5200, 속도 1.0, 장전 rl 1.1, 충전 2400, 평타 440x4 사거리 8, 궁 2300 반경 3.6 기절 1.3 취약 4초, 가젯 6초, 패시브 받는 피해 -12%.
 - 유도 강화: spec homeT(선회율, 기본 7) + 목표 고정(p.lk). 아머드 뮤츠 home 5.5 / homeT 16.
+
+## v1.21.16 포켓 주식
+- DB: pb_stock(종목: price/prev/fund(기본가치)/vol/fl(유동주식=보유한도, 유동성 L=price*fl)/tick_at/news), pb_stock_hist(24h+ 차트, 3일 보관), pb_stock_flow(이번 10분 유저별 매수·매도 금액), pb_stock_hold(username,sid,qty,cost), pb_stock_log.
+- pb_stock_tick(): 10분 경계(date_bin) 지연 처리(최대 36틱 따라잡기). 변화 = 군중 0.10*tanh(유저별 순매수(±0.15L로 제한) 합/L) + 인원 심리 0.4%/명(±3%) + 노이즈 vol + 기본가치 회귀 5%*ln(f/p) + 뉴스(2.5% 확률 ±4~14%, 고변동주 1.6배). 틱당 ±25% 제한.
+- pb_stock_list(token), pb_stock_trade(token,sid,qty(+매수/-매도)): 서버가 save.coins 직접 증감+rev+1 (로또와 같은 방식, 클라는 flushSaveNow 후 호출하고 coins/rev 반영). 수수료 1%(최소 1), 보유 한도 fl주.
+- 클라: 로비 상단 '주식' 버튼(#bStock, STK_ICO 도트 아이콘), openStock() 목록/상세(도트 차트 stkChart, 카운트다운 후 자동 갱신). 상승=빨강▲, 하락=파랑▼ (색약 대비 기호 병기).
