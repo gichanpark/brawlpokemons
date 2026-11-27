@@ -214,5 +214,5 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 ## v1.20.28 (서버 저장 검증)
 - pb_save: 관리자 제외. 새 계정 첫 저장이 다른 계정 데이터처럼 보이면(금구슬>3000, 혜성조각>100, 포켓몬>5, 트로피>80, 스킨 보유, acct 다름) 빈 세이브로 초기화 → 'reset' 반환(클라 스타팅 선택) + pb_flag 'clone_reset'
   - 기존 계정: 저장 간 증가량 허용치 = 우편 수령(claimed_at 이후)+지급 + 6000+1500×분 + 기존 잔액×3(슬롯). 넘으면 pb_flag 'jump', 허용치+30만(혜성 +3만) 넘으면 깎고 'fix' 반환. 포켓몬 +8(+우편) 넘게 늘면 기록
-- pb_signup: 같은 IP(x-forwarded-for, pb_req_ip) 하루 3계정 제한 → 'too_many', signup_ip 저장
+- pb_signup: 가입 IP 기록만 (signup_ip). 하루 3계정 제한은 사용자 요청으로 해제
 - pb_mail.claimed_at, pb_users.saved_at/signup_ip, pb_flag 테이블, pb_admin_flags(의심 기록 + 같은 트로피 해시 묶음) → 관리자 메뉴 '의심 기록'
