@@ -274,6 +274,7 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .gf-sec{display:flex;flex-direction:column;gap:4px}.gf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px;max-height:170px;overflow-y:auto}
 .gf-it{display:flex;align-items:center;gap:4px;background:#1c1530;border:2px solid #111;padding:3px 5px;font-size:10px}.gf-it span{flex:1;min-width:0;line-height:1.2}.gf-it i{font-style:normal;opacity:.6}.gf-it .btn{padding:1px 6px}.gf-it>b{min-width:16px;text-align:center}
 .gf-it.on{border-color:#facc15;background:#2a2140}.gf-sk{cursor:pointer}.gf-sk img{height:26px;max-width:34px}.gf-ck{font-weight:400;color:#a8a29e}.gf-sk.on .gf-ck{color:#fde047}
+.rmode{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin:6px 0 3px}.rmode .sl-bet{padding:3px 8px}.rmode .sl-bet:disabled{opacity:.55}.rmode .sl-bet.on:disabled{opacity:1}
 .lt-sec{border-top:2px solid #3f3f46;margin-top:8px;padding-top:6px;font-size:12px}.lt-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}.lt-row>span{font-size:11px;margin-left:6px}.sqb{position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;border:2px solid #111;font-style:normal;font-size:11px;min-width:18px;height:18px;line-height:14px;text-align:center}
 .jp{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px}
 .jpc{flex:0 0 86px;display:flex;flex-direction:column;gap:5px}
@@ -615,7 +616,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.28';
+const VER='1.21.29';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -3401,7 +3402,7 @@ $('#bTrain').onclick=()=>{const m=SAVE.mode;SAVE.mode='train';startGame(pickRost
 document.body.appendChild($('#shOv'));$('#bRankMini').onclick=()=>{sfx('ui');modal(`<div class="lb-rank" style="position:static;display:flex;width:auto;min-width:300px;max-height:60vh">${$('#lbRank').innerHTML}</div><div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`);document.querySelectorAll('.mbox .rk').forEach(el=>el.onclick=()=>{if(el.dataset.u){sfx('ui');openPlayer(el.dataset.u);}});};$('#bMail').onclick=()=>openMail();$('#bInv').onclick=()=>{sfx('ui');openInv();};$('#bNotice').onclick=()=>openNotice();$('#lbVer').textContent='v'+VER;
 document.querySelectorAll('img[data-ico]').forEach(im=>im.src=ICO[im.dataset.ico]);
 $('#bMulti').onclick=()=>{
-  modal(`<h2>친구랑 멀티</h2><b style="color:#fde047;font-size:11px">젬 그랩 3대3</b><div style="font-size:11px;opacity:.85;margin-bottom:10px">최대 6명 (3대3) · 빈 자리는 봇이 채워요 · 방장이 게임을 진행해요</div>
+  modal(`<h2>친구랑 멀티</h2><b style="color:#fde047;font-size:11px">3대3 멀티 · 젬 그랩 / 바운티 / 하이스트 / 브롤 볼</b><div style="font-size:11px;opacity:.85;margin-bottom:10px">최대 6명 (3대3) · 빈 자리는 봇이 채워요 · 방장이 종목을 고르고 게임을 진행해요</div>
   <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><button class="btn sm" id="mkRoom">방 만들기</button><span style="font-size:11px">또는 코드로 참가</span>
   <input class="minput" id="codeIn" maxlength="4" style="width:110px;text-transform:uppercase;letter-spacing:3px" placeholder="ABCD"><button class="btn b2 sm" id="joinRoom">참가</button></div>
   <div style="margin-top:14px;padding-top:10px;border-top:3px solid #3b2d63"><b style="color:#fde047;font-size:11px">친선전 · 1대1 내기 넉아웃</b><div style="font-size:11px;opacity:.85;margin:4px 0 8px">3판 2선승 · 부활 없음 · 금구슬·혜성조각을 걸고 이긴 사람이 판돈을 모두 가져가요 (참가는 위의 코드 입력으로)</div><button class="btn sm" id="mkKO" style="background:#dc2626;color:#fff">1대1 내기 방 만들기</button></div>
@@ -3660,7 +3661,7 @@ function ev(...a){if(NET.on&&NET.host&&G)NET.ev.push(a);}
 function loadSB(){return new Promise((res,rej)=>{if(window.supabase)return res();const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';s.onload=()=>res();s.onerror=()=>rej(new Error('load'));document.head.appendChild(s);});}
 async function sb(){if(SBC)return SBC;await loadSB();SBC=window.supabase.createClient(SB_URL,SB_KEY,{realtime:{params:{eventsPerSecond:40}}});return SBC;}
 function genCode(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<4;i++)s+=A[Math.floor(Math.random()*A.length)];return s;}
-function myMeta(team){const c=chOf(SAVE.sel);return {kind:NET.kind||'gem',user:ACC.user||null,coins:SAVE.coins||0,gems:SAVE.gems||0,id:NET.id,name:SAVE.nick||SAVE.name,ck:c.k,lv:lv(c.k),sk:skinId(c.k)||0,team,host:NET.host,t:NET.joinT,bots:(NET.myBots||[]).filter(k=>owns(k)).map(k=>({k,lv:lv(k)}))};}
+function myMeta(team){const c=chOf(SAVE.sel);return {kind:NET.kind||'gem',tm:NET.host?(NET.tmode||'gem'):undefined,user:ACC.user||null,coins:SAVE.coins||0,gems:SAVE.gems||0,id:NET.id,name:SAVE.nick||SAVE.name,ck:c.k,lv:lv(c.k),sk:skinId(c.k)||0,team,host:NET.host,t:NET.joinT,bots:(NET.myBots||[]).filter(k=>owns(k)).map(k=>({k,lv:lv(k)}))};}
 function bc(event,payload){if(NET.ch)NET.ch.send({type:'broadcast',event,payload});}
 
 /* 방 만들기 / 참가 */
@@ -3717,6 +3718,7 @@ function netLeave(msg){
   if(msg)modal(`<h2>알림</h2><div style="font-size:11px;margin:6px 0 4px">${msg}</div><div class="mrow"><button class="btn sm" onclick="closeModal()">확인</button></div>`);else closeModal();
 }
 /* 방 화면 */
+const ROOM_MODES=['gem','bounty','heist','ball'];
 function showRoom(){G=null;showScr('room');renderRoom();}
 const teamList=(ms,t)=>{const L=[];ms.filter(m=>m.team===t).forEach(m=>L.push(m));ms.filter(m=>m.team===t).forEach(m=>(m.bots||[]).forEach((b,i)=>L.push({bot:1,k:b.k,lv:b.lv,owner:m.id,oname:m.name,i})));return L.slice(0,3);};
 function renderRoom(){
@@ -3727,11 +3729,12 @@ function renderRoom(){
   const col=t=>{const a=teamList(ms,t);let h='';for(let i=0;i<3;i++)h+=slot(a[i],t);return h;};
   $('#roomCode').textContent=NET.code;
   $('#roomBlue').innerHTML=col(0);$('#roomRed').innerHTML=col(1);
-  const ko=NET.kind==='ko';$('#roomPill').textContent=ko?'친선전 · 1대1 내기 넉아웃':'멀티 · 젬 그랩 3대3';$('#bRTeam').style.display=ko?'none':'';
+  const ko=NET.kind==='ko',hm=ms.find(m=>m.host),tm=NET.host?(NET.tmode||'gem'):(hm&&hm.tm)||'gem';$('#roomPill').textContent=ko?'친선전 · 1대1 내기 넉아웃':'멀티 · '+MODES[tm].nm+' 3대3';$('#bRTeam').style.display=ko?'none':'';
   if(ko){const one=t=>slot(ms.filter(m=>m.team===t)[0]);$('#roomBlue').innerHTML=one(0);$('#roomRed').innerHTML=one(1);}
   $('#roomInfo').textContent=ko?`${ms.length}/2명 · 3판 2선승 · 부활 없음`:`${ms.length}/6명 · `+(NET.host?'준비되면 시작을 눌러요':'방장이 시작하길 기다리는 중...');
   $('#bRStart').style.display=NET.host?'':'none';
-  if(ko)renderBet();else $('#roomBet').innerHTML='';
+  if(ko)renderBet();else{$('#roomBet').innerHTML=`<div class="rmode">${ROOM_MODES.map(k=>`<button class="sl-bet${tm===k?' on':''}" data-tm="${k}" ${NET.host?'':'disabled'}><img class="ico" src="${ICO[MODES[k].ico]||ICO.star}"> ${MODES[k].nm}</button>`).join('')}</div><div style="font-size:10px;opacity:.75;text-align:center">${esc(MODES[tm].ds)}${NET.host?' · 방장이 종목을 골라요':''}</div>`;
+    document.querySelectorAll('#roomBet [data-tm]').forEach(b=>b.onclick=()=>{if(!NET.host)return;NET.tmode=b.dataset.tm;sfx('ui');refreshMeta();renderRoom();});}
   document.querySelectorAll('#room [data-add]').forEach(el=>el.onclick=()=>{sfx('ui');pickRoomBot();});
   document.querySelectorAll('#room [data-rm]').forEach(el=>el.onclick=e=>{e.stopPropagation();NET.myBots=(NET.myBots||[]).filter((_,i)=>i!==+el.dataset.rm);sfx('ui');refreshMeta();});
 }
@@ -3806,7 +3809,7 @@ function hostStart(){
   const team=t=>{const a=teamList(ms,t).map(m=>m.bot?{k:m.k,lv:m.lv,owner:null,name:m.oname+'의 봇'}:{k:m.ck,lv:m.lv,owner:m.id,name:m.name,sk:m.sk||0});
     const avg=ms.length?Math.round(ms.reduce((s,m)=>s+m.lv,0)/ms.length):1;
     while(a.length<3){const c=pool.pop()||pick(CH);a.push({k:c.k,lv:clamp(avg+Math.floor(Math.random()*3)-1,1,11),owner:null,name:botNick(c)});}return a;};
-  const R={blue:team(0),red:team(1),mapId:Math.floor(Math.random()*TMAPS.length)};
+  const R={kind:NET.tmode||'gem',blue:team(0),red:team(1),mapId:Math.floor(Math.random()*TMAPS.length)};
   bc('start',R);netStart(R);
 }
 function netStart(Rw){
@@ -3837,14 +3840,14 @@ function netHostTick(dt){
   const Pr=G.projs.map(p=>p.lob?[1,p.s._id,r1(p.sx),r1(p.sy),r1(p.tx),r1(p.ty),r2(p.t),r2(p.dur),p.team,p.met?1:0]:[0,p.s._id,r1(p.x),r1(p.y),r1(p.vx),r1(p.vy),r1(p.r),r1(p.tr),r1(p.maxD),p.team,p.ret?1:0].concat(p.cv!=null?[r1(p.cv),r1(p.bx),r1(p.by),p.gk]:p.sk?[null,null,null,null]:[]).concat(p.sk?[p.sk]:[]));
   const I=G.items.map(it=>[it.ty==='gem'?0:it.ty==='rock'?2:1,r1(it.x),r1(it.y),it.team??-1]);
   const Z=G.zones.map(z=>[r1(z.x),r1(z.y),r1(z.r),r2(z.t),z.team,z.kind||'']);
-  bc('s',{bl:G.ball?[r1(G.ball.x),r1(G.ball.y),G.ball.h?G.ball.h.nid:-1,G.goals[0],G.goals[1],r2(G.goalT||0),G.ot?1:0,r1(G.ball.z||0),G.ball.sk?1:0]:null,ko:G.ko?[G.ko.s[0],G.ko.s[1],G.ko.round,r2(G.ko.next)]:null,t:r2(G.t),tm:r2(G.time),cd:r2(G.cd),ct:G.cdTeam,in:r2(G.intro),e:E,p:Pr,i:I,z:Z,ev:NET.ev});
+  bc('s',{bl:G.ball?[r1(G.ball.x),r1(G.ball.y),G.ball.h?G.ball.h.nid:-1,G.goals[0],G.goals[1],r2(G.goalT||0),G.ot?1:0,r1(G.ball.z||0),G.ball.sk?1:0]:null,ko:G.ko?[G.ko.s[0],G.ko.s[1],G.ko.round,r2(G.ko.next)]:null,bs:G.stars?[G.stars[0],G.stars[1],G.ents.map(e=>e.bounty||0)]:null,t:r2(G.t),tm:r2(G.time),cd:r2(G.cd),ct:G.cdTeam,in:r2(G.intro),e:E,p:Pr,i:I,z:Z,ev:NET.ev});
   NET.ev=[];
 }
 /* 클라이언트: 스냅샷 수신 */
 function onSnap(s){
   if(!G||!NET.started)return;
   s.rt=performance.now();NET.snaps.push(s);if(NET.snaps.length>4)NET.snaps.shift();
-  G.time=s.tm;G.cd=s.cd;G.cdTeam=s.ct;G.intro=s.in;if(s.ko&&G.ko){G.ko.s=[s.ko[0],s.ko[1]];G.ko.round=s.ko[2];G.ko.next=s.ko[3];}
+  G.time=s.tm;G.cd=s.cd;G.cdTeam=s.ct;G.intro=s.in;if(s.bs){G.stars=[s.bs[0],s.bs[1]];s.bs[2].forEach((b,i)=>{if(G.ents[i])G.ents[i].bounty=b;});}if(s.ko&&G.ko){G.ko.s=[s.ko[0],s.ko[1]];G.ko.round=s.ko[2];G.ko.next=s.ko[3];}
   s.e.forEach((a,i)=>{const e=G.ents[i];if(!e)return;
     const hp0=e.hp,al0=e.alive;
     e.hp=a[2];e.maxHp=a[3];e.alive=!!a[4];e.gems=a[5];e.ammo=a[6];const sc0=e.sc;e.sc=a[7];e.fx=a[8];e.stun=a[9];e.inv=a[10];e.buffT=a[11];e.zz=a[12];
@@ -5131,7 +5134,7 @@ async function openPlayer(u){modal(`<h2>트레이너 정보</h2><div style="font
   let btn='';
   if(r.me)btn=`<button class="btn sm" id="ppEdit">내 프로필 꾸미기</button>`;
   else if(!ACC.token)btn='';
-  else if(r.fs==='f')btn=`<button class="btn sm" id="ppKO" style="background:#dc2626;color:#fff">친선전 초대</button><button class="btn sm" id="ppGem">젬 그랩 같이하기</button><button class="btn b2 sm" id="ppDel">친구 삭제</button>`;
+  else if(r.fs==='f')btn=`<button class="btn sm" id="ppKO" style="background:#dc2626;color:#fff">친선전 초대</button><button class="btn sm" id="ppGem">3대3 멀티 같이하기</button><button class="btn b2 sm" id="ppDel">친구 삭제</button>`;
   else if(r.fs==='out')btn=`<button class="btn b2 sm" disabled>친구 요청 보냄</button>`;
   else if(r.fs==='in')btn=`<button class="btn sm" id="ppAcc">친구 요청 수락</button>`;
   else btn=`<button class="btn sm" id="ppAdd">친구 추가</button>`;
@@ -5150,7 +5153,7 @@ async function inviteFriend(u,n,kind){
   let code=NET.on&&NET.host&&NET.kind===kind&&!NET.started?NET.code:null;
   if(!code){if(NET.on)netLeave();code=genCode();openRoom(code,true,kind);}
   setTimeout(async()=>{let q;try{q=await rpc('pb_invite',{p_token:ACC.token,p_to:u,p_code:code,p_kind:kind});}catch(e){}
-    if(q&&q.ok)toast(`${esc(n)}님에게 ${kind==='ko'?'친선전':'젬 그랩'} 초대를 보냈어요`);else toast('초대를 보내지 못했어요 (친구만 초대할 수 있어요)');},1600);}
+    if(q&&q.ok)toast(`${esc(n)}님에게 ${kind==='ko'?'친선전':'3대3 멀티'} 초대를 보냈어요`);else toast('초대를 보내지 못했어요 (친구만 초대할 수 있어요)');},1600);}
 function toast(h,btns){const t=$('#invToast');t.innerHTML=`<span>${h}</span>${btns||''}`;t.classList.add('on');clearTimeout(t._t);if(!btns)t._t=setTimeout(()=>t.classList.remove('on'),3500);return t;}
 const SEENINV=new Set();let pingT=null;
 function verNum(v){return String(v||'0').split('.').map(x=>+x||0).reduce((a,x)=>a*1000+x,0);}
@@ -5178,7 +5181,7 @@ async function pingNow(){if(!ACC.token)return;let r;try{r=await rpc('pb_ping',{p
   const bd=$('#frBadge');if(bd){bd.textContent=r.freq;bd.style.display=r.freq?'':'none';}
   const busy=G&&!G.over;
   for(const v of r.inv){if(SEENINV.has(v.id)||busy)continue;SEENINV.add(v.id);sfx('found');
-    const t=toast(`<b style="color:#fde047">${esc(v.n)}</b>님이 ${v.kind==='ko'?'1대1 친선전':'젬 그랩'}에 초대했어요!`,`<button class="btn sm" id="ivY">수락</button><button class="btn b2 sm" id="ivN">거절</button>`);
+    const t=toast(`<b style="color:#fde047">${esc(v.n)}</b>님이 ${v.kind==='ko'?'1대1 친선전':'3대3 멀티'}에 초대했어요!`,`<button class="btn sm" id="ivY">수락</button><button class="btn b2 sm" id="ivN">거절</button>`);
     const hide=()=>t.classList.remove('on');clearTimeout(t._t);t._t=setTimeout(hide,60000);
     $('#ivN').onclick=()=>{hide();rpc('pb_invite_resp',{p_token:ACC.token,p_id:v.id,p_ok:false}).catch(()=>{});};
     $('#ivY').onclick=async()=>{hide();let q;try{q=await rpc('pb_invite_resp',{p_token:ACC.token,p_id:v.id,p_ok:true});}catch(e){}
