@@ -259,3 +259,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - IMGX 는 SKINX 의 모든 이미지 키(f1~f3, mega, gmax) 로드, megaImg 도 테마 지원
 - 갑옷 조각 가격: 만렙 티켓 500→700, 10연속 추출 400→1500
 - v1.21.8: 레쿠쟈 gold→sky(창공), 큐레무 magma→onyx(흑빙), 아르세우스 abyss→flame(홍염) 교체. 예전 키는 SKREN 으로 cleanSave 때 새 키로 바꿔줌
+- v1.21.9: 슬롯머신 숨김 (SHOW_SLOT=false)
