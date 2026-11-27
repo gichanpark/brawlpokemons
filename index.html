@@ -561,7 +561,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.20.21';
+const VER='1.20.22';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1383,7 +1383,7 @@ function startGame(R){TNTF.length=0;
   else if(R.names){G.ents.forEach((e,i)=>{if(!e.name&&R.names[i])e.name=R.names[i];});}
   G.tour=mode==='train'||mode==='karp'?0:3.8;G.tourT=0;
   {const d=mode==='karp'?.55:clamp(tro(P.ch.k)/500,0,1);G.diff=d;for(const e of G.ents){if(e===P||e.owner||e.dummy||e.safe)continue;const foe=e.team!==P.team||mode==='sd',dd=foe?d:Math.max(.45,d);
-    e.ai.err=(.34-.26*dd)+Math.random()*.08;e.ai.react=.42-.24*dd;e.ai.fg=1.7-.7*dd;e.ai.supP=.35+.65*dd;}}G.cam.x=P.x;G.cam.y=P.y;G.floor=null;
+    e.ai.err=(.34-.26*dd)+Math.random()*.08;e.ai.react=.42-.24*dd;e.ai.fg=1.7-.7*dd;e.ai.supP=.35+.65*dd;aiPersona(e);}}G.cam.x=P.x;G.cam.y=P.y;G.floor=null;
   IN.mv=IN.atk=IN.sup=null;
   showScr(null);
 }
@@ -1852,11 +1852,12 @@ function endMatch(mode,res){
   G.result={big,sub,d,coin,road,gem,pxp,qd};
   setTimeout(()=>sfx(d>0||res==='win'?'win':(tm&&res==='draw')?'ui':'lose'),700);
 }
+const psTag=e=>{const k=e.ai&&e.ai.ps;return k&&k!=='norm'&&e!==P&&!e.owner?`<span style="font-size:9px;color:#111;background:${PERSONA[k].col};padding:0 3px;margin-right:3px;border:1px solid #111">${PERSONA[k].sh}</span>`:'';};
 function kdHtml(){const L=G.ents.filter(e=>!e.safe&&!e.dummy);if(!L.length)return '';
-  const row=e=>`<tr class="${e===P?'me':''}"><td><img src="${SPR[chOf(e.ch.k).id]}"></td><td class="n">${e===P?'▶ ':''}${esc(e===P?(SAVE.nick||'나'):(e.name||e.ch.nm))}</td><td class="k">${e.kills||0}</td><td class="d">${e.deaths||0}</td></tr>`;
+  const row=e=>`<tr class="${e===P?'me':''}"><td><img src="${SPR[chOf(e.ch.k).id]}"></td><td class="n">${e===P?'▶ ':''}${psTag(e)}${esc(e===P?(SAVE.nick||'나'):(e.name||e.ch.nm))}</td><td class="k">${e.kills||0}</td><td class="d">${e.deaths||0}</td></tr>`;
   const tb=(t,a)=>`<table><tr><th></th><th style="text-align:left">${t}</th><th>킬</th><th>데스</th></tr>${a.sort((x,y)=>(y.kills||0)-(x.kills||0)||(x.deaths||0)-(y.deaths||0)).map(row).join('')}</table>`;
   if(TM())return tb('우리 팀',L.filter(e=>e.team===P.team))+tb('상대 팀',L.filter(e=>e.team!==P.team));
-  if(G.mode==='sd'){const al1=G.ents.filter(o=>o.alive&&!o.safe).length===1,lab=e=>e.rank?e.rank+'위':e.alive?(al1?'1위':'생존'):'탈락',a=L.slice().sort((x,y)=>(x.rank||(x.alive?0:99))-(y.rank||(y.alive?0:99))),h=Math.ceil(a.length/2),rk=e=>`<tr class="${e===P?'me':''}"><td>${lab(e)}</td><td><img src="${SPR[chOf(e.ch.k).id]}"></td><td class="n">${e===P?'▶ ':''}${esc(e===P?(SAVE.nick||'나'):(e.name||e.ch.nm))}</td><td class="k">${e.kills||0}</td><td class="d">${e.deaths||0}</td></tr>`,t2=b=>`<table><tr><th>순위</th><th></th><th style="text-align:left">이름</th><th>킬</th><th>데스</th></tr>${b.map(rk).join('')}</table>`;return t2(a.slice(0,h))+(a.length>h?t2(a.slice(h)):'');}
+  if(G.mode==='sd'){const al1=G.ents.filter(o=>o.alive&&!o.safe).length===1,lab=e=>e.rank?e.rank+'위':e.alive?(al1?'1위':'생존'):'탈락',a=L.slice().sort((x,y)=>(x.rank||(x.alive?0:99))-(y.rank||(y.alive?0:99))),h=Math.ceil(a.length/2),rk=e=>`<tr class="${e===P?'me':''}"><td>${lab(e)}</td><td><img src="${SPR[chOf(e.ch.k).id]}"></td><td class="n">${e===P?'▶ ':''}${psTag(e)}${esc(e===P?(SAVE.nick||'나'):(e.name||e.ch.nm))}</td><td class="k">${e.kills||0}</td><td class="d">${e.deaths||0}</td></tr>`,t2=b=>`<table><tr><th>순위</th><th></th><th style="text-align:left">이름</th><th>킬</th><th>데스</th></tr>${b.map(rk).join('')}</table>`;return t2(a.slice(0,h))+(a.length>h?t2(a.slice(h)):'');}
   return tb('플레이어',L);}
 function showResult(){
   $('#bAgain').textContent='다시 하기';
@@ -1874,6 +1875,12 @@ function showResult(){
 }
 
 /* ---------- AI ---------- */
+/* AI 성격: 보통 / 상남자형 / 쫄보형 / 잘하는형 */
+const PERSONA={norm:{nm:'보통',w:40},brave:{nm:'상남자형',sh:'상남자',w:20,col:'#f87171'},shy:{nm:'쫄보형',sh:'쫄보',w:20,col:'#93c5fd'},pro:{nm:'잘하는형',sh:'고수',w:20,col:'#fde047'}};
+function aiPersona(e){const A=e.ai;let r=Math.random()*100,k='norm';for(const [id,v] of Object.entries(PERSONA)){if((r-=v.w)<0){k=id;break;}}A.ps=k;
+  if(k==='brave'){A.pref=.45;A.flee=.12;A.eng=1.6;A.supP=Math.min(1,A.supP+.25);A.err+=.04;A.fg*=.8;A.stf=.5;}
+  else if(k==='shy'){A.pref=.95;A.flee=.55;A.eng=.8;A.supP*=.7;A.fg*=1.1;A.stf=.9;A.kite=1;}
+  else if(k==='pro'){A.pref=.75;A.flee=.3;A.eng=1.15;A.err*=.55;A.react=Math.max(.12,A.react*.7);A.stf=1.15;A.focus=.55;A.supSmart=1;}}
 function ai(e,dt){
   const A=e.ai;A.th-=dt;A.fcd-=dt;A.str+=dt;
   if(A.th<=0){A.th=(A.react||.18)+Math.random()*.15;decide(e);}
@@ -1884,7 +1891,7 @@ function ai(e,dt){
     if(moved<T*.35&&far&&e.stun<=0&&!e.dash&&!e.leap){A.unstuck=.5+Math.random()*.4;const sg=Math.random()<.5?1:-1;if(sv&&(sv[0]||sv[1])){A.ux=-sv[1]*sg*.8+sv[0]*.2;A.uy=sv[0]*sg*.8+sv[1]*.2;}else{const a=Math.random()*6.283;A.ux=Math.cos(a);A.uy=Math.sin(a);}}
     A.lx=e.x;A.ly=e.y;A.stT=0;}
   if(A.unstuck>0){A.unstuck-=dt;mx=A.ux;my=A.uy;const nx=e.x+mx*T*.6,ny=e.y+my*T*.6;if(blocksMove(tAtP(nx,ny))){A.ux=-A.uy;A.uy=mx;}}
-  if((A.mode==='fight'||A.mode==='hold')&&A.tgt){const dx=A.tgt.x-e.x,dy=A.tgt.y-e.y,d=Math.hypot(dx,dy)||1,s=Math.sin(A.str*A.sf+A.ph);mx+=-dy/d*s*.75;my+=dx/d*s*.75;}
+  if((A.mode==='fight'||A.mode==='hold')&&A.tgt){const dx=A.tgt.x-e.x,dy=A.tgt.y-e.y,d=Math.hypot(dx,dy)||1,s=Math.sin(A.str*A.sf+A.ph);mx+=-dy/d*s*(A.stf??.75);my+=dx/d*s*(A.stf??.75);}
   for(const o of G.ents)if(o!==e&&o.alive&&o.team===e.team){const dx=e.x-o.x,dy=e.y-o.y,d=Math.hypot(dx,dy);if(d<40&&d>0){mx+=dx/d*.5;my+=dy/d*.5;}}
   const l=Math.hypot(mx,my);if(l>1){mx/=l;my/=l;}
   if(G.safes&&(mx||my))for(const q of G.safes){if(!q.alive)continue;const dx=q.x-e.x,dy=q.y-e.y,d=Math.hypot(dx,dy)||1,rr=q.r+e.r+T*.9;if(d<rr&&(mx*dx+my*dy)/d>.2){const sg=(mx*dy-my*dx)>0?1:-1;const tx=dy/d*sg,ty=-dx/d*sg;mx=tx*.9-dx/d*.1;my=ty*.9-dy/d*.1;}}
@@ -1896,7 +1903,7 @@ function ai(e,dt){
   const t=A.tgt;
   if(t&&t.alive&&visibleTo(t,e.team)){
     const d=dist(e,t),a=e.ch.atk,s=e.ch.sup;
-    if(e.sc>=1&&Math.random()<(A.supP??1)){
+    if(e.sc>=1&&Math.random()<(A.supP??1)&&!(A.supSmart&&s.ty==='shot'&&!s.thru&&d>(s.range||6)*T*.7&&t.hp>t.maxHp*.35)){
       let ok=false;
       if(s.ty==='zone'){if(e.hp<e.maxHp*.55){ok=fireSuper(e,0,0);}else if(d<s.range*T)ok=botFire(e,t,true);}
       else if(s.ty==='nova'){if(d<s.aoe*T*.85)ok=fireSuper(e,0,0);}
@@ -1928,10 +1935,10 @@ function botFire(e,t,sup){
 function decide(e){
   const A=e.ai,m=G.map;
   let ne=null,nd=1e9;
-  for(const o of G.ents){if(!o.alive||o.team===e.team||!visibleTo(o,e.team))continue;if(o.illusT>0&&dist(e,o)>1.6*T)continue;let d=dist(e,o);if(o.hp<o.maxHp*.4)d*=.8;if(d<nd){nd=d;ne=o;}}
-  const rng=e.ch.atk.range*T,pref=Math.max(rng*.7,T*1.3);
-  A.tgt=ne&&nd<Math.max(rng*1.5,6*T)?ne:null;A.box=null;
-  const low=e.hp<e.maxHp*(G.mode==='heist'?.22:.33)&&ne&&nd<rng*1.4;
+  for(const o of G.ents){if(!o.alive||o.team===e.team||!visibleTo(o,e.team))continue;if(o.illusT>0&&dist(e,o)>1.6*T)continue;let d=dist(e,o);if(o.hp<o.maxHp*.4)d*=(A.focus??.8);if(d<nd){nd=d;ne=o;}}
+  const rng=e.ch.atk.range*T,pref=Math.max(rng*(A.pref??.7),T*1.3);
+  A.tgt=ne&&nd<Math.max(rng*1.5,6*T)*(A.eng??1)?ne:null;A.box=null;
+  const low=e.hp<e.maxHp*(G.mode==='heist'?.22:(A.flee??.33))&&ne&&nd<rng*1.4;
   if(G.mode==='sd'){
     const a=(G.gas+1.5)*T,b=(m.C-G.gas-1.5)*T;
     if(e.x<a||e.x>b||e.y<a||e.y>b){A.mode='move';A.gx=m.center.x;A.gy=m.center.y;return;}
