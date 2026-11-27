@@ -616,7 +616,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.29';
+const VER='1.21.30';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -3650,6 +3650,12 @@ const BAL_FIX={pikachu:[1.0969,1.075,1.1546],charizard:[1.0524,1.0341,1.0407],bl
 (()=>{const done=new Set(),sc=(c,f)=>{if(!c||done.has(c))return;done.add(c);if(typeof c.hp==='number')c.hp=Math.round(c.hp*f[0]/10)*10;
     for(const [sp,m] of [[c.atk,f[1]],[c.sup,f[2]]]){if(!sp||done.has(sp))continue;done.add(sp);if(sp.dmg>0)sp.dmg=Math.round(sp.dmg*m);}};
   for(const c of CH){const f=BAL_FIX[c.k];if(!f)continue;sc(c,f);const fm=FORMS[c.k];if(fm)fm.forEach(x=>sc(x,f));}})();
+/* v1.21.30 너프 (사용률·쇼다운 성적 1위권) [체력, 평타, 필살기] 배율 */
+const NERF={eternatus:[.88,.85,.85],giratina:[.92,.9,.88],arceus:[.9,.9,.9],zygarde:[.95,.9,.9],necrozma:[.95,.92,.92],darkrai:[.95,.92,.92],armewtwo:[.92,.9,.9]};
+(()=>{const done=new Set(),sc=(c,f)=>{if(!c||done.has(c))return;done.add(c);if(typeof c.hp==='number')c.hp=Math.round(c.hp*f[0]/10)*10;
+    for(const [sp,m] of [[c.atk,f[1]],[c.sup,f[2]]]){if(!sp||done.has(sp))continue;done.add(sp);if(sp.dmg>0)sp.dmg=Math.round(sp.dmg*m);if(sp.endDmg>0)sp.endDmg=Math.round(sp.endDmg*m);}};
+  for(const c of CH){const f=NERF[c.k];if(!f)continue;sc(c,f);const fm=FORMS[c.k];if(fm)fm.forEach(x=>sc(x,f));}
+  const dk=chOf('darkrai');if(dk&&dk.sup.stun)dk.sup.stun=1.2;})();
 function formPor(k,i){return POR[k+'_'+(i||0)]||(i?POR[k+i]:null)||POR[chOf(k).id];}
 const SPECS=[];CH.concat(DXF.slice(1),MNF.slice(1),PLF.slice(1),MKF.slice(1),TRF.slice(1),LTF.slice(1),CXF.slice(1),ENF.slice(1),STF.slice(1),GRF.slice(1),NZF.slice(1),KYF.slice(1),MPF.slice(1),ZGF.slice(1),OGF.slice(1),AEF.slice(1),DMF.slice(1)).forEach(c=>{c.atk._id=SPECS.push(c.atk)-1;c.sup._id=SPECS.push(c.sup)-1;});
 const SHARDS={};
