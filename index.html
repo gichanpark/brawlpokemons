@@ -520,7 +520,7 @@ select.minput{width:auto}
   <button class="lb-fr lb-nt" id="bNotice">공지<i id="ntBadge" style="display:none">N</i></button>
   <div class="lb-ver" id="lbVer"></div>
   <button class="lb-fr" id="bFriend">친구<i id="frBadge" style="display:none">0</i></button>
-  <button class="lb-mail lb-stk" id="bStock"><img id="stkIco" alt=""><span>주식</span></button>
+  <button class="lb-mail lb-stk" id="bStock" style="display:none"><img id="stkIco" alt=""><span>주식</span></button>
   <button class="lb-mail lb-inv" id="bInv"><img class="px" id="invIco" alt=""><span>가방</span><i id="invBadge" style="display:none">0</i></button>
   <button class="lb-mail" id="bMail"><img class="px" data-ico="mail" alt=""><span>우편함</span><i id="mailBadge" style="display:none">0</i></button>
   <div class="lb-side">
@@ -614,7 +614,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.24';
+const VER='1.21.25';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -4477,12 +4477,13 @@ function openBox(id){
   }
   SAVE.coins+=R.coin;SAVE.gems=(SAVE.gems||0)+R.gem;return R;
 }
-const SHOW_GAMBLE=false,SHOW_SLOT=false;/* 슬롯머신·포켓증권 노출 (true로 바꾸면 다시 보임) */
-const SEC={today:'스카우트 · 오늘의 선물',game:SHOW_SLOT?'투자 · 미니게임':'투자',box:'볼 상자',coin:'금구슬 교환'}/* tkt 항목은 상점에 안 보이고 되팔기·회수 가격 기준으로만 씀 */;
+const SHOW_GAMBLE=false,SHOW_SLOT=false,SHOW_STOCK=false;/* SHOW_STOCK: 포켓증권(상점 투자 칸·로비 주식 버튼) */
+if(SHOW_STOCK)$('#bStock').style.display='';/* 슬롯머신·포켓증권 노출 (true로 바꾸면 다시 보임) */
+const SEC=Object.assign({today:'스카우트 · 오늘의 선물'},SHOW_STOCK||SHOW_SLOT?{game:SHOW_STOCK&&SHOW_SLOT?'투자 · 미니게임':SHOW_STOCK?'투자':'미니게임'}:{},{box:'볼 상자',coin:'금구슬 교환'})/* tkt 항목은 상점에 안 보이고 되팔기·회수 가격 기준으로만 씀 */;
 function renderShop(){
   const done=SAVE.daily===today();
   $('#shCoin').textContent=SAVE.coins;$('#shGem').textContent=SAVE.gems||0;
-  $('#shBody').innerHTML=Object.entries(SEC).map(([k,t])=>`<div class="shsec"><h3>${t}</h3><div class="shrow">`+SHOP.filter(it=>it.sec===k&&(it.cur!=='slot'||SHOW_SLOT)).map(it=>{if(it.tk&&ITEMS[it.tk]){it.nm=ITEMS[it.tk].nm;it.ds=ITEMS[it.tk].ds+' (가방으로)';}
+  $('#shBody').innerHTML=Object.entries(SEC).map(([k,t])=>`<div class="shsec"><h3>${t}</h3><div class="shrow">`+SHOP.filter(it=>it.sec===k&&(it.cur!=='slot'||SHOW_SLOT)&&(it.cur!=='stock'||SHOW_STOCK)).map(it=>{if(it.tk&&ITEMS[it.tk]){it.nm=ITEMS[it.tk].nm;it.ds=ITEMS[it.tk].ds+' (가방으로)';}
     const can=it.cur==='slot'?!slotBanned():it.cur==='stock'?true:it.cur==='free'?!done:it.cur==='coin'?SAVE.coins>=it.cost:(SAVE.gems||0)>=it.cost;
     const price=it.cur==='stock'?'열기':it.cur==='slot'?(slotBanned()?'출입 금지 · '+banLeft(SAVE.slotBan)+' 남음':'플레이'):it.cur==='free'?(done?'내일 다시':'무료'):`${it.cur==='coin'?cIco:gIco} ${it.cost}`;
     const pic=it.cur==='stock'?`<img class="sbig px" src="${STI.icon}">`:it.cur==='slot'?`<img class="sbig px" src="${SLOTI.icon}">`:it.tk?`<span class="sbig" style="display:flex;align-items:center;justify-content:center">${itemPic(it.tk)}</span>`:it.give?`<img class="sbig" src="${ICO.coin}">`:`<img class="sbig" src="${BALL[it.ball]}">`;
@@ -4677,7 +4678,7 @@ function stRender(soft){if(!ST.d)return;const co=stCo();stPill();
   $('#stMaxB').onclick=()=>{const bl=stBal(x);let n=Math.floor(bl/(p*1.01));while(n>0&&n*p+fee(n*p)>bl)n--;q.value=Math.max(0,Math.min(n,x.fl-x.mq));est();sfx('ui');};
   $('#stMaxS').onclick=()=>{q.value=x.mq;est();sfx('ui');};
   $('#stBuy').onclick=()=>stTrade(x,1);$('#stSell').onclick=()=>stTrade(x,-1);est();stTick();}
-const STE={funds:'재화가 부족해요 (서버 저장 기준)',hold:'가진 주식보다 많이 팔 수 없어요',cap:'한 종목은 정해진 수량까지만 가질 수 있어요',qty:'수량을 확인해 주세요',auth:'다시 로그인해 주세요',sid:'없는 종목이에요'};
+const STE={closed:'포켓증권은 지금 닫혀 있어요',funds:'재화가 부족해요 (서버 저장 기준)',hold:'가진 주식보다 많이 팔 수 없어요',cap:'한 종목은 정해진 수량까지만 가질 수 있어요',qty:'수량을 확인해 주세요',auth:'다시 로그인해 주세요',sid:'없는 종목이에요'};
 async function stTrade(x,sg){if(ST.busy)return;const n=Math.max(0,Math.floor(+$('#stQ').value||0));if(!n)return;ST.q=n;
   ST.busy=true;document.querySelectorAll('.sd-tr .btn').forEach(b=>b.disabled=true);$('#stEst').textContent='거래 중...';await flushSaveNow();
   let r=null;try{r=await rpc('pb_stock_trade',{p_token:ACC.token,p_sid:x.id,p_qty:n*sg});}catch(e){}
