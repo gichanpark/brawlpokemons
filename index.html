@@ -271,6 +271,9 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .stk-d{font-size:11px}.stk-d .row2{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0}.stk-q{display:flex;gap:4px;align-items:center;flex-wrap:wrap}.stk-q input{width:84px}
 .stk-news{background:#120d24;border:2px solid #111;padding:5px 8px;font-size:11px;margin:6px 0}
 .btn.buy{background:#dc2626;box-shadow:inset 0 -4px 0 #7f1d1d,inset 0 2px 0 #fca5a5,0 3px 0 #111;color:#fff}.btn.sell{background:#2563eb;box-shadow:inset 0 -4px 0 #1e3a8a,inset 0 2px 0 #93c5fd,0 3px 0 #111;color:#fff}
+.gf-sec{display:flex;flex-direction:column;gap:4px}.gf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px;max-height:170px;overflow-y:auto}
+.gf-it{display:flex;align-items:center;gap:4px;background:#1c1530;border:2px solid #111;padding:3px 5px;font-size:10px}.gf-it span{flex:1;min-width:0;line-height:1.2}.gf-it i{font-style:normal;opacity:.6}.gf-it .btn{padding:1px 6px}.gf-it>b{min-width:16px;text-align:center}
+.gf-it.on{border-color:#facc15;background:#2a2140}.gf-sk{cursor:pointer}.gf-sk img{height:26px;max-width:34px}.gf-ck{font-weight:400;color:#a8a29e}.gf-sk.on .gf-ck{color:#fde047}
 .lt-sec{border-top:2px solid #3f3f46;margin-top:8px;padding-top:6px;font-size:12px}.lt-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}.lt-row>span{font-size:11px;margin-left:6px}.sqb{position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;border:2px solid #111;font-style:normal;font-size:11px;min-width:18px;height:18px;line-height:14px;text-align:center}
 .jp{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px}
 .jpc{flex:0 0 86px;display:flex;flex-direction:column;gap:5px}
@@ -611,7 +614,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.19';
+const VER='1.21.20';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -4562,13 +4565,14 @@ const STI=(()=>{const c=document.createElement('canvas');c.width=c.height=16;con
   ['................','.kkkkkkkkkkkkkk.','.kbbbbbbbbbbbbk.','.kbbbbbbbbbyybk.','.kbbbbbbbbybbbk.','.kbbbbbbbybbbbk.','.kbbbybbbybbbbk.','.kbbybybybbbbbk.','.kbybbbybbbbbbk.','.kybbbbbbbbbbbk.','.kbbbbbbbbbbbbk.','.kwbwbwbwbwbwbk.','.kkkkkkkkkkkkkk.','......kkkk......','....kkkkkkkk....','................'].forEach((r,y)=>{for(let i=0;i<16;i++)if(r[i]!=='.'){x.fillStyle=P[r[i]];x.fillRect(i,y,1,1);}});
   return {icon:c.toDataURL()};})();
 /* ---------- 포켓증권 (서버 시세: pb_stock_list / pb_stock_trade · 10분마다 가격 결정 · 금구슬) ---------- */
-const STC={SLPH:'#a78bfa',DEVN:'#38bdf8',MCRO:'#facc15',FRND:'#4ade80',PTCH:'#f472b6',FLDR:'#f87171',MAUV:'#fb923c',JROL:'#22d3ee',CNDY:'#e879f9',RCKT:'#ef4444',KARP:'#fdba74'};
+const STC={SLPH:'#a78bfa',DEVN:'#38bdf8',MCRO:'#facc15',FRND:'#4ade80',PTCH:'#f472b6',FLDR:'#f87171',MAUV:'#fb923c',JROL:'#22d3ee',CNDY:'#e879f9',RCKT:'#ef4444',KARP:'#fdba74',AETH:'#e5e7eb',COMT:'#c084fc',SAND:'#fde68a'};
 const STTF=[{k:'6h',nm:'6시간',span:6*3600,bk:600,bn:'10분봉'},{k:'1d',nm:'1일',span:86400,bk:1800,bn:'30분봉'},{k:'3d',nm:'3일',span:3*86400,bk:7200,bn:'2시간봉'}];
-const ST={d:null,sel:'slph',tf:'1d',ct:'candle',tab:'all',pv:false,busy:false,iv:null,from:'shop',off:0,hov:null,q:1};
+const ST={d:null,sel:'slph',tf:'1d',ct:'candle',tab:'coin',pv:false,busy:false,iv:null,from:'shop',off:0,hov:null,q:1};
 const fmtI=v=>Math.round(v).toLocaleString('ko-KR');
 const pct=(a,b)=>b?((a-b)/b*100):0;
 const updn=(v,txt)=>v>0?`<span class="up">▲ ${txt}</span>`:v<0?`<span class="dn">▼ ${txt}</span>`:`<span class="fl">- ${txt}</span>`;
-const cIc=()=>`<img class="ico" src="${ICO.coin}">`;
+const cIc=x=>`<img class="ico" src="${x&&x.cur==='gem'?ICO.gemc:ICO.coin}">`;const gIc=()=>`<img class="ico" src="${ICO.gemc}">`;
+const stBal=x=>x&&x.cur==='gem'?(SAVE.gems||0):(SAVE.coins||0);const stCurNm=x=>x&&x.cur==='gem'?'혜성조각':'금구슬';
 const stNow=()=>Date.now()+ST.off;
 const stCo=()=>(ST.d&&ST.d.st)||[];
 const stOf=id=>stCo().find(x=>x.id===id);
@@ -4576,7 +4580,7 @@ const stH=x=>(x&&x.hist)||[];
 function stAgo(x,sec){const h=stH(x),t=stNow()/1000-sec;let v=null;for(const p of h){if(p[0]<=t)v=+p[1];else break;}return v==null?(h.length?+h[0][1]:+x.price):v;}
 async function stLoad(){let r=null;try{r=await rpc('pb_stock_list',{p_token:ACC.token});}catch(e){}if(!r||!r.ok)return false;ST.d=r;ST.off=new Date(r.now)-Date.now();ST.last=Date.now();return true;}
 function stockOpen(from){if(!ACC.token){modal(`<h2>포켓증권</h2><div style="font-size:12px">로그인해야 할 수 있어요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
-  ST.from=from||'shop';closeModal();showScr('stock');$('#bStBack').textContent=ST.from==='menu'?'← 로비':'← 상점';$('#stGem').textContent=fmtI(SAVE.coins||0);
+  ST.from=from||'shop';closeModal();showScr('stock');$('#bStBack').textContent=ST.from==='menu'?'← 로비':'← 상점';stPill();
   $('#bStBack').onclick=()=>{clearInterval(ST.iv);ST.iv=null;if(ST.from==='menu'){refreshMenu();showScr('menu');}else openShop();};
   if(ST.d)stRender();else $('#stDet').innerHTML='<div class="st-load">시세를 불러오는 중...</div>';
   stLoad().then(ok=>{if(!ok&&!ST.d){$('#stDet').innerHTML='<div class="st-load">시세를 불러오지 못했어요. 인터넷 연결을 확인해 주세요.</div>';return;}stRender();});
@@ -4631,15 +4635,17 @@ function stHover(cv,info,e){if(!info)return;const r=cv.getBoundingClientRect(),m
   const c=info.C[i],ch=pct(c.c,c.o),xx=info.X(i);const cr=$('#stCross');cr.style.display='block';cr.style.left=(xx*r.width/cv.width)+'px';cr.style.height=((info.H-info.TB)*r.height/cv.height)+'px';
   tip.style.display='block';tip.style.left=(mx>info.PW/2?4:'auto')+(mx>info.PW/2?'px':'');tip.style.right=mx>info.PW/2?'auto':(cv.width-info.PW+4)*r.width/cv.width+'px';
   tip.innerHTML=`<b>${stTs(c.b,1)} ~ ${stTs(c.b+info.tf.bk)}</b><div>시가 ${fmtI(c.o)}</div><div>고가 <span class="up">${fmtI(c.h)}</span></div><div>저가 <span class="dn">${fmtI(c.l)}</span></div><div>종가 ${fmtI(c.c)} ${updn(ch,Math.abs(ch).toFixed(2)+'%')}</div><div>거래대금 ${fmtI(c.vol)}</div>${c.nb||c.ns?`<div>산 사람 ${c.nb} · 판 사람 ${c.ns}</div>`:''}`;}
-function stRender(soft){if(!ST.d)return;const co=stCo();$('#stGem').textContent=fmtI(SAVE.coins||0);
-  let tv=0,tc=0;for(const c of co){tv+=c.mq*c.price;tc+=+c.mc;}const pl=tv-tc;
-  $('#stAcc').innerHTML=`<div class="sa-h">내 계좌</div><div class="sa-v">${cIc()} ${fmtI(tv)}</div><div class="sa-p">${tc?updn(pl,`${fmtI(Math.abs(pl))} (${Math.abs(pct(tv,tc)).toFixed(2)}%)`):'<span class="fl">보유 주식 없음</span>'}</div>`;
+function stPill(){$('#stGem').innerHTML=`${fmtI(SAVE.coins||0)} &nbsp;<img class="ico" src="${ICO.gemc}"> ${fmtI(SAVE.gems||0)}`;}
+function stSum(cur){let tv=0,tc=0;for(const c of stCo())if((c.cur||'coin')===cur){tv+=c.mq*c.price;tc+=+c.mc;}return {tv,tc};}
+function stRender(soft){if(!ST.d)return;const co=stCo();stPill();
+  const A=stSum('coin'),B=stSum('gem'),line=(S,x)=>`<div class="sa-v">${cIc(x)} ${fmtI(S.tv)}</div><div class="sa-p">${S.tc?updn(S.tv-S.tc,`${fmtI(Math.abs(S.tv-S.tc))} (${Math.abs(pct(S.tv,S.tc)).toFixed(2)}%)`):'<span class="fl">없음</span>'}</div>`;
+  $('#stAcc').innerHTML=`<div class="sa-h">금구슬주</div>${line(A,{cur:'coin'})}<div class="sa-h">혜성조각주</div>${line(B,{cur:'gem'})}`;
   $('#stAcc').onclick=()=>{ST.tab='my';ST.pv=true;sfx('ui');stRender();};
-  const L=ST.tab==='my'?co.filter(c=>c.mq>0):co;
-  $('#stTabs').innerHTML=`<button class="sl-bet${ST.tab==='all'?' on':''}" data-t="all">전체 종목</button><button class="sl-bet${ST.tab==='my'?' on':''}" data-t="my">내 주식 ${co.filter(c=>c.mq>0).length}</button>`;
-  document.querySelectorAll('#stTabs .sl-bet').forEach(b=>b.onclick=()=>{ST.tab=b.dataset.t;ST.pv=ST.tab==='my';sfx('ui');stRender();});
+  if(ST.tab==='all')ST.tab='coin';const L=ST.tab==='my'?co.filter(c=>c.mq>0):co.filter(c=>(c.cur||'coin')===ST.tab);
+  $('#stTabs').innerHTML=`<button class="sl-bet${ST.tab==='coin'?' on':''}" data-t="coin"><img class="ico" src="${ICO.coin}"> 금구슬주</button><button class="sl-bet${ST.tab==='gem'?' on':''}" data-t="gem"><img class="ico" src="${ICO.gemc}"> 혜성조각주</button><button class="sl-bet${ST.tab==='my'?' on':''}" data-t="my">내 주식 ${co.filter(c=>c.mq>0).length}</button>`;
+  document.querySelectorAll('#stTabs .sl-bet').forEach(b=>b.onclick=()=>{ST.tab=b.dataset.t;ST.pv=ST.tab==='my';if(!ST.pv){const f=co.find(c=>(c.cur||'coin')===ST.tab);if(f&&(stOf(ST.sel)||{}).cur!==ST.tab)ST.sel=f.id;}sfx('ui');stRender();});
   $('#stList').innerHTML=L.length?L.map(c=>{const r=stAgo(c,86400),ch=pct(c.price,r);
-    return `<div class="st-row${c.id===ST.sel&&!ST.pv?' on':''}" data-s="${c.id}"><div class="st-logo" style="--lc:${STC[c.sym]||'#fff'}">${c.sym.slice(0,2)}</div><div class="st-nm"><b>${esc(c.nm)}</b><span>${c.sym}${c.mq?' · <i style="color:#fde047;font-style:normal">'+fmtI(c.mq)+'주</i>':''}</span></div><img class="st-sp" src="${stSpark(c,40,16)}"><div class="st-pr"><b>${fmtI(c.price)}</b>${updn(ch,Math.abs(ch).toFixed(2)+'%')}</div></div>`;}).join(''):'<div class="st-load">아직 산 주식이 없어요</div>';
+    return `<div class="st-row${c.id===ST.sel&&!ST.pv?' on':''}" data-s="${c.id}"><div class="st-logo" style="--lc:${STC[c.sym]||'#fff'}">${c.sym.slice(0,2)}</div><div class="st-nm"><b>${esc(c.nm)}</b><span>${c.sym}${c.mq?' · <i style="color:#fde047;font-style:normal">'+fmtI(c.mq)+'주</i>':''}</span></div><img class="st-sp" src="${stSpark(c,40,16)}"><div class="st-pr"><b>${cIc(c)} ${fmtI(c.price)}</b>${updn(ch,Math.abs(ch).toFixed(2)+'%')}</div></div>`;}).join(''):'<div class="st-load">아직 산 주식이 없어요</div>';
   document.querySelectorAll('.st-row').forEach(el=>el.onclick=()=>{ST.sel=el.dataset.s;ST.pv=false;ST.q=1;sfx('ui');stRender();});
   stNews();
   if(ST.pv){stPortfolio();return;}
@@ -4649,7 +4655,7 @@ function stRender(soft){if(!ST.d)return;const co=stCo();$('#stGem').textContent=
   const nw=x.news?x.news.split('|'):null,nOld=!x.news_at||(stNow()-new Date(x.news_at))>36e5*6;
   if(soft&&$('#stQ'))ST.q=Math.max(1,Math.floor(+$('#stQ').value||1));
   $('#stDet').innerHTML=`<div class="sd-h">${ST.tab==='my'?'<button class="sl-bet" id="stPv">← 내 주식</button>':''}<div class="st-logo big" style="--lc:${STC[x.sym]}">${x.sym.slice(0,2)}</div><div><b class="sd-nm">${esc(x.nm)}</b><div class="sd-sym">${x.sym} · ${esc(x.ds||'')}</div></div><div class="sd-cd" id="stCd"></div></div>
-    <div class="sd-px"><b>${fmtI(p)}</b> <span class="sd-u">금구슬</span> ${updn(p-r24,`${fmtI(Math.abs(p-r24))} (${Math.abs(ch).toFixed(2)}%)`)} <span class="sd-sub">24시간 전 대비</span> <span class="sd-sub">· 지난 10분 ${updn(p-pv,`${fmtI(Math.abs(p-pv))} (${Math.abs(pct(p,pv)).toFixed(2)}%)`)}</span></div>
+    <div class="sd-px">${cIc(x)} <b>${fmtI(p)}</b> <span class="sd-u">${stCurNm(x)}</span> ${updn(p-r24,`${fmtI(Math.abs(p-r24))} (${Math.abs(ch).toFixed(2)}%)`)} <span class="sd-sub">24시간 전 대비</span> <span class="sd-sub">· 지난 10분 ${updn(p-pv,`${fmtI(Math.abs(p-pv))} (${Math.abs(pct(p,pv)).toFixed(2)}%)`)}</span></div>
     <div class="sd-tfr">${STTF.map(t=>`<button class="sl-bet${ST.tf===t.k?' on':''}" data-k="${t.k}">${t.nm}</button>`).join('')}<span class="fl">${tf.bn}</span><button class="sl-bet" id="stCt" style="margin-left:auto">${ST.ct==='candle'?'캔들':'라인'}</button></div>
     <div class="sd-ch2"><canvas id="stCv"></canvas><div id="stCross" class="st-cross"></div><div id="stTip" class="st-tip"></div></div>
     <div class="sd-st"><div>시가(24시간 전)<b>${fmtI(r24)}</b></div><div>고가(24시간)<b class="up">${fmtI(hi)}</b></div><div>저가(24시간)<b class="dn">${fmtI(lo)}</b></div><div>거래대금(24시간)<b>${fmtI(v24)}</b></div><div>주주<b>${x.holders}명</b></div><div>최대 보유<b>${fmtI(x.fl)}주</b></div></div>
@@ -4664,19 +4670,19 @@ function stRender(soft){if(!ST.d)return;const co=stCo();$('#stGem').textContent=
   document.querySelectorAll('.sd-tfr .sl-bet[data-k]').forEach(b=>b.onclick=()=>{ST.tf=b.dataset.k;sfx('ui');stRender(true);});
   $('#stCt').onclick=()=>{ST.ct=ST.ct==='candle'?'line':'candle';sfx('ui');stRender(true);};
   const q=$('#stQ'),fee=v=>Math.max(1,Math.ceil(v*.01)),est=()=>{const n=Math.max(0,Math.floor(+q.value||0)),v=n*p;
-    $('#stEst').innerHTML=n?`살 때 ${cIc()} <b>${fmtI(v+fee(v))}</b> <span class="fl">(주식 ${fmtI(v)} + 수수료 ${fmtI(fee(v))})</span> · 팔 때 ${cIc()} <b>${fmtI(Math.max(0,v-fee(v)))}</b> 받아요`+(x.mq&&n<=x.mq?` <span class="fl">· 팔면 손익</span> ${updn(v-fee(v)-avg*n,fmtI(Math.abs(v-fee(v)-avg*n)))}`:''):'';
-    $('#stBuy').disabled=!n||v+fee(v)>(SAVE.coins||0)||x.mq+n>x.fl;$('#stSell').disabled=!n||n>x.mq;};
+    $('#stEst').innerHTML=n?`살 때 ${cIc(x)} <b>${fmtI(v+fee(v))}</b> <span class="fl">(주식 ${fmtI(v)} + 수수료 ${fmtI(fee(v))})</span> · 팔 때 ${cIc(x)} <b>${fmtI(Math.max(0,v-fee(v)))}</b> 받아요`+(x.mq&&n<=x.mq?` <span class="fl">· 팔면 손익</span> ${updn(v-fee(v)-avg*n,fmtI(Math.abs(v-fee(v)-avg*n)))}`:''):'';
+    $('#stBuy').disabled=!n||v+fee(v)>stBal(x)||x.mq+n>x.fl;$('#stSell').disabled=!n||n>x.mq;};
   q.oninput=est;q.addEventListener('pointerdown',e=>e.stopPropagation());q.addEventListener('keydown',e=>e.stopPropagation());
   document.querySelectorAll('.sd-tr [data-a]').forEach(b=>b.onclick=()=>{q.value=Math.max(0,Math.floor(+q.value||0))+(+b.dataset.a);est();sfx('ui');});
-  $('#stMaxB').onclick=()=>{let n=Math.floor((SAVE.coins||0)/(p*1.01));while(n>0&&n*p+fee(n*p)>(SAVE.coins||0))n--;q.value=Math.max(0,Math.min(n,x.fl-x.mq));est();sfx('ui');};
+  $('#stMaxB').onclick=()=>{const bl=stBal(x);let n=Math.floor(bl/(p*1.01));while(n>0&&n*p+fee(n*p)>bl)n--;q.value=Math.max(0,Math.min(n,x.fl-x.mq));est();sfx('ui');};
   $('#stMaxS').onclick=()=>{q.value=x.mq;est();sfx('ui');};
   $('#stBuy').onclick=()=>stTrade(x,1);$('#stSell').onclick=()=>stTrade(x,-1);est();stTick();}
-const STE={funds:'금구슬이 부족해요 (서버 저장 기준)',hold:'가진 주식보다 많이 팔 수 없어요',cap:'한 종목은 정해진 수량까지만 가질 수 있어요',qty:'수량을 확인해 주세요',auth:'다시 로그인해 주세요',sid:'없는 종목이에요'};
+const STE={funds:'재화가 부족해요 (서버 저장 기준)',hold:'가진 주식보다 많이 팔 수 없어요',cap:'한 종목은 정해진 수량까지만 가질 수 있어요',qty:'수량을 확인해 주세요',auth:'다시 로그인해 주세요',sid:'없는 종목이에요'};
 async function stTrade(x,sg){if(ST.busy)return;const n=Math.max(0,Math.floor(+$('#stQ').value||0));if(!n)return;ST.q=n;
   ST.busy=true;document.querySelectorAll('.sd-tr .btn').forEach(b=>b.disabled=true);$('#stEst').textContent='거래 중...';await flushSaveNow();
   let r=null;try{r=await rpc('pb_stock_trade',{p_token:ACC.token,p_sid:x.id,p_qty:n*sg});}catch(e){}
   if(!r||!r.ok){ST.busy=false;toast(!r?'서버 연결 실패':STE[r.err]||'거래 실패');stRender(true);return;}
-  SAVE.coins=+r.coins;SAVE.rev=r.rev;saveLocal();try{refreshMenu();}catch(e){}
+  SAVE.coins=+r.coins;SAVE.gems=+r.gems;SAVE.rev=r.rev;saveLocal();try{refreshMenu();}catch(e){}
   const avg0=x.mq?x.mc/x.mq:0;x.mq=+r.mq;x.mc=+r.mc;
   if(sg>0){sfx('cube');toast(`${x.nm} ${fmtI(n)}주 매수 · 주당 ${fmtI(r.price)} (수수료 ${fmtI(r.fee)})`);}
   else{sfx('gem');const plv=n*r.price-r.fee-Math.round(avg0*n);toast(`${x.nm} ${fmtI(n)}주 매도 · ${plv>=0?'▲ 이익 ':'▼ 손실 '}${fmtI(Math.abs(plv))}`);if(ST.q>x.mq)ST.q=Math.max(1,x.mq);}
@@ -4690,10 +4696,10 @@ function stNews(){const D=ST.d,now=stNow()/1000,co=stCo();
   $('#stNews').innerHTML=`<b>뉴스</b><div class="st-mq"><div class="st-mqt">${one}${one}</div></div>`;
   requestAnimationFrame(()=>{const t=$('#stNews .st-mqt');if(t)t.style.animationDuration=Math.max(20,t.scrollWidth/2/45)+'s';});}
 function stPortfolio(){const co=stCo(),rows=co.filter(c=>c.mq>0).map(c=>({c,n:c.mq,avg:c.mc/c.mq,p:+c.price,val:c.mq*c.price,pl:c.mq*c.price-c.mc,pp:pct(c.mq*c.price,c.mc)}));
-  const tv=rows.reduce((a,r)=>a+r.val,0),tc=rows.reduce((a,r)=>a+(+r.c.mc),0),tot=tv||1;
+  const A=stSum('coin'),B=stSum('gem'),tot=Math.max(1,...rows.map(r=>r.val));
   $('#stDet').innerHTML=`<div class="sd-h"><b class="sd-nm">내 주식 모아보기</b><div class="sd-cd" id="stCd"></div></div>
-    <div class="pf-sum"><div>평가 금액<b>${cIc()} ${fmtI(tv)}</b></div><div>매입 금액<b>${cIc()} ${fmtI(tc)}</b></div><div>총 손익<b>${tc?updn(tv-tc,`${fmtI(Math.abs(tv-tc))} (${Math.abs(pct(tv,tc)).toFixed(2)}%)`):'-'}</b></div><div>보유 금구슬<b>${cIc()} ${fmtI(SAVE.coins||0)}</b></div></div>
-    ${rows.length?`<div class="pf-t">${rows.map(r=>`<div class="pf-r" data-s="${r.c.id}"><div class="st-logo" style="--lc:${STC[r.c.sym]}">${r.c.sym.slice(0,2)}</div><div class="pf-nm"><b>${esc(r.c.nm)}</b><span>${fmtI(r.n)}주 · 평단 ${fmtI(r.avg)} → 현재 ${fmtI(r.p)}</span><div class="pf-bar"><i style="width:${Math.round(r.val/tot*100)}%;background:${STC[r.c.sym]}"></i></div></div><div class="pf-v"><b>${fmtI(r.val)}</b>${updn(r.pl,`${fmtI(Math.abs(r.pl))} (${Math.abs(r.pp).toFixed(2)}%)`)}</div></div>`).join('')}</div>`:'<div class="st-load">아직 산 주식이 없어요. 왼쪽에서 종목을 골라 사 보세요!</div>'}`;
+    <div class="pf-sum"><div>금구슬주 평가<b>${cIc({cur:'coin'})} ${fmtI(A.tv)}</b></div><div>금구슬주 손익<b>${A.tc?updn(A.tv-A.tc,`${fmtI(Math.abs(A.tv-A.tc))} (${Math.abs(pct(A.tv,A.tc)).toFixed(2)}%)`):'-'}</b></div><div>혜성조각주 평가<b>${gIc()} ${fmtI(B.tv)}</b></div><div>혜성조각주 손익<b>${B.tc?updn(B.tv-B.tc,`${fmtI(Math.abs(B.tv-B.tc))} (${Math.abs(pct(B.tv,B.tc)).toFixed(2)}%)`):'-'}</b></div></div>
+    ${rows.length?`<div class="pf-t">${rows.map(r=>`<div class="pf-r" data-s="${r.c.id}"><div class="st-logo" style="--lc:${STC[r.c.sym]}">${r.c.sym.slice(0,2)}</div><div class="pf-nm"><b>${esc(r.c.nm)}</b><span>${fmtI(r.n)}주 · 평단 ${fmtI(r.avg)} → 현재 ${fmtI(r.p)}</span><div class="pf-bar"><i style="width:${Math.round(r.val/tot*100)}%;background:${STC[r.c.sym]}"></i></div></div><div class="pf-v"><b>${cIc(r.c)} ${fmtI(r.val)}</b>${updn(r.pl,`${fmtI(Math.abs(r.pl))} (${Math.abs(r.pp).toFixed(2)}%)`)}</div></div>`).join('')}</div>`:'<div class="st-load">아직 산 주식이 없어요. 왼쪽에서 종목을 골라 사 보세요!</div>'}`;
   document.querySelectorAll('.pf-r').forEach(el=>el.onclick=()=>{ST.sel=el.dataset.s;ST.pv=false;sfx('ui');stRender();});stTick();}
 
 const isBroke=()=>(SAVE.gems||0)<0;
@@ -5160,26 +5166,39 @@ async function pingNow(){if(!ACC.token)return;let r;try{r=await rpc('pb_ping',{p
 setInterval(()=>{if(ACC.token&&!document.hidden)pingNow();},7000);
 /* ---------- 친구 선물 (재화 보내기) / 후원하기 ---------- */
 async function flushSaveNow(){if(!ACC.token)return;clearTimeout(saveTimer);saveTimer=null;try{const r=await rpc('pb_save',{p_token:ACC.token,p_save:saveBody()});if(r&&r.seal&&r.save){SAVE=Object.assign(DEF_SAVE(),r.save);SAVE.acct=ACC.user;saveLocal();}else if(r&&r.stale&&r.save)adoptServer(r.save);else if(r&&r.ok){if(r.rev!=null)SAVE.rev=r.rev;delete SAVE.dirty;saveLocal();let ch=applyGrant(r);if(applyTake(r))ch=true;if(ch)await flushSaveNow();}}catch(e){}}
-function giftOpen(u,n,o){o=o||{};
+function giftOpen(u,n,o){o=o||{};const IQ={},SK=new Set();
+  const invL=ITEMK.filter(k=>invN(k)>0);
+  const skL=[...(SAVE.shy||[]).map(pk=>'sk_'+pk+'_s'),...(SAVE.skn||[]).map(x=>{const i=x.indexOf('_');return 'sk_'+x.slice(0,i)+'_'+x.slice(i+1);})].filter(k=>ITEMS[k]);
   modal(`<h2>${o.title||'선물 보내기'} <span class="cur">${esc(n)} @${esc(u)}</span></h2>
     ${o.note?`<div style="font-size:12px;margin-bottom:8px;color:#fde047">${o.note}</div>`:''}
     <div style="display:flex;flex-direction:column;gap:8px;font-size:12px">
       <label style="display:flex;align-items:center;gap:6px"><img class="ico" src="${ICO.coin}"> 금구슬 <input class="minput" id="gfC" type="number" min="0" value="${o.c||0}" style="width:110px"> <span style="opacity:.7">보유 ${SAVE.coins}</span></label>
       <label style="display:flex;align-items:center;gap:6px"><img class="ico" src="${ICO.gemc}"> 혜성조각 <input class="minput" id="gfG" type="number" min="0" value="${o.g||0}" style="width:110px"> <span style="opacity:.7">보유 ${SAVE.gems||0}</span></label>
+      ${o.noItems?'':`<div class="gf-sec"><b>가방 아이템</b>${invL.length?`<div class="gf-grid">${invL.map(k=>`<div class="gf-it" data-k="${k}">${itemPic(k,1)}<span>${ITEMS[k].nm}</span><i>보유 ${invN(k)}</i><button class="btn b2 sm" data-d="-1">-</button><b>0</b><button class="btn b2 sm" data-d="1">+</button></div>`).join('')}</div>`:'<div class="fl">가방이 비어 있어요</div>'}</div>
+      <div class="gf-sec"><b>스킨</b> <span style="opacity:.7;font-size:10px">보내면 내 스킨에서 사라져요 · 상대가 이미 가진 스킨은 못 보내요</span>${skL.length?`<div class="gf-grid">${skL.map(k=>{const [pk,id]=ITEMS[k].skin,src=id==='s'?SPRS[pk]:(SKINX[pk+'_'+id]||{}).spr;return `<div class="gf-it gf-sk" data-s="${k}"><img class="px" src="${src}"><span>${esc(skinNm(pk,id))}</span><b class="gf-ck">보내기</b></div>`;}).join('')}</div>`:'<div class="fl">보낼 수 있는 스킨이 없어요</div>'}</div>`}
       <input class="minput" id="gfM" maxlength="40" placeholder="한마디 (선택)" style="width:240px">
-      <span style="font-size:11px;opacity:.7">받는 사람 우편함으로 가요 · 하루 10번까지</span><span class="lg-err" id="gfE"></span></div>
+      <span style="font-size:11px;opacity:.7">받는 사람 우편함으로 가요 · 하루 10번까지 · 한 번에 아이템 50개까지</span><span class="lg-err" id="gfE"></span></div>
     <div class="mrow"><button class="btn sm" id="gfGo">${o.btn||'보내기'}</button><button class="btn b2 sm" id="gfX">${o.back?'돌아가기':'닫기'}</button></div>`);
+  $('#mbox').classList.add('wide');
+  document.querySelectorAll('.gf-it[data-k]').forEach(el=>{const k=el.dataset.k;el.querySelectorAll('button').forEach(b=>b.onclick=()=>{IQ[k]=clamp((IQ[k]||0)+(+b.dataset.d),0,Math.min(50,invN(k)));el.querySelector('b').textContent=IQ[k];el.classList.toggle('on',IQ[k]>0);sfx('ui');});});
+  document.querySelectorAll('.gf-sk').forEach(el=>el.onclick=()=>{const k=el.dataset.s;if(SK.has(k))SK.delete(k);else SK.add(k);el.classList.toggle('on',SK.has(k));el.querySelector('.gf-ck').textContent=SK.has(k)?'✓ 보냄':'보내기';sfx('ui');});
   $('#gfX').onclick=()=>o.back?o.back():closeModal();
   $('#gfGo').onclick=async()=>{const c=Math.max(0,Math.floor(+$('#gfC').value||0)),g=Math.max(0,Math.floor(+$('#gfG').value||0)),E=$('#gfE');
-    if(c+g<=0){E.textContent='보낼 양을 적어 주세요';return;}if(c>SAVE.coins||g>(SAVE.gems||0)){E.textContent='재화가 부족해요';return;}
+    const its=[];for(const k in IQ)for(let i=0;i<IQ[k];i++)its.push(k);SK.forEach(k=>its.push(k));
+    if(c+g<=0&&!its.length){E.textContent='보낼 것을 골라 주세요';return;}if(c>SAVE.coins||g>(SAVE.gems||0)){E.textContent='재화가 부족해요';return;}if(its.length>50){E.textContent='아이템은 한 번에 50개까지예요';return;}
     $('#gfGo').disabled=true;E.textContent='보내는 중...';await flushSaveNow();
-    let r=null;try{r=await rpc('pb_gift',{p_token:ACC.token,p_to:u,p_c:c,p_g:g,p_msg:$('#gfM').value||''});}catch(e){}
-    if(!r||!r.ok){$('#gfGo').disabled=false;E.textContent=!r?'서버 연결 실패':{funds:'재화가 부족해요 (서버 저장 기준)',limit:'오늘은 더 보낼 수 없어요 (하루 10번)',not_friend:'친구에게만 보낼 수 있어요',no_user:'없는 트레이너예요',bad_amount:'양이 잘못됐어요'}[r.err]||'보내기 실패';return;}
-    SAVE.coins-=c;SAVE.gems=(SAVE.gems||0)-g;SAVE.rev=r.rev;saveLocal();refreshMenu();sfx('cube');
-    modal(`<h2>보냈어요!</h2><div style="font-size:12px">${esc(n)}님에게 ${c?`<img class="ico" src="${ICO.coin}"> ${c} `:''}${g?`<img class="ico" src="${ICO.gemc}"> ${g}`:''}을(를) 보냈어요<br><span style="opacity:.7">오늘 ${r.left}번 더 보낼 수 있어요</span></div><div class="mrow"><button class="btn sm" id="gfOk">확인</button></div>`);
+    let r=null;try{r=await rpc('pb_gift2',{p_token:ACC.token,p_to:u,p_c:c,p_g:g,p_items:its,p_msg:$('#gfM').value||''});}catch(e){}
+    const nmOf=k=>ITEMS[k]?ITEMS[k].nm:k;
+    if(!r||!r.ok){$('#gfGo').disabled=false;E.textContent=!r?'서버 연결 실패':({funds:'재화가 부족해요 (서버 저장 기준)',limit:'오늘은 더 보낼 수 없어요 (하루 10번)',not_friend:'친구에게만 보낼 수 있어요',no_user:'없는 트레이너예요',bad_amount:'양이 잘못됐어요',no_item:'서버 기준으로 없는 아이템이에요: '+nmOf(r.k),has_skin:'상대가 이미 가진 스킨이에요: '+nmOf(r.k),dup_skin:'같은 스킨은 하나만 보낼 수 있어요'}[r.err]||'보내기 실패');return;}
+    SAVE.coins-=c;SAVE.gems=(SAVE.gems||0)-g;
+    for(const k in IQ)if(IQ[k])invAdd(k,-IQ[k]);
+    SK.forEach(k=>{const [pk,id]=ITEMS[k].skin;if(id==='s')SAVE.shy=(SAVE.shy||[]).filter(x=>x!==pk);else SAVE.skn=(SAVE.skn||[]).filter(x=>x!==pk+'_'+id);if(SAVE.sk&&SAVE.sk[pk]===id)delete SAVE.sk[pk];});
+    SAVE.rev=r.rev;saveLocal();refreshMenu();invBadge();sfx('cube');
+    const what=[c?`<img class="ico" src="${ICO.coin}"> ${c}`:'',g?`<img class="ico" src="${ICO.gemc}"> ${g}`:'',its.length?`아이템·스킨 ${its.length}개`:''].filter(Boolean).join(' · ');
+    modal(`<h2>보냈어요!</h2><div style="font-size:12px">${esc(n)}님에게 ${what}을(를) 보냈어요<br><span style="opacity:.7">오늘 ${r.left}번 더 보낼 수 있어요</span></div><div class="mrow"><button class="btn sm" id="gfOk">확인</button></div>`);
     $('#gfOk').onclick=()=>o.back?o.back():closeModal();};}
 function sponsorAsk(u,n){const L=NET.lastDuel||{c:0,g:0};
-  giftOpen(u,n,{title:'후원하기',btn:'후원하기',note:`${esc(n)}님이 판돈으로 재화를 전부 잃었어요... 조금 후원해 줄까요?`,c:Math.min(SAVE.coins,Math.round((L.c||0)*.3)),g:Math.min(SAVE.gems||0,Math.round((L.g||0)*.3))});}
+  giftOpen(u,n,{noItems:1,title:'후원하기',btn:'후원하기',note:`${esc(n)}님이 판돈으로 재화를 전부 잃었어요... 조금 후원해 줄까요?`,c:Math.min(SAVE.coins,Math.round((L.c||0)*.3)),g:Math.min(SAVE.gems||0,Math.round((L.g||0)*.3))});}
 async function openFriends(){modal(`<h2>친구</h2><div style="font-size:11px">불러오는 중...</div>`);let r;try{r=await rpc('pb_friend_list',{p_token:ACC.token});}catch(e){}
   if(!r||!r.ok){modal(`<h2>친구</h2><div style="font-size:11px">로그인이 필요해요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
   const av=x=>{const [src,ph]=otherAva(x.ava,x.sel);return `<div class="ava fr-${/^[a-z]+$/.test(x.frm||'')?x.frm:'basic'}${ph?' ph':''}" style="--s:30px${abgS(x.ava)}"><img src="${src}"></div>`;};
