@@ -585,7 +585,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.7';
+const VER='1.21.8';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -986,11 +986,11 @@ const hasShy=k=>!!SPRS[k]&&(SAVE.shy||[]).includes(k);
 /* 테마 스킨: SKINX['k_id']={spr,por,gmax}, 보유 SAVE.skn=['k_id'], 장착 SAVE.sk[k]='s'(이로치,예전 값 1)|테마id */
 const THEMES={cinderace:[{id:'spurs',nm:'토트넘 에이스번',ball:1},{id:'korea',nm:'국가대표 에이스번',ball:1}],hlil:[{id:'dongbaek',nm:'동백꽃 필 무렵',fx:{palO:['#facc15','#fef9c3','#9a3412'],col:'#facc15',edge:'#16181c',petal:1}}],giratina:[{id:'yako',nm:'백귀야행 기라티나',fx:{palO:['#dc2626','#fecaca','#1a0505'],col:'#dc2626',yako:1}}],
   mewtwo:[{id:'obsid',nm:'흑요석 뮤츠',fx:{palO:['#d946ef','#fae8ff','#3a0d3d'],col:'#d946ef'}}],
-  rayquaza:[{id:'gold',nm:'황금룡 레쿠쟈',fx:{palO:['#facc15','#fef9c3','#4a2a02'],col:'#facc15'}}],
-  kyurem:[{id:'magma',nm:'마그마 큐레무',fx:{palO:['#f97316','#fde68a','#4a0e04'],col:'#f97316'}}],
+  rayquaza:[{id:'sky',nm:'창공 레쿠쟈',fx:{palO:['#7dd3fc','#f0f9ff','#0c2d4a'],col:'#7dd3fc'}}],
+  kyurem:[{id:'onyx',nm:'흑빙 큐레무',fx:{palO:['#38bdf8','#e0f2fe','#06283d'],col:'#38bdf8'}}],
   zygarde:[{id:'order',nm:'순백 질서 지가르데',fx:{palO:['#22d3ee','#cffafe','#0b3a4a'],col:'#22d3ee'}}],
   necrozma:[{id:'eclipse',nm:'일식 네크로즈마',fx:{palO:['#fbbf24','#fffbeb','#3d2a02'],col:'#fbbf24'}}],
-  arceus:[{id:'abyss',nm:'심연 아르세우스',fx:{palO:['#fbbf24','#fef3c7','#3d2a02'],col:'#fbbf24'}}],
+  arceus:[{id:'flame',nm:'홍염 아르세우스',fx:{palO:['#fb923c','#ffedd5','#4a1503'],col:'#fb923c'}}],
   calyrex:[{id:'sakura',nm:'벚꽃 버드렉스',fx:{palO:['#f472b6','#fdf2f8','#5b1235'],col:'#f472b6'}}],
   solgaleo:[{id:'lunar',nm:'월식 솔가레오',fx:{palO:['#a5b4fc','#eef2ff','#1e1b4b'],col:'#a5b4fc'}}],
   eternatus:[{id:'galaxy',nm:'은하수 무한다이노',pass:1,fx:{palO:['#a855f7','#a5f3fc','#0b0720'],col:'#a855f7'}},{id:'aurora',nm:'오로라 무한다이노',pass:1,fx:{palO:['#10b981','#a7f3d0','#062420'],col:'#10b981'}},{id:'plat',nm:'백금 무한다이노',pass:1,fx:{palO:['#fcd34d','#ffffff','#3b2f4a'],col:'#fcd34d'}}]};
@@ -1039,7 +1039,8 @@ try{const s=JSON.parse(localStorage.getItem('pokebrawl1'));if(s){if(s.sg&&s.sg==
 function saveLocal(){try{delete SAVE.unsealed;SAVE.sg=sealOf(SAVE);localStorage.setItem('pokebrawl1',JSON.stringify(SAVE))}catch(e){}}
 var dirtyN=0;function save(){dirtyN++;try{if(ACC.token)SAVE.dirty=1;}catch(e){}saveLocal();if(typeof serverSave==='function')serverSave();}
 const tro=k=>SAVE.tro[k]||0;
-function cleanSave(){if(!SAVE||!SAVE.own)return;if(SAVE.tmp)for(const k of Object.keys(SAVE.tmp))if(!(SAVE.tmp[k]>Date.now())||ownP(k))delete SAVE.tmp[k];if(!owns(SAVE.sel))SAVE.sel=SAVE.own[0]||'pikachu';const ok=k=>CH.some(c=>c.k===k);SAVE.own=SAVE.own.filter(ok);if(SAVE.lv)for(const k of Object.keys(SAVE.lv))if(!ok(k))delete SAVE.lv[k];if(SAVE.tro)for(const k of Object.keys(SAVE.tro))if(!ok(k)&&!SAVE.tro[k])delete SAVE.tro[k];if(!ok(SAVE.sel))SAVE.sel=SAVE.own[0]||'pikachu';}
+const SKREN={rayquaza_gold:'rayquaza_sky',kyurem_magma:'kyurem_onyx',arceus_abyss:'arceus_flame'};
+function cleanSave(){if(SAVE&&SAVE.skn)SAVE.skn=[...new Set(SAVE.skn.map(x=>SKREN[x]||x))];if(SAVE&&SAVE.sk)for(const k in SAVE.sk){const n=SKREN[k+'_'+SAVE.sk[k]];if(n)SAVE.sk[k]=n.slice(k.length+1);}if(!SAVE||!SAVE.own)return;if(SAVE.tmp)for(const k of Object.keys(SAVE.tmp))if(!(SAVE.tmp[k]>Date.now())||ownP(k))delete SAVE.tmp[k];if(!owns(SAVE.sel))SAVE.sel=SAVE.own[0]||'pikachu';const ok=k=>CH.some(c=>c.k===k);SAVE.own=SAVE.own.filter(ok);if(SAVE.lv)for(const k of Object.keys(SAVE.lv))if(!ok(k))delete SAVE.lv[k];if(SAVE.tro)for(const k of Object.keys(SAVE.tro))if(!ok(k)&&!SAVE.tro[k])delete SAVE.tro[k];if(!ok(SAVE.sel))SAVE.sel=SAVE.own[0]||'pikachu';}
 const totTro=()=>CH.reduce((a,c)=>a+tro(c.k),0);
 const chOf=k=>CH.find(c=>c.k===k)||CH[0];
 const STARTERS=['venusaur','charizard','blastoise'];
