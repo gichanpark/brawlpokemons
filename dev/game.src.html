@@ -544,7 +544,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.20.18';
+const VER='1.20.19';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -907,9 +907,9 @@ const CH=[
  {k:'ironvaliant',id:1006,nm:'무쇠무인',pdx:'f',role:'암살 · 순간이동',el:'fairy',gr:'m',col:'#4ade80',hp:4000,spd:1.2,rl:1.0,charge:2600,
   atk:{nm:'소울크래시',ds:'부채꼴로 베어내는 정신의 칼날 · 30% 확률로 1.5초간 공격 하락',ty:'shot',swing:1.4,art:'vblade',el:'fairy',range:2.5,speed:16,dmg:780,r:18,weakC:{c:.3,t:1.5},col:'#f9a8d4'},
   sup:{nm:'인파이트',ds:'순간이동해 들이닥쳐 주변 적에게 큰 피해 · 반동으로 3초간 받는 피해 증가',ty:'tele',boom:'pop',el:'fight',range:6,aoe:1.9,dmg:1700,kb:.8,selfVuln:3,col:'#4ade80'}},
- {k:'eternatus',id:890,nm:'무한다이노',role:'포격 · 거다이맥스',el:'dragon',gr:'l',col:'#7e22ce',hp:5000,spd:.95,rl:1.15,charge:3000,
-  atk:{nm:'다이맥스포',ds:'세 방향으로 뻗는 관통 레이저 · 체력이 많이 남은 적일수록 더 아픔 (최대 1.5배)',ty:'shot',fx:'dmax',el:'dragon',count:3,spread:.42,range:7.5,speed:24,dmg:1050,r:10,pierce:1,hiHp:.5,col:'#a855f7'},
-  sup:{nm:'무한다이빔',ds:'거다이맥스해 떠오른 뒤 지정한 원형 지점에 2.5초 동안 빔을 집중 · 원 안의 적은 행동불능, 주변 적은 원 중앙으로 끌려옴 · 끝나면 크게 폭발하며 날려버림 · 쏘는 동안 무적',gmax:.9,ebeam:2.5,ty:'lob',fx:'dmax',el:'dragon',range:8,aoe:1.8,pull:2.4,dmg:3900,col:'#dc2626'}},
+ {k:'eternatus',id:890,nm:'무한다이노',role:'포격 · 거다이맥스',el:'dragon',gr:'l',col:'#7e22ce',hp:4500,spd:.95,rl:1.15,charge:3000,
+  atk:{nm:'다이맥스포',ds:'세 방향으로 뻗는 관통 레이저 · 체력이 많이 남은 적일수록 더 아픔 (최대 1.3배)',ty:'shot',fx:'dmax',el:'dragon',count:3,spread:.42,range:7,speed:24,dmg:880,r:10,pierce:1,hiHp:.3,col:'#a855f7'},
+  sup:{nm:'무한다이빔',ds:'거다이맥스해 떠오른 뒤 지정한 원형 지점에 2초 동안 빔을 집중 · 원 안의 적은 행동불능, 주변 적은 원 중앙으로 끌려옴 · 끝나면 크게 폭발하며 날려버림 · 쏘는 동안 받는 피해 50% 감소',gmax:.9,ebeam:2,ty:'lob',fx:'dmax',el:'dragon',range:7.5,aoe:1.6,pull:1.9,dmg:3300,col:'#dc2626'}},
  {k:'solgaleo',id:791,nm:'솔가레오',role:'돌격 · 태양의 사자',el:'psychic',gr:'l',col:'#fbbf24',hp:5200,spd:1.05,rl:1.15,charge:2800,
   atk:{nm:'사이코팽',ds:'앞의 적을 강하게 물어뜯음 · 보호막·리플렉터·철벽 같은 방어 효과를 부수고 그때는 1.3배',ty:'shot',fx:'jaw',el:'psychic',range:3,speed:16,dmg:1100,r:22,shieldBreak:1,col:'#c084fc'},
   sup:{nm:'메테오드라이브',ds:'태양처럼 빛나며 일직선으로 돌진 · 벽을 부수고 부딪힌 적의 방어 효과를 무시 · 기절 + 밀쳐냄',ty:'dash',fx:'rage',el:'steel',range:8,speed:24,dmg:2400,kb:1.2,stun:.6,brk:1,shieldBreak:1,col:'#fbbf24'}},
@@ -940,7 +940,8 @@ const IMGS={};for(const k in SPRS){const im=new Image();im.onload=()=>{im.ok=1};
 const IMGSF={};for(const k in SPRSF){const im=new Image();im.onload=()=>{im.ok=1};im.src=SPRSF[k];IMGSF[k]=im;}
 const hasShy=k=>!!SPRS[k]&&(SAVE.shy||[]).includes(k);
 /* 테마 스킨: SKINX['k_id']={spr,por,gmax}, 보유 SAVE.skn=['k_id'], 장착 SAVE.sk[k]='s'(이로치,예전 값 1)|테마id */
-const THEMES={cinderace:[{id:'spurs',nm:'토트넘 에이스번',ball:1},{id:'korea',nm:'국가대표 에이스번',ball:1}],hlil:[{id:'dongbaek',nm:'동백꽃 필 무렵',fx:{palO:['#facc15','#fef9c3','#9a3412'],col:'#facc15',edge:'#16181c',petal:1}}],giratina:[{id:'yako',nm:'백귀야행 기라티나',fx:{palO:['#dc2626','#fecaca','#1a0505'],col:'#dc2626',yako:1}}]};
+const THEMES={cinderace:[{id:'spurs',nm:'토트넘 에이스번',ball:1},{id:'korea',nm:'국가대표 에이스번',ball:1}],hlil:[{id:'dongbaek',nm:'동백꽃 필 무렵',fx:{palO:['#facc15','#fef9c3','#9a3412'],col:'#facc15',edge:'#16181c',petal:1}}],giratina:[{id:'yako',nm:'백귀야행 기라티나',fx:{palO:['#dc2626','#fecaca','#1a0505'],col:'#dc2626',yako:1}}],
+  eternatus:[{id:'galaxy',nm:'은하수 무한다이노',pass:1,fx:{palO:['#a855f7','#a5f3fc','#0b0720'],col:'#a855f7'}},{id:'aurora',nm:'오로라 무한다이노',pass:1,fx:{palO:['#10b981','#a7f3d0','#062420'],col:'#10b981'}},{id:'plat',nm:'백금 무한다이노',pass:1,fx:{palO:['#fcd34d','#ffffff','#3b2f4a'],col:'#fcd34d'}}]};
 /* 백귀야행 색 바꾸기: 보라 계열 → 진홍·칠흑 */
 const YK={'#3b0764':'#450a0a','#7e22ce':'#b91c1c','#a855f7':'#ef4444','#c084fc':'#fca5a5','#1e0533':'#0a0000','#581c87':'#7f1d1d','#d8b4fe':'#fecaca','#e9d5ff':'#fee2e2','#2e1065':'#3f0a0a'};
 const yc=(s,c)=>s&&s.yako?YK[c]||c:c;const ycl=(s,L)=>s&&s.yako?L.map(c=>YK[c]||c):L;
@@ -1506,6 +1507,7 @@ function spawnShots(e,s,ang,d,sup){
 }
 function damage(src,tgt,amt,sup,dot){
   if(!tgt.alive||tgt.inv>0||G.over)return;
+  if(tgt.ebeam&&amt>0)amt*=.5;
   if(src===P&&P&&tgt.team!==P.team&&amt>0)G.pDmg=(G.pDmg||0)+amt;
   if(tgt.disg&&!dot&&amt>0){tgt.disg=false;tgt.disgCd=10;tgt.haste=Math.max(tgt.haste||0,2);addText(tgt.x,tgt.y-90,'탈이 벗겨졌다!','#fde047',1);spark(tgt.x,tgt.y-30,['#fde047','#78350f','#fff'],14,180,.5,5);sfx('hit',tgt.x,tgt.y);tgt.hf=.15;return;}
   amt=Math.round(amt*(src?src.dmgMul*(src.buffT>0?1.5:1)*(src.ch.bers&&src.hp<src.maxHp*.5?1.25:1)*dmgOut(src):1)*dmgIn(src,tgt,dot));
@@ -2673,18 +2675,19 @@ const ARTI=(()=>{const P={k:'#111',w:'#f5ecd7',h:'#ffffff',s:'#c9b99a',g:'#4ade8
     vblade:['................','..............k.','.............kgk','............kghk','...........kghk.','..........kghk..','.........kghk...','........kghdk...','.......kghdk....','......kghdk.....','..k..kghdk......','..kpkkghk.......','...kppkk........','..kpkkpk........','.kpk..kk........','.kk.............']};
   const o={};for(const n in M){const c=document.createElement('canvas');c.width=c.height=16;const x=c.getContext('2d');M[n].forEach((r,y)=>{for(let i=0;i<16;i++){const ch=r[i];if(ch!=='.'){x.fillStyle=P[ch];x.fillRect(i,y,1,1);}}});o[n]=c;}return o;})();
 function pxDot(x,y,sz,c){const b=4;ctx.fillStyle=c;ctx.fillRect(Math.round((x-sz/2)/b)*b,Math.round((y-sz/2)/b)*b,Math.round(sz/b)*b,Math.round(sz/b)*b);}
-function drawEbeams(){for(const e of G.ents){if(!e.ebeam||!e.alive)continue;const B=e.ebeam,s=B.s||chOf('eternatus').sup,rad=s.aoe*T,z=entZ(e),ox=e.x,oy=e.y-z-36*gmaxK(e),tx=B.tx,ty=B.ty;
+const EBP={galaxy:{r:['#22d3ee','#a855f7'],i:'#cffafe',g:'#1e1b4b',L:[['#0b0720','#1e1b4b'],['#6d28d9','#a855f7'],['#0891b2','#22d3ee'],'#a5f3fc','#ffffff']},aurora:{r:['#7c3aed','#10b981'],i:'#d1fae5',g:'#064e3b',L:[['#062420','#064e3b'],['#059669','#10b981'],['#7c3aed','#a78bfa'],'#a7f3d0','#ffffff']},plat:{r:['#f59e0b','#e5e7eb'],i:'#fffbeb',g:'#a8a29e',L:[['#78716c','#a8a29e'],['#d6d3d1','#e7e5e4'],['#f59e0b','#fcd34d'],'#fef3c7','#ffffff']}};
+function drawEbeams(){for(const e of G.ents){if(!e.ebeam||!e.alive)continue;const EP=e.ch.k==='eternatus'&&EBP[e.skin]||null;const B=e.ebeam,s=B.s||chOf('eternatus').sup,rad=s.aoe*T,z=entZ(e),ox=e.x,oy=e.y-z-36*gmaxK(e),tx=B.tx,ty=B.ty;
   const fr=Math.floor(G.t*16)%2,L=Math.hypot(tx-ox,ty-oy),st=6,n=Math.max(1,Math.ceil(L/st));
   /* 착탄 원 (도트 링 · 바닥) */
-  for(let i=0;i<48;i++){const a=i/48*6.283+G.t*1.5,r1=rad*(1+.06*fr);pxDot(tx+Math.cos(a)*r1,ty+Math.sin(a)*r1*.55,8,i%2?'#dc2626':'#a855f7');}
-  for(let i=0;i<32;i++){const a=i/32*6.283-G.t*2,r2=rad*.6;pxDot(tx+Math.cos(a)*r2,ty+Math.sin(a)*r2*.55,4,'#fecdd3');}
-  ctx.globalAlpha=.28;for(let gy=-rad*.55;gy<=rad*.55;gy+=8)for(let gx=-rad;gx<=rad;gx+=8){if((gx/rad)**2+(gy/(rad*.55))**2<=1&&((gx+gy)/8+fr)%2===0)pxDot(tx+gx,ty+gy,8,'#7e22ce');}ctx.globalAlpha=1;
+  for(let i=0;i<48;i++){const a=i/48*6.283+G.t*1.5,r1=rad*(1+.06*fr);pxDot(tx+Math.cos(a)*r1,ty+Math.sin(a)*r1*.55,8,EP?EP.r[i%2]:i%2?'#dc2626':'#a855f7');}
+  for(let i=0;i<32;i++){const a=i/32*6.283-G.t*2,r2=rad*.6;pxDot(tx+Math.cos(a)*r2,ty+Math.sin(a)*r2*.55,4,EP?EP.i:'#fecdd3');}
+  ctx.globalAlpha=.28;for(let gy=-rad*.55;gy<=rad*.55;gy+=8)for(let gx=-rad;gx<=rad;gx+=8){if((gx/rad)**2+(gy/(rad*.55))**2<=1&&((gx+gy)/8+fr)%2===0)pxDot(tx+gx,ty+gy,8,EP?EP.g:'#7e22ce');}ctx.globalAlpha=1;
   /* 빔 (블록을 이어 붙인 도트 기둥) */
-  const lay=[[30,fr?'#3b0764':'#581c87'],[22,fr?'#7e22ce':'#a855f7'],[14,fr?'#dc2626':'#ef4444'],[8,'#fda4af'],[4,'#fff1f2']];
+  const lay=EP?[[30,EP.L[0][fr]],[22,EP.L[1][fr]],[14,EP.L[2][fr]],[8,EP.L[3]],[4,EP.L[4]]]:[[30,fr?'#3b0764':'#581c87'],[22,fr?'#7e22ce':'#a855f7'],[14,fr?'#dc2626':'#ef4444'],[8,'#fda4af'],[4,'#fff1f2']];
   for(const [w,c] of lay)for(let i=0;i<=n;i++){const k=i/n,wob=(i%3===fr?4:0);pxDot(ox+(tx-ox)*k,oy+(ty-oy)*k,w+wob*(w>10?1:0),c);}
   /* 발사구 · 착탄 섬광 */
-  pxDot(ox,oy,36+fr*8,'#dc2626');pxDot(ox,oy,20,'#fecdd3');pxDot(tx,ty,44+fr*12,'#7e22ce');pxDot(tx,ty,28+fr*8,'#dc2626');pxDot(tx,ty,12,'#fff');
-  if(Math.random()<.7){const a=Math.random()*6.283,r=Math.random()*rad;P_({sh:'plus',x:tx+Math.cos(a)*r,y:ty+Math.sin(a)*r*.55-10,vx:0,vy:-120,t:.35,col:pick(['#a855f7','#dc2626','#fecdd3']),r:5});}}}
+  const c1=EP?EP.L[2][1]:'#dc2626',c2=EP?EP.i:'#fecdd3',c3=EP?EP.L[1][0]:'#7e22ce';pxDot(ox,oy,36+fr*8,c1);pxDot(ox,oy,20,c2);pxDot(tx,ty,44+fr*12,c3);pxDot(tx,ty,28+fr*8,c1);pxDot(tx,ty,12,'#fff');
+  if(Math.random()<.7){const a=Math.random()*6.283,r=Math.random()*rad;P_({sh:'plus',x:tx+Math.cos(a)*r,y:ty+Math.sin(a)*r*.55-10,vx:0,vy:-120,t:.35,col:pick(EP?[EP.r[0],EP.r[1],EP.i]:['#a855f7','#dc2626','#fecdd3']),r:5});}}}
 function drawSwings(){for(let i=SWG.length-1;i>=0;i--){const w=SWG[i],k=(G.t-w.t0)/w.d;if(k>1.6||k<0){SWG.splice(i,1);continue;}const e=w.e,cx=e.x,cy=e.y-18,kk=Math.min(1,k),ease=1-Math.pow(1-kk,3);
   const a0=w.ang-w.dir*w.arc/2,a1=w.ang+w.dir*w.arc/2,cur=a0+(a1-a0)*ease,fade=k>1?1-(k-1)/.6:1;
   const swp=w.tool>=3&&SWEEPI[0].complete&&SWEEPI[0].naturalWidth;
@@ -3002,7 +3005,7 @@ const PASS_N=60,PASS_XP=100,PASS_SEASON=1,PASS_PRICE='2,900원';
 const PASS=(()=>{const F=[],P=[];
   for(let t=1;t<=PASS_N;t++){let f,p;
     if(t%15===0){f=({15:[{it:'sel_e'}],30:[{it:'box_master'},{g:120}],45:[{it:'box_ultra',n:2},{g:200}],60:[{it:'fr_jpass'},{c:5000}]})[t];
-      p=({15:[{shy:1},{it:'box_master'}],30:[{it:'sel_m'}],45:[{shy:1},{g:400}],60:[{it:'sel_l'},{it:'fr_jpassg'}]})[t];}
+      p=({15:[{shy:1},{it:'box_master'}],30:[{it:'sel_m'},{it:'fr_jpassg'}],45:[{shy:1},{g:400}],60:[{pick:['sk_eternatus_galaxy','sk_eternatus_aurora','sk_eternatus_plat']},{it:'sel_l'}]})[t];}
     else{const m=t%5;
       f=[[{g:40}],[{c:300+t*20}],[{it:'box_poke'}],[{c:400+t*20}],[{it:t%10===4?'scout':'box_great'}]][m];
       p=[[{g:80}],[{c:600+t*30}],[{it:'box_great'}],[{it:t%10===3?'box_ultra':'scout'}],[{c:750+t*30},{g:40}]][m];}
@@ -3057,6 +3060,7 @@ function rwHTML(r){
   if(r.g)return `<img class="ico px" src="${ICO.gemc}"><span><b>${r.g}</b> 혜성조각</span>`;
   if(r.pk){const k=pkOfR(r)||(r.pk==='starter'?'charizard':r.pk);return `<img class="px" src="${POR[chOf(k).id]}"><span>${r.pk==='starter'&&!pkOfR(r)?'스타팅 포켓몬':chOf(k).nm}</span>`;}
   if(r.shy)return `<img class="ico px" src="${ICO.star}"><span>랜덤 이로치·테마 스킨</span>`;
+  if(r.pick)return `<span style="display:flex;gap:1px">${r.pick.map(k=>`<img class="px" style="max-height:22px;max-width:26px" src="${SKINX[ITEMS[k].skin.join('_')].spr}">`).join('')}</span><span>스킨 ${r.pick.length}개 중 택1</span>`;
   if(r.it){const I=ITEMS[r.it];return I?itemPic(r.it)+`<span>${I.nm}${r.n>1?' ×'+r.n:''}</span>`:'';}
   return '';}
 function rwGive(r){const got=[];
@@ -3066,7 +3070,16 @@ function rwGive(r){const got=[];
   if(r.shy){const x=dropShy();if(x)got.push((x.id==='s'?'이로치 '+x.nm:skinNm(x.k,x.id))+' 스킨!');else{SAVE.gems=(SAVE.gems||0)+300;got.push('혜성조각 300 (받을 스킨 없음)');}}
   if(r.it&&ITEMS[r.it]){invAdd(r.it,r.n||1);if(!ITEMS[r.it].skin&&!ITEMS[r.it].fr)got.push(ITEMS[r.it].nm+(r.n>1?' ×'+r.n:''));}
   return got;}
-function passClaim(tr,t){if(!passCan(tr,t))return [];passSet(tr,t);return [].concat(...(tr==='f'?PASS.F:PASS.P)[t-1].map(rwGive));}
+const passPick=(tr,t)=>((tr==='f'?PASS.F:PASS.P)[t-1].find(r=>r.pick)||null);
+function passClaim(tr,t,ch){if(!passCan(tr,t))return [];const pk=passPick(tr,t);if(pk&&ch==null)return [];passSet(tr,t);
+  return [].concat(...(tr==='f'?PASS.F:PASS.P)[t-1].map(r=>{if(!r.pick)return rwGive(r);if(ch&&ITEMS[ch]){invAdd(ch,1);return [ITEMS[ch].nm+'!'];}SAVE.gems=(SAVE.gems||0)+300;return ['혜성조각 300 (스킨을 이미 모두 가짐)'];}));}
+function passPickUI(tr,t,done){const pk=passPick(tr,t),L=pk.pick.filter(k=>{const [a,b]=ITEMS[k].skin;return !hasSkin(a,b);});
+  if(!L.length){done(passClaim(tr,t,''));return;}let sel=null;
+  modal(`<h2>스킨 고르기 <span class="cur">하나만 고를 수 있어요</span></h2><div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">${pk.pick.map(k=>{const sk=ITEMS[k].skin,X=SKINX[sk.join('_')],own=hasSkin(sk[0],sk[1]);return `<div class="selc pks${own?' off':''}" data-k="${k}" style="width:150px;${own?'opacity:.4;pointer-events:none':''}"><img class="px" src="${X.por}" style="width:72px;height:72px"><img class="px" src="${X.spr}" style="max-width:130px;max-height:90px"><b>${skinNm(sk[0],sk[1])}</b>${own?'<i>이미 있음</i>':''}</div>`;}).join('')}</div>
+    <div class="mrow"><button class="btn sm" id="pkOk" disabled>고르기</button><button class="btn b2 sm" id="pkBk">돌아가기</button></div>`);
+  $('#mbox').classList.add('wide');
+  document.querySelectorAll('.pks').forEach(el=>el.onclick=()=>{sel=el.dataset.k;document.querySelectorAll('.pks').forEach(x=>x.classList.toggle('on',x===el));$('#pkOk').disabled=false;$('#pkOk').textContent='✓ '+ITEMS[sel].nm+' 고르기';sfx('ui');});
+  $('#pkBk').onclick=()=>openPass();$('#pkOk').onclick=()=>{if(sel)done(passClaim(tr,t,sel));};}
 function openPass(keep){const ps=passS(),lv=passLv();
   const col=t=>{const sp=t%15===0,cur=t===Math.min(PASS_N,lv+1);
     const cell=tr=>{const L=(tr==='f'?PASS.F:PASS.P)[t-1],cl=passGot(tr,t)?'got':passCan(tr,t)?'can':(tr==='p'&&!ps.paid)?'lk':'';
@@ -3075,16 +3088,16 @@ function openPass(keep){const ps=passS(),lv=passLv();
   $('#mbox').classList.add('wide');
   $('#mbox').innerHTML=`<h2><img class="ico px" src="${ICO.pass}"> 조롤패스 · 시즌 ${PASS_SEASON}</h2>
     <div class="jph"><b>Lv ${lv}${lv>=PASS_N?' (최대)':''}</b><div class="jpbar"><i style="width:${lv>=PASS_N?100:(ps.xp%PASS_XP)/PASS_XP*100}%"></i></div><span style="font-size:11px">${lv>=PASS_N?'100마다 금구슬 500':(ps.xp%PASS_XP)+' / '+PASS_XP}</span></div>
-    <div class="jplab"><span style="background:#2a2140">위: 무료</span><span style="background:#3b2a12">아래: 프리미엄 ${ps.paid?'✓ 보유':'🔒'}</span><span style="background:#7e22ce">★ 15단계마다 특별 보상</span></div>
+    <div class="jplab"><span style="background:#2a2140">위: 무료</span><span style="background:#3b2a12">아래: 프리미엄 ${ps.paid?'✓ 보유':'🔒'}</span><span style="background:#7e22ce">★ 15단계마다 특별 보상</span>${passPick('p',PASS_N)?'<span style="background:#1e1b4b">60단계: 무한다이노 스킨 3개 중 택1</span>':''}</div>
     ${questHTML()}
     <div class="jp" id="jpList">${Array.from({length:PASS_N},(_,i)=>col(i+1)).join('')}</div>
     <div style="font-size:11px;opacity:.75;margin:2px 0 8px">대전을 하면 패스 경험치를 얻어요 (승리 40 · 무승부 25 · 패배 20 · 쇼다운은 순위별). 반짝이는 칸을 눌러 보상을 받아요.</div>
     <div class="mrow">${ps.paid?'':`<button class="btn sm" id="jpBuy" style="background:#facc15;color:#111">프리미엄 ${PASS_PRICE}</button>`}<button class="btn sm" id="jpAll" ${passCount()?'':'disabled'}>모두 받기</button><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`;
   $('#modal').classList.add('on');
   const l=$('#jpList'),cur=$('#jpCur');if(keep!=null)l.scrollLeft=keep;else if(cur)l.scrollLeft=Math.max(0,cur.offsetLeft-l.offsetLeft-90);
-  const done=g=>{save();refreshMenu();if(g.length){sfx('win');toast('받았어요: '+g.join(', '));}openPass($('#jpList').scrollLeft);};
+  const done=g=>{save();refreshMenu();if(g.length){sfx('win');toast('받았어요: '+(g.length>6?g.slice(0,6).join(', ')+' 외 '+(g.length-6)+'개':g.join(', ')));}const jl=$('#jpList');openPass(jl?jl.scrollLeft:null);};
   document.querySelectorAll('.jpr').forEach(el=>el.onclick=()=>{const tr=el.dataset.tr,t=+el.dataset.t;
-    if(passCan(tr,t))done(passClaim(tr,t));else if(tr==='p'&&!ps.paid)toast('프리미엄 패스('+PASS_PRICE+')가 있어야 받을 수 있어요');else if(t>lv)toast(t+'레벨에 받을 수 있어요');});
+    if(passCan(tr,t)){if(passPick(tr,t))passPickUI(tr,t,done);else done(passClaim(tr,t));}else if(tr==='p'&&!ps.paid)toast('프리미엄 패스('+PASS_PRICE+')가 있어야 받을 수 있어요');else if(t>lv)toast(t+'레벨에 받을 수 있어요');});
   $('#jpAll').onclick=()=>{let g=[];for(let t=1;t<=passLv();t++)g=g.concat(passClaim('f',t),passClaim('p',t));done(g);};
   const b=$('#jpBuy');if(b)b.onclick=()=>toast('결제 기능은 아직 준비 중이에요');}
 const ROAD=[{t:10,c:50,pk:'pikachu'},{t:30,c:80,pk:'starter'},{t:60,c:120,pk:'snorlax'},{t:100,c:160,pk:'starter'},{t:150,c:200,pk:'lycanroc'},{t:200,c:250},{t:300,c:300},{t:400,c:400},{t:500,c:500},{t:750,c:700},{t:1000,c:1000}];
@@ -4004,7 +4017,7 @@ function traitTick(e,dt){
   if(k==='morpeko'&&e.form===1&&Math.random()<dt*4)P_({sh:'plus',x:e.x+rnd(-18,18),y:e.y-rnd(15,50),vx:0,vy:0,t:.18,col:'#a855f7',r:4});
   if(e.ch.ditto&&!(e.dittoT>0)&&!(NET.on&&!NET.host)){e.ch=chOf('ditto');e.form=0;spark(e.x,e.y-30,['#c4b5fd','#fff'],14,150,.5,5);addText(e.x,e.y-110,'변신 풀림','#c4b5fd');}
   if(k==='darmanitan'&&!e.ch.ditto&&!(e.zenLock>0)){if(!e.form&&e.hp<e.maxHp*.5)setForm(e,1);else if(e.form===1&&e.hp>e.maxHp*.7)setForm(e,0);}
-  if(e.ebeam){const B=e.ebeam;B.t-=dt;if(B.t<=0||!e.alive){if(B.t<=0&&e.alive&&B.s&&!(NET.on&&!NET.host)){const s=B.s;aoeHit(e,B.tx,B.ty,s.aoe*T*1.35,s.dmg*.3,GSP.ebBoom,true);if(e===P||Math.hypot(P.x-B.tx,P.y-B.ty)<6*T)G.shake=Math.max(G.shake,.5);sfx('bigboom',B.tx,B.ty);addText(B.tx,B.ty-80,'펑!','#f87171',1);}e.ebeam=null;}else if(!(NET.on&&!NET.host)&&B.s){B.tk-=dt;e.inv=Math.max(e.inv||0,B.t+.1);
+  if(e.ebeam){const B=e.ebeam;B.t-=dt;if(B.t<=0||!e.alive){if(B.t<=0&&e.alive&&B.s&&!(NET.on&&!NET.host)){const s=B.s;aoeHit(e,B.tx,B.ty,s.aoe*T*1.35,s.dmg*.3,GSP.ebBoom,true);if(e===P||Math.hypot(P.x-B.tx,P.y-B.ty)<6*T)G.shake=Math.max(G.shake,.5);sfx('bigboom',B.tx,B.ty);addText(B.tx,B.ty-80,'펑!','#f87171',1);}e.ebeam=null;}else if(!(NET.on&&!NET.host)&&B.s){B.tk-=dt;
       const s=B.s,rad=s.aoe*T,pr=rad*(s.pull||2.4);
       for(const o of G.ents){if(!o.alive||!enemyOf(e,o))continue;const dx=B.tx-o.x,dy=B.ty-o.y,dd=Math.hypot(dx,dy);
         if(o.safe){if(B.tk<=0&&dd<rad+o.r)hitEff(e,o,s,s.dmg*.07,true,-dx,-dy);continue;}
@@ -4234,7 +4247,7 @@ function randPow(n){const out=[];for(let i=0;i<n;i++){const can=CH.filter(c=>own
 const BOXT={poke:{n:4,c:[.35,80,160],g:[.15,3,6],k:.03,s:.01},great:{n:7,c:[.3,120,240],g:[.15,5,9],k:.05,s:.015},
   ultra:{n:10,c:[.3,160,320],g:[.15,6,12],k:.06,s:.02},master:{n:14,c:[.3,240,400],g:[.15,9,15],k:.07,s:.03}};
 /* 이로치 스킨 드롭: 가진 포켓몬 중 아직 이로치가 없는 것에서 랜덤 */
-function dropShy(){const L=[];for(const c of CH){if(!ownP(c.k))continue;if(SPRS[c.k]&&!hasShy(c.k))L.push({c,id:'s'});for(const t of THEMES[c.k]||[])if(!hasSkin(c.k,t.id))L.push({c,id:t.id});}if(!L.length)return null;const x=pick(L);if(x.id==='s'){SAVE.shy=SAVE.shy||[];SAVE.shy.push(x.c.k);}else{SAVE.skn=SAVE.skn||[];SAVE.skn.push(x.c.k+'_'+x.id);}return {k:x.c.k,nm:x.c.nm,id:x.id,c:x.c};}
+function dropShy(){const L=[];for(const c of CH){if(!ownP(c.k))continue;if(SPRS[c.k]&&!hasShy(c.k))L.push({c,id:'s'});for(const t of THEMES[c.k]||[])if(!t.pass&&!hasSkin(c.k,t.id))L.push({c,id:t.id});}if(!L.length)return null;const x=pick(L);if(x.id==='s'){SAVE.shy=SAVE.shy||[];SAVE.shy.push(x.c.k);}else{SAVE.skn=SAVE.skn||[];SAVE.skn.push(x.c.k+'_'+x.id);}return {k:x.c.k,nm:x.c.nm,id:x.id,c:x.c};}
 const rint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function openBox(id){
   const R={coin:0,gem:0,pow:[],pks:[],cl:[],gl:[],shy:[]};
@@ -4740,7 +4753,7 @@ const _oldProf=()=>{
 function esc(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 /* ---------- 프로필 ---------- */
 const PIMG=[/*PIMG*/];
-const FRAMES=[].concat([{id:'basic',nm:'기본',t:0},{id:'ball',nm:'몬스터볼',t:0},{id:'gold',nm:'금테',t:100},{id:'fire',nm:'불꽃',t:200},{id:'ice',nm:'얼음',t:200},{id:'leaf',nm:'풀잎',t:50},{id:'pixel',nm:'도트 체크',t:80},{id:'wave',nm:'물결',t:150},{id:'thunder',nm:'번개',t:250},{id:'ghost',nm:'유령',t:300},{id:'neon',nm:'네온',t:400},{id:'rbw',nm:'무지개',t:500},{id:'shiny',nm:'이로치',t:700},{id:'master',nm:'하이퍼볼',t:800},{id:'leg',nm:'전설',t:1000},{id:'galaxy',nm:'은하수',t:1500},{id:'crown',nm:'왕관',t:2000},{id:'star',nm:'트로피 성좌',t:1e9,aw:'시즌 1등 보상'},{id:'jpass',nm:'조롤패스',t:1e9,aw:'조롤패스 60단계'},{id:'jpassg',nm:'황금 조롤패스',t:1e9,aw:'조롤패스 프리미엄 60단계'}]).sort((a,b)=>a.t-b.t);
+const FRAMES=[].concat([{id:'basic',nm:'기본',t:0},{id:'ball',nm:'몬스터볼',t:0},{id:'gold',nm:'금테',t:100},{id:'fire',nm:'불꽃',t:200},{id:'ice',nm:'얼음',t:200},{id:'leaf',nm:'풀잎',t:50},{id:'pixel',nm:'도트 체크',t:80},{id:'wave',nm:'물결',t:150},{id:'thunder',nm:'번개',t:250},{id:'ghost',nm:'유령',t:300},{id:'neon',nm:'네온',t:400},{id:'rbw',nm:'무지개',t:500},{id:'shiny',nm:'이로치',t:700},{id:'master',nm:'하이퍼볼',t:800},{id:'leg',nm:'전설',t:1000},{id:'galaxy',nm:'은하수',t:1500},{id:'crown',nm:'왕관',t:2000},{id:'star',nm:'트로피 성좌',t:1e9,aw:'시즌 1등 보상'},{id:'jpass',nm:'조롤패스',t:1e9,aw:'조롤패스 60단계'},{id:'jpassg',nm:'황금 조롤패스',t:1e9,aw:'조롤패스 프리미엄 30단계'}]).sort((a,b)=>a.t-b.t);
 const frLock=(f,tt)=>f.aw?!(SAVE.frOwn||[]).includes(f.id):tt<f.t;
 const okNick=n=>/^[가-힣a-zA-Z0-9_ ]{2,10}$/.test(n)&&n.trim().length>=2;
 function avaSrc(a){a=a||SAVE.ava;if(a&&a.t==='img'&&PIMG[a.i])return PIMG[a.i];if(a&&a.t==='por'&&owns(a.k))return formPor(a.k,a.f||0);const k=a&&a.t==='pk'&&owns(a.k)?a.k:SAVE.sel;return SPR[chOf(k).id];}

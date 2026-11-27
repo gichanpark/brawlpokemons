@@ -171,3 +171,9 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - 몰수에 가방 추가: pb_take_apply(u,c,g,pks,items jsonb,vals jsonb,msg) 공용 — 서버 저장에서 아이템 빼고, 모자라면 vals(상점가) 만큼 재화 차감. take_items 컬럼 → pb_save 'ti' / login·session note 'i' → 클라 takeItemsLocal 같은 규칙 ('@k' = 기간제 포켓몬, 스킨·프레임·패스도 회수)
 - 전체우편 회수: pb_admin_bc_list / pb_admin_recall(token, created_at, msg, vals). 안 받은 우편 삭제 + pb_mail_bc 삭제, 받은 사람은 pb_take_apply. 이제 전체 발송은 항상 pb_mail_bc 기록(until null 허용)
 - 되팔기 25%
+
+## v1.20.19
+- 무한다이노 패스 전용 스킨 3종 (THEMES.eternatus: galaxy 은하수 / aurora 오로라 / plat 백금, pass:1 → 상자 드롭 제외). SKINX 에 spr·por·gmax(무한다이맥스) 추가. 생성: dev/tools/eter*.py (색 분류 리컬러 + 성운 노이즈 + 별)
+- 무한다이빔 색: EBP[skin] 팔레트로 빔·링·섬광 교체
+- 조롤패스: 프리미엄 30 = 신화 선택권 + 황금 조롤패스 프레임, 60 = 무한다이노 스킨 3개 중 택1(pick 보상 → passPickUI, 모두 받기에서는 건너뜀) + 전설 선택권
+- 무한다이노 너프: 체력 5000→4500, 다이맥스포 1050→880·사거리 7.5→7·체력비례 최대 1.5→1.3배, 무한다이빔 2.5→2초·피해 3900→3300·범위 1.8→1.6·끌어당김 2.4→1.9·무적 → 받는 피해 50% 감소
