@@ -592,7 +592,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.14';
+const VER='1.21.15';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -964,9 +964,9 @@ const CH=[
  {k:'steve',id:'steve',rface:1,nm:'스티브',fnm:'스티브 (맨손)',role:'한정 · 채굴과 제작',el:'normal',gr:'sp',col:'#22d3ee',hp:4200,spd:1.1,rl:1.0,charge:2600,
   atk:{nm:'주먹',ds:'맨손 주먹질 (도구를 만들면 공격이 바뀜)',ty:'shot',fx:'fist',el:'normal',range:1.8,speed:14,dmg:420,r:16,col:'#f5d0a9'},
   sup:{nm:'TNT',ds:'TNT를 던져 크게 폭발',ty:'lob',fx:'tnt',boom:'quake',el:'fire',range:7,dmg:1700,aoe:2.1,fl:.8,col:'#dc2626'}},
- {k:'armewtwo',id:'armewtwo',nm:'아머드 뮤츠',role:'크로마틱 · 강철 갑옷',el:'psychic',gr:'cr',col:'#64748b',hp:4300,spd:.95,rl:1.3,charge:2800,
-  atk:{nm:'E8YS92RM',ds:'적을 따라가는 염동 유도탄 4발을 간격을 두고 발사',ty:'shot',fx:'psyorb',el:'psychic',burst:4,gap:.2,range:7,speed:13,dmg:360,r:10,home:3,col:'#c084fc'},
-  sup:{nm:'JOF511JAJ32TA',ds:'주변으로 강력한 강철 충격파 · 맞은 적은 기절 + 3초간 취약(받는 피해 증가)',ty:'nova',boom:'quake',el:'steel',aoe:3,dmg:1800,stun:1,vulnC:{c:1,t:3},col:'#94a3b8'}}
+ {k:'armewtwo',id:'armewtwo',nm:'아머드 뮤츠',role:'크로마틱 · 강철 갑옷',el:'psychic',gr:'cr',col:'#64748b',hp:5200,spd:1.0,rl:1.1,charge:2400,
+  atk:{nm:'E8YS92RM',ds:'적을 끝까지 쫓아가는 염동 유도탄 4발을 간격을 두고 발사 (강한 유도·목표 고정)',ty:'shot',fx:'psyorb',el:'psychic',burst:4,gap:.18,range:8,speed:14,dmg:440,r:11,home:5.5,homeT:16,col:'#c084fc'},
+  sup:{nm:'JOF511JAJ32TA',ds:'주변으로 강력한 강철 충격파 · 맞은 적은 기절 + 4초간 취약(받는 피해 증가)',ty:'nova',boom:'quake',el:'steel',aoe:3.6,dmg:2300,stun:1.3,vulnC:{c:1,t:4},col:'#94a3b8'}}
 ];
 CH.forEach(c=>{if(!c.atk.el)c.atk.el=c.el;if(!c.sup.el)c.sup.el=c.el;});
 
@@ -1885,8 +1885,8 @@ function updProjs(dt){
       else{aoeHit(p.o,p.tx,p.ty,s.aoe*T,s.dmg,s,p.sup);if(s.pool)addZone(p.tx,p.ty,s.pool.r*T,s.pool.t,p.team,p.o,0,s.pool.dps,'poison');}
       G.projs.splice(i,1);}continue;}
     p.life=(p.life||0)+dt;
-    if(s.home&&!p.ret){let best=null,bd=s.home*T;for(const o of G.ents)if(o.alive&&o.team!==p.team&&!p.hit.has(o)&&visibleTo(o,p.team)){const d=Math.hypot(o.x-p.x,o.y-p.y);if(d<bd){bd=d;best=o;}}
-      if(best){const v=Math.hypot(p.vx,p.vy),a0=Math.atan2(p.vy,p.vx),a1=Math.atan2(best.y-p.y,best.x-p.x);let da=a1-a0;while(da>Math.PI)da-=6.2832;while(da<-Math.PI)da+=6.2832;da=clamp(da,-7*dt,7*dt);p.vx=Math.cos(a0+da)*v;p.vy=Math.sin(a0+da)*v;}}
+    if(s.home&&!p.ret){let best=null,bd=s.home*T;if(s.homeT&&p.lk&&p.lk.alive&&!p.hit.has(p.lk)&&visibleTo(p.lk,p.team)&&Math.hypot(p.lk.x-p.x,p.lk.y-p.y)<s.home*T*1.6)best=p.lk;else for(const o of G.ents)if(o.alive&&o.team!==p.team&&!p.hit.has(o)&&visibleTo(o,p.team)){const d=Math.hypot(o.x-p.x,o.y-p.y);if(d<bd){bd=d;best=o;}}if(s.homeT&&best)p.lk=best;
+      if(best){const v=Math.hypot(p.vx,p.vy),a0=Math.atan2(p.vy,p.vx),a1=Math.atan2(best.y-p.y,best.x-p.x);let da=a1-a0;while(da>Math.PI)da-=6.2832;while(da<-Math.PI)da+=6.2832;da=clamp(da,-(s.homeT||7)*dt,(s.homeT||7)*dt);p.vx=Math.cos(a0+da)*v;p.vy=Math.sin(a0+da)*v;}}
     if(p.ret){const o=p.o,v=Math.hypot(p.vx,p.vy),dx=o.x-p.x,dy=o.y-p.y,d=Math.hypot(dx,dy)||1;p.vx=dx/d*v;p.vy=dy/d*v;if(d<o.r+10||!o.alive||p.life>4){G.projs.splice(i,1);continue;}}
     trailFx(p,dt);
     const sp=Math.hypot(p.vx,p.vy),steps=Math.max(1,Math.ceil(sp*dt/10));let dead=false;
@@ -3908,7 +3908,7 @@ const TRG={
  greninja:{t:['변환자재','공격할 때마다 2초간 이동속도 +10% (최대 3중첩)'],g:['그림자분신','2.5초간 투명해지고 빨라짐 (공격하면 풀림)']},
  dragonite:{t:['멀티스케일','체력이 가득할 때 받는 피해 50% 감소'],g:['용의춤','4초간 장전 속도 2배 · 이동속도 +15%']},
  mewtwo:{t:['프레셔','4칸 안의 적은 장전 속도 -35%'],g:['HP회복','체력 40% 즉시 회복']},
- armewtwo:{t:['프레셔','4칸 안의 적은 장전 속도 -35%'],g:['EBIC881JUD','5초 동안 모든 능력(공격·방어·이동·장전) 1.2배 + 탄환 전부 회복']},
+ armewtwo:{t:['프레셔 · 강철 갑옷','4칸 안의 적은 장전 속도 -35% · 갑옷 덕분에 받는 피해 항상 -12%'],g:['EBIC881JUD','6초 동안 모든 능력(공격·방어·이동·장전) 1.2배 + 탄환 전부 회복']},
  gyarados:{t:['위협 · 헤엄','4칸 안의 적 공격력 -20% · 물 위를 빠르게 헤엄침'],g:['바다회오리','지정한 곳에 3초간 적을 끌어당기고 느리게 하는 소용돌이']},
  tyranitar:{t:['모래날림','3칸 안의 적에게 모래바람 지속 피해'],g:['스텔스록','주변에 밟으면 터지는 바위 함정 3개 설치']},
  garchomp:{t:['까칠한피부 · 광폭화','가까이서 때린 적에게 피해 20% 반사 · 체력 50% 이하 공격력·속도 +25%'],g:['구멍파기','1.2초간 땅속으로 숨어 무적 상태로 빠르게 이동']},
@@ -4162,7 +4162,7 @@ function dmgIn(src,tgt,dot){
   if(k==='flareon'&&!tgt.ch.ditto&&src&&src!==tgt&&src.ch.el==='fire'){if(!dot&&G.t-(tgt.ffT||-9)>.4){tgt.ffT=G.t;tgt.heat=Math.min(5,(tgt.heat||0)+2);tgt.heatT=3;addText(tgt.x,tgt.y-95,'타오르는불꽃!','#fdba74');}return 0;}
   if(k==='blastoise')m*=.85;if(k==='geodude')m*=.9;if(k==='magikarp'&&tgt.form===1)m*=.75;if(k==='umbreon'||k==='corviknight')m*=.85;if(k==='bewear')m*=.75;if(k==='shuckle')m*=tgt.trickT>0?1.6:.55;if(src&&src.ch.k==='darkrai'&&tgt.stun>0)m*=1.5;if(k==='minior'&&tgt.form===1)m*=1.2;if(k==='dachsbun'&&src&&src.ch.el==='fire')m*=.25;if(tgt.vulnT>0)m*=1.3;for(const z of G.zones)if(z.kind==='barrier'&&z.team===tgt.team&&Math.hypot(tgt.x-z.x,tgt.y-z.y)<z.r){m*=.6;break;}if(tgt.shellT>0)m*=.3;if(tgt.ironT>0)m*=.5;
   if(k==='snorlax'&&src&&src.ch.el==='fire')m*=.5;
-  if(tgt.armT>0)m/=1.2;
+  if(tgt.armT>0)m/=1.2;if(tgt.ch.k==='armewtwo'&&!tgt.ch.ditto)m*=.88;
   if(k==='dragonite'&&tgt.hp>=tgt.maxHp-1)m*=.5;
   if(k==='rayquaza'&&dot)m*=.5;
   if(k==='alakazam'&&dot&&src)m*=.3;
@@ -4254,7 +4254,7 @@ function useGadget(e,ang,d){
   if(ang==null){const t=nearEnemy(e,7);ang=t?Math.atan2(t.y-e.y,t.x-e.x):e.face;d=t?Math.hypot(t.x-e.x,t.y-e.y):4*T;}
   const ca=Math.cos(ang),sa=Math.sin(ang);
   switch(k){
-    case 'armewtwo':e.armT=5;e.ammo=e.ch.amax||3;spark(e.x,e.y-30,['#94a3b8','#e2e8f0','#c084fc','#fff'],24,240,.6,6);addText(e.x,e.y-110,'EBIC881JUD!','#e2e8f0',1);sfx('ready',e.x,e.y);break;
+    case 'armewtwo':e.armT=6;e.ammo=e.ch.amax||3;spark(e.x,e.y-30,['#94a3b8','#e2e8f0','#c084fc','#fff'],24,240,.6,6);addText(e.x,e.y-110,'EBIC881JUD!','#e2e8f0',1);sfx('ready',e.x,e.y);break;
     case 'pikachu':case 'scizor':bumpFz(e);e.dash={dx:ca,dy:sa,left:3.5*T,hit:new Set(),s:k==='pikachu'?GSP.pdash:GSP.sdash};break;
     case 'charizard':{const dd=clamp(d||4*T,T,5*T);bumpFz(e);e.leap={sx:e.x,sy:e.y,tx:e.x+ca*dd,ty:e.y+sa*dd,t:0,dur:.55,s:GSP.fly};e.inv=Math.max(e.inv,.55);break;}
     case 'blastoise':case 'shuckle':case 'golisopod':e.shellT=1.5;break;
