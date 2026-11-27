@@ -496,6 +496,7 @@ select.minput{width:auto}
 .st-news{width:100%;max-width:960px;box-sizing:border-box;margin:6px 8px 8px;background:#111;border:2px solid #3b2d63;box-shadow:inset 0 0 0 2px #000;padding:4px 8px;font-size:12px;white-space:nowrap;overflow:hidden;display:flex;gap:10px;align-items:center}.st-news>b{color:#111;background:#fde047;font-weight:400;padding:1px 6px;flex:none;z-index:1}
 .st-mq{flex:1;overflow:hidden;min-width:0}.st-mqt{display:inline-flex;align-items:center;gap:14px;animation:stmq 40s linear infinite;color:#fde68a;text-shadow:0 0 4px rgba(253,224,71,.4)}.st-mqt .nw em{opacity:.6;font-style:normal;color:#fff}.st-mqt .nsep{font-style:normal;color:#f97316}
 @keyframes stmq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+#updBar{position:fixed;left:50%;top:8px;transform:translateX(-50%);z-index:9999;display:none;align-items:center;gap:8px;background:#1c1530;border:3px solid #111;box-shadow:inset 0 3px 0 #3b2d63,0 4px 0 #111;padding:6px 10px;font-size:12px;color:#fff;max-width:92vw;animation:pop .3s steps(3)}#updBar>i{font-style:normal;background:#facc15;color:#111;padding:1px 6px;border:2px solid #111}#updBar b{color:#fde047;font-weight:400}#updBar .btn{padding:3px 8px;white-space:nowrap}#updBar span{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -614,7 +615,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.25';
+const VER='1.21.26';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -5144,6 +5145,16 @@ async function inviteFriend(u,n,kind){
 function toast(h,btns){const t=$('#invToast');t.innerHTML=`<span>${h}</span>${btns||''}`;t.classList.add('on');clearTimeout(t._t);if(!btns)t._t=setTimeout(()=>t.classList.remove('on'),3500);return t;}
 const SEENINV=new Set();let pingT=null;
 function verNum(v){return String(v||'0').split('.').map(x=>+x||0).reduce((a,x)=>a*1000+x,0);}
+/* 새 업데이트 알림: 배포된 ver.json 을 1분마다 확인 → 접속 중인 모두에게 알림 (판 중엔 띠만, 판 끝나면 새로고침 버튼) */
+const UPD={v:null,x:0};
+async function updPoll(){if(location.protocol==='file:'||window._banned)return;try{const r=await fetch('ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const j=await r.json();if(j&&j.v&&verNum(j.v)>verNum(VER)){if(UPD.v!==j.v){UPD.v=j.v;UPD.x=0;sfx('ready');}updShow();}}catch(e){}}
+function updGo(){try{serverPush();}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(UPD.v||VER)),700);}
+function updShow(){if(!UPD.v||UPD.x)return;let b=$('#updBar');if(!b){b=document.createElement('div');b.id='updBar';document.body.appendChild(b);}
+  const inGame=G&&!G.over;
+  b.innerHTML=`<i>NEW</i><span>새 업데이트 <b>v${esc(UPD.v)}</b>가 나왔어요!${inGame?' · 판 끝나고 새로고침':''}</span>${inGame?'':'<button class="btn sm" id="updGo">새로고침</button>'}<button class="btn b2 sm" id="updX">나중에</button>`;
+  b.style.display='flex';if($('#updGo'))$('#updGo').onclick=()=>{sfx('ui');updGo();};$('#updX').onclick=()=>{sfx('ui');UPD.x=1;b.style.display='none';setTimeout(()=>{UPD.x=0;updShow();},10*60000);};}
+setTimeout(updPoll,8000);setInterval(updPoll,60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)updPoll();});
+setInterval(()=>{const b=$('#updBar');if(UPD.v&&!UPD.x&&b&&b.style.display!=='none'){const ig=G&&!G.over;if(ig!==!!b.dataset.ig){b.dataset.ig=ig?'1':'';updShow();}}},2000);
 let VERASK=0;function verCheck(lv){if(!lv||verNum(lv)<=verNum(VER)||VERASK)return;if(G&&!G.over){return;}VERASK=1;
   modal(`<h2>새 버전이 나왔어요!</h2><div style="font-size:12px;line-height:1.8">지금 버전 v${VER} → 새 버전 v${esc(lv)}<br>잠시 후 자동으로 새로고침돼요.</div><div class="mrow"><button class="btn sm" onclick="location.replace(location.pathname+'?v='+encodeURIComponent('${esc(lv)}'))">지금 새로고침</button></div>`);
   try{serverPush();}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(lv)),4000);}
