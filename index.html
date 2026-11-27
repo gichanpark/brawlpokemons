@@ -616,7 +616,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.30';
+const VER='1.21.31';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -2010,7 +2010,7 @@ function endMatch(mode,res){
   let coin=tm?(res==='win'?150:res==='draw'?80:50):([0,200,160,140,120,90,70,50,40,30,20][res]||20);
   const road=[];const qd=questTick(mode,res,tm);const pxp=passGain(qd.xp+tm?(res==='win'?40:res==='draw'?25:20):([0,40,32,32,26,26,20,20,15,15,15][res]||15));
   while(false){const rr=Object.assign({},ROAD[SAVE.road]);if(rr.pk){const k=rr.pk==='starter'?STARTERS.find(x=>!owns(x)):rr.pk;if(k&&!owns(k)){unlockPk(k);rr.got=chOf(k).nm;}}road.push(rr);coin+=rr.c;SAVE.road++;}
-  const ash=10+Math.floor(Math.random()*41);SAVE.ashard=(SAVE.ashard||0)+ash;
+  const ash=rescueOn()?10+Math.floor(Math.random()*41):0;if(ash)SAVE.ashard=(SAVE.ashard||0)+ash;
   let gem=(tm&&res==='win')||(mode==='sd'&&res<=3)?6:0;gem+=road.length*5;
   SAVE.coins=(SAVE.coins||0)+coin;SAVE.gems=(SAVE.gems||0)+gem;save();
   G.result={big,sub,d,coin,road,gem,pxp,qd,ash};
@@ -3336,7 +3336,7 @@ function refreshMenu(){try{renderAllies();}catch(e){}try{invBadge();}catch(e){}
   $('#selTro').textContent=tro(c.k);
   const tt=totTro();$('#totTro').textContent=tt;$('#lbCoin').textContent=SAVE.coins;$('#lbGem').textContent=SAVE.gems||0;
   $('#lbName').innerHTML=esc(SAVE.nick||ACC.user||SAVE.name)+(ACC.admin?' <span class="adm">관리자</span>':'');$('#lbAva').src=avaSrc();{const w=$('#lbAvaW');w.style.setProperty('--abg',abg(SAVE.ava)||'#0d0a1f');w.className='ava fr-'+(SAVE.frm||'basic')+(SAVE.ava&&(SAVE.ava.t==='img'&&PIMG[SAVE.ava.i]||SAVE.ava.t==='por'&&owns(SAVE.ava.k))?' ph':'');}$('#lbSqImg').src=POR[c.id];
-  {const si=$('#stkIco');if(si&&!si.src&&window.STK_ICO)si.src=STK_ICO;}{const ri=$('#rsIco');if(ri&&!ri.src)ri.src=SPR.armewtwo;const rb=$('#rsBadge');if(rb){const n=SAVE.ashard||0,got=(SAVE.own||[]).includes('armewtwo');rb.textContent=got?'✓':Math.min(100,Math.floor(n/10))+'%';}}
+  {const si=$('#stkIco');if(si&&!si.src&&window.STK_ICO)si.src=STK_ICO;}{const rbt=$('#bRescue');if(rbt)rbt.style.display=rescueOn()?'':'none';}{const ri=$('#rsIco');if(ri&&!ri.src)ri.src=SPR.armewtwo;const rb=$('#rsBadge');if(rb){const n=SAVE.ashard||0,got=(SAVE.own||[]).includes('armewtwo');rb.textContent=got?'✓':Math.min(100,Math.floor(n/10))+'%';}}
   {const ls=$('#lpSkins');if(ls&&!ls.dataset.ok){ls.dataset.ok=1;const L=['galaxy','aurora','plat'].filter(id=>SKINX['eternatus_'+id]);let i=0;
     ls.innerHTML=`<div class="lps"><img class="px" alt=""><i></i></div>`;const im=ls.querySelector('img'),lb=ls.querySelector('i');
     const show=()=>{const id=L[i%L.length],t=(THEMES.eternatus||[]).find(x=>x.id===id);im.src=SKINX['eternatus_'+id].spr;lb.textContent=t?t.nm:'';im.classList.remove('sw');void im.offsetWidth;im.classList.add('sw');i++;};
@@ -3651,7 +3651,7 @@ const BAL_FIX={pikachu:[1.0969,1.075,1.1546],charizard:[1.0524,1.0341,1.0407],bl
     for(const [sp,m] of [[c.atk,f[1]],[c.sup,f[2]]]){if(!sp||done.has(sp))continue;done.add(sp);if(sp.dmg>0)sp.dmg=Math.round(sp.dmg*m);}};
   for(const c of CH){const f=BAL_FIX[c.k];if(!f)continue;sc(c,f);const fm=FORMS[c.k];if(fm)fm.forEach(x=>sc(x,f));}})();
 /* v1.21.30 너프 (사용률·쇼다운 성적 1위권) [체력, 평타, 필살기] 배율 */
-const NERF={eternatus:[.88,.85,.85],giratina:[.92,.9,.88],arceus:[.9,.9,.9],zygarde:[.95,.9,.9],necrozma:[.95,.92,.92],darkrai:[.95,.92,.92],armewtwo:[.92,.9,.9]};
+const NERF={eternatus:[.88,.85,.85],giratina:[.92,.9,.88],arceus:[.9,.9,.9],zygarde:[.95,.9,.9],necrozma:[.95,.92,.92],darkrai:[.95,.92,.92]};/* 아머드 뮤츠는 이벤트 한정이라 너프 취소 */
 (()=>{const done=new Set(),sc=(c,f)=>{if(!c||done.has(c))return;done.add(c);if(typeof c.hp==='number')c.hp=Math.round(c.hp*f[0]/10)*10;
     for(const [sp,m] of [[c.atk,f[1]],[c.sup,f[2]]]){if(!sp||done.has(sp))continue;done.add(sp);if(sp.dmg>0)sp.dmg=Math.round(sp.dmg*m);if(sp.endDmg>0)sp.endDmg=Math.round(sp.endDmg*m);}};
   for(const c of CH){const f=NERF[c.k];if(!f)continue;sc(c,f);const fm=FORMS[c.k];if(fm)fm.forEach(x=>sc(x,f));}
@@ -4761,12 +4761,15 @@ function lLeft(ms){const m=Math.max(0,ms-Date.now())/6e4;return m>=1440?Math.flo
 /* ---------- 이벤트: 아머드 뮤츠 구출 (갑옷 조각) ---------- */
 const ASH_SHOP=[{id:'armewtwo',nm:'아머드 뮤츠',cost:1000,pk:'armewtwo'},{id:'box_poke',cost:30},{id:'box_great',cost:80},{id:'box_ultra',cost:150},{id:'box_master',cost:300},{id:'scout',cost:250},{id:'c500',nm:'금구슬 500',cost:40,c:500},{id:'g20',nm:'혜성조각 20',cost:60,g:20},{id:'sel7_l',cost:350},{id:'maxlv',cost:700},{id:'pull10',cost:1500}];
 const ASH_ICO=(()=>{const rows=['....kkkk....','..kkggggkk..','.kgwwggggdk.','kgwggggggdgk','kgggkkkkggdk','kggk....kgdk','kggk....kgdk','.kgk....kdk.','..kk....kk..'],P={k:'#111',g:'#94a3b8',w:'#e2e8f0',d:'#475569'},c=document.createElement('canvas');c.width=12;c.height=9;const x=c.getContext('2d');rows.forEach((r,j)=>{for(let i=0;i<12;i++)if(r[i]!=='.'){x.fillStyle=P[r[i]];x.fillRect(i,j,1,1);}});return c.toDataURL();})();
+/* 아머드 뮤츠 구출 이벤트 기간: 2026-11-30 23:59 (한국 시간)까지 */
+const RESCUE_END=Date.parse('2026-11-30T23:59:59+09:00');const rescueOn=()=>Date.now()<RESCUE_END;
+function rescueLeft(){const t=Math.max(0,RESCUE_END-Date.now()),d=Math.floor(t/864e5),h=Math.floor(t%864e5/36e5),m=Math.floor(t%36e5/6e4);return d?`${d}일 ${h}시간`:h?`${h}시간 ${m}분`:`${m}분`;}
 function rescueHTML(){const n=SAVE.ashard||0,own=ownP('armewtwo')&&(SAVE.own||[]).includes('armewtwo'),c=chOf('armewtwo');
-  return `<div class="rsq"><div class="rs-h"><img class="px" src="${POR[c.id]}"><div><b>아머드 뮤츠 구출</b><br><span style="font-size:11px;opacity:.85">게임을 할 때마다 갑옷 조각을 10~50개 모아요. 1000개를 모으면 아머드 뮤츠를 구출할 수 있어요!</span></div></div>
+  return `<div class="rsq"><div class="rs-h"><img class="px" src="${POR[c.id]}"><div><b>아머드 뮤츠 구출</b><br><span style="font-size:11px;opacity:.85">게임을 할 때마다 갑옷 조각을 10~50개 모아요. 1000개를 모으면 아머드 뮤츠를 구출할 수 있어요!</span><br><b style="font-size:11px;color:#fca5a5">11월 30일(월) 밤 12시에 끝나요 · 남은 시간 ${rescueLeft()} · 끝나면 남은 갑옷 조각은 못 써요</b></div></div>
     <div class="rs-bar"><i style="width:${Math.min(100,n/10)}%"></i><span><img class="px" style="height:12px" src="${ASH_ICO}"> ${n.toLocaleString()} / 1,000</span></div>
     <div class="rs-shop">${ASH_SHOP.map((it,i)=>{const isPk=!!it.pk,got=isPk&&own,nm=it.nm||(ITEMS[it.id]?ITEMS[it.id].nm:it.id),pic=isPk?`<img class="px" src="${SPR[c.id]}" style="max-height:44px">`:it.c?`<img class="ico" src="${ICO.coin}">`:it.g?`<img class="ico" src="${ICO.gemc}">`:itemPic(it.id);
       return `<div class="rs-it${isPk?' big':''}${got?' got':''}">${pic}<b>${nm}</b><button class="btn sm" data-ash="${i}" ${got||n<it.cost?'disabled':''}>${got?'✓ 구출 완료':`<img class="px" style="height:12px;vertical-align:-2px" src="${ASH_ICO}"> ${it.cost}`}</button>${!isPk&&n>=it.cost*2?`<button class="btn sm b2" data-ashq="${i}" style="font-size:9px;padding:2px 5px">여러 개</button>`:''}</div>`;}).join('')}</div></div>`;}
-function openRescue(){const draw=()=>{$('#mbox').innerHTML=`<h2>이벤트 · 아머드 뮤츠 구출</h2>${rescueHTML()}<div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`;$('#mbox').classList.add('wide');rescueBind(draw);};draw();$('#modal').classList.add('on');}
+function openRescue(){if(!rescueOn()){modal(`<h2>이벤트 종료</h2><div style="font-size:12px">아머드 뮤츠 구출 이벤트가 끝났어요. 참여해 주셔서 고마워요!</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}const draw=()=>{$('#mbox').innerHTML=`<h2>이벤트 · 아머드 뮤츠 구출</h2>${rescueHTML()}<div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`;$('#mbox').classList.add('wide');rescueBind(draw);};draw();$('#modal').classList.add('on');}
 function rescueQty(i,redraw){const it=ASH_SHOP[i],nm=it.nm||ITEMS[it.id].nm,mx=Math.floor((SAVE.ashard||0)/it.cost);let q=Math.min(10,mx);
   const ui=()=>{$('#mbox').innerHTML=`<h2>여러 개 교환 <span class="cur">${nm}</span></h2><div style="display:flex;align-items:center;gap:8px;justify-content:center;font-size:14px;margin:10px 0"><button class="btn sm b2" data-d="-10">-10</button><button class="btn sm b2" data-d="-1">-1</button><b style="font-size:24px;min-width:60px;text-align:center">${q}</b><button class="btn sm b2" data-d="1">+1</button><button class="btn sm b2" data-d="10">+10</button><button class="btn sm b2" data-d="max">최대 ${mx}</button></div>
     <div style="text-align:center;font-size:12px">필요한 갑옷 조각 <b>${(q*it.cost).toLocaleString()}</b> / 보유 ${(SAVE.ashard||0).toLocaleString()}</div>
