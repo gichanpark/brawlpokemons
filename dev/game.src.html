@@ -614,7 +614,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.20';
+const VER='1.21.21';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1013,7 +1013,7 @@ const IMGS={};for(const k in SPRS){const im=new Image();im.onload=()=>{im.ok=1};
 const IMGSF={};for(const k in SPRSF){const im=new Image();im.onload=()=>{im.ok=1};im.src=SPRSF[k];IMGSF[k]=im;}
 const hasShy=k=>!!SPRS[k]&&(SAVE.shy||[]).includes(k);
 /* 테마 스킨: SKINX['k_id']={spr,por,gmax}, 보유 SAVE.skn=['k_id'], 장착 SAVE.sk[k]='s'(이로치,예전 값 1)|테마id */
-const THEMES={cinderace:[{id:'spurs',nm:'토트넘 에이스번',ball:1},{id:'korea',nm:'국가대표 에이스번',ball:1}],hlil:[{id:'dongbaek',nm:'동백꽃 필 무렵',fx:{palO:['#facc15','#fef9c3','#9a3412'],col:'#facc15',edge:'#16181c',petal:1}}],giratina:[{id:'yako',nm:'백귀야행 기라티나',fx:{palO:['#dc2626','#fecaca','#1a0505'],col:'#dc2626',yako:1}}],
+const THEMES={blastoise:[{id:'pirate',nm:'해적선장 거북왕',fx:{palO:['#eab308','#fef08a','#3b200c'],col:'#eab308'}}],cinderace:[{id:'spurs',nm:'토트넘 에이스번',ball:1},{id:'korea',nm:'국가대표 에이스번',ball:1}],hlil:[{id:'dongbaek',nm:'동백꽃 필 무렵',fx:{palO:['#facc15','#fef9c3','#9a3412'],col:'#facc15',edge:'#16181c',petal:1}}],giratina:[{id:'yako',nm:'백귀야행 기라티나',pass:1,fx:{palO:['#dc2626','#fecaca','#1a0505'],col:'#dc2626',yako:1}}],
   mewtwo:[{id:'obsid',nm:'흑요석 뮤츠',fx:{palO:['#d946ef','#fae8ff','#3a0d3d'],col:'#d946ef'}}],
   rayquaza:[{id:'sky',nm:'창공 레쿠쟈',fx:{palO:['#7dd3fc','#f0f9ff','#0c2d4a'],col:'#7dd3fc'}}],
   kyurem:[{id:'onyx',nm:'흑빙 큐레무',fx:{palO:['#38bdf8','#e0f2fe','#06283d'],col:'#38bdf8'}}],
