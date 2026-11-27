@@ -615,7 +615,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.26';
+const VER='1.21.27';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -2175,10 +2175,17 @@ function atkBase(){return {x:W-92,y:H-108,r:55};}
 function scale(){return Math.min(1.3,Math.min(W,H)/(10*T))*(G&&G.zk?G.zk:1);}
 function s2w(x,y){const S=scale();return {x:(x-W/2)/S+G.cam.x,y:(y-H/2)/S+G.cam.y};}
 function autoTarget(e,s){
-  const R=(s.range||(s.aoe?s.aoe+1:5))*T*1.05;let best=null,bd=R;
-  for(const o of G.ents){if(!o.alive||o.team===e.team||!visibleTo(o,e.team))continue;const d=dist(e,o);if(d<bd){bd=d;best=o;}}
-  if(best)return {x:best.x+best.vx*.15,y:best.y+best.vy*.15};
-  if(G.mode==='sd'){const m=G.map;for(let i=0;i<m.g.length;i++)if(m.g[i]===4&&!(m.stn&&m.stn[i])){const x=(i%m.C+.5)*T,y=((i/m.C|0)+.5)*T,d=Math.hypot(x-e.x,y-e.y);if(d<bd){bd=d;best={x,y};}}}
+  const R=(s.range||(s.aoe?s.aoe+1:5))*T*1.05,lobT=s.ty==='lob'||s.ty==='zone'||s.ty==='meteor',thru=s.thru||lobT;
+  let best=null,bs=1e9;
+  for(const o of G.ents){if(!o.alive||o.team===e.team||!visibleTo(o,e.team))continue;const d=dist(e,o);if(d>=R)continue;
+    // 벽에 막히는 적보다 바로 맞힐 수 있는 적을 먼저 (막히면 1.7배 먼 것으로 침)
+    const sc=d*(thru||los(e.x,e.y,o.x,o.y)?1:1.7)*(o.safe?1.15:1);if(sc<bs){bs=sc;best=o;}}
+  if(best){const vx=best.vx||0,vy=best.vy||0;let px=best.x,py=best.y;
+    // 날아가는 시간만큼 앞을 노림 (두 번 반복해서 맞춤)
+    for(let k=0;k<2;k++){const dd=Math.hypot(px-e.x,py-e.y),tt=lobT?(s.fl||.6):s.ty==='shot'?Math.min(.8,dd/Math.max(1,(s.speed||12)*T))+(s.burst?.05:0):.05;px=best.x+vx*tt;py=best.y+vy*tt;}
+    const dd=Math.hypot(px-e.x,py-e.y);if(dd>R){const k=R/dd;px=e.x+(px-e.x)*k;py=e.y+(py-e.y)*k;}
+    return {x:px,y:py};}
+  if(G.mode==='sd'){let bd=R;const m=G.map;for(let i=0;i<m.g.length;i++)if(m.g[i]===4&&!(m.stn&&m.stn[i])){const x=(i%m.C+.5)*T,y=((i/m.C|0)+.5)*T,d=Math.hypot(x-e.x,y-e.y);if(d<bd){bd=d;best={x,y};}}}
   return best;
 }
 function playerGadget(){if(!P.alive||G.over)return;if(NET.on&&!NET.host){if(!(P.gadN>0)||P.gadCd>0)return;sendIn('a',{s:2});sfx('gadget',P.x,P.y);return;}useGadget(P,null,null);}
@@ -2201,7 +2208,7 @@ function playerFire(sup,ang,d){
 }
 function releaseStick(st,sup){
   const dx=st.x-st.sx,dy=st.y-st.sy,l=Math.hypot(dx,dy);
-  if(l<14){if(performance.now()-st.t0<300)playerFire(sup,null);}
+  if(l<14){if(performance.now()-st.t0<550)playerFire(sup,null);}
   else{const s=sup?P.ch.sup:P.ch.atk;playerFire(sup,Math.atan2(dy,dx),Math.min(1,l/60)*s.range*T);}
 }
 cv.addEventListener('contextmenu',e=>e.preventDefault());
