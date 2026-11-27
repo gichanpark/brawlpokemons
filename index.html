@@ -611,7 +611,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.18';
+const VER='1.21.19';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -4562,7 +4562,7 @@ const STI=(()=>{const c=document.createElement('canvas');c.width=c.height=16;con
   ['................','.kkkkkkkkkkkkkk.','.kbbbbbbbbbbbbk.','.kbbbbbbbbbyybk.','.kbbbbbbbbybbbk.','.kbbbbbbbybbbbk.','.kbbbybbbybbbbk.','.kbbybybybbbbbk.','.kbybbbybbbbbbk.','.kybbbbbbbbbbbk.','.kbbbbbbbbbbbbk.','.kwbwbwbwbwbwbk.','.kkkkkkkkkkkkkk.','......kkkk......','....kkkkkkkk....','................'].forEach((r,y)=>{for(let i=0;i<16;i++)if(r[i]!=='.'){x.fillStyle=P[r[i]];x.fillRect(i,y,1,1);}});
   return {icon:c.toDataURL()};})();
 /* ---------- 포켓증권 (서버 시세: pb_stock_list / pb_stock_trade · 10분마다 가격 결정 · 금구슬) ---------- */
-const STC={SLPH:'#a78bfa',DEVN:'#38bdf8',MCRO:'#facc15',FRND:'#4ade80',PTCH:'#f472b6',FLDR:'#f87171',MAUV:'#fb923c',JROL:'#22d3ee'};
+const STC={SLPH:'#a78bfa',DEVN:'#38bdf8',MCRO:'#facc15',FRND:'#4ade80',PTCH:'#f472b6',FLDR:'#f87171',MAUV:'#fb923c',JROL:'#22d3ee',CNDY:'#e879f9',RCKT:'#ef4444',KARP:'#fdba74'};
 const STTF=[{k:'6h',nm:'6시간',span:6*3600,bk:600,bn:'10분봉'},{k:'1d',nm:'1일',span:86400,bk:1800,bn:'30분봉'},{k:'3d',nm:'3일',span:3*86400,bk:7200,bn:'2시간봉'}];
 const ST={d:null,sel:'slph',tf:'1d',ct:'candle',tab:'all',pv:false,busy:false,iv:null,from:'shop',off:0,hov:null,q:1};
 const fmtI=v=>Math.round(v).toLocaleString('ko-KR');
