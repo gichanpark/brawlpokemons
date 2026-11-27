@@ -303,3 +303,5 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - 선물(pb_gift2: 금구슬·혜성조각 + 가방 아이템·스킨 최대 50개). 서버가 보내는 사람 save.inv/shy/skn에서 빼고(장착 중 스킨 sk도 해제) rev+1, 받는 사람 우편 items로 감. 상대가 이미 가진 스킨은 has_skin 거절. 후원하기(sponsorAsk)는 재화만(noItems). 옛 pb_gift는 남아 있음.
 - 주식 통화 분리: pb_stock.cur('coin'|'gem'). 혜성조각주: 에테르재단 AETH(공식명) · 혜성광업 COMT · 별의모래상사 SAND(지어냄). trade는 cur에 따라 save.coins/gems 증감, coins·gems 둘 다 반환. 화면 탭: 금구슬주/혜성조각주/내 주식, 계좌·모아보기도 통화별.
 - 주의: pb_stock에 'cur' 컬럼이 생겨서 plpgsql 변수명 cur 쓰면 ambiguous → tick/list 변수 vcur로 바꿈.
+
+- (DB만) 매크로코스모스·프렌들리숍·플라드리 래버러토리를 혜성조각주로 이동(보유자 없던 종목). 가격·차트를 비율로 축소(45/25/15), fl 60/100/200.
