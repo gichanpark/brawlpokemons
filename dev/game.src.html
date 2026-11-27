@@ -474,6 +474,14 @@ select.minput{width:auto}
 .sd-tf{position:absolute;left:4px;top:3px;display:flex;gap:3px}.sd-tf .sl-bet{padding:1px 5px}.sd-my{display:grid;grid-template-columns:repeat(4,auto);gap:2px 10px;background:#2a2140;border:2px solid #111;padding:5px 8px}.sd-my b{font-weight:400;color:#fde047}
 .sd-tr{display:flex;align-items:center;gap:5px;flex-wrap:wrap}.sd-tr input{font-family:inherit;font-size:13px;width:58px;padding:4px 6px;background:#fef3c7;color:#111;border:2px solid #111;outline:none}.sd-tr .sl-bet{padding:3px 6px;white-space:nowrap}
 .st-buy,.st-sell{padding:5px 9px!important}.st-buy{background:#dc2626!important;box-shadow:inset 0 -4px 0 #7f1d1d,inset 0 3px 0 #fca5a5,0 4px 0 #111!important}.st-sell{background:#2563eb!important}.sd-est{opacity:.85}.sd-est .ico{height:12px}
+.sd-tfr{display:flex;align-items:center;gap:4px}.sd-tfr .sl-bet{padding:2px 7px}
+.sd-ch2{position:relative;border:2px solid #111;height:clamp(170px,34vh,300px)}.sd-ch2 canvas{display:block;width:100%;height:100%;image-rendering:pixelated;touch-action:none}
+.st-cross{position:absolute;top:0;width:1px;background:rgba(253,224,71,.7);pointer-events:none;display:none}
+.st-tip{position:absolute;top:4px;display:none;background:rgba(10,6,24,.94);border:2px solid #facc15;padding:4px 7px;font-size:11px;line-height:1.5;pointer-events:none;z-index:2;white-space:nowrap}.st-tip b{font-weight:400;color:#fde047}
+.sd-st{display:grid;grid-template-columns:repeat(6,1fr);gap:3px}.sd-st>div{background:#2a2140;border:2px solid #111;padding:3px 5px;display:flex;flex-direction:column;font-size:10px;opacity:.95}.sd-st b{font-weight:400;font-size:12px;margin-top:1px}
+.sd-flow{display:flex;align-items:center;gap:6px;font-size:11px}.sd-flow b{font-weight:400}.sd-fb{flex:1;height:8px;background:#2563eb;border:2px solid #111;min-width:40px}.sd-fb i{display:block;height:100%;background:#dc2626}
+.sd-nw{background:#120d24;border:2px solid #111;padding:3px 7px}
+@media (max-width:760px){.sd-st{grid-template-columns:repeat(3,1fr)}}
 .st-load{padding:20px;text-align:center;opacity:.8}
 .st-acc{cursor:pointer}.st-tabs{display:flex;gap:4px}.st-tabs .sl-bet{flex:1;justify-content:center}
 .st-sht{color:#fdba74;font-style:normal}.warn{color:#fca5a5!important}
@@ -575,7 +583,7 @@ select.minput{width:auto}
   <div class="shov" id="shOv"></div>
 </div>
 <div id="stock" class="scr">
-  <div class="top"><button class="btn b2 sm" id="bStBack">← 상점</button><div class="pill">포켓증권</div><div class="pill"><img class="ico" data-ico="gemc" alt=""> <span id="stGem">0</span></div></div>
+  <div class="top"><button class="btn b2 sm" id="bStBack">← 상점</button><div class="pill">포켓증권</div><div class="pill"><img class="ico" data-ico="coin" alt=""> <span id="stGem">0</span></div></div>
   <div class="stwrap"><div class="stl"><div class="st-acc" id="stAcc"></div><div class="st-tabs" id="stTabs"></div><div class="st-list" id="stList"></div></div><div class="str" id="stDet"><div class="st-load">시세를 불러오는 중...</div></div></div>
   <div class="st-news" id="stNews"></div>
 </div>
@@ -603,7 +611,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.16';
+const VER='1.21.17';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -3344,7 +3352,7 @@ function pickAlly(i,fromLobby){const own=sortCH(CH.filter(c=>owns(c.k)&&c.k!==SA
 $('#bRoad').onclick=()=>openPass();
 $('#bEvent').onclick=()=>{sfx('ui');openLotto();};
 $('#bRescue').onclick=()=>{sfx('ui');openRescue();};
-$('#bStock').onclick=()=>{sfx('ui');openStock();};
+$('#bStock').onclick=()=>{sfx('ui');stockOpen('menu');};
 
 /* 매치메이킹 + VS 화면 */
 function pickRoster(){
@@ -4445,7 +4453,7 @@ const SHOP=[
  {id:'t_sel_r',sec:'tkt',tk:'sel_r',cost:450,cur:'gem'},{id:'t_sel_s',sec:'tkt',tk:'sel_s',cost:900,cur:'gem'},{id:'t_sel_e',sec:'tkt',tk:'sel_e',cost:1800,cur:'gem'},{id:'t_sel_m',sec:'tkt',tk:'sel_m',cost:3200,cur:'gem'},{id:'t_sel_l',sec:'tkt',tk:'sel_l',cost:5500,cur:'gem'},{id:'t_sel_u',sec:'tkt',tk:'sel_u',cost:7000,cur:'gem'},
  {id:'t_scout',sec:'tkt',tk:'scout',cost:12000,cur:'coin'},
  {id:'slot',sec:'game',nm:'슬롯머신',ds:'금구슬이나 혜성조각을 걸고 돌려요',cost:0,cur:'slot'},
- {id:'stock',sec:'game',nm:'포켓증권',ds:'혜성조각으로 포켓몬 세계 기업의 주식을 사고팔아요',cost:0,cur:'stock'},
+ {id:'stock',sec:'game',nm:'포켓증권',ds:'금구슬로 포켓몬 세계 회사 주식을 사고팔아요 · 10분마다 가격 결정',cost:0,cur:'stock'},
 ];
 function randPow(n){const out=[];for(let i=0;i<n;i++){const can=CH.filter(c=>ownP(c.k)&&lv(c.k)<11);if(!can.length)break;const c=pick(can);SAVE.lv[c.k]=lv(c.k)+1;out.push(c);}return out;}
 const BOXT={poke:{n:4,c:[.35,80,160],g:[.15,3,6],k:.03,s:.01},great:{n:7,c:[.3,120,240],g:[.15,5,9],k:.05,s:.015},
@@ -4467,11 +4475,11 @@ function openBox(id){
   SAVE.coins+=R.coin;SAVE.gems=(SAVE.gems||0)+R.gem;return R;
 }
 const SHOW_GAMBLE=false,SHOW_SLOT=false;/* 슬롯머신·포켓증권 노출 (true로 바꾸면 다시 보임) */
-const SEC=Object.assign({today:'스카우트 · 오늘의 선물',box:'볼 상자',coin:'금구슬 교환'}/* tkt 항목은 상점에 안 보이고 되팔기·회수 가격 기준으로만 씀 */,SHOW_GAMBLE||SHOW_SLOT?{game:SHOW_GAMBLE?'미니게임 · 투자':'미니게임'}:{});
+const SEC={today:'스카우트 · 오늘의 선물',game:SHOW_SLOT?'투자 · 미니게임':'투자',box:'볼 상자',coin:'금구슬 교환'}/* tkt 항목은 상점에 안 보이고 되팔기·회수 가격 기준으로만 씀 */;
 function renderShop(){
   const done=SAVE.daily===today();
   $('#shCoin').textContent=SAVE.coins;$('#shGem').textContent=SAVE.gems||0;
-  $('#shBody').innerHTML=Object.entries(SEC).map(([k,t])=>`<div class="shsec"><h3>${t}</h3><div class="shrow">`+SHOP.filter(it=>it.sec===k&&(it.cur!=='stock'||SHOW_GAMBLE)).map(it=>{if(it.tk&&ITEMS[it.tk]){it.nm=ITEMS[it.tk].nm;it.ds=ITEMS[it.tk].ds+' (가방으로)';}
+  $('#shBody').innerHTML=Object.entries(SEC).map(([k,t])=>`<div class="shsec"><h3>${t}</h3><div class="shrow">`+SHOP.filter(it=>it.sec===k&&(it.cur!=='slot'||SHOW_SLOT)).map(it=>{if(it.tk&&ITEMS[it.tk]){it.nm=ITEMS[it.tk].nm;it.ds=ITEMS[it.tk].ds+' (가방으로)';}
     const can=it.cur==='slot'?!slotBanned():it.cur==='stock'?true:it.cur==='free'?!done:it.cur==='coin'?SAVE.coins>=it.cost:(SAVE.gems||0)>=it.cost;
     const price=it.cur==='stock'?'열기':it.cur==='slot'?(slotBanned()?'출입 금지 · '+banLeft(SAVE.slotBan)+' 남음':'플레이'):it.cur==='free'?(done?'내일 다시':'무료'):`${it.cur==='coin'?cIco:gIco} ${it.cost}`;
     const pic=it.cur==='stock'?`<img class="sbig px" src="${STI.icon}">`:it.cur==='slot'?`<img class="sbig px" src="${SLOTI.icon}">`:it.tk?`<span class="sbig" style="display:flex;align-items:center;justify-content:center">${itemPic(it.tk)}</span>`:it.give?`<img class="sbig" src="${ICO.coin}">`:`<img class="sbig" src="${BALL[it.ball]}">`;
@@ -4479,7 +4487,7 @@ function renderShop(){
   document.querySelectorAll('#shBody .sitem').forEach(el=>el.onclick=()=>{
     const it=SHOP.find(x=>x.id===el.dataset.id);if(el.classList.contains('off'))return;
     if(it.cur==='slot'){sfx('ui');slotOpen();return;}
-    if(it.cur==='stock'){sfx('ui');stockOpen();return;}
+    if(it.cur==='stock'){sfx('ui');stockOpen('shop');return;}
     if(it.cur==='coin')SAVE.coins-=it.cost;else if(it.cur==='gem')SAVE.gems-=it.cost;else SAVE.daily=today();
     if(it.give){SAVE.coins+=it.give.coin;save();renderShop();sfx('cube');return;}
     if(it.tk){invAdd(it.tk,1);save();renderShop();invBadge();sfx('cube');toast(ITEMS[it.tk].nm+'을(를) 가방에 넣었어요');return;}
@@ -4553,157 +4561,144 @@ function slotOpen(){const ov=$('#shOv');ov.classList.add('on');let spin=false;
 const STI=(()=>{const c=document.createElement('canvas');c.width=c.height=16;const x=c.getContext('2d');const P={k:'#111',b:'#1e3a8a',w:'#e0f2fe',r:'#f87171',y:'#facc15'};
   ['................','.kkkkkkkkkkkkkk.','.kbbbbbbbbbbbbk.','.kbbbbbbbbbyybk.','.kbbbbbbbbybbbk.','.kbbbbbbbybbbbk.','.kbbbybbbybbbbk.','.kbbybybybbbbbk.','.kbybbbybbbbbbk.','.kybbbbbbbbbbbk.','.kbbbbbbbbbbbbk.','.kwbwbwbwbwbwbk.','.kkkkkkkkkkkkkk.','......kkkk......','....kkkkkkkk....','................'].forEach((r,y)=>{for(let i=0;i<16;i++)if(r[i]!=='.'){x.fillStyle=P[r[i]];x.fillRect(i,y,1,1);}});
   return {icon:c.toDataURL()};})();
-const STC={SLPH:'#a78bfa',DVON:'#38bdf8',PTCH:'#f472b6',MCRO:'#facc15',AETH:'#e5e7eb',GLXY:'#22d3ee'};
-const STTF=[[60,'1시간',3],[360,'6시간',12],[1440,'1일',48]];
-const ST_LIQ=1.5;/* 공매도 가격 대비 +50% 오르면 반대매매 */
-const ST={d:null,sel:'SLPH',tf:360,ct:'candle',tab:'all',pv:false,off:0,iv:null,busy:false,last:0};
-const stHold=k=>(SAVE.stk&&SAVE.stk[k])||{n:0,c:0};
-const stShort=k=>(SAVE.sht&&SAVE.sht[k])||{n:0,c:0};
-const stPx=k=>{const a=ST.d&&ST.d.px&&ST.d.px[k];return a&&a.length?+a[a.length-1][1]:0;};
-const stRef=k=>{const a=ST.d&&ST.d.px&&ST.d.px[k];return a&&a.length?+a[Math.max(0,a.length-1440)][1]:0;};
-const stNow=()=>Date.now()+ST.off;
-const stSec=()=>(ST.d&&ST.d.sec||60)*1000;
-const fmt=v=>(Math.round(v*100)/100).toLocaleString('ko-KR',{minimumFractionDigits:2,maximumFractionDigits:2});
+/* ---------- 포켓증권 (서버 시세: pb_stock_list / pb_stock_trade · 10분마다 가격 결정 · 금구슬) ---------- */
+const STC={SLPH:'#a78bfa',DEVN:'#38bdf8',MCRO:'#facc15',FRND:'#4ade80',CNDY:'#f472b6',RCKT:'#f87171',KARP:'#fb923c'};
+const STTF=[{k:'6h',nm:'6시간',span:6*3600,bk:600,bn:'10분봉'},{k:'1d',nm:'1일',span:86400,bk:1800,bn:'30분봉'},{k:'3d',nm:'3일',span:3*86400,bk:7200,bn:'2시간봉'}];
+const ST={d:null,sel:'slph',tf:'1d',ct:'candle',tab:'all',pv:false,busy:false,iv:null,from:'shop',off:0,hov:null,q:1};
 const fmtI=v=>Math.round(v).toLocaleString('ko-KR');
-const updn=(v,txt)=>v>0?`<span class="up">▲ ${txt}</span>`:v<0?`<span class="dn">▼ ${txt}</span>`:`<span class="fl">- ${txt}</span>`;
 const pct=(a,b)=>b?((a-b)/b*100):0;
-const stLongV=()=>Object.keys(SAVE.stk||{}).reduce((a,k)=>a+stHold(k).n*stPx(k),0);
-const stShortC=()=>Object.keys(SAVE.sht||{}).reduce((a,k)=>a+stShort(k).c,0);
-const stShortPL=k=>{const h=stShort(k);return h.n?h.c-h.n*stPx(k):0;};
-const stLimit=()=>Math.max(0,Math.floor((SAVE.gems||0)+stLongV()-stShortC()));
-const hasShort=()=>Object.keys(SAVE.sht||{}).length>0;
-/* 시세 불러오기: 처음엔 하루치, 그 다음부턴 새 틱만 이어 붙임 */
-async function stLoad(full){try{
-  const have=ST.d&&!full,est=Math.floor((Date.now()+ST.off)/60000),n=have?Math.min(1440,Math.max(3,est-ST.d.tick+3)):1440;
-  const r=await rpc('pb_stock',{p_n:n});if(!r||!r.px)throw 0;
-  if(have){for(const k of Object.keys(r.px)){const a=ST.d.px[k]||(ST.d.px[k]=[]),lt=a.length?a[a.length-1][0]:-1;for(const p of r.px[k])if(p[0]>lt)a.push(p);if(a.length>1440)a.splice(0,a.length-1440);}
-    ST.d.tick=r.tick;ST.d.now=r.now;ST.d.news=r.news;ST.d.co=r.co;ST.d.sec=r.sec;}
-  else ST.d=r;
-  ST.off=r.now-Date.now();ST.last=Date.now();stLiq();return true;}catch(e){return false;}}
-/* 반대매매 검사 */
-function stLiq(){if(!hasShort()||!ST.d)return;const msgs=[];
-  for(const k of Object.keys(SAVE.sht)){const h=SAVE.sht[k],a=ST.d.px[k];if(!a||!h.n)continue;const liq=h.liq||h.c/h.n*ST_LIQ;let hit=null;
-    for(const p of a){if(p[0]<=(h.ck||h.t||0))continue;if(+p[1]>=liq){hit=p;break;}}
-    if(hit){const cost=Math.ceil(h.n*+hit[1]),pl=h.c-cost;SAVE.gems=(SAVE.gems||0)+pl;const nm=((ST.d.co||[]).find(c=>c.sym===k)||{}).nm||k;
-      msgs.push(`${nm} 공매도 ${fmtI(h.n)}주가 ${fmt(+hit[1])}에 강제 상환됐어요 (손실 ${fmtI(-pl)})`);delete SAVE.sht[k];}
-    else if(a.length)h.ck=a[a.length-1][0];}
-  if(msgs.length){save();const bad=(SAVE.gems||0)<0;sfx('hurt');
-    const html=`<h2>반대매매!</h2><div style="font-size:12px;line-height:1.8;padding:6px 4px">${msgs.join('<br>')}${bad?`<br><br><b style="color:#fca5a5">혜성조각이 ${fmtI(SAVE.gems)}개가 되어 신용불량자가 되었어요.</b><br>빚을 다 갚을 때까지 상점을 이용할 수 없어요.`:''}</div><div class="mrow"><button class="btn sm" id="liqOk">확인</button></div>`;
-    if(typeof G!=='undefined'&&G&&!G.over)toast(msgs[0]);else{modal(html);$('#liqOk').onclick=()=>{closeModal();if(bad&&$('#stock').classList.contains('on')){clearInterval(ST.iv);ST.iv=null;refreshMenu();showScr('menu');}};}
-    try{stRender(true);}catch(e){}}}
-/* 화면 밖에서도 공매도가 있으면 가끔 검사 */
-setInterval(()=>{if(SHOW_GAMBLE&&hasShort()&&!$('#stock').classList.contains('on')&&!ST.busy){ST.busy=true;stLoad(!ST.d).then(()=>ST.busy=false);}},90000);
-setTimeout(()=>{if(SHOW_GAMBLE&&hasShort()){ST.busy=true;stLoad(true).then(()=>ST.busy=false);}},6000);
-const isBroke=()=>(SAVE.gems||0)<0;
-function brokeModal(){modal(`<h2>신용불량자</h2><div style="font-size:12px;line-height:1.8;padding:6px 4px">공매도 실패로 혜성조각이 <b style="color:#fca5a5">${fmtI(SAVE.gems)}개</b>예요.<br>빚을 다 갚을 때까지 상점을 이용할 수 없어요.<br>게임에서 혜성조각을 벌어 0개 이상으로 만들어 주세요.</div><div class="mrow"><button class="btn sm" id="bkOk">확인</button></div>`);$('#bkOk').onclick=closeModal;sfx('hurt');}
-function stockOpen(){if(isBroke()){brokeModal();return;}showScr('stock');$('#stGem').textContent=SAVE.gems||0;
-  $('#bStBack').onclick=()=>{clearInterval(ST.iv);ST.iv=null;if(isBroke()){refreshMenu();showScr('menu');brokeModal();return;}openShop();};
-  if(ST.d)stRender();
-  stLoad(!ST.d||Date.now()-ST.last>600000).then(ok=>{if(!ok&&!ST.d){$('#stDet').innerHTML='<div class="st-load">시세를 불러오지 못했어요. 인터넷 연결을 확인해 주세요.</div>';return;}stRender();});
+const updn=(v,txt)=>v>0?`<span class="up">▲ ${txt}</span>`:v<0?`<span class="dn">▼ ${txt}</span>`:`<span class="fl">- ${txt}</span>`;
+const cIc=()=>`<img class="ico" src="${ICO.coin}">`;
+const stNow=()=>Date.now()+ST.off;
+const stCo=()=>(ST.d&&ST.d.st)||[];
+const stOf=id=>stCo().find(x=>x.id===id);
+const stH=x=>(x&&x.hist)||[];
+function stAgo(x,sec){const h=stH(x),t=stNow()/1000-sec;let v=null;for(const p of h){if(p[0]<=t)v=+p[1];else break;}return v==null?(h.length?+h[0][1]:+x.price):v;}
+async function stLoad(){let r=null;try{r=await rpc('pb_stock_list',{p_token:ACC.token});}catch(e){}if(!r||!r.ok)return false;ST.d=r;ST.off=new Date(r.now)-Date.now();ST.last=Date.now();return true;}
+function stockOpen(from){if(!ACC.token){modal(`<h2>포켓증권</h2><div style="font-size:12px">로그인해야 할 수 있어요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
+  ST.from=from||'shop';closeModal();showScr('stock');$('#bStBack').textContent=ST.from==='menu'?'← 로비':'← 상점';$('#stGem').textContent=fmtI(SAVE.coins||0);
+  $('#bStBack').onclick=()=>{clearInterval(ST.iv);ST.iv=null;if(ST.from==='menu'){refreshMenu();showScr('menu');}else openShop();};
+  if(ST.d)stRender();else $('#stDet').innerHTML='<div class="st-load">시세를 불러오는 중...</div>';
+  stLoad().then(ok=>{if(!ok&&!ST.d){$('#stDet').innerHTML='<div class="st-load">시세를 불러오지 못했어요. 인터넷 연결을 확인해 주세요.</div>';return;}stRender();});
   clearInterval(ST.iv);ST.iv=setInterval(stTick,1000);}
-function stTick(){if(!$('#stock').classList.contains('on')){clearInterval(ST.iv);ST.iv=null;return;}
-  if(!ST.d)return;const nx=(ST.d.tick+1)*stSec(),left=nx-stNow();
-  const cd=$('#stCd');if(cd){const s=Math.max(0,Math.ceil(left/1000));cd.textContent=`다음 변동까지 ${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;}
-  if((left<-1200||Date.now()-ST.last>30000)&&!ST.busy){ST.busy=true;const old=ST.d.tick;stLoad().then(ok=>{ST.busy=false;if(ok){if(ST.d.tick!==old)sfx('ui');stRender(true);}});}}
-function stSpark(a,w,h){if(!a||a.length<2)return '';const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');const v=a.map(p=>+p[1]),mn=Math.min(...v),mx=Math.max(...v),rg=mx-mn||1;
-  x.fillStyle=v[v.length-1]>=v[0]?'#f87171':'#60a5fa';let py=null;for(let i=0;i<w;i++){const k=Math.round(i/(w-1)*(v.length-1)),y=Math.round((h-1)-(v[k]-mn)/rg*(h-1));const y0=py==null?y:py;for(let yy=Math.min(y,y0);yy<=Math.max(y,y0);yy++)x.fillRect(i,yy,1,1);py=y;}
+const openStock=()=>stockOpen('menu');
+function stTick(){if(!$('#stock').classList.contains('on')){clearInterval(ST.iv);ST.iv=null;return;}if(!ST.d)return;
+  const left=new Date(ST.d.next)-stNow(),s=Math.max(0,Math.ceil(left/1000)),cd=$('#stCd');if(cd)cd.textContent=`다음 가격까지 ${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+  if((left<-1500||Date.now()-ST.last>60000)&&!ST.busy){ST.busy=true;const old=ST.d.next;stLoad().then(ok=>{ST.busy=false;if(ok){if(ST.d.next!==old){sfx('ready');toast('주식 가격이 새로 정해졌어요!');}stRender(true);}});}}
+function stSpark(x,w,h){const a=stH(x).filter(p=>p[0]>=stNow()/1000-86400);if(a.length<2)return '';const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');const v=a.map(p=>+p[1]),mn=Math.min(...v),mx=Math.max(...v),rg=mx-mn||1;
+  g.fillStyle=v[v.length-1]>=v[0]?'#f87171':'#60a5fa';let py=null;for(let i=0;i<w;i++){const k=Math.round(i/(w-1)*(v.length-1)),y=Math.round((h-1)-(v[k]-mn)/rg*(h-1));const y0=py==null?y:py;for(let yy=Math.min(y,y0);yy<=Math.max(y,y0);yy++)g.fillRect(i,yy,1,1);py=y;}
   return c.toDataURL();}
-/* 차트 (도트) — 캔들: 오르면 속이 빈 빨강, 내리면 꽉 찬 파랑 */
-function stChart(cv,a,agg,mode){const W=cv.width,H=cv.height,x=cv.getContext('2d');x.clearRect(0,0,W,H);x.fillStyle='#0f0b22';x.fillRect(0,0,W,H);
-  x.fillStyle='#231a45';for(let g=1;g<4;g++){const y=Math.round(H*g/4);for(let i=0;i<W;i+=3)x.fillRect(i,y,1,1);}
-  if(!a||a.length<2)return;
-  if(mode==='line'){const v=a.map(p=>+p[1]),mn=Math.min(...v),mx=Math.max(...v),rg=(mx-mn)||1,pad=3,up=v[v.length-1]>=v[0],col=up?'#f87171':'#60a5fa',fill=up?'rgba(248,113,113,.18)':'rgba(96,165,250,.18)';
-    const Y=val=>Math.round(pad+(H-2*pad-1)*(1-(val-mn)/rg));let py=null;
-    for(let i=0;i<W;i++){const k=Math.round(i/(W-1)*(v.length-1)),y=Y(v[k]);x.fillStyle=fill;x.fillRect(i,y,1,H-y);x.fillStyle=col;const y0=py==null?y:py;for(let yy=Math.min(y,y0);yy<=Math.max(y,y0);yy++)x.fillRect(i,yy,1,1);py=y;}
-    x.fillStyle='#fff';x.fillRect(W-2,Y(v[v.length-1])-1,2,3);return;}
-  const C=[];for(let i=0;i<a.length;i+=agg){const s=a.slice(i,i+agg);if(!s.length)break;const o=i>0?+a[i-1][1]:+s[0][1],v=s.map(p=>+p[1]);C.push({o,c:v[v.length-1],h:Math.max(o,...v),l:Math.min(o,...v)});}
-  const mn=Math.min(...C.map(c=>c.l)),mx=Math.max(...C.map(c=>c.h)),rg=(mx-mn)||1,pad=2,Y=val=>Math.round(pad+(H-2*pad-1)*(1-(val-mn)/rg));
-  const sw=Math.max(3,Math.floor(W/C.length)),bw=Math.max(3,sw-2-((sw-2)%2===0?1:0)),x0=W-sw*C.length;
-  C.forEach((c,i)=>{const cx=x0+i*sw+Math.floor(sw/2),up=c.c>=c.o,col=up?'#f87171':'#60a5fa';x.fillStyle=col;
-    x.fillRect(cx,Y(c.h),1,Y(c.l)-Y(c.h)+1);const t=Y(Math.max(c.o,c.c)),b=Y(Math.min(c.o,c.c)),l=cx-Math.floor(bw/2);
-    if(up){x.fillRect(l,t,bw,1);x.fillRect(l,b,bw,1);x.fillRect(l,t,1,b-t+1);x.fillRect(l+bw-1,t,1,b-t+1);x.fillStyle='#0f0b22';if(b-t>1)x.fillRect(l+1,t+1,bw-2,b-t-1);}
-    else x.fillRect(l,t,bw,Math.max(1,b-t+1));});}
-function stRender(soft){if(!ST.d)return;const D=ST.d,co=D.co||[];$('#stGem').textContent=SAVE.gems||0;
-  let tv=0,tc=0,spl=0;for(const c of co){const h=stHold(c.sym);tv+=h.n*stPx(c.sym);tc+=h.c;spl+=stShortPL(c.sym);}const pl=tv-tc+spl;
-  $('#stAcc').innerHTML=`<div class="sa-h">내 계좌</div><div class="sa-v">${gIco} ${fmtI(tv)}</div><div class="sa-p">${tc||hasShort()?updn(pl,`${fmtI(Math.abs(pl))}${tc?` (${Math.abs(pct(tv+spl,tc)).toFixed(2)}%)`:''}`):'<span class="fl">보유 주식 없음</span>'}</div>`;
+/* 캔들 만들기: 틱(10분 종가)을 봉 단위로 묶음 */
+function stCandles(x,tf){const h=stH(x),t0=stNow()/1000-tf.span,C=[];let prev=null;
+  for(const p of h){const t=+p[0],v=+p[1];if(t<t0){prev=v;continue;}const b=Math.floor((t-1)/tf.bk)*tf.bk;let c=C[C.length-1];
+    if(!c||c.b!==b){const o=prev==null?v:prev;c={b,o,h:Math.max(o,v),l:Math.min(o,v),c:v,vol:0,nb:0,ns:0};C.push(c);}
+    c.h=Math.max(c.h,v);c.l=Math.min(c.l,v);c.c=v;c.vol+=+p[2]||0;c.nb+=+p[3]||0;c.ns+=+p[4]||0;prev=v;}
+  return C;}
+const stTs=(t,full)=>{const d=new Date(t*1000),hh=String(d.getHours()).padStart(2,'0'),mm=String(d.getMinutes()).padStart(2,'0');return (full||hh+mm==='0000'?(d.getMonth()+1)+'/'+d.getDate()+' ':'')+hh+':'+mm;};
+function stNice(mn,mx,n){const rg=mx-mn||1,raw=rg/n,mag=Math.pow(10,Math.floor(Math.log10(raw))),st=[1,2,2.5,5,10].map(k=>k*mag).find(k=>k>=raw)||raw;const a=[];for(let v=Math.ceil(mn/st)*st;v<=mx;v+=st)a.push(Math.round(v*100)/100);return a;}
+/* 차트: 도트 캔들/라인 + 가격축 + 시간축 + 거래대금 + 평단선 + 십자선 */
+function stChart(cv,x,tf,mode,my){const dpr=1,W=cv.clientWidth||600,H=cv.clientHeight||240;cv.width=W;cv.height=H;const g=cv.getContext('2d');g.imageSmoothingEnabled=false;
+  const C=stCandles(x,tf),AX=58,TB=16,VH=Math.round(H*.18),PH=H-TB-VH-6,PW=W-AX;
+  g.fillStyle='#0d0a1c';g.fillRect(0,0,W,H);if(C.length<1){g.fillStyle='#fff';g.font='11px Galmuri11';g.fillText('데이터 없음',10,20);return null;}
+  let mn=Math.min(...C.map(c=>c.l)),mx=Math.max(...C.map(c=>c.h));if(my&&my.avg){mn=Math.min(mn,my.avg);mx=Math.max(mx,my.avg);}const pad=(mx-mn)*.08||Math.max(1,mx*.01);mn-=pad;mx+=pad;
+  const Y=v=>Math.round(4+(1-(v-mn)/(mx-mn))*(PH-8)),n=Math.max(C.length,tf.span/tf.bk),sw=PW/n,X=i=>Math.round(PW-(C.length-i)*sw+sw/2);
+  g.font='11px Galmuri11';g.textBaseline='middle';
+  // 그리드 + 가격축
+  for(const v of stNice(mn,mx,4)){const y=Y(v);g.fillStyle='#231a45';for(let i=0;i<PW;i+=4)g.fillRect(i,y,2,1);g.fillStyle='#a8a29e';g.textAlign='left';g.fillText(fmtI(v),PW+6,y);}
+  // 시간축
+  const lab=Math.max(1,Math.ceil(70/sw));g.textAlign='center';g.textBaseline='top';
+  for(let i=C.length-1;i>=0;i-=lab){const xx=X(i);if(xx<24)break;g.fillStyle='#231a45';for(let y=0;y<PH+VH+6;y+=4)g.fillRect(xx,y,1,2);g.fillStyle='#a8a29e';g.fillText(stTs(C[i].b+tf.bk),xx,H-TB+2);}
+  g.fillStyle='#3b2d63';g.fillRect(PW,0,1,H-TB);g.fillRect(0,PH,PW,1);g.fillRect(0,H-TB,W,1);
+  // 거래대금
+  const vmx=Math.max(1,...C.map(c=>c.vol));C.forEach((c,i)=>{if(!c.vol)return;const hh=Math.max(1,Math.round(c.vol/vmx*(VH-2))),bw=Math.max(1,Math.floor(sw*.7));g.fillStyle=c.nb>=c.ns?'rgba(248,113,113,.55)':'rgba(96,165,250,.55)';g.fillRect(X(i)-Math.floor(bw/2),H-TB-hh,bw,hh);});
+  g.fillStyle='#78716c';g.textAlign='left';g.textBaseline='top';g.fillText('거래대금',4,PH+4);
+  // 가격
+  if(mode==='line'){const up=C[C.length-1].c>=C[0].o,col=up?'#f87171':'#60a5fa';g.fillStyle=up?'rgba(248,113,113,.14)':'rgba(96,165,250,.14)';
+    let py=null;for(let i=0;i<C.length;i++){const xx=X(i),yy=Y(C[i].c),nx=i<C.length-1?X(i+1):xx+1;g.fillStyle=up?'rgba(248,113,113,.14)':'rgba(96,165,250,.14)';g.fillRect(xx,yy,nx-xx,PH-yy);g.fillStyle=col;const y0=py==null?yy:py;g.fillRect(xx,Math.min(y0,yy),2,Math.abs(yy-y0)+2);g.fillRect(xx,yy,nx-xx,2);py=yy;}}
+  else{const bw=Math.max(1,Math.floor(sw*.72)-(Math.floor(sw*.72)%2===0&&sw>3?1:0));C.forEach((c,i)=>{const xx=X(i),up=c.c>=c.o,col=c.c>c.o?'#f87171':c.c<c.o?'#60a5fa':'#a8a29e';g.fillStyle=col;g.fillRect(xx,Y(c.h),1,Y(c.l)-Y(c.h)+1);
+    const t=Y(Math.max(c.o,c.c)),b=Y(Math.min(c.o,c.c)),l=xx-Math.floor(bw/2);g.fillRect(l,t,bw,Math.max(1,b-t+1));});}
+  // 최고/최저 표시
+  let hi=0,lo=0;C.forEach((c,i)=>{if(c.h>C[hi].h)hi=i;if(c.l<C[lo].l)lo=i;});g.textBaseline='middle';
+  const mark=(i,v,col,dy)=>{const xx=X(i),yy=Y(v)+dy,rt=xx>PW*.6;g.fillStyle=col;g.textAlign=rt?'right':'left';g.fillText((rt?'':'← ')+'최'+(col==='#f87171'?'고':'저')+' '+fmtI(v)+(rt?' →':''),xx+(rt?-4:4),yy);};
+  mark(hi,C[hi].h,'#f87171',-8);mark(lo,C[lo].l,'#60a5fa',8);
+  // 평단선
+  if(my&&my.avg){const y=Y(my.avg);g.fillStyle='#facc15';for(let i=0;i<PW;i+=6)g.fillRect(i,y,3,1);g.fillStyle='#facc15';g.fillRect(PW+1,y-8,AX-1,16);g.fillStyle='#111';g.textAlign='left';g.fillText('평단 '+fmtI(my.avg),PW+4,y);}
+  // 현재가
+  {const v=+x.price,y=Y(v),up=v>=stAgo(x,86400),col=up?'#dc2626':'#2563eb';g.fillStyle=col;for(let i=0;i<PW;i+=4)g.fillRect(i,y,2,1);g.fillRect(PW+1,y-8,AX-1,16);g.fillStyle='#fff';g.textAlign='left';g.fillText(fmtI(v),PW+5,y);}
+  return {C,X,Y,PW,PH,sw,H,TB,tf};}
+function stHover(cv,info,e){if(!info)return;const r=cv.getBoundingClientRect(),mx=(e.clientX-r.left)*(cv.width/r.width),i=Math.round(info.C.length-1-(info.PW-mx-info.sw/2)/info.sw);
+  const tip=$('#stTip');if(mx<0||mx>info.PW||i<0||i>=info.C.length){if(tip)tip.style.display='none';$('#stCross').style.display='none';return;}
+  const c=info.C[i],ch=pct(c.c,c.o),xx=info.X(i);const cr=$('#stCross');cr.style.display='block';cr.style.left=(xx*r.width/cv.width)+'px';cr.style.height=((info.H-info.TB)*r.height/cv.height)+'px';
+  tip.style.display='block';tip.style.left=(mx>info.PW/2?4:'auto')+(mx>info.PW/2?'px':'');tip.style.right=mx>info.PW/2?'auto':(cv.width-info.PW+4)*r.width/cv.width+'px';
+  tip.innerHTML=`<b>${stTs(c.b,1)} ~ ${stTs(c.b+info.tf.bk)}</b><div>시가 ${fmtI(c.o)}</div><div>고가 <span class="up">${fmtI(c.h)}</span></div><div>저가 <span class="dn">${fmtI(c.l)}</span></div><div>종가 ${fmtI(c.c)} ${updn(ch,Math.abs(ch).toFixed(2)+'%')}</div><div>거래대금 ${fmtI(c.vol)}</div>${c.nb||c.ns?`<div>산 사람 ${c.nb} · 판 사람 ${c.ns}</div>`:''}`;}
+function stRender(soft){if(!ST.d)return;const co=stCo();$('#stGem').textContent=fmtI(SAVE.coins||0);
+  let tv=0,tc=0;for(const c of co){tv+=c.mq*c.price;tc+=+c.mc;}const pl=tv-tc;
+  $('#stAcc').innerHTML=`<div class="sa-h">내 계좌</div><div class="sa-v">${cIc()} ${fmtI(tv)}</div><div class="sa-p">${tc?updn(pl,`${fmtI(Math.abs(pl))} (${Math.abs(pct(tv,tc)).toFixed(2)}%)`):'<span class="fl">보유 주식 없음</span>'}</div>`;
   $('#stAcc').onclick=()=>{ST.tab='my';ST.pv=true;sfx('ui');stRender();};
-  const mine=c=>stHold(c.sym).n||stShort(c.sym).n;
-  const L=ST.tab==='my'?co.filter(mine):co;
-  $('#stTabs').innerHTML=`<button class="sl-bet${ST.tab==='all'?' on':''}" data-t="all">전체 종목</button><button class="sl-bet${ST.tab==='my'?' on':''}" data-t="my">내 주식 ${co.filter(mine).length}</button>`;
+  const L=ST.tab==='my'?co.filter(c=>c.mq>0):co;
+  $('#stTabs').innerHTML=`<button class="sl-bet${ST.tab==='all'?' on':''}" data-t="all">전체 종목</button><button class="sl-bet${ST.tab==='my'?' on':''}" data-t="my">내 주식 ${co.filter(c=>c.mq>0).length}</button>`;
   document.querySelectorAll('#stTabs .sl-bet').forEach(b=>b.onclick=()=>{ST.tab=b.dataset.t;ST.pv=ST.tab==='my';sfx('ui');stRender();});
-  $('#stList').innerHTML=L.length?L.map(c=>{const p=stPx(c.sym),r=stRef(c.sym),ch=pct(p,r),h=stHold(c.sym),sh=stShort(c.sym);
-    const tag=[h.n?`${fmtI(h.n)}주`:'',sh.n?`<i class="st-sht">공매도 ${fmtI(sh.n)}</i>`:''].filter(Boolean).join(' · ');
-    return `<div class="st-row${c.sym===ST.sel&&!ST.pv?' on':''}" data-s="${c.sym}"><div class="st-logo" style="--lc:${STC[c.sym]||'#fff'}">${c.sym.slice(0,2)}</div><div class="st-nm"><b>${c.nm}</b><span>${c.sym}${tag?' · '+tag:''}</span></div><img class="st-sp px" src="${stSpark(D.px[c.sym].slice(-120),40,16)}"><div class="st-pr"><b>${fmt(p)}</b>${updn(ch,Math.abs(ch).toFixed(2)+'%')}</div></div>`;}).join(''):'<div class="st-load">아직 가진 주식이 없어요</div>';
-  document.querySelectorAll('.st-row').forEach(el=>el.onclick=()=>{ST.sel=el.dataset.s;ST.pv=false;sfx('ui');stRender();});
+  $('#stList').innerHTML=L.length?L.map(c=>{const r=stAgo(c,86400),ch=pct(c.price,r);
+    return `<div class="st-row${c.id===ST.sel&&!ST.pv?' on':''}" data-s="${c.id}"><div class="st-logo" style="--lc:${STC[c.sym]||'#fff'}">${c.sym.slice(0,2)}</div><div class="st-nm"><b>${esc(c.nm)}</b><span>${c.sym}${c.mq?' · <i style="color:#fde047;font-style:normal">'+fmtI(c.mq)+'주</i>':''}</span></div><img class="st-sp" src="${stSpark(c,40,16)}"><div class="st-pr"><b>${fmtI(c.price)}</b>${updn(ch,Math.abs(ch).toFixed(2)+'%')}</div></div>`;}).join(''):'<div class="st-load">아직 산 주식이 없어요</div>';
+  document.querySelectorAll('.st-row').forEach(el=>el.onclick=()=>{ST.sel=el.dataset.s;ST.pv=false;ST.q=1;sfx('ui');stRender();});
+  stNews();
   if(ST.pv){stPortfolio();return;}
-  const c=co.find(x=>x.sym===ST.sel)||co[0];if(!c)return;ST.sel=c.sym;
-  const tf=STTF.find(t=>t[0]===ST.tf)||STTF[1];
-  const p=stPx(c.sym),r=stRef(c.sym),ch=pct(p,r),h=stHold(c.sym),sh=stShort(c.sym),A=D.px[c.sym].slice(-tf[0]),hi=Math.max(...A.map(x=>+x[1])),lo=Math.min(...A.map(x=>+x[1]));
-  const prev=D.px[c.sym].length>1?+D.px[c.sym][D.px[c.sym].length-2][1]:p;
-  const keepQ=soft&&$('#stQ')?$('#stQ').value:'1';
-  const shAvg=sh.n?sh.c/sh.n:0,shLiq=sh.n?(sh.liq||shAvg*ST_LIQ):0;
-  $('#stDet').innerHTML=`<div class="sd-h">${ST.tab==='my'?'<button class="sl-bet" id="stPv">← 내 주식</button>':''}<div class="st-logo big" style="--lc:${STC[c.sym]}">${c.sym.slice(0,2)}</div><div><b class="sd-nm">${c.nm}</b><div class="sd-sym">${c.sym} · 1분마다 가격 변동</div></div><div class="sd-cd" id="stCd"></div></div>
-    <div class="sd-px"><b>${fmt(p)}</b> <span class="sd-u">혜성조각</span> ${updn(ch,`${fmt(Math.abs(p-r))} (${Math.abs(ch).toFixed(2)}%)`)} <span class="sd-sub">하루 전 대비</span> <span class="sd-sub">· 직전 ${updn(p-prev,fmt(Math.abs(p-prev)))}</span></div>
-    <div class="sd-ch"><canvas id="stCv" class="px" width="200" height="48"></canvas><div class="sd-hl"><span>최고 ${fmt(hi)}</span><span>최저 ${fmt(lo)}</span></div><div class="sd-tf">${STTF.map(([n,t])=>`<button class="sl-bet${ST.tf===n?' on':''}" data-n="${n}">${t}</button>`).join('')}<button class="sl-bet" id="stCt">${ST.ct==='candle'?'캔들':'선'}</button></div></div>
-    <div class="sd-my">${h.n?`<div>보유 <b>${fmtI(h.n)}주</b></div><div>평균 단가 <b>${fmt(h.c/h.n)}</b></div><div>평가 금액 <b>${fmtI(h.n*p)}</b></div><div>손익 ${updn(h.n*p-h.c,`${fmtI(Math.abs(h.n*p-h.c))} (${Math.abs(pct(h.n*p,h.c)).toFixed(2)}%)`)}</div>`:''}
-      ${sh.n?`<div class="st-sht">공매도 <b>${fmtI(sh.n)}주</b></div><div>평균 매도가 <b>${fmt(shAvg)}</b></div><div>반대매매 <b class="warn">${fmt(shLiq)}</b></div><div>손익 ${updn(stShortPL(c.sym),`${fmtI(Math.abs(stShortPL(c.sym)))} (${Math.abs(pct(sh.c,sh.n*p)).toFixed(2)}%)`)}</div>`:''}
-      ${!h.n&&!sh.n?'<div class="fl" style="grid-column:1/5">아직 이 주식이 없어요</div>':''}</div>
-    <div class="sd-tr"><span>수량</span><input type="number" inputmode="numeric" min="1" step="1" id="stQ" value="${keepQ}"><button class="sl-bet" id="stMaxB">최대 매수</button><button class="sl-bet" id="stMaxS">전부</button><button class="btn sm st-buy" id="stBuy">매수</button><button class="btn b2 sm st-sell" id="stSell">매도</button><button class="btn sm st-short" id="stShort">공매도</button><button class="btn sm st-cover" id="stCover">상환</button></div><div class="sd-est" id="stEst"></div>`;
-  stChart($('#stCv'),A,tf[2],ST.ct);stTick();
+  const x=stOf(ST.sel)||co[0];if(!x)return;ST.sel=x.id;const tf=STTF.find(t=>t.k===ST.tf)||STTF[1];
+  const p=+x.price,r24=stAgo(x,86400),ch=pct(p,r24),pv=+x.prev||p,a24=stH(x).filter(q=>q[0]>=stNow()/1000-86400),hi=Math.max(p,...a24.map(q=>+q[1])),lo=Math.min(p,...a24.map(q=>+q[1])),v24=a24.reduce((a,q)=>a+(+q[2]||0),0);
+  const avg=x.mq?x.mc/x.mq:0,val=x.mq*p,tot=(+x.vb)+(+x.vs),bw=tot?Math.round(x.vb/tot*100):50;
+  const nw=x.news?x.news.split('|'):null,nOld=!x.news_at||(stNow()-new Date(x.news_at))>36e5*6;
+  if(soft&&$('#stQ'))ST.q=Math.max(1,Math.floor(+$('#stQ').value||1));
+  $('#stDet').innerHTML=`<div class="sd-h">${ST.tab==='my'?'<button class="sl-bet" id="stPv">← 내 주식</button>':''}<div class="st-logo big" style="--lc:${STC[x.sym]}">${x.sym.slice(0,2)}</div><div><b class="sd-nm">${esc(x.nm)}</b><div class="sd-sym">${x.sym} · ${esc(x.ds||'')}</div></div><div class="sd-cd" id="stCd"></div></div>
+    <div class="sd-px"><b>${fmtI(p)}</b> <span class="sd-u">금구슬</span> ${updn(p-r24,`${fmtI(Math.abs(p-r24))} (${Math.abs(ch).toFixed(2)}%)`)} <span class="sd-sub">24시간 전 대비</span> <span class="sd-sub">· 지난 10분 ${updn(p-pv,`${fmtI(Math.abs(p-pv))} (${Math.abs(pct(p,pv)).toFixed(2)}%)`)}</span></div>
+    <div class="sd-tfr">${STTF.map(t=>`<button class="sl-bet${ST.tf===t.k?' on':''}" data-k="${t.k}">${t.nm}</button>`).join('')}<span class="fl">${tf.bn}</span><button class="sl-bet" id="stCt" style="margin-left:auto">${ST.ct==='candle'?'캔들':'라인'}</button></div>
+    <div class="sd-ch2"><canvas id="stCv"></canvas><div id="stCross" class="st-cross"></div><div id="stTip" class="st-tip"></div></div>
+    <div class="sd-st"><div>시가(24시간 전)<b>${fmtI(r24)}</b></div><div>고가(24시간)<b class="up">${fmtI(hi)}</b></div><div>저가(24시간)<b class="dn">${fmtI(lo)}</b></div><div>거래대금(24시간)<b>${fmtI(v24)}</b></div><div>주주<b>${x.holders}명</b></div><div>최대 보유<b>${fmtI(x.fl)}주</b></div></div>
+    <div class="sd-flow"><span>이번 10분</span><b class="up">산 사람 ${x.nb}명 · ${fmtI(x.vb)}</b><div class="sd-fb">${tot?`<i style="width:${bw}%"></i>`:''}</div><b class="dn">판 사람 ${x.ns}명 · ${fmtI(x.vs)}</b></div>
+    ${nw&&!nOld?`<div class="sd-nw"><b class="${nw[0]==='+'?'up':'dn'}">${nw[0]==='+'?'▲ 호재':'▼ 악재'}</b> ${esc(nw[1])} <span class="fl">${stTs(new Date(x.news_at)/1000,1)}</span></div>`:''}
+    <div class="sd-my">${x.mq?`<div>보유 <b>${fmtI(x.mq)}주</b></div><div>평균 단가 <b>${fmtI(avg)}</b></div><div>매입 금액 <b>${fmtI(x.mc)}</b></div><div>평가 금액 <b>${fmtI(val)}</b></div><div style="grid-column:1/5">평가 손익 ${updn(val-x.mc,`${fmtI(Math.abs(val-x.mc))} (${Math.abs(pct(val,x.mc)).toFixed(2)}%)`)} <span class="fl">· 팔면 수수료 1% 빠져요</span></div>`:'<div class="fl" style="grid-column:1/5">아직 이 주식이 없어요</div>'}</div>
+    <div class="sd-tr"><span>수량</span><input type="number" inputmode="numeric" min="1" step="1" id="stQ" value="${ST.q}"><button class="sl-bet" data-a="1">+1</button><button class="sl-bet" data-a="10">+10</button><button class="sl-bet" id="stMaxB">최대 매수</button><button class="sl-bet" id="stMaxS">전부</button><button class="btn sm st-buy" id="stBuy">사기</button><button class="btn sm st-sell" id="stSell">팔기</button></div>
+    <div class="sd-est" id="stEst"></div>`;
+  const cv=$('#stCv');requestAnimationFrame(()=>{ST.ci=stChart(cv,x,tf,ST.ct,x.mq?{avg}:null);});
+  const hv=e=>stHover(cv,ST.ci,e);cv.onpointermove=hv;cv.onpointerdown=hv;cv.onpointerleave=()=>{$('#stTip').style.display='none';$('#stCross').style.display='none';};
   if($('#stPv'))$('#stPv').onclick=()=>{ST.pv=true;sfx('ui');stRender();};
-  document.querySelectorAll('.sd-tf .sl-bet[data-n]').forEach(b=>b.onclick=()=>{ST.tf=+b.dataset.n;sfx('ui');stRender(true);});
+  document.querySelectorAll('.sd-tfr .sl-bet[data-k]').forEach(b=>b.onclick=()=>{ST.tf=b.dataset.k;sfx('ui');stRender(true);});
   $('#stCt').onclick=()=>{ST.ct=ST.ct==='candle'?'line':'candle';sfx('ui');stRender(true);};
-  const q=$('#stQ'),lim=stLimit(),est=()=>{const n=Math.max(0,Math.floor(+q.value||0));
-    $('#stEst').innerHTML=(n?`살 때 ${gIco} ${fmtI(Math.ceil(n*p))} · 팔 때 ${gIco} ${fmtI(Math.floor(n*p))}`:'')+` <span class="fl">· 공매도 한도 ${gIco} ${fmtI(lim)}</span>`;
-    $('#stBuy').disabled=!n||Math.ceil(n*p)>(SAVE.gems||0);$('#stSell').disabled=!n||n>h.n;$('#stShort').disabled=!n||n*p>lim;$('#stCover').disabled=!n||n>sh.n;};
+  const q=$('#stQ'),fee=v=>Math.max(1,Math.ceil(v*.01)),est=()=>{const n=Math.max(0,Math.floor(+q.value||0)),v=n*p;
+    $('#stEst').innerHTML=n?`살 때 ${cIc()} <b>${fmtI(v+fee(v))}</b> <span class="fl">(주식 ${fmtI(v)} + 수수료 ${fmtI(fee(v))})</span> · 팔 때 ${cIc()} <b>${fmtI(Math.max(0,v-fee(v)))}</b> 받아요`+(x.mq&&n<=x.mq?` <span class="fl">· 팔면 손익</span> ${updn(v-fee(v)-avg*n,fmtI(Math.abs(v-fee(v)-avg*n)))}`:''):'';
+    $('#stBuy').disabled=!n||v+fee(v)>(SAVE.coins||0)||x.mq+n>x.fl;$('#stSell').disabled=!n||n>x.mq;};
   q.oninput=est;q.addEventListener('pointerdown',e=>e.stopPropagation());q.addEventListener('keydown',e=>e.stopPropagation());
-  $('#stMaxB').onclick=()=>{q.value=Math.max(0,Math.floor((SAVE.gems||0)/p));est();sfx('ui');};
-  $('#stMaxS').onclick=()=>{q.value=h.n||sh.n;est();sfx('ui');};
-  $('#stBuy').onclick=()=>stTrade('buy');$('#stSell').onclick=()=>stTrade('sell');$('#stShort').onclick=()=>stTrade('short');$('#stCover').onclick=()=>stTrade('cover');est();
-  stNews();}
-const ST_GOSSIP=['기찬, 급식 몰래 두 번 받다 적발','기찬, 체육관 관장에게 도전했다가 3초 만에 패배','기찬, 잃어버린 몬스터볼 주인에게 돌려줘 칭찬','기찬, 포켓몬센터 앞 새치기 논란','기찬, 잠만보에게 길 막혀 지각','기찬, 이상해씨 돌봄 봉사활동 참여',
-  '광덕, 야생 피카츄에게 전기 맞고 머리 폭발','광덕, 포켓몬리그 응원단장 선정','광덕, 편의점 상처약 싹쓸이 의혹','광덕, 길 잃은 꼬렛 집 찾아줘','광덕, 고라파덕과 노래방 99점 기록','광덕, 자전거 도로 무단 질주로 경고',
-  '태암, 길 잃은 파치리스 구조','태암, 낚싯대로 잉어킹만 100마리 낚아 신기록','태암, 도서관 책 3년 연체 적발','태암, 포켓몬 퀴즈 대회 우승','태암, 잠만보 흉내 내다 진짜 잠듦','태암, 미확인 포켓몬 목격담 제보… 알고 보니 메타몽',
-  '기찬·광덕·태암, 체육관 뒤에서 몰래 배틀하다 관장에게 걸려','광덕·태암, 기찬 생일 깜짝 파티 성공','기찬, 광덕 도시락 몰래 먹은 혐의 부인','태암, 광덕에게 빌린 자전거 아직도 안 돌려줘'];
-function stNews(){const D=ST.d,now=stNow(),hr=Math.floor(now/1800000);
-  let sd=hr*9301+49297;const rnd=()=>(sd=(sd*233280+49297)%2147483647)/2147483647;
-  const real=(D.news||[]).slice(0,7).map(nw=>({n:nw.n,m:Math.max(0,Math.round((now-nw.t*stSec())/60000))}));
-  const pool=SAVE.clean?[]:ST_GOSSIP.slice(),gos=[];for(let i=0;i<7&&pool.length;i++){const k=Math.floor(rnd()*pool.length);gos.push({n:pool.splice(k,1)[0],m:Math.floor(rnd()*540)});}
-  const L=real.concat(gos).sort((a,b)=>a.m-b.m),key=L.map(x=>x.n).join('|');
+  document.querySelectorAll('.sd-tr [data-a]').forEach(b=>b.onclick=()=>{q.value=Math.max(0,Math.floor(+q.value||0))+(+b.dataset.a);est();sfx('ui');});
+  $('#stMaxB').onclick=()=>{let n=Math.floor((SAVE.coins||0)/(p*1.01));while(n>0&&n*p+fee(n*p)>(SAVE.coins||0))n--;q.value=Math.max(0,Math.min(n,x.fl-x.mq));est();sfx('ui');};
+  $('#stMaxS').onclick=()=>{q.value=x.mq;est();sfx('ui');};
+  $('#stBuy').onclick=()=>stTrade(x,1);$('#stSell').onclick=()=>stTrade(x,-1);est();stTick();}
+const STE={funds:'금구슬이 부족해요 (서버 저장 기준)',hold:'가진 주식보다 많이 팔 수 없어요',cap:'한 종목은 정해진 수량까지만 가질 수 있어요',qty:'수량을 확인해 주세요',auth:'다시 로그인해 주세요',sid:'없는 종목이에요'};
+async function stTrade(x,sg){if(ST.busy)return;const n=Math.max(0,Math.floor(+$('#stQ').value||0));if(!n)return;ST.q=n;
+  ST.busy=true;document.querySelectorAll('.sd-tr .btn').forEach(b=>b.disabled=true);$('#stEst').textContent='거래 중...';await flushSaveNow();
+  let r=null;try{r=await rpc('pb_stock_trade',{p_token:ACC.token,p_sid:x.id,p_qty:n*sg});}catch(e){}
+  if(!r||!r.ok){ST.busy=false;toast(!r?'서버 연결 실패':STE[r.err]||'거래 실패');stRender(true);return;}
+  SAVE.coins=+r.coins;SAVE.rev=r.rev;saveLocal();try{refreshMenu();}catch(e){}
+  const avg0=x.mq?x.mc/x.mq:0;x.mq=+r.mq;x.mc=+r.mc;
+  if(sg>0){sfx('cube');toast(`${x.nm} ${fmtI(n)}주 매수 · 주당 ${fmtI(r.price)} (수수료 ${fmtI(r.fee)})`);}
+  else{sfx('gem');const plv=n*r.price-r.fee-Math.round(avg0*n);toast(`${x.nm} ${fmtI(n)}주 매도 · ${plv>=0?'▲ 이익 ':'▼ 손실 '}${fmtI(Math.abs(plv))}`);if(ST.q>x.mq)ST.q=Math.max(1,x.mq);}
+  await stLoad();ST.busy=false;stRender(true);}
+const ST_GOSSIP=['기찬, 급식 몰래 두 번 받다 적발','기찬, 체육관 관장에게 도전했다가 3초 만에 패배','광덕, 야생 피카츄에게 전기 맞고 머리 폭발','광덕, 고라파덕과 노래방 99점 기록','태암, 길 잃은 파치리스 구조','태암, 낚싯대로 잉어킹만 100마리 낚아 신기록'];
+function stNews(){const D=ST.d,now=stNow()/1000,co=stCo();
+  const real=(D.news||[]).map(n=>{const c=co.find(x=>x.id===n[0]),t=n[2].split('|');return {n:`<b class="${t[0]==='+'?'up':'dn'}">${t[0]==='+'?'▲':'▼'}</b> ${esc(t[1])}`,m:Math.max(0,Math.round((now-n[1])/60))};});
+  const L=real.length?real:[{n:'아직 뉴스가 없어요. 가끔 호재·악재가 터지면 여기에 떠요',m:0}],key=L.map(x=>x.n).join('|');
   if(ST.nkey===key&&$('#stNews .st-mqt'))return;ST.nkey=key;
-  const one=L.map(x=>`<span class="nw">${x.n} <em>${x.m<60?x.m+'분 전':Math.floor(x.m/60)+'시간 전'}</em></span>`).join('<i class="nsep">◆</i>')+'<i class="nsep">◆</i>';
+  const one=L.map(x=>`<span class="nw">${x.n} <em>${x.m<60?x.m+'분 전':x.m<1440?Math.floor(x.m/60)+'시간 전':Math.floor(x.m/1440)+'일 전'}</em></span>`).join('<i class="nsep">◆</i>')+'<i class="nsep">◆</i>';
   $('#stNews').innerHTML=`<b>뉴스</b><div class="st-mq"><div class="st-mqt">${one}${one}</div></div>`;
   requestAnimationFrame(()=>{const t=$('#stNews .st-mqt');if(t)t.style.animationDuration=Math.max(20,t.scrollWidth/2/45)+'s';});}
-/* 내 주식 모아보기 */
-function stPortfolio(){const D=ST.d,co=D.co||[];const rows=[];let tv=0,tc=0,spl=0;
-  for(const c of co){const h=stHold(c.sym),sh=stShort(c.sym),p=stPx(c.sym);
-    if(h.n){tv+=h.n*p;tc+=h.c;rows.push({c,kind:'보유',n:h.n,avg:h.c/h.n,p,val:h.n*p,pl:h.n*p-h.c,pp:pct(h.n*p,h.c)});}
-    if(sh.n){const v=stShortPL(c.sym);spl+=v;rows.push({c,kind:'공매도',n:sh.n,avg:sh.c/sh.n,p,val:sh.c,pl:v,pp:pct(sh.c,sh.n*p),liq:sh.liq||sh.c/sh.n*ST_LIQ});}}
-  const tot=rows.reduce((a,r)=>a+r.val,0)||1;
+function stPortfolio(){const co=stCo(),rows=co.filter(c=>c.mq>0).map(c=>({c,n:c.mq,avg:c.mc/c.mq,p:+c.price,val:c.mq*c.price,pl:c.mq*c.price-c.mc,pp:pct(c.mq*c.price,c.mc)}));
+  const tv=rows.reduce((a,r)=>a+r.val,0),tc=rows.reduce((a,r)=>a+(+r.c.mc),0),tot=tv||1;
   $('#stDet').innerHTML=`<div class="sd-h"><b class="sd-nm">내 주식 모아보기</b><div class="sd-cd" id="stCd"></div></div>
-    <div class="pf-sum"><div>평가 금액<b>${gIco} ${fmtI(tv)}</b></div><div>총 손익<b>${updn(tv-tc+spl,fmtI(Math.abs(tv-tc+spl)))}</b></div><div>보유 혜성조각<b class="${isBroke()?'warn':''}">${gIco} ${fmtI(SAVE.gems||0)}</b></div><div>공매도 한도<b>${gIco} ${fmtI(stLimit())}</b></div></div>
-    ${rows.length?`<div class="pf-t">${rows.map(r=>`<div class="pf-r" data-s="${r.c.sym}"><div class="st-logo" style="--lc:${STC[r.c.sym]}">${r.c.sym.slice(0,2)}</div><div class="pf-nm"><b>${r.c.nm}</b><span>${r.kind==='공매도'?'<i class="st-sht">공매도</i>':'보유'} ${fmtI(r.n)}주 · 평균 ${fmt(r.avg)}${r.liq?` · <i class="warn">반대매매 ${fmt(r.liq)}</i>`:''}</span><div class="pf-bar"><i style="width:${Math.max(2,Math.round(r.val/tot*100))}%;background:${STC[r.c.sym]}"></i></div></div><div class="pf-v"><b>${fmtI(r.val)}</b>${updn(r.pl,`${fmtI(Math.abs(r.pl))} (${Math.abs(r.pp).toFixed(1)}%)`)}</div></div>`).join('')}</div>`:'<div class="st-load">아직 가진 주식이 없어요. 종목을 골라 사 보세요!</div>'}`;
-  document.querySelectorAll('.pf-r').forEach(el=>el.onclick=()=>{ST.sel=el.dataset.s;ST.pv=false;sfx('ui');stRender();});
-  stTick();stNews();}
-async function stTrade(kind){if(ST.busy)return;const k=ST.sel,q=$('#stQ'),n=Math.max(0,Math.floor(+q.value||0));if(!n)return;
-  ST.busy=true;document.querySelectorAll('.sd-tr .btn').forEach(b=>b.disabled=true);const ok=await stLoad();ST.busy=false;
-  if(!ok){toast('시세를 불러오지 못해 거래하지 못했어요');stRender(true);return;}
-  if(isBroke()&&kind!=='sell'&&kind!=='cover'){stRender(true);return;}
-  const p=stPx(k),nm=(ST.d.co.find(c=>c.sym===k)||{}).nm||k,tk=ST.d.tick;SAVE.stk=SAVE.stk||{};SAVE.sht=SAVE.sht||{};
-  const h=Object.assign({n:0,c:0},SAVE.stk[k]),sh=Object.assign({n:0,c:0},SAVE.sht[k]);
-  if(kind==='buy'){const cost=Math.ceil(n*p);if(cost>(SAVE.gems||0)){toast('혜성조각이 모자라요');stRender(true);return;}
-    SAVE.gems-=cost;h.n+=n;h.c+=cost;sfx('gem');toast(`${nm} ${fmtI(n)}주 매수 · ${fmtI(cost)} 혜성조각 (주당 ${fmt(p)})`);}
-  else if(kind==='sell'){if(n>h.n){toast('가진 수량보다 많이 팔 수 없어요');stRender(true);return;}
-    const get=Math.floor(n*p),avg=h.n?h.c/h.n:0;h.c=Math.round((h.n-n)*avg);h.n-=n;SAVE.gems=(SAVE.gems||0)+get;sfx('cube');
-    const pl=get-Math.round(n*avg);toast(`${nm} ${fmtI(n)}주 매도 · ${fmtI(get)} 혜성조각 (${pl>=0?'▲ 이익 ':'▼ 손실 '}${fmtI(Math.abs(pl))})`);}
-  else if(kind==='short'){const v=Math.floor(n*p);if(n*p>stLimit()){toast('공매도 한도를 넘었어요');stRender(true);return;}
-    sh.n+=n;sh.c+=v;sh.liq=Math.round(sh.c/sh.n*ST_LIQ*100)/100;sh.t=sh.t||tk;sh.ck=tk;sfx('gadget');
-    toast(`${nm} ${fmtI(n)}주 공매도 (주당 ${fmt(p)}) · ${fmt(sh.liq)} 넘게 오르면 반대매매!`);}
-  else if(kind==='cover'){if(n>sh.n){toast('공매도한 수량보다 많이 갚을 수 없어요');stRender(true);return;}
-    const cost=Math.ceil(n*p),part=Math.round(sh.c*n/sh.n),pl=part-cost;sh.c-=part;sh.n-=n;SAVE.gems=(SAVE.gems||0)+pl;sfx(pl>=0?'gem':'hurt');
-    toast(`${nm} ${fmtI(n)}주 상환 (${pl>=0?'▲ 이익 ':'▼ 손실 '}${fmtI(Math.abs(pl))} 혜성조각)`);
-    if(isBroke())setTimeout(()=>{brokeModal();},400);}
-  if(h.n>0)SAVE.stk[k]=h;else delete SAVE.stk[k];if(sh.n>0)SAVE.sht[k]=sh;else delete SAVE.sht[k];save();stRender(true);}
+    <div class="pf-sum"><div>평가 금액<b>${cIc()} ${fmtI(tv)}</b></div><div>매입 금액<b>${cIc()} ${fmtI(tc)}</b></div><div>총 손익<b>${tc?updn(tv-tc,`${fmtI(Math.abs(tv-tc))} (${Math.abs(pct(tv,tc)).toFixed(2)}%)`):'-'}</b></div><div>보유 금구슬<b>${cIc()} ${fmtI(SAVE.coins||0)}</b></div></div>
+    ${rows.length?`<div class="pf-t">${rows.map(r=>`<div class="pf-r" data-s="${r.c.id}"><div class="st-logo" style="--lc:${STC[r.c.sym]}">${r.c.sym.slice(0,2)}</div><div class="pf-nm"><b>${esc(r.c.nm)}</b><span>${fmtI(r.n)}주 · 평단 ${fmtI(r.avg)} → 현재 ${fmtI(r.p)}</span><div class="pf-bar"><i style="width:${Math.round(r.val/tot*100)}%;background:${STC[r.c.sym]}"></i></div></div><div class="pf-v"><b>${fmtI(r.val)}</b>${updn(r.pl,`${fmtI(Math.abs(r.pl))} (${Math.abs(r.pp).toFixed(2)}%)`)}</div></div>`).join('')}</div>`:'<div class="st-load">아직 산 주식이 없어요. 왼쪽에서 종목을 골라 사 보세요!</div>'}`;
+  document.querySelectorAll('.pf-r').forEach(el=>el.onclick=()=>{ST.sel=el.dataset.s;ST.pv=false;sfx('ui');stRender();});stTick();}
+
+const isBroke=()=>(SAVE.gems||0)<0;
+function brokeModal(){modal(`<h2>신용불량자</h2><div style="font-size:12px;line-height:1.8;padding:6px 4px">공매도 실패로 혜성조각이 <b style="color:#fca5a5">${fmtI(SAVE.gems)}개</b>예요.<br>빚을 다 갚을 때까지 상점을 이용할 수 없어요.<br>게임에서 혜성조각을 벌어 0개 이상으로 만들어 주세요.</div><div class="mrow"><button class="btn sm" id="bkOk">확인</button></div>`);$('#bkOk').onclick=closeModal;sfx('hurt');}
+
 function openShop(){if(isBroke()){refreshMenu();showScr('menu');brokeModal();return;}closeModal();renderShop();showScr('shop');}
 /* ---------- 상자 열기 도트 이펙트 (캔버스 파티클) ---------- */
 const BXFX={c:null,x:null,P:[],RG:[],on:false,im:{},
@@ -4763,60 +4758,6 @@ var STK_ICO=(()=>{const c=document.createElement('canvas');c.width=16;c.height=1
   const R=(a,b,w,h,col)=>{x.fillStyle=col;x.fillRect(a,b,w,h);};R(0,13,16,1,'#111');R(0,0,1,14,'#111');
   [[2,8,4,'#3b82f6'],[5,5,5,'#ef4444'],[8,7,4,'#3b82f6'],[11,2,7,'#ef4444']].forEach(([a,b,h,col])=>{R(a,b,2,h,col);R(a,b-1,2,1,'#111');});
   R(13,1,2,1,'#fde047');R(14,0,1,3,'#fde047');return c.toDataURL();})();
-const STKE={funds:'금구슬이 부족해요 (서버 저장 기준)',hold:'가진 주식보다 많이 팔 수 없어요',cap:'한 종목은 이만큼까지만 가질 수 있어요',qty:'수량을 확인해 주세요',auth:'다시 로그인해 주세요',sid:'없는 종목이에요'};
-function stkPct(a,b){if(!b)return {t:'0.00%',c:'fl',a:'-'};const v=(a-b)/b*100;return {t:(v>0?'+':v<0?'−':'')+Math.abs(v).toFixed(2)+'%',c:v>0?'up':v<0?'dn':'fl',a:v>0?'▲':v<0?'▼':'-'};}
-function stkChart(cv,h,o){o=o||{};const x=cv.getContext('2d'),W=cv.width,H=cv.height,u=o.u||2;x.imageSmoothingEnabled=false;x.fillStyle=o.bg||'#0d0a1c';x.fillRect(0,0,W,H);
-  if(!h||h.length<2)return;const mn=Math.min(...h),mx=Math.max(...h),rg=Math.max(1,mx-mn),pd=o.pad||3;
-  if(o.grid){x.fillStyle='rgba(255,255,255,.07)';for(let i=1;i<4;i++)x.fillRect(0,Math.round(H*i/4/u)*u,W,u);for(let i=1;i<6;i++)x.fillRect(Math.round(W*i/6/u)*u,0,u,H);}
-  const up=h[h.length-1]>=h[0],col=up?'#ef4444':'#3b82f6',fillc=up?'rgba(239,68,68,.18)':'rgba(59,130,246,.18)';
-  const Y=v=>Math.round((pd+(1-(v-mn)/rg)*(H-2*pd*u))/u)*u,X=i=>Math.round(i/(h.length-1)*(W-u)/u)*u;
-  let py=Y(h[0]);for(let i=0;i<h.length;i++){const xx=X(i),yy=Y(h[i]),nx=i<h.length-1?X(i+1):W;
-    x.fillStyle=fillc;x.fillRect(xx,yy,nx-xx,H-yy);x.fillStyle=col;x.fillRect(xx,Math.min(py,yy),u,Math.abs(yy-py)+u);x.fillRect(xx,yy,nx-xx,u);py=yy;}
-  if(o.dot){const yy=Y(h[h.length-1]);x.fillStyle='#111';x.fillRect(W-3*u,yy-u,3*u,3*u);x.fillStyle='#fde047';x.fillRect(W-2*u,yy,u,u);}}
-async function openStock(){if(!ACC.token){modal(`<h2>포켓 주식</h2><div style="font-size:12px">로그인해야 할 수 있어요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
-  let D=null,view=null,qty=1,busy=false,tmr=null,skew=0;
-  const load=async()=>{let r=null;try{r=await rpc('pb_stock_list',{p_token:ACC.token});}catch(e){}if(r&&r.ok){D=r;skew=new Date(r.now)-Date.now();}return r&&r.ok;};
-  modal(`<h2>포켓 주식</h2><div style="font-size:11px">불러오는 중...</div>`);$('#mbox').classList.add('wide');
-  if(!await load()){modal(`<h2>포켓 주식</h2><div style="font-size:11px">불러오기 실패</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
-  const left=()=>Math.max(0,Math.floor((new Date(D.next)-Date.now()-skew)/1000));
-  const fmtCd=t=>Math.floor(t/60)+':'+String(t%60).padStart(2,'0');
-  const coin=n=>`<img class="ico" src="${ICO.coin}"> ${Math.round(n).toLocaleString()}`;
-  const tick=async()=>{if(!$('#stkCd')){clearInterval(tmr);return;}const t=left();$('#stkCd').textContent=fmtCd(t);if(t<=0&&!busy){busy=true;await new Promise(r=>setTimeout(r,1500));await load();busy=false;if($('#stkCd')){draw();toast('주식 가격이 새로 정해졌어요!');sfx('ready');}}};
-  const top=()=>{const ev=D.st.reduce((a,x)=>a+x.mq*x.price,0),cost=D.st.reduce((a,x)=>a+(+x.mc),0),pl=stkPct(ev,cost);
-    return `<div class="stk-top"><span>내 금구슬 <b>${coin(SAVE.coins||0)}</b></span><span>주식 평가 <b>${coin(ev)}</b>${cost?` <span class="${pl.c}">${pl.a} ${pl.t}</span>`:''}</span><span class="cd">다음 가격까지 <b id="stkCd">${fmtCd(left())}</b></span></div>`;};
-  const listHTML=()=>`${top()}<div class="stk-l">${D.st.map((x,i)=>{const c=stkPct(x.price,x.prev),d=stkPct(x.price,x.p24||(x.hist||[])[0]),tot=(+x.vb)+(+x.vs),bw=tot?Math.round(x.vb/tot*100):0;
-      return `<button class="stk-r" data-i="${i}"><canvas width="100" height="40" style="width:100px;height:40px"></canvas><div><div class="stk-nm">${esc(x.nm)}<i>${x.sym}</i></div><div class="stk-sub">이번 10분: 산 사람 ${x.nb}명 · 판 사람 ${x.ns}명${x.mq?` · <b style="color:#fde047">내 주식 ${x.mq}주</b>`:''}</div><div class="stk-bar">${tot?`<b style="width:${bw}%"></b><u style="width:${100-bw}%"></u>`:''}</div></div>
-        <div class="stk-px">${coin(x.price)}<small class="${c.c}">${c.a} ${c.t}</small><small class="${d.c}" style="opacity:.8">24시간 ${d.t}</small></div></button>`;}).join('')}</div>
-    <div style="font-size:10px;opacity:.75;margin-top:6px;line-height:1.6">10분마다 가격이 새로 정해져요. 그 10분 동안 <b class="up">사는 사람이 많으면 ▲ 오르고</b> <b class="dn">파는 사람이 많으면 ▼ 내려요</b>. 가끔 뉴스(호재·악재)가 터져요. 사고팔 때 수수료 1%.</div>
-    <div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`;
-  const detailHTML=x=>{const c=stkPct(x.price,x.prev),pl=x.mq?stkPct(x.mq*x.price,x.mc):null,val=qty*x.price,fee=Math.max(1,Math.ceil(val*.01)),mn=Math.min(...(x.hist||[x.price])),mx=Math.max(...(x.hist||[x.price]));
-    const nw=x.news?x.news.split('|'):null,nOld=x.news_at&&(Date.now()+skew-new Date(x.news_at))>36e5*3;
-    return `${top()}<div class="stk-d"><div class="row2"><b style="font-size:15px">${esc(x.nm)}</b><span style="opacity:.6">${x.sym}</span><span style="opacity:.75">${esc(x.ds||'')}</span></div>
-      <div class="row2"><b style="font-size:20px">${coin(x.price)}</b><span class="${c.c}" style="font-size:13px">${c.a} ${c.t} <span style="opacity:.7">(지난 10분)</span></span></div>
-      <canvas class="stk-big" width="560" height="160" style="width:100%;height:auto;border:2px solid #111"></canvas>
-      <div class="row2" style="font-size:10px;opacity:.8;justify-content:space-between"><span>24시간 차트 · 최저 ${mn.toLocaleString()} · 최고 ${mx.toLocaleString()}</span><span>주주 ${x.holders}명</span></div>
-      ${nw&&!nOld?`<div class="stk-news"><b class="${nw[0]==='+'?'up':'dn'}">${nw[0]==='+'?'▲ 호재':'▼ 악재'}</b> ${esc(nw[1])}</div>`:''}
-      <div class="row2">이번 10분: <b class="up">산 사람 ${x.nb}명 (${(+x.vb).toLocaleString()})</b> · <b class="dn">판 사람 ${x.ns}명 (${(+x.vs).toLocaleString()})</b></div>
-      <div class="row2">내 주식: <b>${x.mq}주</b>${x.mq?` · 산 값 ${coin(x.mc)} → 지금 ${coin(x.mq*x.price)} <b class="${pl.c}">${pl.a} ${pl.t}</b>`:''} <span style="opacity:.6">(최대 ${x.fl}주)</span></div>
-      <div class="stk-q"><button class="btn b2 sm" data-q="-10">-10</button><button class="btn b2 sm" data-q="-1">-1</button><input class="minput sm2" id="stkQ" type="number" min="1" value="${qty}"><button class="btn b2 sm" data-q="1">+1</button><button class="btn b2 sm" data-q="10">+10</button><button class="btn b2 sm" data-m="buy">살 수 있는 최대</button><button class="btn b2 sm" data-m="sell">가진 만큼</button></div>
-      <div class="row2">금액 ${coin(val)} · 수수료 ${coin(fee)}</div>
-      <div class="row2"><button class="btn buy" id="stkB">사기 · ${coin(val+fee)}</button><button class="btn sell" id="stkS" ${x.mq>=qty?'':'disabled'}>팔기 · ${coin(val-fee)} 받기</button><span class="lg-err" id="stkE"></span></div></div>
-      <div class="mrow"><button class="btn b2 sm" id="stkBack">목록으로</button><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`;};
-  const draw=()=>{const mb=$('#mbox');if(!mb)return;
-    if(view==null){mb.innerHTML=`<h2>포켓 주식</h2>`+listHTML();mb.querySelectorAll('.stk-r').forEach(b=>{const x=D.st[+b.dataset.i];stkChart(b.querySelector('canvas'),x.hist,{u:2});b.onclick=()=>{sfx('ui');view=x.id;qty=1;draw();};});}
-    else{const x=D.st.find(o=>o.id===view);if(!x){view=null;return draw();}mb.innerHTML=`<h2>포켓 주식</h2>`+detailHTML(x);stkChart(mb.querySelector('.stk-big'),x.hist,{u:4,grid:1,dot:1,pad:2});
-      const maxBuy=()=>{let n=Math.floor((SAVE.coins||0)/(x.price*1.01));while(n>0&&n*x.price+Math.max(1,Math.ceil(n*x.price*.01))>(SAVE.coins||0))n--;return Math.max(1,Math.min(n,x.fl-x.mq));};
-      const setQ=n=>{qty=Math.max(1,Math.min(1000000,Math.floor(n)||1));draw();};
-      mb.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{sfx('ui');setQ(qty+(+b.dataset.q));});
-      mb.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{sfx('ui');setQ(b.dataset.m==='buy'?maxBuy():Math.max(1,x.mq));});
-      $('#stkQ').onchange=e=>setQ(+e.target.value);$('#stkBack').onclick=()=>{sfx('ui');view=null;draw();};
-      const trade=async q=>{if(busy)return;busy=true;const E=$('#stkE');$('#stkB').disabled=$('#stkS').disabled=true;E.textContent='거래 중...';await flushSaveNow();
-        let r=null;try{r=await rpc('pb_stock_trade',{p_token:ACC.token,p_sid:x.id,p_qty:q});}catch(e){}busy=false;
-        if(!r||!r.ok){E.textContent=!r?'서버 연결 실패':(STKE[r.err]||'거래 실패')+(r.err==='cap'?` (최대 ${r.cap}주)`:'');$('#stkB').disabled=false;$('#stkS').disabled=!(x.mq>=qty);return;}
-        SAVE.coins=+r.coins;SAVE.rev=r.rev;saveLocal();refreshMenu();x.mq=+r.mq;x.mc=+r.mc;sfx(q>0?'cube':'gem');
-        toast(q>0?`${x.nm} ${q}주를 샀어요!`:`${x.nm} ${-q}주를 팔았어요!`);if(q<0&&qty>x.mq)qty=Math.max(1,x.mq);await load();draw();};
-      $('#stkB').onclick=()=>trade(qty);$('#stkS').onclick=()=>trade(-qty);}};
-  draw();clearInterval(tmr);tmr=setInterval(tick,1000);}
 async function openLotto(){if(!ACC.token){modal(`<h2>조롤 로또</h2><div style="font-size:12px">로그인해야 참여할 수 있어요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
   modal(`<h2>조롤 로또</h2><div style="font-size:11px">불러오는 중...</div>`);let r;try{r=await rpc('pb_lotto_info',{p_token:ACC.token});}catch(e){}
   if(!r||!r.ok){modal(`<h2>조롤 로또</h2><div style="font-size:11px">불러오기 실패</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}

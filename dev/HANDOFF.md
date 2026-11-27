@@ -285,3 +285,9 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - pb_stock_tick(): 10분 경계(date_bin) 지연 처리(최대 36틱 따라잡기). 변화 = 군중 0.10*tanh(유저별 순매수(±0.15L로 제한) 합/L) + 인원 심리 0.4%/명(±3%) + 노이즈 vol + 기본가치 회귀 5%*ln(f/p) + 뉴스(2.5% 확률 ±4~14%, 고변동주 1.6배). 틱당 ±25% 제한.
 - pb_stock_list(token), pb_stock_trade(token,sid,qty(+매수/-매도)): 서버가 save.coins 직접 증감+rev+1 (로또와 같은 방식, 클라는 flushSaveNow 후 호출하고 coins/rev 반영). 수수료 1%(최소 1), 보유 한도 fl주.
 - 클라: 로비 상단 '주식' 버튼(#bStock, STK_ICO 도트 아이콘), openStock() 목록/상세(도트 차트 stkChart, 카운트다운 후 자동 갱신). 상승=빨강▲, 하락=파랑▼ (색약 대비 기호 병기).
+
+## v1.21.17 포켓증권 화면 교체
+- 옛 혜성조각/공매도 포켓증권(클라 보유 SAVE.stk·sht, pb_stock(p_n) 1분 틱) 클라 코드 제거 → #stock 화면을 새 서버 시세(pb_stock_list/trade, 금구슬)로 다시 만듦. (옛 DB pb_stock_co/pb_stock_px·함수 pb_stock(int)는 남아 있지만 안 씀)
+- 상점 '투자' 섹션에 포켓증권 항상 노출(슬롯은 SHOW_SLOT로만), 로비 #bStock도 stockOpen('menu').
+- 차트 stChart: 6시간(10분봉)/1일(30분봉)/3일(2시간봉), 캔들·라인, 가격축·시간축, 거래대금 막대(산 사람≥판 사람이면 빨강), 평단선, 현재가 태그, 최고/최저 표시, 십자선 툴팁(시고저종·거래대금·인원).
+- DB: pb_stock_hist에 vol/nb/ns 추가, pb_stock_news(뉴스 기록), list가 3일치 [t,price,vol,nb,ns] + 최근 뉴스 12개 반환.
