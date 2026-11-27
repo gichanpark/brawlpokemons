@@ -241,6 +241,7 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .rcoin{font-size:22px;color:#fde047;margin:-8px 0 14px;display:flex;gap:6px;align-items:center}
 .rroad{font-size:11px;color:#d8b4fe;margin:-6px 0 14px}
 .lb-sq{position:relative}
+.au-pk{display:flex;flex-wrap:wrap;gap:4px;max-height:220px;overflow:auto}.au-p{display:flex;align-items:center;gap:4px;background:#1e1b2e;border:2px solid #111;padding:2px 5px 2px 2px;font-size:10px}.au-p img{width:26px;height:26px;image-rendering:pixelated}.au-p b{font-weight:normal}.au-p i{font-style:normal;opacity:.75}.au-p.no{opacity:.45}
 .lowh .lb-logo{display:none}.lowh .lb-ver{left:110px}
 .lb-ev{height:76px!important;background:#facc15!important;color:#111!important;box-shadow:inset 0 -6px 0 #ca8a04,inset 0 3px 0 #fef9c3,0 5px 0 #111!important;font-weight:bold;animation:lbev 1.6s steps(2) infinite}.lb-ev img{height:34px!important}
 @keyframes lbev{50%{box-shadow:inset 0 -6px 0 #ca8a04,inset 0 3px 0 #fff,0 5px 0 #111,0 0 0 3px #fde047}}
@@ -578,7 +579,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.20.26';
+const VER='1.20.27';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -4608,7 +4609,7 @@ async function openLotto(){if(!ACC.token){modal(`<h2>조롤 로또</h2><div styl
     $('#mbox').classList.add('wide');
     document.querySelectorAll('.lt-grid .lball').forEach(el=>el.onclick=()=>{const n=+el.dataset.n;if(pick.includes(n))pick=pick.filter(x=>x!==n);else if(pick.length<3)pick.push(n);sfx('ui');draw();});
     $('#ltAuto').onclick=()=>{pick=shuffle(Array.from({length:20},(_,i)=>i+1)).slice(0,3);sfx('ui');draw();};
-    $('#ltBuy').onclick=async()=>{if(pick.length!==3)return;const E=$('#ltE');$('#ltBuy').disabled=true;E.textContent='구매 중...';await flushSave();
+    $('#ltBuy').onclick=async()=>{if(pick.length!==3)return;const E=$('#ltE');$('#ltBuy').disabled=true;E.textContent='구매 중...';await flushSaveNow();
       let q=null;try{q=await rpc('pb_lotto_buy',{p_token:ACC.token,p_nums:pick});}catch(e){}
       if(!q||!q.ok){E.textContent=!q?'서버 연결 실패':{funds:'금구슬이 부족해요 (서버 저장 기준)',limit:'이번 주는 10장까지만 살 수 있어요',bad_nums:'번호를 다시 골라 주세요'}[q.err]||'구매 실패';$('#ltBuy').disabled=false;return;}
       SAVE.coins-=LOTTO_PRICE;SAVE.rev=q.rev;saveLocal();refreshMenu();sfx('cube');
@@ -4830,7 +4831,7 @@ function applyAccount(r,carry,nick){
   try{localStorage.setItem('pb_token',r.token);}catch(e){}
   let sv=r.save&&Object.keys(r.save).length?r.save:null;const loc=SAVE;
   if(sv&&loc&&loc.dirty&&loc.acct===r.user&&(loc.rev||0)>=(sv.rev||0))sv=Object.assign({},loc);
-  if(sv)SAVE=Object.assign(DEF_SAVE(),sv);else if(!carry)SAVE=DEF_SAVE();SAVE.acct=r.user;
+  if(sv)SAVE=Object.assign(DEF_SAVE(),sv);else if(!carry||SAVE.acct)SAVE=DEF_SAVE();SAVE.acct=r.user;
   if(!SAVE.lv)SAVE.lv={};if(!SAVE.tro)SAVE.tro={};
   if(nick){SAVE.nick=nick;if(SAVE.clean==null)SAVE.clean=true;}SAVE.name=SAVE.nick||ACC.user;applyGrant(r);if(SAVE.own&&!SAVE.own.length)delete SAVE.own;save();
   const go=()=>{
@@ -4860,7 +4861,7 @@ async function afterLoad(){
   showScr('login');
 }
 async function logout(){try{if(ACC.token)await rpc('pb_logout',{p_token:ACC.token});}catch(e){}
-  ACC.user=ACC.token=null;ACC.admin=false;try{localStorage.removeItem('pb_token');}catch(e){}closeModal();showScr('login');}
+  ACC.user=ACC.token=null;ACC.admin=false;try{localStorage.removeItem('pb_token');}catch(e){}SAVE=DEF_SAVE();saveLocal();closeModal();showScr('login');}
 $('#lgIn').onclick=()=>doAuth('in');$('#lgUp').onclick=()=>doAuth('up');
 $('#lgPw').addEventListener('keydown',e=>{if(e.key==='Enter')doAuth($('#lgNick').style.display==='none'?'in':'up');});
 $('#lgNick').addEventListener('keydown',e=>{if(e.key==='Enter')doAuth('up');});
@@ -4953,7 +4954,7 @@ async function pingNow(){if(!ACC.token)return;let r;try{r=await rpc('pb_ping',{p
     break;}}
 setInterval(()=>{if(ACC.token&&!document.hidden)pingNow();},7000);
 /* ---------- 친구 선물 (재화 보내기) / 후원하기 ---------- */
-async function flushSave(){if(!ACC.token)return;clearTimeout(saveTimer);saveTimer=null;try{const r=await rpc('pb_save',{p_token:ACC.token,p_save:saveBody()});if(r&&r.stale&&r.save)adoptServer(r.save);else if(r&&r.ok){if(r.rev!=null)SAVE.rev=r.rev;delete SAVE.dirty;saveLocal();let ch=applyGrant(r);if(applyTake(r))ch=true;if(ch)await flushSave();}}catch(e){}}
+async function flushSaveNow(){if(!ACC.token)return;clearTimeout(saveTimer);saveTimer=null;try{const r=await rpc('pb_save',{p_token:ACC.token,p_save:saveBody()});if(r&&r.stale&&r.save)adoptServer(r.save);else if(r&&r.ok){if(r.rev!=null)SAVE.rev=r.rev;delete SAVE.dirty;saveLocal();let ch=applyGrant(r);if(applyTake(r))ch=true;if(ch)await flushSaveNow();}}catch(e){}}
 function giftOpen(u,n,o){o=o||{};
   modal(`<h2>${o.title||'선물 보내기'} <span class="cur">${esc(n)} @${esc(u)}</span></h2>
     ${o.note?`<div style="font-size:12px;margin-bottom:8px;color:#fde047">${o.note}</div>`:''}
@@ -4966,7 +4967,7 @@ function giftOpen(u,n,o){o=o||{};
   $('#gfX').onclick=()=>o.back?o.back():closeModal();
   $('#gfGo').onclick=async()=>{const c=Math.max(0,Math.floor(+$('#gfC').value||0)),g=Math.max(0,Math.floor(+$('#gfG').value||0)),E=$('#gfE');
     if(c+g<=0){E.textContent='보낼 양을 적어 주세요';return;}if(c>SAVE.coins||g>(SAVE.gems||0)){E.textContent='재화가 부족해요';return;}
-    $('#gfGo').disabled=true;E.textContent='보내는 중...';await flushSave();
+    $('#gfGo').disabled=true;E.textContent='보내는 중...';await flushSaveNow();
     let r=null;try{r=await rpc('pb_gift',{p_token:ACC.token,p_to:u,p_c:c,p_g:g,p_msg:$('#gfM').value||''});}catch(e){}
     if(!r||!r.ok){$('#gfGo').disabled=false;E.textContent=!r?'서버 연결 실패':{funds:'재화가 부족해요 (서버 저장 기준)',limit:'오늘은 더 보낼 수 없어요 (하루 10번)',not_friend:'친구에게만 보낼 수 있어요',no_user:'없는 트레이너예요',bad_amount:'양이 잘못됐어요'}[r.err]||'보내기 실패';return;}
     SAVE.coins-=c;SAVE.gems=(SAVE.gems||0)-g;SAVE.rev=r.rev;saveLocal();refreshMenu();sfx('cube');
@@ -5053,6 +5054,28 @@ function takeForm(x){
       if(q.ok){$('#tkRes').textContent='몰수했어요';sfx('ko');setTimeout(()=>adminPanel(x.u),700);}else $('#tkRes').textContent='실패했어요';}catch(e){$('#tkRes').textContent='연결 실패';}
     $('#tkGo').disabled=false;};
 }
+/* 관리자: 회원 상세 */
+async function adminUser(u){modal(`<h2>회원 정보 · ${esc(u)}</h2><div style="font-size:11px">불러오는 중...</div>`);let r;try{r=await rpc('pb_admin_user',{p_token:ACC.token,p_user:u});}catch(e){}
+  if(!r||!r.ok){modal(`<h2>회원 정보</h2><div style="font-size:11px">불러오기 실패</div><div class="mrow"><button class="btn sm" id="auBk">돌아가기</button></div>`);$('#auBk').onclick=()=>adminPanel(u);return;}
+  const sv=r.save||{},own=(sv.own||CH.map(c=>c.k)).filter(k=>CH.some(c=>c.k===k)),tro=sv.tro||{},lvs=sv.lv||{},d=t=>t?new Date(t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit'}):'-';
+  const tot=Object.values(tro).reduce((a,b)=>a+(+b||0),0);
+  const pks=sortCH(CH.filter(c=>own.includes(c.k)||tro[c.k])).sort((a,b)=>(tro[b.k]||0)-(tro[a.k]||0));
+  const skins=[...(sv.shy||[]).map(k=>{try{return '이로치 '+chOf(k).nm}catch(e){return k}}),...(sv.skn||[]).map(x=>{const i=x.indexOf('_');try{return skinNm(x.slice(0,i),x.slice(i+1))}catch(e){return x}})];
+  const inv=Object.entries(sv.inv||{}).filter(([k,n])=>n>0).map(([k,n])=>(ITEMS[k]?ITEMS[k].nm:k)+' ×'+n);
+  const ps=sv.pass||{},sec=(t,b)=>`<div class="pf-sec">${t}</div><div style="font-size:11px;line-height:1.7">${b}</div>`;
+  const warn=[];if(r.clones.length)warn.push(`세이브가 똑같은 계정: <b>${r.clones.map(esc).join(', ')}</b> (복제 의심)`);if(!r.games&&(sv.coins>20000||own.length>40))warn.push(`대전 기록 0판인데 금구슬 ${sv.coins} · 포켓몬 ${own.length}마리`);
+  modal(`<h2>회원 정보 · ${esc(sv.nick||r.u)} <span class="cur">@${esc(r.u)}${r.admin?' · 관리자':''}${r.banned?` · 정지${r.until?' ('+banLeft(r.until)+' 남음)':' (영구)'}`:''}</span></h2>
+    ${warn.length?`<div class="amail" style="border-color:#dc2626;font-size:11px;line-height:1.7">⚠ ${warn.join('<br>⚠ ')}</div>`:''}
+    ${sec('기본',`가입 ${d(r.created)} · 마지막 로그인 ${d(r.last)} · 마지막 접속 ${d(r.seen)}<br><img class="ico" src="${ICO.coin}"> ${sv.coins||0} · <img class="ico" src="${ICO.gemc}"> ${sv.gems||0} · 총 트로피 ${tot} · 대전 기록 ${r.games}판 (승 ${r.wins}) · 우편으로 받은 것 금구슬 ${r.mail.c} / 혜성조각 ${r.mail.g} (${r.mail.n}통)<br>조롤패스 Lv ${Math.floor((ps.xp||0)/PASS_XP)} (${ps.xp||0}xp)${ps.paid?' · 프리미엄':''} · 로또 ${r.lotto}장 · 저장 횟수(rev) ${sv.rev||0}${sv.slotBan?' · 슬롯 출입 금지':''}`)}
+    ${sec(`포켓몬 ${own.length}마리`,`<div class="au-pk">${pks.map(c=>`<span class="au-p${own.includes(c.k)?'':' no'}"><img src="${POR[c.id]}"><b>${c.nm}</b><i>파워 ${lvs[c.k]||1} · 🏆${tro[c.k]||0}</i></span>`).join('')}</div>`)}
+    ${sec(`스킨 ${skins.length}개 · 프레임 ${(sv.frOwn||[]).length}개`,(skins.join(', ')||'없음')+'<br>프레임: '+((sv.frOwn||[]).map(f=>(FRAMES.find(x=>x.id===f)||{nm:f}).nm).join(', ')||'없음')+' · 장착 '+((FRAMES.find(x=>x.id===sv.frm)||{nm:'기본'}).nm))}
+    ${sec(`가방`,inv.join(', ')||'비어 있음')}
+    ${sec(`친구 ${r.friends.length}명`,r.friends.map(f=>`<a href="#" data-au="${esc(f.u)}" style="color:#93c5fd">${esc(f.n)}</a>${f.b?' (정지)':''}`).join(', ')||'없음')}
+    ${sec('판돈 친선전 (최근 20)',r.duels.map(x=>`${d(x.at)} vs ${esc(x.o)} · ${x.c}/${x.g} · ${x.w===r.u?'승':x.w==null?'무효':'패'}`).join('<br>')||'없음')}
+    ${sec('선물 (최근 20)',r.gifts.map(x=>`${d(x.at)} ${esc(x.a)} → ${esc(x.b)} · ${x.c}/${x.g}`).join('<br>')||'없음')}
+    <div class="mrow"><button class="btn sm b2" id="auBk">돌아가기</button></div>`);
+  $('#mbox').classList.add('wide');$('#auBk').onclick=()=>adminPanel(u);
+  document.querySelectorAll('[data-au]').forEach(a=>a.onclick=e=>{e.preventDefault();adminUser(a.dataset.au);});}
 async function bcList(target){const el=$('#bcList');el.innerHTML='<span style="font-size:11px">불러오는 중...</span>';let r;try{r=await rpc('pb_admin_bc_list',{p_token:ACC.token});}catch(e){}
   if(!r||!r.ok){el.innerHTML='<span style="font-size:11px">불러오기 실패</span>';return;}
   if(!r.bc.length){el.innerHTML='<span style="font-size:11px;opacity:.7">최근 60일 안에 보낸 전체우편이 없어요</span>';return;}
@@ -5068,7 +5091,7 @@ async function adminPanel(target){
   if(!r.ok){modal(`<h2>관리자 메뉴</h2><div style="font-size:11px">권한이 없거나 연결에 실패했어요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
   const opts=`<option value="*">전체 회원 (${r.users.filter(x=>!x.banned).length}명)</option>`+r.users.map(x=>`<option value="${x.u}"${target===x.u?' selected':''}>${x.u}</option>`).join('');
   const rows=r.users.map(x=>{const t=Object.values((x.save&&x.save.tro)||{}).reduce((a,b)=>a+b,0),c=(x.save&&x.save.coins)||0;
-    return `<tr><td><input type="checkbox" class="adk" value="${x.u}" ${x.admin||x.u==='outislove'?'disabled':''}></td><td>${x.u}${x.save&&x.save.nick?` <span style="opacity:.7">(${esc(x.save.nick)})</span>`:''}${x.admin?' <span class="adm">관리자</span>':''}${x.banned?` <span class="ban">정지${x.until?' · '+banLeft(x.until)+' 남음':' · 영구'}</span>`:''}</td><td>${t}</td><td>${c}</td><td>${(x.save&&x.save.gems)||0}</td><td class="acts">
+    return `<tr><td><input type="checkbox" class="adk" value="${x.u}" ${x.admin||x.u==='outislove'?'disabled':''}></td><td><a href="#" data-au="${x.u}" style="color:#93c5fd">${x.u}</a>${x.save&&x.save.nick?` <span style="opacity:.7">(${esc(x.save.nick)})</span>`:''}${x.admin?' <span class="adm">관리자</span>':''}${x.banned?` <span class="ban">정지${x.until?' · '+banLeft(x.until)+' 남음':' · 영구'}</span>`:''}</td><td>${t}</td><td>${c}</td><td>${(x.save&&x.save.gems)||0}</td><td class="acts">
     <button data-a="mailto" data-u="${x.u}">우편</button><button data-a="take" data-u="${x.u}" class="del">몰수</button><button data-a="${x.banned?'unban':'ban'}" data-u="${x.u}">${x.banned?'정지 해제':'정지'}</button>
     <button data-a="${x.admin?'unadmin':'admin'}" data-u="${x.u}">${x.admin?'관리자 해제':'관리자 지정'}</button><button data-a="delete" data-u="${x.u}" class="del">삭제</button></td></tr>`;}).join('');
   modal(`<h2>관리자 메뉴 · 회원 ${r.users.length}명</h2>
@@ -5093,6 +5116,7 @@ async function adminPanel(target){
   <div style="font-size:11px;opacity:.7;margin-top:6px">삭제는 두 번 눌러야 실행돼요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);
   $('#mbox').classList.add('wide','afull');
   {const b=$('#bcLoad');if(b)b.onclick=()=>bcList(target);}
+  document.querySelectorAll('.adt [data-au]').forEach(a=>a.onclick=e=>{e.preventDefault();adminUser(a.dataset.au);});
   {const sel=()=>[...document.querySelectorAll('.adk:checked')].map(i=>i.value),up=()=>{const n=sel().length;$('#adkN').textContent=n?n+'명 선택':'';$('#adBan').disabled=!n;$('#adUnban').disabled=!n;$('#adBan').textContent=n?`✓ 선택 정지 (${n})`:'선택 정지';};
    document.querySelectorAll('.adk').forEach(i=>i.onchange=up);$('#adkAll').onchange=()=>{document.querySelectorAll('.adk:not(:disabled)').forEach(i=>i.checked=$('#adkAll').checked);up();};
    $('#adBan').onclick=()=>banForm(sel());
