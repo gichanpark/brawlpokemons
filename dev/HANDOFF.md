@@ -243,3 +243,7 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 
 ## v1.21.3
 - 슬롯 출입 금지 1시간(v1.21.4): SAVE.slotBan = 해제 시각(ms). slotBanned() — 예전 값 1/true 나 1시간 넘게 남은 값은 지금+1시간으로, 지나면 삭제
+
+## v1.21.5
+- 관리자 슬롯 금지 해제: pb_admin_slot_unban(token, users[]) — 서버 세이브에서 slotBan 삭제 + pb_users.cmd {slotUnban} → pb_save 응답 'cmd' 로 접속 중 클라에도 반영 후 비움. 관리자 목록 '슬롯 해제'(금지 중인 회원만) + '선택 슬롯 해제'
+- pb_users.cmd: 서버→클라 1회성 명령 통로 (pb_save 가 돌려주고 비움)
