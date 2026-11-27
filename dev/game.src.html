@@ -614,7 +614,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.23';
+const VER='1.21.24';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -3753,7 +3753,7 @@ async function betAct(p,who){const B=NET.bet;if(!B||B.locked||B.turn!==who)retur
   if(betEq(B.h,B.g)){B.locked=true;B.turn=null;
     const opp=members().find(m=>m.team===1);
     try{const r=await rpc('pb_duel_open',{p_token:ACC.token,p_code:NET.code,p_opp:opp&&opp.user,p_c:c,p_g:g});
-      if(!r.ok){betReset();koMsg(r.err==='funds'?'둘 중 한 명의 재화가 부족해요 (서버 저장 기준)':'판돈 확정에 실패했어요');return;}B.id=r.id;}catch(e){betReset();koMsg('서버 연결 실패');return;}
+      if(!r.ok){betReset();koMsg(r.err==='funds'?'둘 중 한 명의 재화가 부족해요 (서버 저장 기준)':r.err==='few_games'?`판돈은 둘 다 ${r.need}판 이상 해야 걸 수 있어요 (나 ${Math.min(r.me,r.need)}/${r.need} · 상대 ${Math.min(r.op,r.need)}/${r.need})`:'판돈 확정에 실패했어요');return;}B.id=r.id;}catch(e){betReset();koMsg('서버 연결 실패');return;}
     duelLock(B);}
   bcBet();}
 function duelLock(B){if(!B.id||(NET.duel&&NET.duel.id===B.id))return;const c=B.h.c,g=B.h.g;
@@ -5189,7 +5189,7 @@ function giftOpen(u,n,o){o=o||{};const IQ={},SK=new Set();
     $('#gfGo').disabled=true;E.textContent='보내는 중...';await flushSaveNow();
     let r=null;try{r=await rpc('pb_gift2',{p_token:ACC.token,p_to:u,p_c:c,p_g:g,p_items:its,p_msg:$('#gfM').value||''});}catch(e){}
     const nmOf=k=>ITEMS[k]?ITEMS[k].nm:k;
-    if(!r||!r.ok){$('#gfGo').disabled=false;E.textContent=!r?'서버 연결 실패':({funds:'재화가 부족해요 (서버 저장 기준)',limit:'오늘은 더 보낼 수 없어요 (하루 10번)',not_friend:'친구에게만 보낼 수 있어요',no_user:'없는 트레이너예요',bad_amount:'양이 잘못됐어요',no_item:'서버 기준으로 없는 아이템이에요: '+nmOf(r.k),has_skin:'상대가 이미 가진 스킨이에요: '+nmOf(r.k),dup_skin:'같은 스킨은 하나만 보낼 수 있어요'}[r.err]||'보내기 실패');return;}
+    if(!r||!r.ok){$('#gfGo').disabled=false;E.textContent=!r?'서버 연결 실패':({funds:'재화가 부족해요 (서버 저장 기준)',limit:'오늘은 더 보낼 수 없어요 (하루 10번)',not_friend:'친구에게만 보낼 수 있어요',no_user:'없는 트레이너예요',bad_amount:'양이 잘못됐어요',no_item:'서버 기준으로 없는 아이템이에요: '+nmOf(r.k),has_skin:'상대가 이미 가진 스킨이에요: '+nmOf(r.k),dup_skin:'같은 스킨은 하나만 보낼 수 있어요',new_acct:'가입하고 3일이 지나야 선물을 보낼 수 있어요'+(r.at?' ('+new Date(r.at).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit'})+'부터)':'')}[r.err]||'보내기 실패');return;}
     SAVE.coins-=c;SAVE.gems=(SAVE.gems||0)-g;
     for(const k in IQ)if(IQ[k])invAdd(k,-IQ[k]);
     SK.forEach(k=>{const [pk,id]=ITEMS[k].skin;if(id==='s')SAVE.shy=(SAVE.shy||[]).filter(x=>x!==pk);else SAVE.skn=(SAVE.skn||[]).filter(x=>x!==pk+'_'+id);if(SAVE.sk&&SAVE.sk[pk]===id)delete SAVE.sk[pk];});
