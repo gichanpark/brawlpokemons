@@ -622,7 +622,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.37';
+const VER='1.21.38';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1021,7 +1021,7 @@ const IMGS={};for(const k in SPRS){const im=new Image();im.onload=()=>{im.ok=1};
 const IMGSF={};for(const k in SPRSF){const im=new Image();im.onload=()=>{im.ok=1};im.src=SPRSF[k];IMGSF[k]=im;}
 const hasShy=k=>!!SPRS[k]&&(SAVE.shy||[]).includes(k);
 /* 테마 스킨: SKINX['k_id']={spr,por,gmax}, 보유 SAVE.skn=['k_id'], 장착 SAVE.sk[k]='s'(이로치,예전 값 1)|테마id */
-const THEMES={blastoise:[{id:'pirate',nm:'해적선장 거북왕',fx:{palO:['#eab308','#fef08a','#3b200c'],col:'#eab308'}}],cinderace:[{id:'spurs',nm:'토트넘 에이스번',ball:1},{id:'korea',nm:'국가대표 에이스번',ball:1}],hlil:[{id:'dongbaek',nm:'동백꽃 필 무렵',fx:{palO:['#facc15','#fef9c3','#9a3412'],col:'#facc15',edge:'#16181c',petal:1}}],giratina:[{id:'yako',nm:'백귀야행 기라티나',pass:1,fx:{palO:['#dc2626','#fecaca','#1a0505'],col:'#dc2626',yako:1}}],
+const THEMES={alakazam:[{id:'magic',nm:'마술사 후딘',pass:1,ev:'초희귀 챌린지'}],lapras:[{id:'santa',nm:'산타 라프라스',pass:1,ev:'초희귀 챌린지'}],jolteon:[{id:'cyber',nm:'사이버 쥬피썬더',pass:1,ev:'초희귀 챌린지'}],umbreon:[{id:'vamp',nm:'흡혈귀 블래키',pass:1,ev:'초희귀 챌린지'}],primarina:[{id:'pirate',nm:'해적 갑판장 누리레느',pass:1,ev:'초희귀 챌린지'}],blastoise:[{id:'pirate',nm:'해적선장 거북왕',fx:{palO:['#eab308','#fef08a','#3b200c'],col:'#eab308'}}],cinderace:[{id:'spurs',nm:'토트넘 에이스번',ball:1},{id:'korea',nm:'국가대표 에이스번',ball:1}],hlil:[{id:'dongbaek',nm:'동백꽃 필 무렵',fx:{palO:['#facc15','#fef9c3','#9a3412'],col:'#facc15',edge:'#16181c',petal:1}}],giratina:[{id:'yako',nm:'백귀야행 기라티나',pass:1,fx:{palO:['#dc2626','#fecaca','#1a0505'],col:'#dc2626',yako:1}}],
   mewtwo:[{id:'obsid',nm:'흑요석 뮤츠',fx:{palO:['#d946ef','#fae8ff','#3a0d3d'],col:'#d946ef'}}],
   rayquaza:[{id:'sky',nm:'창공 레쿠쟈',fx:{palO:['#7dd3fc','#f0f9ff','#0c2d4a'],col:'#7dd3fc'}}],
   kyurem:[{id:'onyx',nm:'흑빙 큐레무',fx:{palO:['#38bdf8','#e0f2fe','#06283d'],col:'#38bdf8'}}],
@@ -4797,17 +4797,23 @@ function rescueBind(redraw){document.querySelectorAll('[data-ashq]').forEach(b=>
 /* ---------- 이벤트: 초희귀 챌린지 (SAVE.srm 챌린지 켬, SAVE.srt 토큰) ---------- */
 const SR_START=null,SR_END=null;/* SR_START=null 이면 이벤트 꺼짐(숨김). 시작하려면 Date.parse('…+09:00') 또는 0 */const srOn=()=>SR_START!=null&&srvNow()>=SR_START&&(SR_END==null||srvNow()<SR_END);const srMode=()=>srOn()&&SAVE.srm===1;
 const SRT_ICO=(()=>{const rows=['.....k.....','....kwk....','...kwbbk...','..kwbbbbk..','.kwbbbbbdk.','kwbbbbbbddk','.kbbbbbddk.','..kbbbddk..','...kbddk...','....kdk....','.....k.....'],P={k:'#111',w:'#dbeafe',b:'#60a5fa',d:'#1d4ed8'},c=document.createElement('canvas');c.width=11;c.height=11;const x=c.getContext('2d');rows.forEach((r,j)=>{for(let i=0;i<11;i++)if(r[i]!=='.'){x.fillStyle=P[r[i]];x.fillRect(i,j,1,1);}});return c.toDataURL();})();
-const SR_SHOP=[{id:'fr_srare',nm:'초희귀 프레임',cost:500,got:()=>(SAVE.frOwn||[]).includes('srare')}];/* 1000개 스킨은 미정 (사용자 결정 대기) */
+const SR_SHOP=[{id:'fr_srare',nm:'초희귀 프레임',cost:500,got:()=>(SAVE.frOwn||[]).includes('srare')},{id:'srbox',nm:'랜덤 초희귀 스킨 박스',cost:1000,box:1,got:()=>!srBoxPool().length}];
+/* 랜덤 초희귀 스킨 박스: 초희귀 포켓몬의 안 가진 스킨(이로치·테마) 중 하나. 이벤트 스킨(ev)은 가중치 6, 나머지 1 */
+function srBoxPool(){const L=[];for(const c of CH){if(c.gr!=='s')continue;if(SPRS[c.k]&&!hasShy(c.k))L.push({k:c.k,id:'s',w:1});for(const t of THEMES[c.k]||[])if(!hasSkin(c.k,t.id)&&SKINX[c.k+'_'+t.id])L.push({k:c.k,id:t.id,w:t.ev?6:1});}return L;}
+function srBoxOpen(){const L=srBoxPool();if(!L.length){toast('초희귀 스킨을 전부 가지고 있어요!');return null;}let r=Math.random()*L.reduce((a,x)=>a+x.w,0),x=L[0];for(const it of L){r-=it.w;if(r<0){x=it;break;}}
+  if(x.id==='s'){SAVE.shy=SAVE.shy||[];SAVE.shy.push(x.k);}else{SAVE.skn=SAVE.skn||[];SAVE.skn.push(x.k+'_'+x.id);}return x;}
 function srHTML(){const n=SAVE.srt||0,on=srMode(),ownS=(SAVE.own||[]).filter(k=>chOf(k).gr==='s').length;
   return `<div class="rsq"><div class="rs-h"><img class="px" src="${SRT_ICO}"><div><b>초희귀 챌린지</b><br><span style="font-size:11px;opacity:.85">챌린지를 켜면 나도, 상대 봇도 <b style="color:#93c5fd">초희귀</b> 포켓몬만 써요. 초희귀 포켓몬으로 이길 때마다(팀전 승리 · 쇼다운 1등) 초희귀 토큰을 10~50개 받아요!</span></div></div>
     <div class="sr-tg"><span>챌린지</span><button class="btn sm b2${on?'':' on'}" data-srm="0">끄기</button><button class="btn sm b2${on?' on':''}" data-srm="1">켜기</button><span style="opacity:.75">보유 초희귀 ${ownS}마리</span></div>
     <div class="rs-bar"><i style="width:${Math.min(100,n/10)}%;background:#60a5fa;box-shadow:inset 0 -4px 0 #1d4ed8"></i><span><img class="px" style="height:12px" src="${SRT_ICO}"> ${n.toLocaleString()} / 1,000</span></div>
-    <div class="rs-shop">${SR_SHOP.map((it,i)=>{const got=it.got(),pic=it.id==='fr_srare'?`<div style="padding-top:12px">${avaHTML(34,null,'srare')}</div>`:'';
-      return `<div class="rs-it big${got?' got':''}">${pic}<b>${it.nm}</b><button class="btn sm" data-srb="${i}" ${got||n<it.cost?'disabled':''}>${got?'✓ 받음':`<img class="px" style="height:12px;vertical-align:-2px" src="${SRT_ICO}"> ${it.cost}`}</button></div>`;}).join('')}</div></div>`;}
+    <div class="rs-shop">${SR_SHOP.map((it,i)=>{const got=it.got(),pic=it.id==='fr_srare'?`<div style="padding-top:12px">${avaHTML(34,null,'srare')}</div>`:`<div style="display:flex;gap:2px;justify-content:center">${['alakazam_magic','lapras_santa','jolteon_cyber'].map(k=>SKINX[k]?`<img class="px" src="${SKINX[k].spr}" style="max-height:30px">`:'').join('')}</div>`;
+      return `<div class="rs-it big${got?' got':''}">${pic}<b>${it.nm}</b><button class="btn sm" data-srb="${i}" ${got||n<it.cost?'disabled':''}>${got?(it.box?'✓ 다 모음':'✓ 받음'):`<img class="px" style="height:12px;vertical-align:-2px" src="${SRT_ICO}"> ${it.cost}`}</button>${it.box?'<span style="font-size:9px;opacity:.75">이벤트 스킨 5종이 더 잘 나와요</span>':''}</div>`;}).join('')}</div></div>`;}
 function openSr(){const draw=()=>{$('#mbox').innerHTML=`<h2>이벤트 · 초희귀 챌린지</h2>${srHTML()}<div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`;$('#mbox').classList.add('wide');
     document.querySelectorAll('[data-srm]').forEach(b=>b.onclick=()=>{const v=+b.dataset.srm;if(v===1){const L=(SAVE.own||[]).filter(k=>chOf(k).gr==='s'&&owns(k));if(!L.length){toast('초희귀 포켓몬이 없어서 챌린지를 켤 수 없어요');return;}if(chOf(SAVE.sel).gr!=='s')SAVE.sel=L.sort((a,b)=>tro(b)-tro(a)||lv(b)-lv(a))[0];}
       SAVE.srm=v;save();refreshMenu();sfx('ui');toast(v?'초희귀 챌린지 시작! 초희귀 포켓몬만 쓸 수 있어요':'초희귀 챌린지를 껐어요');draw();});
-    document.querySelectorAll('[data-srb]').forEach(b=>b.onclick=()=>{const it=SR_SHOP[+b.dataset.srb];if(it.got()||(SAVE.srt||0)<it.cost)return;SAVE.srt-=it.cost;invAdd(it.id,1);save();refreshMenu();sfx('win');draw();});};
+    document.querySelectorAll('[data-srb]').forEach(b=>b.onclick=()=>{const it=SR_SHOP[+b.dataset.srb];if(it.got()||(SAVE.srt||0)<it.cost)return;if(it.box){const x=srBoxOpen();if(!x)return;SAVE.srt-=it.cost;save();refreshMenu();sfx('win');const src=x.id==='s'?SPRS[x.k]:SKINX[x.k+'_'+x.id].spr,ev=(themeOf(x.k,x.id)||{}).ev;
+      modal(`<h2>랜덤 초희귀 스킨 박스</h2><div class="rws"><div class="rw newpk"><img class="px" src="${src}" style="max-height:110px;image-rendering:pixelated"><b>${ev?'★ 이벤트 스킨!':x.id==='s'?'이로치 스킨':'새 스킨'}</b><span>${esc(skinNm(x.k,x.id))}${owns(x.k)?'':' · '+chOf(x.k).nm+'이(가) 있어야 쓸 수 있어요'}</span></div></div><div class="mrow"><button class="btn sm" id="srOk">확인</button></div>`);$('#srOk').onclick=()=>openSr();return;}
+      SAVE.srt-=it.cost;invAdd(it.id,1);save();refreshMenu();sfx('win');draw();});};
   draw();$('#modal').classList.add('on');}
 /* ---------- 주식 (서버: pb_stock_list / pb_stock_trade, 10분마다 가격 결정) ---------- */
 var STK_ICO=(()=>{const c=document.createElement('canvas');c.width=16;c.height=14;const x=c.getContext('2d');
