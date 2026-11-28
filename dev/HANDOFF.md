@@ -384,7 +384,5 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - SAVE.srm=1(챌린지 켬) / SAVE.srt(초희귀 토큰). **v1.21.36: 아직 시작 안 함** — `SR_START=null`이면 이벤트 꺼짐(버튼 숨김·srMode 꺼짐). 시작: SR_START에 시각(또는 0), 끝: SR_END. 공지(pb_notice)도 아직 안 올림. srOn()/srMode().
 - 켜면: 선택창은 초희귀(gr 's')만 보임(위에 '챌린지 끄기' 줄), startMatch에서 초희귀 아니면 막고 선택창으로, pickRoster 봇·AI 파티도 초희귀만. 켤 때 지금 포켓몬이 초희귀가 아니면 보유 초희귀 중 트로피 높은 걸로 바꿈(초희귀 0마리면 못 켬).
 - 보상: endMatch에서 srMode && 내 포켓몬 초희귀 && (팀전 승리 || 쇼다운 1등) → 토큰 10~50 (G.result.srt, 결과 화면 표시). 훈련장 제외.
-- 교환(openSr, SR_SHOP): 500 → 초희귀 프레임(fr_srare, FRAMES 'srare', CSS .fr-srare 파란 테두리+도트 다이아) / 1000 → 육군 아미 타이거 어흥염 스킨(sk_incineroar_army). 각 1번.
-- 스킨: THEMES.incineroar army (pass:1 → 상자 드롭 제외, ev:'초희귀 챌린지' → 선택창에 '…보상' 표시). 도트: dev/tools/skins/incineroar_army.py (원본 23x24 → 46x48로 키워 군복 위장무늬·전투모(병장 계급장)·인식표·버클·태극기 패치·군화를 손도트, 초상화도 전투모·군복 깃·태극기). skins.js 에는 ×2(92x96).
-- 로비 왼쪽 '초희귀' 버튼(#bSr, 배지=토큰 수, 켜져 있으면 ON + 깜빡임). 토큰 아이콘 SRT_ICO.
-- 공지 배너 notice/v12135.png (dev/tools/banner_v12135.py)
+- 교환(openSr, SR_SHOP): 500 → 초희귀 프레임(fr_srare, FRAMES 'srare', CSS .fr-srare 파란 테두리+도트 다이아). 1000개 보상 스킨은 미정(v1.21.37에서 육군 아미 타이거 어흥염 삭제 — 사용자 요청, 받은 사람 없음).
+- 로비 왼쪽 '초희귀' 버튼(#bSr, 아이콘·배지=토큰, 켜져 있으면 ON + 깜빡임). 토큰 아이콘 SRT_ICO. 공지 배너는 스킨 정해지면 다시 만들 것.
