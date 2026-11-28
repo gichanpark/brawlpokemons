@@ -647,7 +647,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.22.16';
+const VER='1.22.17';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -5326,6 +5326,8 @@ const DID=(()=>{let d=null;try{d=localStorage.getItem('pb_did');}catch(e){}if(!d
 const didFmt=d=>d.slice(0,4)+'-'+d.slice(4);
 function devBlock(msg){window._banned=1;try{if(G)G.over=true;}catch(e){}try{ACC.user=ACC.token=null;localStorage.removeItem('pb_token');}catch(e){}
   modal(`<h2>이 기기는 이용이 정지됐어요</h2><div style="font-size:12px;margin-bottom:8px">기기 번호 <b>${didFmt(DID)}</b></div>${msg?`<div class="amail" style="white-space:pre-wrap;line-height:1.7"><b>관리자의 편지</b><br>${esc(msg)}</div>`:''}`);$('#modal').onclick=null;window.MLOCK=1;}
+function devLimit(){if(window._dl)return;window._dl=1;try{ACC.user=ACC.token=null;ACC.admin=false;localStorage.removeItem('pb_token');}catch(e){}try{showScr('login');}catch(e){}
+  modal(`<h2>기기 3개까지만 쓸 수 있어요</h2><div style="font-size:12px;line-height:1.8">이 계정은 이미 다른 기기 3개에 연결돼 있어서 이 기기(<b>${didFmt(DID)}</b>)에서는 로그인할 수 없어요.<br>예전 기기를 빼려면 관리자에게 기기 번호를 알려주세요.</div><div class="mrow"><button class="btn sm" onclick="location.reload()">확인</button></div>`);$('#modal').onclick=null;}
 async function devCheck(){try{const r=await rpc('pb_dev_check',{p_did:DID});if(r&&r.banned){devBlock(r.msg);return true;}}catch(e){}return false;}
 setTimeout(devCheck,1500);
 function banKick(r){if(r&&r.dev){devBlock(r.msg);return;}if(window._banned)return;window._banned=1;try{if(G){G.over=true;}}catch(e){}
@@ -5334,7 +5336,7 @@ function banKick(r){if(r&&r.dev){devBlock(r.msg);return;}if(window._banned)retur
   modal(`<h2>이용이 정지된 계정이에요</h2><div style="font-size:12px;margin-bottom:8px">${r.until?`정지 해제까지 <b>${banLeft(r.until)}</b> 남았어요`:'<b>영구 정지</b>'}</div>${r.msg?`<div class="amail" style="white-space:pre-wrap;line-height:1.7"><b>관리자의 편지</b><br>${esc(r.msg)}</div>`:''}<div class="mrow"><button class="btn sm" onclick="location.reload()">확인</button></div>`);
   $('#modal').onclick=null;}
 async function pingNow(){if(!ACC.token)return;let r;try{r=await rpc('pb_ping',{p_token:ACC.token,p_ver:VER,p_did:DID});}catch(e){return;}if(!r)return;if(r.now){SRVOFF=r.now-Date.now();if(!SRVOK){SRVOK=1;try{refreshMenu();}catch(e){}}}
-  if(!r.ok){if(r.banned)banKick(r);return;}
+  if(!r.ok){if(r.banned)banKick(r);else if(r.devlimit)devLimit();return;}
   verCheck(r.ver);
   const bd=$('#frBadge');if(bd){bd.textContent=r.freq;bd.style.display=r.freq?'':'none';}
   const busy=G&&!G.over;
@@ -5488,12 +5490,13 @@ async function auDevices(u){const el=$('#auDev');if(!el)return;let r;try{r=await
   const d=t=>t?new Date(t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit'}):'-';
   el.innerHTML=r.dev.map((x,i)=>{const others=x.acc.filter(a=>a.u!==u);return `<div style="border-top:2px solid #111;padding:3px 0"><b>${didFmt(x.did)}</b> · 처음 ${d(x.first)} · 마지막 ${d(x.last)}${x.ban?' · <b style="color:#fca5a5">기기 정지됨</b>':''}
     <br>이 기기의 다른 계정: ${others.length?others.map(a=>`<a href="#" data-au2="${esc(a.u)}" style="color:#93c5fd">${esc(a.u)}</a>${a.b?'(정지)':''}`).join(', '):'없음'}
-    <br>${x.ban?`<button class="btn sm b2" data-dun="${i}">기기 정지 해제</button>`:`<button class="btn sm" style="background:#dc2626;color:#fff" data-dbn="${i}">기기 정지</button>`}</div>`;}).join('');
+    <br>${x.ban?`<button class="btn sm b2" data-dun="${i}">기기 정지 해제 (같이 정지된 계정도 풀림)</button>`:`<button class="btn sm" style="background:#dc2626;color:#fff" data-dbn="${i}">기기 정지</button>`} <button class="btn sm b2" data-dul="${i}">이 계정에서 기기 연결 해제</button></div>`;}).join('')+`<div style="opacity:.7;margin-top:4px">한 계정은 기기 3개까지 (지금 ${r.dev.length}개)</div>`;
   el.querySelectorAll('[data-au2]').forEach(a=>a.onclick=e=>{e.preventDefault();adminUser(a.dataset.au2);});
-  el.querySelectorAll('[data-dun]').forEach(b=>b.onclick=async()=>{await rpc('pb_admin_dev_ban',{p_token:ACC.token,p_did:r.dev[+b.dataset.dun].did,p_on:false});auDevices(u);});
-  el.querySelectorAll('[data-dbn]').forEach(b=>b.onclick=async()=>{const x=r.dev[+b.dataset.dbn];if(!b.dataset.ok){b.dataset.ok=1;b.textContent='정말 정지? (이 기기의 모든 계정)';
+  el.querySelectorAll('[data-dun]').forEach(b=>b.onclick=async()=>{const q=await rpc('pb_admin_dev_ban',{p_token:ACC.token,p_did:r.dev[+b.dataset.dun].did,p_on:false});toast('기기 정지 해제 · 계정 '+((q&&q.n)||0)+'개 정지 해제');auDevices(u);});
+  el.querySelectorAll('[data-dul]').forEach(b=>b.onclick=async()=>{if(!b.dataset.ok){b.dataset.ok=1;b.textContent='정말 해제?';return;}await rpc('pb_admin_dev_unlink',{p_token:ACC.token,p_did:r.dev[+b.dataset.dul].did,p_user:u});auDevices(u);});
+  el.querySelectorAll('[data-dbn]').forEach(b=>b.onclick=async()=>{const x=r.dev[+b.dataset.dbn];if(!b.dataset.ok){b.dataset.ok=1;b.textContent='정말 정지? (이 기기에 연결된 적 있는 계정 '+x.acc.filter(a=>!a.b).length+'개도 영구 정지)';
       b.insertAdjacentHTML('afterend',`<input class="minput sm2" id="dbMsg" maxlength="300" placeholder="정지 사유(선택)" style="width:200px;margin-left:4px">`);return;}
-    const q=await rpc('pb_admin_dev_ban',{p_token:ACC.token,p_did:x.did,p_on:true,p_msg:($('#dbMsg')||{}).value||''});if(q&&q.err==='admin_device'){toast('관리자 계정이 쓰는 기기는 정지할 수 없어요');return;}auDevices(u);});}
+    const q=await rpc('pb_admin_dev_ban',{p_token:ACC.token,p_did:x.did,p_on:true,p_msg:($('#dbMsg')||{}).value||''});if(q&&q.err==='admin_device'){toast('관리자 계정이 쓰는 기기는 정지할 수 없어요');return;}toast('기기 정지 · 계정 '+((q&&q.n)||0)+'개 정지');auDevices(u);});}
 async function flagList(){const el=$('#flList');el.innerHTML='<span style="font-size:11px">불러오는 중...</span>';let r;try{r=await rpc('pb_admin_flags',{p_token:ACC.token});}catch(e){}
   if(!r||!r.ok){el.innerHTML='<span style="font-size:11px">불러오기 실패</span>';return;}
   const KN={clone_reset:'복제 의심 → 초기화',clamp:'재화 급증 → 깎음',jump:'재화 급증',signup_limit:'가입 제한'},d=t=>new Date(t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit'});
