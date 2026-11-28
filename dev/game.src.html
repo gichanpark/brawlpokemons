@@ -622,7 +622,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.35';
+const VER='1.21.36';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -4795,7 +4795,7 @@ function rescueBind(redraw){document.querySelectorAll('[data-ashq]').forEach(b=>
     modal(`<h2>구출 성공!</h2><div class="rws"><div class="rw newpk"><img class="sbig por2" src="${POR[c.id]}"><b>새 포켓몬!</b><span>${c.nm} · ${GRADE[c.gr].nm}</span></div></div><div class="mrow"><button class="btn sm" id="rsOk">확인</button></div>`);$('#rsOk').onclick=()=>openRescue();return;}
   SAVE.ashard-=it.cost;if(it.c)SAVE.coins+=it.c;else if(it.g)SAVE.gems=(SAVE.gems||0)+it.g;else invAdd(it.id,1);save();refreshMenu();invBadge();sfx('cube');toast((it.nm||ITEMS[it.id].nm)+' 교환 완료!'+(it.c||it.g?'':' 가방에 넣었어요'));redraw();});}
 /* ---------- 이벤트: 초희귀 챌린지 (SAVE.srm 챌린지 켬, SAVE.srt 토큰) ---------- */
-const SR_END=null;const srOn=()=>SR_END==null||srvNow()<SR_END;const srMode=()=>srOn()&&SAVE.srm===1;
+const SR_START=null,SR_END=null;/* SR_START=null 이면 이벤트 꺼짐(숨김). 시작하려면 Date.parse('…+09:00') 또는 0 */const srOn=()=>SR_START!=null&&srvNow()>=SR_START&&(SR_END==null||srvNow()<SR_END);const srMode=()=>srOn()&&SAVE.srm===1;
 const SRT_ICO=(()=>{const rows=['.....k.....','....kwk....','...kwbbk...','..kwbbbbk..','.kwbbbbbdk.','kwbbbbbbddk','.kbbbbbddk.','..kbbbddk..','...kbddk...','....kdk....','.....k.....'],P={k:'#111',w:'#dbeafe',b:'#60a5fa',d:'#1d4ed8'},c=document.createElement('canvas');c.width=11;c.height=11;const x=c.getContext('2d');rows.forEach((r,j)=>{for(let i=0;i<11;i++)if(r[i]!=='.'){x.fillStyle=P[r[i]];x.fillRect(i,j,1,1);}});return c.toDataURL();})();
 const SR_SHOP=[{id:'fr_srare',nm:'초희귀 프레임',cost:500,got:()=>(SAVE.frOwn||[]).includes('srare')},{id:'sk_incineroar_army',nm:'육군 아미 타이거 어흥염',cost:1000,got:()=>hasSkin('incineroar','army')}];
 function srHTML(){const n=SAVE.srt||0,on=srMode(),ownS=(SAVE.own||[]).filter(k=>chOf(k).gr==='s').length,sk=SKINX.incineroar_army;

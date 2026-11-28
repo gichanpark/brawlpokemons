@@ -381,7 +381,7 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - 검증: 가변 dt로 젬·하이스트·볼·바운티·쇼다운·녹아웃 수십 판 돌리며 x/y/kb/v 세터에 NaN 트랩 → 0건 (수정 전 하이스트 25판 중 4판 발생).
 
 ## v1.21.35 이벤트: 초희귀 챌린지
-- SAVE.srm=1(챌린지 켬) / SAVE.srt(초희귀 토큰). `SR_END=null`(끝 없음, 끝낼 땐 Date.parse 값 넣으면 버튼 숨김·srMode 꺼짐). srOn()/srMode().
+- SAVE.srm=1(챌린지 켬) / SAVE.srt(초희귀 토큰). **v1.21.36: 아직 시작 안 함** — `SR_START=null`이면 이벤트 꺼짐(버튼 숨김·srMode 꺼짐). 시작: SR_START에 시각(또는 0), 끝: SR_END. 공지(pb_notice)도 아직 안 올림. srOn()/srMode().
 - 켜면: 선택창은 초희귀(gr 's')만 보임(위에 '챌린지 끄기' 줄), startMatch에서 초희귀 아니면 막고 선택창으로, pickRoster 봇·AI 파티도 초희귀만. 켤 때 지금 포켓몬이 초희귀가 아니면 보유 초희귀 중 트로피 높은 걸로 바꿈(초희귀 0마리면 못 켬).
 - 보상: endMatch에서 srMode && 내 포켓몬 초희귀 && (팀전 승리 || 쇼다운 1등) → 토큰 10~50 (G.result.srt, 결과 화면 표시). 훈련장 제외.
 - 교환(openSr, SR_SHOP): 500 → 초희귀 프레임(fr_srare, FRAMES 'srare', CSS .fr-srare 파란 테두리+도트 다이아) / 1000 → 육군 아미 타이거 어흥염 스킨(sk_incineroar_army). 각 1번.
