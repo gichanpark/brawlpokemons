@@ -649,7 +649,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.22.21';
+const VER='1.22.22';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1477,7 +1477,7 @@ function updBall(dt){if(G.over)return;const B=G.ball,m=G.map;
     else{endMatch('ball',a>b?'win':a<b?'lose':'draw');return;}}}
   if(B.npT>0)B.npT-=dt;
   if(B.z>0||B.vz>0){B.vz-=900*dt;B.z+=B.vz*dt;if(B.z<=0){B.z=0;if(B.vz<-120){B.vz=-B.vz*.45;sfx('ui',B.x,B.y);parts(B.x,B.y+8,4,'#e7e5e4',70,.3,4);}else B.vz=0;}}
-  if(B.h){if(!B.h.alive){B.h=null;B.vx=B.vy=0;}else{const e=B.h;B.x=e.x+(e.fx||1)*16;B.y=e.y+8;B.z=0;B.sk=0;
+  if(B.h){if(!B.h.alive){B.h=null;B.vx=B.vy=0;}else{const e=B.h;B.x=e.x+(e.fx||1)*24;B.y=e.y+16;B.z=0;B.sk=0;
     if(Math.abs(e.y/T-m.R/2)<2.5){if(e.team===1&&Math.min(e.x,B.x)<T*.8){B.kk=e;B.x=Math.min(B.x,T*.4);ballGoal(1);return;}if(e.team===0&&Math.max(e.x,B.x)>m.C*T-T*.8){B.kk=e;B.x=Math.max(B.x,m.C*T-T*.4);ballGoal(0);return;}}
     return;}}
   const r=13,sp=Math.hypot(B.vx,B.vy);
@@ -1512,6 +1512,7 @@ function drawBall(){const B=G.ball;if(!B||G.goalT>0)return;
   if(B.tr)B.tr.forEach((q,i)=>{const k=(i+1)/B.tr.length,sz=Math.round((B.sk?10:6)*k/2)*2;ctx.globalAlpha=.25+.55*k;ctx.fillStyle=B.sk?(i%2?'#f97316':'#fde047'):'rgba(255,255,255,.8)';ctx.fillRect(Math.round(q[0])-sz/2,Math.round(q[1])-sz/2,sz,sz);});ctx.globalAlpha=1;
   const sw=Math.max(5,18-z/26);ctx.fillStyle='rgba(0,0,0,'+(.15+.2*sw/18).toFixed(2)+')';ctx.beginPath();ctx.ellipse(B.x,B.y+10,sw,sw*.42,0,0,7);ctx.fill();
   ctx.save();ctx.translate(x,y+Math.round((1-sqy)*r));ctx.scale(sqx,sqy);ctx.rotate(Math.round((B.rot||0)/BBR)*BBR);
+  if(B.h){const tc=B.h.team===P.team?'#60a5fa':'#f87171',on=Math.floor(G.t*6)%2;ctx.fillStyle=on?'#fff':tc;ctx.beginPath();ctx.arc(0,0,r+7,0,7);ctx.fill();}
   ctx.fillStyle='#111';ctx.beginPath();ctx.arc(0,0,r+3,0,7);ctx.fill();
   if(BALLIMG.ok){ctx.imageSmoothingEnabled=false;ctx.drawImage(BALLIMG,-r,-r,r*2,r*2);}else{ctx.fillStyle='#ef4444';ctx.beginPath();ctx.arc(0,0,r,Math.PI,0);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(0,0,r,0,Math.PI);ctx.fill();}
   ctx.restore();
@@ -2883,7 +2884,7 @@ function render(){
   for(const e of G.ents)if(e.ctab&&e.ch.k==='steve')L.push({k:'ct',e,y:e.ctab.y+T*.25});
   for(const e of G.ents)if(e.alive&&visibleTo(e,P.team))L.push({k:'e',e,y:e.y+e.r*.5});
   if(G.crumb){G.crumb=G.crumb.filter(c=>G.t-c.t0<.7);for(const c of G.crumb)L.push({k:'cr',c,y:c.ty*T+T});}
-  if(G.mode==='ball'&&G.ball&&(!G.ball.h||visibleTo(G.ball.h,P.team)))L.push({k:'b',y:G.ball.y+12});
+  if(G.mode==='ball'&&G.ball&&(!G.ball.h||visibleTo(G.ball.h,P.team)))L.push({k:'b',y:G.ball.h?G.ball.h.y+G.ball.h.r*.5+.5:G.ball.y+12});
   L.sort((a,b)=>a.y-b.y);
   G.dbgN=0;for(const o of L){if(o.k==='cr'){drawCrumble(o.c);continue;}if(o.k==='b'){drawBall();continue;}if(o.k==='ct'){drawCTab(o.e);continue;}if(o.k==='e'){drawEntSprite(o.e);G.dbgN++;}else if(o.k===1)drawWall(o.tx,o.ty);else drawBox(o.tx,o.ty);}
   drawSwings();drawEbeams();drawTnts();
