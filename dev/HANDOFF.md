@@ -367,3 +367,10 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 
 ## (서버) pb_ping 고장 수정 (11/28)
 - pb_ping 끝의 `select count(*) from pb_friend where b=me` 가 변수 b(pb_users)와 컬럼 b가 겹쳐 매번 에러 → 11/27 08:49 KST쯤부터 핑 전부 실패(접속 표시·초대·친구 요청 알림·정지 즉시 반영·서버 시각 안 됨). `pb_friend fq where fq.b=me` 로 수정. plpgsql 변수명 b 쓰는 함수에서 테이블 컬럼 b 쓸 때 별칭 필수.
+
+## v1.21.33 오류·이상 상태 자동 기록
+- 증상 제보(폰, AI 혼자 판): 갑자기 다른 포켓몬·체력바가 전부 안 보이고 맵과 내 포켓몬만 보임. 판은 계속 진행(킬 피드·투사체는 보임). PC 헤드리스로는 재현 안 됨.
+- 테이블 pb_err(at, username, ver, ua(+화면크기@DPR), kind, d) 14일 보관, RPC pb_err_log(token|null, ver, kind, d, ua) (분당 전체 60, 유저당 시간당 30).
+- 클라: errLog(kind,d) — 같은 종류는 세션당 1번. kind: 'loop'(루프 try/catch 예외), 'onerror', 'reject', 'ghost'.
+- ghost 감지 ghostChk: 판 중 1초마다, 내 주변 7타일에 살아 있는 포켓몬 2마리 이상인데 render가 그린 엔티티 수(G.dbgN, render의 L 루프에서 셈)가 1 이하인 상태가 3초 연속이거나 좌표가 NaN이면 ghostSnap(엔티티별 alive/좌표/invisT/digT/stealth/bush/visibleTo/이미지 등) 전송. 판마다 1번.
+- 확인: `select * from pb_err order by at desc`

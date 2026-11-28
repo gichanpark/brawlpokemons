@@ -616,7 +616,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.32';
+const VER='1.21.33';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -2814,7 +2814,7 @@ function render(){
   if(G.crumb){G.crumb=G.crumb.filter(c=>G.t-c.t0<.7);for(const c of G.crumb)L.push({k:'cr',c,y:c.ty*T+T});}
   if(G.mode==='ball'&&G.ball&&(!G.ball.h||visibleTo(G.ball.h,P.team)))L.push({k:'b',y:G.ball.y+12});
   L.sort((a,b)=>a.y-b.y);
-  for(const o of L){if(o.k==='cr'){drawCrumble(o.c);continue;}if(o.k==='b'){drawBall();continue;}if(o.k==='ct'){drawCTab(o.e);continue;}if(o.k==='e')drawEntSprite(o.e);else if(o.k===1)drawWall(o.tx,o.ty);else drawBox(o.tx,o.ty);}
+  G.dbgN=0;for(const o of L){if(o.k==='cr'){drawCrumble(o.c);continue;}if(o.k==='b'){drawBall();continue;}if(o.k==='ct'){drawCTab(o.e);continue;}if(o.k==='e'){drawEntSprite(o.e);G.dbgN++;}else if(o.k===1)drawWall(o.tx,o.ty);else drawBox(o.tx,o.ty);}
   drawSwings();drawEbeams();drawTnts();
   for(let ty=y0;ty<=y1;ty++)for(let tx=x0;tx<=x1;tx++)if(m.g[ty*m.C+tx]===2){
     const cx=(tx+.5)*T,cy=(ty+.5)*T;let near=false;
@@ -5439,12 +5439,28 @@ async function adminPanel(target){
 
 $('#bShBack').onclick=()=>{refreshMenu();showScr('menu');};
 document.querySelectorAll('img[data-ico]').forEach(im=>im.src=ICO[im.dataset.ico]);
+/* ---------- 오류·이상 상태 기록 (pb_err) ---------- */
+const ERRS={};
+function errLog(kind,d){const key=kind+'|'+((d&&d.m)||'');if(ERRS[key]||Object.keys(ERRS).length>20)return;ERRS[key]=1;
+  try{rpc('pb_err_log',{p_token:(typeof ACC!=='undefined'&&ACC&&ACC.token)||null,p_ver:VER,p_kind:kind,p_d:d,p_ua:navigator.userAgent+' '+innerWidth+'x'+innerHeight+'@'+(devicePixelRatio||1)}).catch(()=>{});}catch(e){}}
+addEventListener('error',ev=>errLog('onerror',{m:String(ev.message),s:String(ev.error&&ev.error.stack||ev.filename+':'+ev.lineno).slice(0,1500)}));
+addEventListener('unhandledrejection',ev=>{const r=ev.reason;if(r&&/fetch|network|Load failed/i.test(String(r.message||r)))return;errLog('reject',{m:String(r&&r.message||r).slice(0,300),s:String(r&&r.stack||'').slice(0,1500)});});
+function ghostSnap(){const r=v=>v==null?v:Math.round(v*100)/100;
+  return {mode:G.mode,t:r(G.t),dbgN:G.dbgN,W,H,DPR,S:r(VIEW.S),ox:VIEW.ox,oy:VIEW.oy,cam:[r(G.cam.x),r(G.cam.y)],fps:r(G.fpsA),
+    P:{k:P.ch.k,tm:P.team,x:r(P.x),y:r(P.y)},
+    E:G.ents.slice(0,14).map(e=>({k:e.ch.k,tm:e.team,al:e.alive,x:r(e.x),y:r(e.y),hp:r(e.hp),iv:r(e.invisT),dg:r(e.digT),st:e.stealthOn,rv:r(e.reveal),b:inBush(e),vis:visibleTo(e,P.team),dvk:e.dvk,sf:e.safe,lp:!!e.leap,sk:e.skin||0,img:(()=>{try{const im=entImg(e);return im?[!!im.ok,im.width|0]:0;}catch(x){return 'err';}})()}))};}
+function ghostChk(dt){if(!G||G.over||G.tour>0||!P||!P.alive||G.intro>0||G.ghSent)return;
+  G.fpsA=(G.fpsA||60)*.95+(dt>0?1/dt:60)*.05;G.ghT=(G.ghT||0)+dt;if(G.ghT<1)return;G.ghT=0;
+  const bad=G.ents.some(e=>e.alive&&(!isFinite(e.x)||!isFinite(e.y)));
+  const near=G.ents.filter(e=>e!==P&&e.alive&&!e.safe&&Math.hypot(e.x-P.x,e.y-P.y)<7*T).length;
+  G.ghN=(bad||(near>=2&&(G.dbgN||0)<=1))?(G.ghN||0)+1:0;
+  if(G.ghN>=3){G.ghSent=1;let d;try{d=ghostSnap();}catch(x){d={m:'snap fail '+x.message};}d.bad=bad;d.near=near;errLog('ghost',d);}}
 /* ---------- 루프 ---------- */
 let last=performance.now();
 function loop(now){
   requestAnimationFrame(loop);
   const dt=Math.min(.05,(now-last)/1000);last=now;
-  if(G){try{if(NET.on&&!NET.host)clientUpdate(dt);else update(dt);if(NET.on&&NET.host&&!(G.over&&G.shown))netHostTick(dt);render();}catch(err){console.error(err);}}
+  if(G){try{if(NET.on&&!NET.host)clientUpdate(dt);else update(dt);if(NET.on&&NET.host&&!(G.over&&G.shown))netHostTick(dt);render();ghostChk(dt);}catch(err){console.error(err);errLog('loop',{m:String(err&&err.message),s:String(err&&err.stack||'').slice(0,1500),mode:G.mode,ck:P&&P.ch&&P.ch.k});}}
 }
 requestAnimationFrame(loop);
 </script>
