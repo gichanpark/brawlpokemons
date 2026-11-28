@@ -306,6 +306,7 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .rk-season .ss-no{font-size:20px;line-height:1;text-shadow:2px 2px 0 #111}.rk-season .ss-c.p1 .ss-no{color:#facc15}.rk-season .ss-c.p2 .ss-no{color:#e2e8f0}.rk-season .ss-c.p3 .ss-no{color:#d08a4e}
 .rk-season .ss-dots{display:flex;gap:4px;justify-content:center;margin-top:4px}.rk-season .ss-dots i{width:6px;height:6px;background:#475569;border:1px solid #111}.rk-season .ss-dots i.on{background:#fde047}
 @keyframes ssin{0%{transform:scale(.6);opacity:0}100%{transform:none;opacity:1}}
+.lb-tm{background:#ca8a04!important;box-shadow:inset 0 -6px 0 #854d0e,inset 0 3px 0 #fef08a,0 5px 0 #111!important}
 .lb-sr{background:#2563eb!important;box-shadow:inset 0 -6px 0 #1e40af,inset 0 3px 0 #bfdbfe,0 5px 0 #111!important}.lb-sr.on{animation:srpulse 1s steps(2) infinite}@keyframes srpulse{50%{outline:3px solid #93c5fd}}
 .sr-tg{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0;font-size:12px}.sr-tg .btn.on{background:#2563eb;color:#fff}
 .sr-note{font-size:11px;background:#1e3a8a;border:3px solid #111;padding:4px 8px;margin:0 0 6px;text-align:center}
@@ -550,6 +551,7 @@ select.minput{width:auto}
     <button class="lb-sq" id="bBrawlers"><img id="lbSqImg" class="px" alt=""><span>포켓몬</span></button>
     <button class="lb-sq" id="bShop" style="background:#f97316;box-shadow:inset 0 -6px 0 #c2410c,inset 0 3px 0 #fed7aa,0 5px 0 #111"><img class="ico px big" data-ico="gemc" alt=""><span>상점</span></button>
     <button class="lb-sq lb-ev" id="bEvent"><img class="ico px big" data-ico="lotto" alt=""><span>이벤트</span><i class="sqb" style="background:#facc15;color:#111">로또</i></button>
+    <button class="lb-sq lb-tm" id="bTm" style="display:none"><img class="ico px big" data-ico="trophy" alt=""><span>트로피 마켓</span><i class="sqb" id="tmBadge" style="background:#facc15;color:#111">0</i></button>
     <button class="lb-sq lb-sr" id="bSr" style="display:none"><img class="px big" id="srIco" alt=""><span>초희귀</span><i class="sqb" id="srBadge" style="background:#60a5fa;color:#111">0</i></button>
     <button class="lb-sq lb-rs" id="bRescue"><img class="px big" id="rsIco" alt=""><span>뮤츠 구출</span><i class="sqb" id="rsBadge" style="background:#94a3b8;color:#111">0</i></button>
   </div>
@@ -638,7 +640,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.22.7';
+const VER='1.22.8';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -3396,7 +3398,7 @@ function refreshMenu(){try{renderAllies();}catch(e){}try{invBadge();}catch(e){}
   $('#selTro').textContent=tro(c.k);
   const tt=totTro();$('#totTro').textContent=tt;$('#lbCoin').textContent=SAVE.coins;$('#lbGem').textContent=SAVE.gems||0;
   $('#lbName').innerHTML=esc(SAVE.nick||ACC.user||SAVE.name)+(ACC.admin?' <span class="adm">관리자</span>':'');$('#lbAva').src=avaSrc();{const w=$('#lbAvaW');w.style.setProperty('--abg',abg(SAVE.ava)||'#0d0a1f');w.className='ava fr-'+(SAVE.frm||'basic')+(SAVE.ava&&(SAVE.ava.t==='img'&&PIMG[SAVE.ava.i]||SAVE.ava.t==='por'&&owns(SAVE.ava.k))?' ph':'');}$('#lbSqImg').src=POR[c.id];
-  {const si=$('#stkIco');if(si&&!si.src&&window.STK_ICO)si.src=STK_ICO;}{const rbt=$('#bRescue');if(rbt)rbt.style.display=rescueOn()?'':'none';}{const b=$('#bSr');if(b){b.style.display=srOn()?'':'none';b.classList.toggle('on',srMode());}const ic=$('#srIco');if(ic&&!ic.src)ic.src=SRT_ICO;const bd=$('#srBadge');if(bd){const n=SAVE.srt||0;bd.textContent=srMode()?'ON':n>=1000?Math.floor(n/100)/10+'k':String(n);}}{const ri=$('#rsIco');if(ri&&!ri.src)ri.src=SPR.armewtwo;const rb=$('#rsBadge');if(rb){const n=SAVE.ashard||0,got=(SAVE.own||[]).includes('armewtwo');rb.textContent=got?'✓':Math.min(100,Math.floor(n/10))+'%';}}
+  {const si=$('#stkIco');if(si&&!si.src&&window.STK_ICO)si.src=STK_ICO;}{const rbt=$('#bRescue');if(rbt)rbt.style.display=rescueOn()?'':'none';}{const b=$('#bTm');if(b){b.style.display=tmOn()?'':'none';const bd=$('#tmBadge');if(bd){const n=tmPts();bd.textContent=n>=1000?Math.floor(n/100)/10+'k':String(n);}}seasonConvMsg();}{const b=$('#bSr');if(b){b.style.display=srOn()?'':'none';b.classList.toggle('on',srMode());}const ic=$('#srIco');if(ic&&!ic.src)ic.src=SRT_ICO;const bd=$('#srBadge');if(bd){const n=SAVE.srt||0;bd.textContent=srMode()?'ON':n>=1000?Math.floor(n/100)/10+'k':String(n);}}{const ri=$('#rsIco');if(ri&&!ri.src)ri.src=SPR.armewtwo;const rb=$('#rsBadge');if(rb){const n=SAVE.ashard||0,got=(SAVE.own||[]).includes('armewtwo');rb.textContent=got?'✓':Math.min(100,Math.floor(n/10))+'%';}}
   {const ls=$('#lpSkins');if(ls&&!ls.dataset.ok){ls.dataset.ok=1;const L=['galaxy','aurora','plat'].filter(id=>SKINX['eternatus_'+id]);let i=0;
     ls.innerHTML=`<div class="lps"><img class="px" alt=""><i></i></div>`;const im=ls.querySelector('img'),lb=ls.querySelector('i');
     const show=()=>{const id=L[i%L.length],t=(THEMES.eternatus||[]).find(x=>x.id===id);im.src=SKINX['eternatus_'+id].spr;lb.textContent=t?t.nm:'';im.classList.remove('sw');void im.offsetWidth;im.classList.add('sw');i++;};
@@ -3427,6 +3429,7 @@ $('#bRoad').onclick=()=>openPass();
 $('#bEvent').onclick=()=>{sfx('ui');openLotto();};
 $('#bRescue').onclick=()=>{sfx('ui');openRescue();};
 $('#bSr').onclick=()=>{sfx('ui');openSr();};
+$('#bTm').onclick=()=>{sfx('ui');openTm();};
 $('#bStock').onclick=()=>{sfx('ui');stockOpen('menu');};
 
 /* 매치메이킹 + VS 화면 */
@@ -5143,7 +5146,7 @@ function serverPush(){if(!ACC.token)return;clearTimeout(saveTimer);saveTimer=nul
     let ch=applyGrant(r);if(applyTake(r))ch=true;if(r.cmd&&r.cmd.slotUnban&&SAVE.slotBan){delete SAVE.slotBan;ch=true;toast('관리자가 슬롯머신 출입 금지를 풀어줬어요!');}if(ch)save();}).catch(()=>{clearTimeout(saveTimer);saveTimer=setTimeout(serverPush,5000);});}
 function adoptServer(sv){const L=SAVE,N=Object.assign(DEF_SAVE(),sv);
   if(L.own&&N.own)L.own.forEach(k=>{if(!N.own.includes(k)&&CH.some(c=>c.k===k))N.own.push(k);});else if(L.own&&!N.own)N.own=L.own.slice();
-  for(const f of ['lv','tro'])if(L[f]){N[f]=N[f]||{};for(const k of Object.keys(L[f]))N[f][k]=Math.max(N[f][k]||0,L[f][k]||0);}
+  for(const f of ['lv','tro'])if(L[f]&&!(f==='tro'&&(N.tmS||1)>(L.tmS||1))){N[f]=N[f]||{};for(const k of Object.keys(L[f]))N[f][k]=Math.max(N[f][k]||0,L[f][k]||0);}
   if(L.frOwn)N.frOwn=[...new Set([...(N.frOwn||[]),...L.frOwn])];if(L.shy)N.shy=[...new Set([...(N.shy||[]),...L.shy])];if(L.skn)N.skn=[...new Set([...(N.skn||[]),...L.skn])];if(L.sk&&!N.sk)N.sk=L.sk;  N.snd=L.snd;N.acct=ACC.user;SAVE=N;cleanSave();save();try{if(!G||G.over)refreshMenu();}catch(e){}}
 function flushSave(){if(!ACC.token||!SAVE.dirty)return;clearTimeout(saveTimer);saveTimer=null;try{fetch(API+'pb_save',{method:'POST',keepalive:true,headers:{apikey:APIKEY,'Content-Type':'application/json'},body:JSON.stringify({p_token:ACC.token,p_save:saveBody()})});}catch(e){}}
 addEventListener('pagehide',flushSave);document.addEventListener('visibilitychange',()=>{if(document.hidden)flushSave();else if(ACC.token&&SAVE.dirty)serverPush();});
@@ -5213,6 +5216,29 @@ const EV_END=Date.parse('2026-12-01T00:00:00+09:00');
 function evOn(){return srvNow()<EV_END;}
 const SEASON_SHOW_END=Date.parse('2026-12-08T00:00:00+09:00');
 function otherAva(a,sel){try{if(a&&a.t==='img'&&PIMG[a.i])return [PIMG[a.i],1];if(a&&a.t==='por'&&a.k)return [formPor(a.k,a.f||0)||POR[chOf(a.k).id],1];if(a&&a.t==='pk'&&a.k)return [SPR[chOf(a.k).id],0];return [SPR[chOf(sel||'pikachu').id],0];}catch(e){return [SPR[25],0];}}
+/* ---------- 트로피 마켓 (시즌 끝난 뒤 일주일): 쓴 트로피는 SAVE.tmSpent 에만 쌓이고 포켓몬 트로피는 그대로.
+   12/8 새 시즌: 서버 pb_season2_reset 이 남은 트로피(합계 - tmSpent) × 20 금구슬을 우편으로 주고 tro 초기화(tmS=2, tmConv=남은 트로피) ---------- */
+const TM_OPEN=Date.parse('2026-12-01T00:00:00+09:00'),TM_CLOSE=Date.parse('2026-12-08T00:00:00+09:00'),TM_RATE=20;
+const tmOn=()=>{const n=srvNow();return n>=TM_OPEN&&n<TM_CLOSE&&(SAVE.tmS||1)<2;};
+const tmPts=()=>Math.max(0,totTro()-(SAVE.tmSpent||0));
+/* 마켓 물건(가격 = 트로피). ltd = 마켓 한정 (내용 미정) */
+const TM_SHOP=[{id:'box_poke',cost:20},{id:'box_great',cost:50},{id:'box_ultra',cost:100},{id:'box_master',cost:200},{id:'scout',cost:300},{id:'maxlv',cost:400},{id:'pull10',cost:600},
+  {id:'sel_e',cost:300},{id:'sel_m',cost:800},{id:'sel_l',cost:1500},{id:'c1000',nm:'금구슬 1000',cost:30,c:1000},{id:'g50',nm:'혜성조각 50',cost:40,g:50}];
+function tmLeft(){const t=Math.max(0,TM_CLOSE-srvNow()),d=Math.floor(t/864e5),h=Math.floor(t%864e5/36e5),m=Math.floor(t%36e5/6e4);return d?`${d}일 ${h}시간`:h?`${h}시간 ${m}분`:`${m}분`;}
+function openTm(){if(!tmOn()){toast('트로피 마켓이 열려 있지 않아요');return;}
+  const draw=()=>{const n=tmPts();$('#mbox').innerHTML=`<h2>트로피 마켓</h2><div style="font-size:11px;line-height:1.7;margin-bottom:6px">시즌 1 동안 모은 트로피로 물건을 살 수 있어요. 써도 포켓몬 트로피와 랭킹은 그대로예요.<br><b style="color:#fde68a">12월 8일 0시에 새 시즌이 시작되면 남은 트로피는 1개당 금구슬 ${TM_RATE}개로 바뀌어요</b> · 남은 시간 ${tmLeft()}</div>
+    <div class="rs-bar"><i style="width:100%;background:#ca8a04;box-shadow:inset 0 -4px 0 #854d0e"></i><span><img class="ico px" data-ico="trophy" src="${ICO.trophy}" style="height:12px"> 쓸 수 있는 트로피 ${n.toLocaleString()} (금구슬로 바꾸면 ${(n*TM_RATE).toLocaleString()})</span></div>
+    <div class="rs-shop">${TM_SHOP.map((it,i)=>{const nm=it.nm||(ITEMS[it.id]?ITEMS[it.id].nm:it.id),pic=it.c?`<img class="ico" src="${ICO.coin}">`:it.g?`<img class="ico" src="${ICO.gemc}">`:itemPic(it.id);
+      return `<div class="rs-it">${pic}<b>${nm}</b><button class="btn sm" data-tmb="${i}" ${n<it.cost?'disabled':''}><img class="ico px" src="${ICO.trophy}" style="height:12px;vertical-align:-2px"> ${it.cost}</button></div>`;}).join('')}</div>
+    <div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`;$('#mbox').classList.add('wide');
+    document.querySelectorAll('[data-tmb]').forEach(b=>b.onclick=()=>{const it=TM_SHOP[+b.dataset.tmb];if(!tmOn()||tmPts()<it.cost)return;SAVE.tmSpent=(SAVE.tmSpent||0)+it.cost;
+      if(it.c)SAVE.coins=(SAVE.coins||0)+it.c;else if(it.g)SAVE.gems=(SAVE.gems||0)+it.g;else invAdd(it.id,1);save();refreshMenu();invBadge();sfx('cube');toast((it.nm||ITEMS[it.id].nm)+' 샀어요!'+(it.c||it.g?'':' 가방에 넣었어요'));draw();});};
+  draw();$('#modal').classList.add('on');}
+/* 새 시즌 환산: 계정은 서버가 처리(우편), 게스트는 여기서 직접 */
+function seasonConvMsg(){if(srvNow()<TM_CLOSE)return;
+  if(!ACC.token&&(SAVE.tmS||1)<2){const n=tmPts();SAVE.coins=(SAVE.coins||0)+n*TM_RATE;SAVE.tro={};SAVE.tmSpent=0;SAVE.tmS=2;SAVE.tmConv=n;save();setTimeout(()=>{try{refreshMenu();}catch(e){}},0);}
+  if(SAVE.tmS===2&&!SAVE.tmMsg){SAVE.tmMsg=1;save();const n=SAVE.tmConv||0;
+    setTimeout(()=>modal(`<h2>시즌 2 시작!</h2><div style="font-size:12px;line-height:1.8">시즌 1 트로피가 모두 초기화됐어요.<br>남은 트로피 <b>${n.toLocaleString()}</b>개 → <img class="ico" src="${ICO.coin}"> <b>${(n*TM_RATE).toLocaleString()}</b> 금구슬${ACC.token?'을 우편으로 보냈어요':'을 받았어요'}!</div><div class="mrow"><button class="btn sm" onclick="closeModal()">확인</button></div>`),600);}}
 /* ---------- 시즌 1 결과 발표: 끝나면 3등 → 2등 → 1등 번갈아 보여줌 (서버 스냅샷 pb_season_top) ---------- */
 let SEASON=null,seasonI=0,seasonTm=null,seasonT=0;
 async function seasonShow(){const el=$('#rkSeason');if(!el)return;const now=srvNow();
