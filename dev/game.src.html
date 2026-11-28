@@ -647,7 +647,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.22.10';
+const VER='1.22.11';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1055,7 +1055,7 @@ const IMGS={};for(const k in SPRS){const im=new Image();im.onload=()=>{im.ok=1};
 const IMGSF={};for(const k in SPRSF){const im=new Image();im.onload=()=>{im.ok=1};im.src=SPRSF[k];IMGSF[k]=im;}
 const hasShy=k=>!!SPRS[k]&&(SAVE.shy||[]).includes(k);
 /* 테마 스킨: SKINX['k_id']={spr,por,gmax}, 보유 SAVE.skn=['k_id'], 장착 SAVE.sk[k]='s'(이로치,예전 값 1)|테마id */
-const THEMES={alakazam:[{id:'magic',nm:'마술사 후딘',pass:1,ev:'초희귀 챌린지'}],lapras:[{id:'santa',nm:'산타 라프라스',pass:1,ev:'초희귀 챌린지'}],jolteon:[{id:'cyber',nm:'사이버 쥬피썬더',pass:1,ev:'초희귀 챌린지'}],umbreon:[{id:'vamp',nm:'흡혈귀 블래키',pass:1,ev:'초희귀 챌린지'}],primarina:[{id:'pirate',nm:'해적 갑판장 누리레느',pass:1,ev:'초희귀 챌린지'}],blastoise:[{id:'pirate',nm:'해적선장 거북왕',fx:{palO:['#eab308','#fef08a','#3b200c'],col:'#eab308'}}],cinderace:[{id:'spurs',nm:'토트넘 에이스번',ball:1},{id:'korea',nm:'국가대표 에이스번',ball:1}],hlil:[{id:'dongbaek',nm:'동백꽃 필 무렵',fx:{palO:['#facc15','#fef9c3','#9a3412'],col:'#facc15',edge:'#16181c',petal:1}}],giratina:[{id:'yako',nm:'백귀야행 기라티나',pass:1,fx:{palO:['#dc2626','#fecaca','#1a0505'],col:'#dc2626',yako:1}}],
+const THEMES={greninja:[{id:'s1',nm:'진홍 시즌 개굴닌자',pass:1,ev:'트로피 마켓(시즌 1)'}],garchomp:[{id:'s1',nm:'진홍 시즌 한카리아스',pass:1,ev:'트로피 마켓(시즌 1)'}],gardevoir:[{id:'s1',nm:'진홍 시즌 가디안',pass:1,ev:'트로피 마켓(시즌 1)'}],charizard:[{id:'s1',nm:'진홍 시즌 리자몽',pass:1,ev:'트로피 마켓(시즌 1)'}],alakazam:[{id:'magic',nm:'마술사 후딘',pass:1,ev:'초희귀 챌린지'}],lapras:[{id:'santa',nm:'산타 라프라스',pass:1,ev:'초희귀 챌린지'}],jolteon:[{id:'cyber',nm:'사이버 쥬피썬더',pass:1,ev:'초희귀 챌린지'}],umbreon:[{id:'vamp',nm:'흡혈귀 블래키',pass:1,ev:'초희귀 챌린지'}],primarina:[{id:'pirate',nm:'해적 갑판장 누리레느',pass:1,ev:'초희귀 챌린지'}],blastoise:[{id:'pirate',nm:'해적선장 거북왕',fx:{palO:['#eab308','#fef08a','#3b200c'],col:'#eab308'}}],cinderace:[{id:'spurs',nm:'토트넘 에이스번',ball:1},{id:'korea',nm:'국가대표 에이스번',ball:1}],hlil:[{id:'dongbaek',nm:'동백꽃 필 무렵',fx:{palO:['#facc15','#fef9c3','#9a3412'],col:'#facc15',edge:'#16181c',petal:1}}],giratina:[{id:'yako',nm:'백귀야행 기라티나',pass:1,fx:{palO:['#dc2626','#fecaca','#1a0505'],col:'#dc2626',yako:1}}],
   mewtwo:[{id:'obsid',nm:'흑요석 뮤츠',fx:{palO:['#d946ef','#fae8ff','#3a0d3d'],col:'#d946ef'}}],
   rayquaza:[{id:'sky',nm:'창공 레쿠쟈',fx:{palO:['#7dd3fc','#f0f9ff','#0c2d4a'],col:'#7dd3fc'}}],
   kyurem:[{id:'onyx',nm:'흑빙 큐레무',fx:{palO:['#38bdf8','#e0f2fe','#06283d'],col:'#38bdf8'}}],
@@ -5233,7 +5233,7 @@ const tmPts=()=>Math.max(0,totTro());
 function spendTro(n){SAVE.tro=SAVE.tro||{};for(let i=0;i<n;i++){let bk=null,bv=0;for(const k in SAVE.tro)if((SAVE.tro[k]||0)>bv){bv=SAVE.tro[k];bk=k;}if(!bk)break;SAVE.tro[bk]=bv-1;}SAVE.tmSpent=(SAVE.tmSpent||0)+n;}
 /* 마켓 물건(가격 = 트로피). ltd = 마켓 한정 (내용 미정) */
 const TM_SHOP=[{id:'box_poke',cost:20},{id:'box_great',cost:50},{id:'box_ultra',cost:100},{id:'box_master',cost:200},{id:'scout',cost:300},{id:'maxlv',cost:400},{id:'pull10',cost:600},
-  {id:'fr_s1red',cost:500,ltd:1,got:()=>(SAVE.frOwn||[]).includes('s1red')},{id:'sel_e',cost:300},{id:'sel_m',cost:800},{id:'sel_l',cost:1500},{id:'c1000',nm:'금구슬 1000',cost:30,c:1000},{id:'g50',nm:'혜성조각 50',cost:40,g:50}];
+  {id:'fr_s1red',cost:500,ltd:1,got:()=>(SAVE.frOwn||[]).includes('s1red')},{id:'sk_greninja_s1',cost:400,ltd:1,got:()=>hasSkin('greninja','s1')},{id:'sk_garchomp_s1',cost:400,ltd:1,got:()=>hasSkin('garchomp','s1')},{id:'sk_gardevoir_s1',cost:400,ltd:1,got:()=>hasSkin('gardevoir','s1')},{id:'sk_charizard_s1',cost:400,ltd:1,got:()=>hasSkin('charizard','s1')},{id:'sel_e',cost:300},{id:'sel_m',cost:800},{id:'sel_l',cost:1500},{id:'c1000',nm:'금구슬 1000',cost:30,c:1000},{id:'g50',nm:'혜성조각 50',cost:40,g:50}];
 /* 트로피 숫자가 천천히 줄어드는 연출 */
 function tmAnim(a,b){const t0=performance.now(),D=Math.min(1600,300+(a-b)*2);const f=()=>{const el=$('#tmNum'),k=Math.min(1,(performance.now()-t0)/D);if(el)el.textContent=Math.round(a+(b-a)*k).toLocaleString();if(k<1)requestAnimationFrame(f);};requestAnimationFrame(f);}
 function tmLeft(){const t=Math.max(0,TM_CLOSE-srvNow()),d=Math.floor(t/864e5),h=Math.floor(t%864e5/36e5),m=Math.floor(t%36e5/6e4);return d?`${d}일 ${h}시간`:h?`${h}시간 ${m}분`:`${m}분`;}
