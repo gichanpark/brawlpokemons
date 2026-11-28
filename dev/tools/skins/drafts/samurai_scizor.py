@@ -57,4 +57,5 @@ patch(6,12,["oyYYo","okRRo","oCCCo","okRRo","_ooo_"])
 patch(16,13,["oYYGo","oRRKo","oCCCo","oRRKo","_ooo_"])
 # 날개 → 등에 멘 칼: 금 코등이 + 손잡이
 for (x,y,c) in [(19,10,'Y'),(18,11,'G'),(20,9,'w')]:q[x,y+TOP]=H(PAL[c])
-im.save(sys.argv[2])
+sys.path.insert(0,__import__('os').path.dirname(__file__));import pkoutline
+pkoutline.fix(im,lambda c:c[:3] in [(0x1a,0x0f,0x12),(0x31,0x31,0x31)],orig=src,oy=TOP).save(sys.argv[2])

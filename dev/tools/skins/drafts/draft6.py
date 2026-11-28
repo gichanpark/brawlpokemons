@@ -2,7 +2,7 @@
 import colorsys,sys
 from PIL import Image
 H=lambda s:tuple(int(s[i:i+2],16) for i in (1,3,5))+(255,)
-OL='#141018'
+OL='#313131'
 def cls(p):
     if p[3]<128:return '.'
     h,l,s=colorsys.rgb_to_hls(*[v/255 for v in p[:3]]);Hh=h*360
@@ -19,6 +19,7 @@ def rp(R,t):t=max(0,min(.999,t));return R[int(t*len(R))]
 class S:
     def __init__(s,src,top=0,right=0):
         b=Image.open(src).convert('RGBA');s.ow,s.oh=b.size
+        s.src=b
         s.im=Image.new('RGBA',(b.width+right,b.height+top));s.im.paste(b,(0,top));s.oy=top;s.q=s.im.load();s.W,s.H=s.im.size
         s.c=[[cls(s.q[x,y]) for y in range(s.H)] for x in range(s.W)];s.new=set()
     def map(s,f):
@@ -54,7 +55,7 @@ s.P(10,12,'#dc2626');s.P(11,12,'#7f1d1d');s.P(12,12,'#dc2626');s.P(11,13,'#f1f5f
 s.rows({-4:(12,16),-3:(12,16),-2:(12,16),-1:(12,16),0:(12,16)},'#0f0f18')            # 실크햇
 s.rows({-1:(12,16)},'#dc2626');s.P(13,-4,'#2c2c40');s.P(13,-3,'#2c2c40')
 s.rows({1:(10,18)},'#000000')
-s.outline();out['magic']=s.im
+s.outline();out['magic']=(s.im,s.src,s.oy)
 # 2 산타 라프라스 -------------------------------------------------
 s=S(D+'/lapras.png',top=5)
 s.map(lambda x,y,c,l: rp(['#7f1d1d','#b91c1c','#dc2626','#f87171'],(l-.35)/.55) if c in 'gW' and x>=12 and 6<=y<=13 else None)
@@ -63,14 +64,14 @@ for x in range(13,20):s.P(x,10,'#facc15','fg')
 s.P(15,6,'#facc15');s.P(17,6,'#facc15');s.P(16,7,'#fde68a')
 s.rows({0:(3,8),-1:(3,7),-2:(2,6),-3:(1,4),-4:(1,2)},'#dc2626');s.P(5,-1,'#b91c1c');s.P(4,-2,'#b91c1c')
 s.rows({1:(2,9)},'#f8fafc');s.P(0,-5,'#f8fafc');s.P(1,-5,'#f8fafc');s.P(0,-4,'#e2e8f0')
-s.outline();out['santa']=s.im
+s.outline();out['santa']=(s.im,s.src,s.oy)
 # 3 사이버 쥬피썬더 ------------------------------------------------
 s=S(D+'/jolteon.png')
 NE=['#0e4a5c','#0891b2','#22d3ee','#a5f3fc']
 s.map(lambda x,y,c,l: rp(NE,(l-.25)/.6) if c in 'YN' else (rp(['#334155','#64748b','#94a3b8','#e2e8f0'],(l-.3)/.7) if c in 'Wg' else None))
 for (x,y) in [(4,8),(5,8),(6,8),(6,9),(13,7),(13,8),(16,9),(16,10),(4,11)]:s.P(x,y,'#0b2530','fg')
 for (x,y) in [(7,9),(13,9),(16,11),(4,12)]:s.P(x,y,'#f0abfc','fg')
-s.outline();out['cyber']=s.im
+s.outline();out['cyber']=(s.im,s.src,s.oy)
 # 4 사무라이 핫삼 -------------------------------------------------
 s=S(D+'/scizor.png',top=3)
 GOLD=['#5a3d0c','#9a7414','#d4a72c','#f8dc7a']
@@ -80,12 +81,12 @@ for (x,y,c) in [(9,-2,'#f8dc7a'),(17,-2,'#f8dc7a'),(9,-1,'#d4a72c'),(17,-1,'#d4a
                 (10,1,'#9a7414'),(16,1,'#9a7414'),(11,1,'#d4a72c'),(12,1,'#f8dc7a'),(13,1,'#f8dc7a'),(14,1,'#f8dc7a'),(15,1,'#d4a72c'),
                 (12,2,'#9a7414'),(13,2,'#d4a72c'),(14,2,'#9a7414'),(13,3,'#5a3d0c')]:s.P(x,y,c)
 for (x,y) in [(12,13),(15,13),(13,16),(4,9)]:s.P(x,y,'#f8dc7a','fg')                  # 금 리벳
-s.outline();out['samurai']=s.im
+s.outline();out['samurai']=(s.im,s.src,s.oy)
 # 5 흡혈귀 블래키 -------------------------------------------------
 s=S(D+'/umbreon.png',right=3)
 s.map(lambda x,y,c,l: rp(['#5f0a14','#9f1239','#dc2626','#f87171'],(l-.25)/.6) if c=='Y' else None)
 s.P(1,10,'#f8fafc');s.P(3,10,'#f8fafc')                            # 송곳니
-s.outline();out['vamp']=s.im
+s.outline();out['vamp']=(s.im,s.src,s.oy)
 # 6 해적 갑판장 누리레느 -------------------------------------------
 s=S(D+'/primarina.png',top=1)
 s.map(lambda x,y,c,l: ('#1e3a8a' if y%2 else '#f8fafc') if c in 'Wg' and y>=13 else None)
@@ -94,5 +95,7 @@ for y in range(1,5):
 for (x,y) in [(12,2),(15,1),(17,3),(14,4)]:s.P(x,y,'#f8fafc','fg')
 s.P(20,4,'#dc2626');s.P(21,5,'#b91c1c');s.P(20,5,'#b91c1c')
 s.rows({0:(13,16)},'#dc2626')
-s.outline();out['pirate']=s.im
-for k,v in out.items():v.save(D+'/d_'+k+'.png')
+s.outline();out['pirate']=(s.im,s.src,s.oy)
+import os;sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)));import pkoutline
+for k,v in out.items():
+  pkoutline.fix(v[0],lambda c:c[:3] in [(0x31,0x31,0x31),(0x14,0x10,0x18),(0,0,0)],orig=v[1],oy=v[2]).save(D+'/d_'+k+'.png')
