@@ -392,3 +392,10 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - 도트: dev/tools/skins/drafts/draft7.py(스프라이트, 원본 해상도·부위 바꾸기) + portraits7.py(40x40 초상화) — 원본 png는 drafts/src/. skins.js에는 spr ×4(오른쪽 여백만큼 왼쪽도 채워 가운데 맞춤), por.
 - SR_SHOP 'srbox' 1000토큰: srBoxPool() = 초희귀(gr 's') 포켓몬의 안 가진 스킨(이로치·테마) 전부, 이벤트 스킨 가중치 6 · 나머지 1 (전부 미보유일 때 이벤트 스킨 1종 9%, 5종 합 45%, 이로치 1종 1.5%). 다 모으면 버튼 '✓ 다 모음'. 포켓몬이 없어도 스킨은 받음(안내 문구).
 - v1.21.39: 해적 갑판장 누리레느 초상화를 사용자가 준 그림으로 교체 (drafts/src/primarina_pirate_por_user.png)
+
+## v1.21.40 시즌 1 마감(11/30 24시) 준비
+- 초희귀 챌린지 시작: `SR_START = 2026-12-01 00:00 KST` (서버 시각 srvNow 기준). 같은 시각에 랭킹 이벤트(EV_END)·뮤츠 구출(RESCUE_END) 끝남. evOn도 srvNow 사용. srvNow는 SRVOFF 선언 전 호출돼도 NaN 안 나게 `(SRVOFF||0)`.
+- 서버 스냅샷: pb_season(id=1, top jsonb) + pb_season_snap() — 12/1 00:00 이후 첫 pb_ping/pb_season_top 호출 때 1~3등(pb_rank와 같은 조건) 저장, 한 번만. pb_season_top() 공개 RPC.
+- 로비 랭킹 위 #rkSeason: 12/1~12/8 동안 3등→2등→1등 번갈아(1등 6초, 나머지 3.5초), 누르면 프로필. seasonShow()/seasonStep().
+- 프레임: 2등 '은빛 트로피 성좌'(fr_star2) · 3등 '동빛 트로피 성좌'(fr_star3) — fr-star CSS·이미지를 은/동색으로 다시 칠해 복제(.fr-star2/.fr-star3, frsg2/3, frst2/3). 관리자 우편 아이템으로 보낼 수 있음.
+- 보상 지급(프레임+한정 포켓몬)은 아직 수동(관리자 우편). 한정 포켓몬 미정.
