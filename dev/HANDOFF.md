@@ -405,3 +405,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - CH 에 `base:'tinkaton'|'corviknight'|'ferrothorn'` 표시. 원본의 특성·가젯 코드를 같이 쓰게 case 라벨 추가: 철가시(bferro 25%), 필살기 충전(gtinkaton 1.4배), 미러아머(scorvi, 받는 피해 ×0.8), 철벽·택시·자이로볼 가젯, AI 택시. 평타 플래그(bigBonus/flinch/gyro)는 스펙에 직접.
 - 서버: pb_cfg season1_pk1/2/3 = gtinkaton/scorvi/bferro → pb_season_snap 이 등수별로 우편에 넣음.
 - 결과 발표 카드·랭킹 안내 문구에 보상 포켓몬 이름·스프라이트. 공지 배너 notice/v1220.png (dev/tools/banner_v1220.py).
+- v1.22.1: 황금 망치 두드리짱 초상화 망치 금색 명암 다시 칠함(dev/tools/skins/gtinkaton_por_gold.py, 원본은 variants/champion_tinkaton_por_orig.png). **크로마틱 3종 특성·기술은 사용자 확인 전 임시값 — 사용자가 정해줄 예정**
