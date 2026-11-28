@@ -638,7 +638,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.22.3';
+const VER='1.22.4';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1431,7 +1431,18 @@ function drawTnts(){for(const f of TNTF){if(!MCOK('tnt'))continue;const k=1-f.t,
   ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(Math.round(f.x-sz/2),Math.round(f.y+sz*.25),sz,8);ctx.drawImage(MCI.tnt,Math.round(f.x-sz/2),Math.round(f.y-sz*.75),sz,sz);
   if(bl&&tntWhite()){ctx.globalAlpha=.75;ctx.drawImage(TNTW,Math.round(f.x-sz/2),Math.round(f.y-sz*.75),sz,sz);}ctx.restore();
   if(Math.random()<.4)P_({x:f.x+rnd(-3,3),y:f.y-sz*.8,vx:rnd(-20,20),vy:-60,t:.4,col:pick(['#9ca3af','#d1d5db']),r:4});}}
-function kickBall(e,ang,d,pow){const B=G.ball;if(!B)return;B.h=null;const dd=clamp(d||6*T,2*T,9*T)*(pow||1),v=dd*2.2;B.vx=Math.cos(ang)*v;B.vy=Math.sin(ang)*v;B.x=e.x+Math.cos(ang)*(e.r+10);B.y=e.y+Math.sin(ang)*(e.r+10);B.np=e;B.npT=.45;B.kk=e;B.sk=pow>1?1:0;B.z=Math.max(B.z||0,4);B.vz=pow>1?300:170;e.lastAtk=G.t;e.reveal=.9;sfx(pow>1?'super':'shot',e.x,e.y);
+/* 공을 이 각도로 차면 자기 골대로 들어가는지 미리 굴려봄 (벽 튕김 포함, 2.5초) */
+function ballOwnGoal(e,ang,v){const m=G.map,r=13,cyT=m.R/2;let x=e.x+Math.cos(ang)*(e.r+10),y=e.y+Math.sin(ang)*(e.r+10),vx=Math.cos(ang)*v,vy=Math.sin(ang)*v;const dt=1/60;
+  const bl=(X,Y)=>{const t=tileAt(Math.floor(X/T),Math.floor(Y/T));return t===1||t===4;};
+  for(let i=0;i<150;i++){let nx=x+vx*dt,ny=y+vy*dt;const mouth=Math.abs(ny/T-cyT)<2.5+.6;
+    if(nx<T*.5&&mouth)return e.team===0;if(nx>m.C*T-T*.5&&mouth)return e.team===1;
+    if(nx<r){vx=Math.abs(vx)*.7;nx=r;}if(nx>m.C*T-r){vx=-Math.abs(vx)*.7;nx=m.C*T-r;}if(ny<r){vy=Math.abs(vy)*.7;ny=r;}if(ny>m.R*T-r){vy=-Math.abs(vy)*.7;ny=m.R*T-r;}
+    if(bl(nx,y)){vx=-vx*.7;nx=x;}if(bl(x,ny)){vy=-vy*.7;ny=y;}x=nx;y=ny;const f=Math.exp(-2.2*dt);vx*=f;vy*=f;if(Math.hypot(vx,vy)<60)return false;}
+  return false;}
+function kickBall(e,ang,d,pow){const B=G.ball;if(!B)return;B.h=null;const dd=clamp(d||6*T,2*T,9*T)*(pow||1),v=dd*2.2;
+  if(e!==P&&!e.owner&&ballOwnGoal(e,ang,v)){const m=G.map,egx=e.team===0?m.C*T:0,a0=Math.atan2(m.R*T/2-e.y,egx-e.x);   // AI는 자책골 금지: 상대 골대 쪽으로 다시 조준
+    for(const da of [0,.35,-.35,.7,-.7,1.1,-1.1,Math.PI/2,-Math.PI/2])if(!ballOwnGoal(e,a0+da,v)){ang=a0+da;break;}}
+B.vx=Math.cos(ang)*v;B.vy=Math.sin(ang)*v;B.x=e.x+Math.cos(ang)*(e.r+10);B.y=e.y+Math.sin(ang)*(e.r+10);B.np=e;B.npT=.45;B.kk=e;B.sk=pow>1?1:0;B.z=Math.max(B.z||0,4);B.vz=pow>1?300:170;e.lastAtk=G.t;e.reveal=.9;sfx(pow>1?'super':'shot',e.x,e.y);
   if(pow>1){spark(B.x,B.y,['#fde047','#f97316','#fff'],18,280,.4,5,{sh:'plus'});ring(B.x,B.y,70,'#fde047');if(Math.hypot(P.x-B.x,P.y-B.y)<8*T)G.shake=Math.max(G.shake,.25);}
   else spark(B.x,B.y,['#fff','#ef4444'],8,160,.3,4,{sh:'plus'});
   parts(e.x,e.y+e.r*.6,6,'#d6d3d1',90,.35,4);ev('BK',Math.round(B.x),Math.round(B.y),pow>1?1:0);}
