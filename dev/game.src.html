@@ -288,6 +288,11 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .jph{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}.jpbar{flex:1;min-width:140px;height:12px;background:#3f3f46;border:2px solid #111}.jpbar i{display:block;height:100%;background:#a855f7}
 .jplab{display:flex;gap:6px;font-size:11px;margin:0 0 4px;flex-wrap:wrap}.jplab span{padding:1px 6px;border:2px solid #111}
 .fr-jpass{border:5px solid #a855f7;box-shadow:0 0 0 2px #111,inset 0 0 0 2px #f0abfc}.fr-jpass:after{content:'';position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);width:18px;height:10px;background:#a855f7;border:2px solid #111;box-shadow:inset 0 -3px 0 #6b21a8,inset 0 2px 0 #f0abfc;z-index:2}
+.fr-srare{border:5px solid #60a5fa;box-shadow:0 0 0 2px #111,inset 0 0 0 2px #dbeafe,0 0 0 4px #1d4ed8,0 0 0 6px #111;animation:frsr 1.4s steps(2) infinite}.fr-srare:after{content:'';position:absolute;top:-15px;left:50%;transform:translateX(-50%);width:16px;height:16px;background:linear-gradient(135deg,#dbeafe 0 30%,#60a5fa 30% 70%,#1d4ed8 70%);clip-path:polygon(37.5% 0,62.5% 0,62.5% 12.5%,75% 12.5%,75% 25%,87.5% 25%,87.5% 37.5%,100% 37.5%,100% 62.5%,87.5% 62.5%,87.5% 75%,75% 75%,75% 87.5%,62.5% 87.5%,62.5% 100%,37.5% 100%,37.5% 87.5%,25% 87.5%,25% 75%,12.5% 75%,12.5% 62.5%,0 62.5%,0 37.5%,12.5% 37.5%,12.5% 25%,25% 25%,25% 12.5%,37.5% 12.5%);filter:drop-shadow(0 0 0 #111);z-index:2}
+@keyframes frsr{0%{border-color:#60a5fa}50%{border-color:#93c5fd}}
+.lb-sr{background:#2563eb!important;box-shadow:inset 0 -6px 0 #1e40af,inset 0 3px 0 #bfdbfe,0 5px 0 #111!important}.lb-sr.on{animation:srpulse 1s steps(2) infinite}@keyframes srpulse{50%{outline:3px solid #93c5fd}}
+.sr-tg{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0;font-size:12px}.sr-tg .btn.on{background:#2563eb;color:#fff}
+.sr-note{font-size:11px;background:#1e3a8a;border:3px solid #111;padding:4px 8px;margin:0 0 6px;text-align:center}
 .fr-jpassg{border:5px solid #facc15;box-shadow:0 0 0 2px #111,inset 0 0 0 2px #a855f7,0 0 0 5px #7e22ce,0 0 0 7px #111;animation:frsg 2.4s ease-in-out infinite}.fr-jpassg:after{content:'';position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:20px;height:12px;background:#facc15;border:2px solid #111;clip-path:polygon(0 100%,0 30%,25% 65%,50% 0,75% 65%,100% 30%,100% 100%);z-index:2}
 
 .lb-multi{width:96px;height:70px;font-family:inherit;font-size:11px;color:#052e16;background:#4ade80;border:3px solid #111;box-shadow:inset 0 -6px 0 #16a34a,inset 0 3px 0 #bbf7d0,0 5px 0 #111;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;line-height:1.2}
@@ -529,6 +534,7 @@ select.minput{width:auto}
     <button class="lb-sq" id="bBrawlers"><img id="lbSqImg" class="px" alt=""><span>포켓몬</span></button>
     <button class="lb-sq" id="bShop" style="background:#f97316;box-shadow:inset 0 -6px 0 #c2410c,inset 0 3px 0 #fed7aa,0 5px 0 #111"><img class="ico px big" data-ico="gemc" alt=""><span>상점</span></button>
     <button class="lb-sq lb-ev" id="bEvent"><img class="ico px big" data-ico="lotto" alt=""><span>이벤트</span><i class="sqb" style="background:#facc15;color:#111">로또</i></button>
+    <button class="lb-sq lb-sr" id="bSr"><img class="px big" id="srIco" alt=""><span>초희귀</span><i class="sqb" id="srBadge" style="background:#60a5fa;color:#111">0</i></button>
     <button class="lb-sq lb-rs" id="bRescue"><img class="px big" id="rsIco" alt=""><span>뮤츠 구출</span><i class="sqb" id="rsBadge" style="background:#94a3b8;color:#111">0</i></button>
   </div>
   <div class="lb-rank" id="lbRank"><h4><img class="ico px" data-ico="trophy" alt="">트로피 랭킹</h4><div class="ev" id="rkEv">11/30까지 1위 · 특별 프레임 + 한정 포켓몬!</div><div class="rk-hide" id="rkHide" style="display:none">11월 30일 1위 공개!!</div><div class="rl" id="rkList">불러오는 중...</div><div class="mine" id="rkMine"></div></div>
@@ -616,7 +622,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.34';
+const VER='1.21.35';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1015,7 +1021,7 @@ const IMGS={};for(const k in SPRS){const im=new Image();im.onload=()=>{im.ok=1};
 const IMGSF={};for(const k in SPRSF){const im=new Image();im.onload=()=>{im.ok=1};im.src=SPRSF[k];IMGSF[k]=im;}
 const hasShy=k=>!!SPRS[k]&&(SAVE.shy||[]).includes(k);
 /* 테마 스킨: SKINX['k_id']={spr,por,gmax}, 보유 SAVE.skn=['k_id'], 장착 SAVE.sk[k]='s'(이로치,예전 값 1)|테마id */
-const THEMES={blastoise:[{id:'pirate',nm:'해적선장 거북왕',fx:{palO:['#eab308','#fef08a','#3b200c'],col:'#eab308'}}],cinderace:[{id:'spurs',nm:'토트넘 에이스번',ball:1},{id:'korea',nm:'국가대표 에이스번',ball:1}],hlil:[{id:'dongbaek',nm:'동백꽃 필 무렵',fx:{palO:['#facc15','#fef9c3','#9a3412'],col:'#facc15',edge:'#16181c',petal:1}}],giratina:[{id:'yako',nm:'백귀야행 기라티나',pass:1,fx:{palO:['#dc2626','#fecaca','#1a0505'],col:'#dc2626',yako:1}}],
+const THEMES={incineroar:[{id:'army',nm:'육군 아미 타이거 어흥염',pass:1,ev:'초희귀 챌린지'}],blastoise:[{id:'pirate',nm:'해적선장 거북왕',fx:{palO:['#eab308','#fef08a','#3b200c'],col:'#eab308'}}],cinderace:[{id:'spurs',nm:'토트넘 에이스번',ball:1},{id:'korea',nm:'국가대표 에이스번',ball:1}],hlil:[{id:'dongbaek',nm:'동백꽃 필 무렵',fx:{palO:['#facc15','#fef9c3','#9a3412'],col:'#facc15',edge:'#16181c',petal:1}}],giratina:[{id:'yako',nm:'백귀야행 기라티나',pass:1,fx:{palO:['#dc2626','#fecaca','#1a0505'],col:'#dc2626',yako:1}}],
   mewtwo:[{id:'obsid',nm:'흑요석 뮤츠',fx:{palO:['#d946ef','#fae8ff','#3a0d3d'],col:'#d946ef'}}],
   rayquaza:[{id:'sky',nm:'창공 레쿠쟈',fx:{palO:['#7dd3fc','#f0f9ff','#0c2d4a'],col:'#7dd3fc'}}],
   kyurem:[{id:'onyx',nm:'흑빙 큐레무',fx:{palO:['#38bdf8','#e0f2fe','#06283d'],col:'#38bdf8'}}],
@@ -1096,7 +1102,7 @@ function buildGrid(){
   const g=$('#grid'),st0=g.scrollTop;g.innerHTML='';const mode=GSORT[SAVE.gsort]?SAVE.gsort:'grade';
   $('#gsort').innerHTML='<span>정렬</span>'+Object.entries(GSORT).map(([k,n])=>`<button data-k="${k}" class="${k===mode?'on':''}">${n}</button>`).join('');
   document.querySelectorAll('#gsort button').forEach(b=>b.onclick=()=>{SAVE.gsort=b.dataset.k;save();sfx('ui');g.scrollTop=0;buildGrid();});
-  const vis=CH.filter(c=>(!LTD(c.gr)&&!c.paid)||owns(c.k)),ownL=vis.filter(c=>owns(c.k)),not=sortCH(vis.filter(c=>!owns(c.k)));
+  const vis=CH.filter(c=>((!LTD(c.gr)&&!c.paid)||owns(c.k))&&(!srMode()||c.gr==='s')),ownL=vis.filter(c=>owns(c.k)),not=sortCH(vis.filter(c=>!owns(c.k)));
   const cmp={grade:byGrade,tro:(a,b)=>tro(b.k)-tro(a.k)||byGrade(a,b),pow:(a,b)=>lv(b.k)-lv(a.k)||tro(b.k)-tro(a.k)||byGrade(a,b),name:(a,b)=>a.nm.localeCompare(b.nm,'ko')}[mode];
   const hd=(t,n,col,sub)=>{const h=document.createElement('div');h.className='ghd';h.style.setProperty('--gc',col);h.innerHTML=`<b>${t}</b><i>${sub||''}${n}마리</i>`;g.appendChild(h);};
   const add=c=>{
@@ -1106,6 +1112,7 @@ function buildGrid(){
     d.onclick=()=>{if(viewK!==c.k)viewForm=0;viewK=c.k;if(owns(c.k)){SAVE.sel=c.k;save();}buildGrid();};
     g.appendChild(d);};
   const ownS=ownL.slice().sort(cmp);
+  if(srMode()){const h=document.createElement('div');h.className='sr-note';h.style.gridColumn='1/-1';h.innerHTML='초희귀 챌린지 중 · 초희귀 포켓몬만 고를 수 있어요 <button class="btn sm b2" style="font-size:10px;padding:1px 6px">챌린지 끄기</button>';h.querySelector('button').onclick=()=>{SAVE.srm=0;save();refreshMenu();buildGrid();toast('초희귀 챌린지를 껐어요');};g.appendChild(h);}
   if(mode==='grade'){Object.keys(GRADE).sort((a,b)=>GRADE[a].o-GRADE[b].o).forEach(gr=>{const L=ownS.filter(c=>c.gr===gr);if(!L.length)return;hd(GRADE[gr].nm,L.length,GRADE[gr].c,'보유 ');L.forEach(add);});}
   else{if(ownS.length)hd('보유 포켓몬',ownS.length,'#fde047');ownS.forEach(add);}
   if(not.length){hd('🔒 아직 없는 포켓몬',not.length,'#71717a');not.forEach(add);}
@@ -1115,7 +1122,7 @@ function buildGrid(){
   const bar=(l,v,m)=>`<div class="stat"><em>${l}</em><div class="bar"><i style="width:${Math.min(100,v/m*100)}%"></i></div><span>${l==='속도'?spdNm(c.spd):l==='체력'?Math.round(c.hp*(1+.06*(lv(c.k)-1))):''}</span></div>`;
   const dps=c.atk.dmg*(c.atk.count||1)*(c.atk.burst||1)*(c.atk.dsc?1.5:1);
   $('#detail').innerHTML=`<img class="dpor" src="${kf&&viewForm?formPor(c0.k,viewForm):porOf(c0.k)}"><h3>${c.nm} <span class="gd" style="display:inline-block;background:${GRADE[c.gr].c}">${GRADE[c.gr].nm}</span> ${c.noble?`<span class="nbtag"><img src="${NOBLEB}">히스이의 주인</span> `:c.horse?`<span class="nbtag hb"><img src="${HORSEB}">왕의 애마</span> `:''}<span class="ty" style="color:${EL[c.el].c[0]}">${EL[c.el].nm}</span></h3><div style="opacity:.75">${c.role}${isTmp(c0.k)?` · <b style="color:#67e8f9">기간제 · ${tmpLeft(c0.k)} 남음</b>`:''}</div>${ownP(c0.k)?'':c.gr==='sp'?'<div class="pw"><span style="color:#67e8f9">한정 캐릭터 · 뽑기·영입으로 얻을 수 없어요</span></div>':`<div class="pw"><button class="upbtn" id="bUnlock" ${(SAVE.gems||0)<UNLOCK_GEM[c.gr]?'disabled':''}>혜성조각 ${UNLOCK_GEM[c.gr]}개로 영입</button><span style="opacity:.7">보유 ${SAVE.gems||0} · 상자에서도 나와요</span></div>`}<div class="pw"${own?'':' style="display:none"'}><span class="lbv">파워 ${lv(c.k)}</span>${isTmp(c.k)?'<span style="color:#67e8f9">기간제 · 파워 9 고정 (강화 불가)</span>':lv(c.k)<11?`<button class="upbtn" id="bUp" ${SAVE.coins<upCost(lv(c.k))?'disabled':''}>강화 · 금구슬 ${upCost(lv(c.k))}</button>`:'<span>최대 레벨</span>'}<span style="opacity:.7">보유 금구슬 ${SAVE.coins}</span></div>`+
-    ((SPRS[c0.k]||THEMES[c0.k])&&own?(()=>{const cur=skinId(c0.k),L=[...(SPRS[c0.k]?[{id:'s',nm:'✦ 이로치'}]:[]),...(THEMES[c0.k]||[])];return `<div class="skrow"><span>스킨</span><button class="skb${cur?'':' on'}" data-s="0">기본</button>${L.map(t=>`<button class="skb${t.id==='s'?' shy':''}${cur===t.id?' on':''}${hasSkin(c0.k,t.id)?'':' lock'}" data-s="${t.id}">${t.nm}${hasSkin(c0.k,t.id)?'':' 🔒'}</button>`).join('')}${L.some(t=>!hasSkin(c0.k,t.id))?'<em>상자에서 가끔 나와요</em>':''}</div>`;})():'')+
+    ((SPRS[c0.k]||THEMES[c0.k])&&own?(()=>{const cur=skinId(c0.k),L=[...(SPRS[c0.k]?[{id:'s',nm:'✦ 이로치'}]:[]),...(THEMES[c0.k]||[])];return `<div class="skrow"><span>스킨</span><button class="skb${cur?'':' on'}" data-s="0">기본</button>${L.map(t=>`<button class="skb${t.id==='s'?' shy':''}${cur===t.id?' on':''}${hasSkin(c0.k,t.id)?'':' lock'}" data-s="${t.id}">${t.nm}${hasSkin(c0.k,t.id)?'':' 🔒'}</button>`).join('')}${(()=>{const lk=L.filter(t=>!hasSkin(c0.k,t.id)),a=[];if(lk.some(t=>!t.pass))a.push('상자에서 가끔 나와요');lk.filter(t=>t.ev).forEach(t=>a.push(t.nm+'은(는) '+t.ev+' 보상'));if(lk.some(t=>t.pass&&!t.ev))a.push('조롤패스 보상');return a.length?'<em>'+a.join(' · ')+'</em>':'';})()}</div>`;})():'')+
     bar('체력',c.hp*(1+.06*(lv(c.k)-1)),7200)+bar('공격력',dps,2000)+bar('사거리',c.atk.range,10)+bar('속도',c.spd,1.3)+bar('장전',1/c.rl,1)+
     (kf?`<div class="ftabs">${kf.map((f,i)=>`<button class="ftab${i===viewForm?' on':''}" data-f="${i}">${f.fnm||f.nm}</button>`).join('')}</div>`:'')+
     `<div class="sk"><b>공격 · ${c.atk.nm}</b> <span style="color:${EL[c.atk.el].c[0]}">[${EL[c.atk.el].nm}]</span><br>${c.atk.ds}</div><div class="sk"><b>★ 필살기 · ${c.sup.nm}</b> <span style="color:${EL[c.sup.el].c[0]}">[${EL[c.sup.el].nm}]</span><br>${c.sup.ds}</div>`+`<div class="sk"><b>특성 · ${c.trait[0]}</b><br>${c.trait[1]}</div><div class="sk"><b style="color:#86efac">가젯 · ${c.gad[0]}</b> <span style="opacity:.7">(${GADN(c0.k)>5?'횟수 제한 없음 · 쿨타임 4초':'경기당 '+GADN(c0.k)+'회'})</span><br>${c.gad[1]}</div>`;
@@ -2012,9 +2019,10 @@ function endMatch(mode,res){
   const road=[];const qd=questTick(mode,res,tm);const pxp=passGain(qd.xp+tm?(res==='win'?40:res==='draw'?25:20):([0,40,32,32,26,26,20,20,15,15,15][res]||15));
   while(false){const rr=Object.assign({},ROAD[SAVE.road]);if(rr.pk){const k=rr.pk==='starter'?STARTERS.find(x=>!owns(x)):rr.pk;if(k&&!owns(k)){unlockPk(k);rr.got=chOf(k).nm;}}road.push(rr);coin+=rr.c;SAVE.road++;}
   const ash=rescueOn()?10+Math.floor(Math.random()*41):0;if(ash)SAVE.ashard=(SAVE.ashard||0)+ash;
+  const srt=srMode()&&P.ch.gr==='s'&&((tm&&res==='win')||(mode==='sd'&&res===1))?10+Math.floor(Math.random()*41):0;if(srt)SAVE.srt=(SAVE.srt||0)+srt;
   let gem=(tm&&res==='win')||(mode==='sd'&&res<=3)?6:0;gem+=road.length*5;
   SAVE.coins=(SAVE.coins||0)+coin;SAVE.gems=(SAVE.gems||0)+gem;save();
-  G.result={big,sub,d,coin,road,gem,pxp,qd,ash};
+  G.result={big,sub,d,coin,road,gem,pxp,qd,ash,srt};
   setTimeout(()=>sfx(d>0||res==='win'?'win':(tm&&res==='draw')?'ui':'lose'),700);
 }
 const psTag=e=>'';const psTag0=e=>{const k=e.ai&&e.ai.ps;return k&&k!=='norm'&&e!==P&&!e.owner?`<span style="font-size:9px;color:#111;background:${PERSONA[k].col};padding:0 3px;margin-right:3px;border:1px solid #111">${PERSONA[k].sh}</span>`:'';};
@@ -2034,7 +2042,7 @@ function showResult(){
     $('#rCoin').innerHTML=dl&&(dl.c||dl.g)?(r.res==='win'?`판돈 <img class="ico" src="${ICO.coin}"> ${dl.c*2} · <img class="ico" src="${ICO.gemc}"> ${dl.g*2} → 우편함으로 도착해요`:`판돈 <img class="ico" src="${ICO.coin}"> ${dl.c} · <img class="ico" src="${ICO.gemc}"> ${dl.g} 를 잃었어요`):'판돈 없는 친선전';
     $('#rBig').style.color=r.res==='win'?'#fde047':'#93c5fd';showScr('res');return;}
   $('#rBig').style.color=r.d>0?'#fde047':r.d<0?'#93c5fd':'#fff';
-  $('#rCoin').innerHTML=`<img class="ico" src="${ICO.coin}"> +${r.coin} 금구슬`+(r.gem?` &nbsp; <img class="ico" src="${ICO.gemc}"> +${r.gem} 혜성조각`:'')+(r.ash?` &nbsp; <img class="ico px" src="${ASH_ICO}"> +${r.ash} 갑옷 조각`:'');
+  $('#rCoin').innerHTML=`<img class="ico" src="${ICO.coin}"> +${r.coin} 금구슬`+(r.gem?` &nbsp; <img class="ico" src="${ICO.gemc}"> +${r.gem} 혜성조각`:'')+(r.ash?` &nbsp; <img class="ico px" src="${ASH_ICO}"> +${r.ash} 갑옷 조각`:'')+(r.srt?` &nbsp; <img class="ico px" src="${SRT_ICO}"> +${r.srt} 초희귀 토큰`:'');
   $('#rRoad').textContent=r.pxp?'조롤패스 +'+r.pxp.xp+(r.qd&&r.qd.done.length?' (퀘스트 완료: '+r.qd.done.join(', ')+')':'')+' · '+r.pxp.lvTxt+(r.pxp.up?' ▲ 레벨 업! 받을 보상이 있어요':''):'';
   showScr('res');
 }
@@ -3337,7 +3345,7 @@ function refreshMenu(){try{renderAllies();}catch(e){}try{invBadge();}catch(e){}
   $('#selTro').textContent=tro(c.k);
   const tt=totTro();$('#totTro').textContent=tt;$('#lbCoin').textContent=SAVE.coins;$('#lbGem').textContent=SAVE.gems||0;
   $('#lbName').innerHTML=esc(SAVE.nick||ACC.user||SAVE.name)+(ACC.admin?' <span class="adm">관리자</span>':'');$('#lbAva').src=avaSrc();{const w=$('#lbAvaW');w.style.setProperty('--abg',abg(SAVE.ava)||'#0d0a1f');w.className='ava fr-'+(SAVE.frm||'basic')+(SAVE.ava&&(SAVE.ava.t==='img'&&PIMG[SAVE.ava.i]||SAVE.ava.t==='por'&&owns(SAVE.ava.k))?' ph':'');}$('#lbSqImg').src=POR[c.id];
-  {const si=$('#stkIco');if(si&&!si.src&&window.STK_ICO)si.src=STK_ICO;}{const rbt=$('#bRescue');if(rbt)rbt.style.display=rescueOn()?'':'none';}{const ri=$('#rsIco');if(ri&&!ri.src)ri.src=SPR.armewtwo;const rb=$('#rsBadge');if(rb){const n=SAVE.ashard||0,got=(SAVE.own||[]).includes('armewtwo');rb.textContent=got?'✓':Math.min(100,Math.floor(n/10))+'%';}}
+  {const si=$('#stkIco');if(si&&!si.src&&window.STK_ICO)si.src=STK_ICO;}{const rbt=$('#bRescue');if(rbt)rbt.style.display=rescueOn()?'':'none';}{const b=$('#bSr');if(b){b.style.display=srOn()?'':'none';b.classList.toggle('on',srMode());}const ic=$('#srIco');if(ic&&!ic.src&&SKINX.incineroar_army)ic.src=SKINX.incineroar_army.spr;const bd=$('#srBadge');if(bd){const n=SAVE.srt||0;bd.textContent=srMode()?'ON':n>=1000?Math.floor(n/100)/10+'k':String(n);}}{const ri=$('#rsIco');if(ri&&!ri.src)ri.src=SPR.armewtwo;const rb=$('#rsBadge');if(rb){const n=SAVE.ashard||0,got=(SAVE.own||[]).includes('armewtwo');rb.textContent=got?'✓':Math.min(100,Math.floor(n/10))+'%';}}
   {const ls=$('#lpSkins');if(ls&&!ls.dataset.ok){ls.dataset.ok=1;const L=['galaxy','aurora','plat'].filter(id=>SKINX['eternatus_'+id]);let i=0;
     ls.innerHTML=`<div class="lps"><img class="px" alt=""><i></i></div>`;const im=ls.querySelector('img'),lb=ls.querySelector('i');
     const show=()=>{const id=L[i%L.length],t=(THEMES.eternatus||[]).find(x=>x.id===id);im.src=SKINX['eternatus_'+id].spr;lb.textContent=t?t.nm:'';im.classList.remove('sw');void im.offsetWidth;im.classList.add('sw');i++;};
@@ -3367,21 +3375,23 @@ function pickAlly(i,fromLobby){const own=sortCH(CH.filter(c=>owns(c.k)&&c.k!==SA
 $('#bRoad').onclick=()=>openPass();
 $('#bEvent').onclick=()=>{sfx('ui');openLotto();};
 $('#bRescue').onclick=()=>{sfx('ui');openRescue();};
+$('#bSr').onclick=()=>{sfx('ui');openSr();};
 $('#bStock').onclick=()=>{sfx('ui');stockOpen('menu');};
 
 /* 매치메이킹 + VS 화면 */
 function pickRoster(){
   const mode=SAVE.mode,pc=chOf(SAVE.sel),pl=lv(pc.k),tr=tro(pc.k),bl=()=>clamp(pl+Math.floor(Math.random()*3)-1+(tr>=300&&Math.random()<.4?1:0),1,11);
   if(mode==='train')return {mode,pc,lv:pl};
-  const maxO=tr<40?1:tr<120?2:tr<250?3:4,minO=tr>=400?1:0,ok=c=>GRADE[c.gr].o<=maxO&&GRADE[c.gr].o>=minO;
-  const pool=n=>{let p=shuffle(CH.filter(c=>c!==pc&&ok(c)&&!c.paid));if(p.length<n)p=p.concat(shuffle(CH.filter(c=>c!==pc&&!ok(c)&&!c.paid&&c.gr!=='sp')));return p.slice(0,n);};
+  const srm=srMode(),maxO=tr<40?1:tr<120?2:tr<250?3:4,minO=tr>=400?1:0,ok=c=>srm?c.gr==='s':GRADE[c.gr].o<=maxO&&GRADE[c.gr].o>=minO;
+  const pool=n=>{let p=shuffle(CH.filter(c=>c!==pc&&ok(c)&&!c.paid));if(p.length<n&&!srm)p=p.concat(shuffle(CH.filter(c=>c!==pc&&!ok(c)&&!c.paid&&c.gr!=='sp')));return p.slice(0,n);};
   if(TEAMM(mode)){const others=pool(4),pk=new Set([pc.k]),al=[];
-    for(let i=0;i<2;i++){const k=(SAVE.ally||[])[i];if(k&&owns(k)&&!pk.has(k)){pk.add(k);al.push({c:chOf(k),lv:lv(k),ally:1});}else{let c=others.find(x=>!pk.has(x.k));if(!c)c=pick(CH);pk.add(c.k);al.push({c,lv:bl()});}}
+    for(let i=0;i<2;i++){const k=(SAVE.ally||[])[i];if(k&&owns(k)&&!pk.has(k)&&(!srm||chOf(k).gr==='s')){pk.add(k);al.push({c:chOf(k),lv:lv(k),ally:1});}else{let c=others.find(x=>!pk.has(x.k));if(!c)c=pick(CH);pk.add(c.k);al.push({c,lv:bl()});}}
     return {mode,blue:[{c:pc,lv:pl,me:1}].concat(al),red:pool(3).map(c=>({c,lv:bl()}))};}
   return {mode,list:[{c:pc,lv:pl,me:1}].concat(pool(9).map(c=>({c,lv:bl()})))};
 }
 let mmTimer=null;
 function startMatch(){
+  if(srMode()&&SAVE.mode!=='train'&&chOf(SAVE.sel).gr!=='s'){toast('초희귀 챌린지 중에는 초희귀 포켓몬만 쓸 수 있어요');viewK=null;buildGrid();showScr('sel');return;}
   if(SAVE.mode==='train'){closeModal();startGame(pickRoster());return;}
   closeModal();const R=pickRoster(),need=TEAMM(R.mode)?6:10;let n=1;
   showScr('mm');
@@ -4784,6 +4794,21 @@ function rescueBind(redraw){document.querySelectorAll('[data-ashq]').forEach(b=>
   if(it.pk){if((SAVE.own||[]).includes(it.pk))return;SAVE.ashard-=it.cost;unlockPk(it.pk);save();refreshMenu();sfx('win');const c=chOf(it.pk);
     modal(`<h2>구출 성공!</h2><div class="rws"><div class="rw newpk"><img class="sbig por2" src="${POR[c.id]}"><b>새 포켓몬!</b><span>${c.nm} · ${GRADE[c.gr].nm}</span></div></div><div class="mrow"><button class="btn sm" id="rsOk">확인</button></div>`);$('#rsOk').onclick=()=>openRescue();return;}
   SAVE.ashard-=it.cost;if(it.c)SAVE.coins+=it.c;else if(it.g)SAVE.gems=(SAVE.gems||0)+it.g;else invAdd(it.id,1);save();refreshMenu();invBadge();sfx('cube');toast((it.nm||ITEMS[it.id].nm)+' 교환 완료!'+(it.c||it.g?'':' 가방에 넣었어요'));redraw();});}
+/* ---------- 이벤트: 초희귀 챌린지 (SAVE.srm 챌린지 켬, SAVE.srt 토큰) ---------- */
+const SR_END=null;const srOn=()=>SR_END==null||srvNow()<SR_END;const srMode=()=>srOn()&&SAVE.srm===1;
+const SRT_ICO=(()=>{const rows=['.....k.....','....kwk....','...kwbbk...','..kwbbbbk..','.kwbbbbbdk.','kwbbbbbbddk','.kbbbbbddk.','..kbbbddk..','...kbddk...','....kdk....','.....k.....'],P={k:'#111',w:'#dbeafe',b:'#60a5fa',d:'#1d4ed8'},c=document.createElement('canvas');c.width=11;c.height=11;const x=c.getContext('2d');rows.forEach((r,j)=>{for(let i=0;i<11;i++)if(r[i]!=='.'){x.fillStyle=P[r[i]];x.fillRect(i,j,1,1);}});return c.toDataURL();})();
+const SR_SHOP=[{id:'fr_srare',nm:'초희귀 프레임',cost:500,got:()=>(SAVE.frOwn||[]).includes('srare')},{id:'sk_incineroar_army',nm:'육군 아미 타이거 어흥염',cost:1000,got:()=>hasSkin('incineroar','army')}];
+function srHTML(){const n=SAVE.srt||0,on=srMode(),ownS=(SAVE.own||[]).filter(k=>chOf(k).gr==='s').length,sk=SKINX.incineroar_army;
+  return `<div class="rsq"><div class="rs-h"><img class="px" src="${sk?sk.por:POR[727]}"><div><b>초희귀 챌린지</b><br><span style="font-size:11px;opacity:.85">챌린지를 켜면 나도, 상대 봇도 <b style="color:#93c5fd">초희귀</b> 포켓몬만 써요. 초희귀 포켓몬으로 이길 때마다(팀전 승리 · 쇼다운 1등) 초희귀 토큰을 10~50개 받아요!</span></div></div>
+    <div class="sr-tg"><span>챌린지</span><button class="btn sm b2${on?'':' on'}" data-srm="0">끄기</button><button class="btn sm b2${on?' on':''}" data-srm="1">켜기</button><span style="opacity:.75">보유 초희귀 ${ownS}마리</span></div>
+    <div class="rs-bar"><i style="width:${Math.min(100,n/10)}%;background:#60a5fa;box-shadow:inset 0 -4px 0 #1d4ed8"></i><span><img class="px" style="height:12px" src="${SRT_ICO}"> ${n.toLocaleString()} / 1,000</span></div>
+    <div class="rs-shop">${SR_SHOP.map((it,i)=>{const got=it.got(),pic=it.id==='fr_srare'?`<div style="padding-top:12px">${avaHTML(34,null,'srare')}</div>`:`<img class="px" src="${sk.spr}" style="max-height:48px">`;
+      return `<div class="rs-it big${got?' got':''}">${pic}<b>${it.nm}</b>${it.id!=='fr_srare'&&!owns('incineroar')&&!got?'<span style="font-size:9px;opacity:.7">어흥염이 있어야 쓸 수 있어요</span>':''}<button class="btn sm" data-srb="${i}" ${got||n<it.cost?'disabled':''}>${got?'✓ 받음':`<img class="px" style="height:12px;vertical-align:-2px" src="${SRT_ICO}"> ${it.cost}`}</button></div>`;}).join('')}</div></div>`;}
+function openSr(){const draw=()=>{$('#mbox').innerHTML=`<h2>이벤트 · 초희귀 챌린지</h2>${srHTML()}<div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`;$('#mbox').classList.add('wide');
+    document.querySelectorAll('[data-srm]').forEach(b=>b.onclick=()=>{const v=+b.dataset.srm;if(v===1){const L=(SAVE.own||[]).filter(k=>chOf(k).gr==='s'&&owns(k));if(!L.length){toast('초희귀 포켓몬이 없어서 챌린지를 켤 수 없어요');return;}if(chOf(SAVE.sel).gr!=='s')SAVE.sel=L.sort((a,b)=>tro(b)-tro(a)||lv(b)-lv(a))[0];}
+      SAVE.srm=v;save();refreshMenu();sfx('ui');toast(v?'초희귀 챌린지 시작! 초희귀 포켓몬만 쓸 수 있어요':'초희귀 챌린지를 껐어요');draw();});
+    document.querySelectorAll('[data-srb]').forEach(b=>b.onclick=()=>{const it=SR_SHOP[+b.dataset.srb];if(it.got()||(SAVE.srt||0)<it.cost)return;SAVE.srt-=it.cost;invAdd(it.id,1);save();refreshMenu();sfx('win');draw();});};
+  draw();$('#modal').classList.add('on');}
 /* ---------- 주식 (서버: pb_stock_list / pb_stock_trade, 10분마다 가격 결정) ---------- */
 var STK_ICO=(()=>{const c=document.createElement('canvas');c.width=16;c.height=14;const x=c.getContext('2d');
   const R=(a,b,w,h,col)=>{x.fillStyle=col;x.fillRect(a,b,w,h);};R(0,13,16,1,'#111');R(0,0,1,14,'#111');
@@ -4865,6 +4890,7 @@ const ITEMS=(()=>{const o={};[['poke','몬스터볼'],['great','슈퍼볼'],['ul
   o.sel7_u={nm:'궁극 7일 선택권',ds:'모든 포켓몬(스페셜·크로마틱 제외) 중 1마리를 골라 7일 동안 사용',g:'u',days:7,o:15.5};o.sel_u={nm:'궁극 선택권',ds:'모든 포켓몬(스페셜·크로마틱 제외) 중 1마리를 골라 영구히 데려와요',g:'u',o:15.6};
   o.fr_star={nm:'트로피 성좌 프레임',ds:'시즌 1등 보상 프레임 (받으면 바로 열림)',fr:'star',o:20};
   o.fr_jpass={nm:'조롤패스 프레임',ds:'조롤패스 보상 프레임 (받으면 바로 열림)',fr:'jpass',o:21};o.fr_jpassg={nm:'황금 조롤패스 프레임',ds:'조롤패스 프리미엄 보상 프레임 (받으면 바로 열림)',fr:'jpassg',o:22};
+  o.fr_srare={nm:'초희귀 프레임',ds:'초희귀 챌린지 보상 프레임 (받으면 바로 열림)',fr:'srare',o:22.5};
   o.pass_paid={nm:'조롤패스 프리미엄',ds:'받으면 이번 시즌 프리미엄 패스가 열려요',pass:1,o:23};o.pass_xp={nm:'조롤패스 경험치 +100',ds:'받으면 조롤패스 경험치가 100 올라요 (1단계)',pass:'xp',o:24};
   return o;})();
 /* 스킨 아이템 (관리자 우편용, 받으면 바로 열림): sk_<포켓몬키>_<s|테마id> */
@@ -5111,7 +5137,7 @@ const _oldProf=()=>{
 function esc(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 /* ---------- 프로필 ---------- */
 const PIMG=[/*PIMG*/];
-const FRAMES=[].concat([{id:'basic',nm:'기본',t:0},{id:'ball',nm:'몬스터볼',t:0},{id:'gold',nm:'금테',t:100},{id:'fire',nm:'불꽃',t:200},{id:'ice',nm:'얼음',t:200},{id:'leaf',nm:'풀잎',t:50},{id:'pixel',nm:'도트 체크',t:80},{id:'wave',nm:'물결',t:150},{id:'thunder',nm:'번개',t:250},{id:'ghost',nm:'유령',t:300},{id:'neon',nm:'네온',t:400},{id:'rbw',nm:'무지개',t:500},{id:'shiny',nm:'이로치',t:700},{id:'master',nm:'하이퍼볼',t:800},{id:'leg',nm:'전설',t:1000},{id:'galaxy',nm:'은하수',t:1500},{id:'crown',nm:'왕관',t:2000},{id:'star',nm:'트로피 성좌',t:1e9,aw:'시즌 1등 보상'},{id:'jpass',nm:'조롤패스',t:1e9,aw:'조롤패스 60단계'},{id:'jpassg',nm:'황금 조롤패스',t:1e9,aw:'조롤패스 프리미엄 30단계'}]).sort((a,b)=>a.t-b.t);
+const FRAMES=[].concat([{id:'basic',nm:'기본',t:0},{id:'ball',nm:'몬스터볼',t:0},{id:'gold',nm:'금테',t:100},{id:'fire',nm:'불꽃',t:200},{id:'ice',nm:'얼음',t:200},{id:'leaf',nm:'풀잎',t:50},{id:'pixel',nm:'도트 체크',t:80},{id:'wave',nm:'물결',t:150},{id:'thunder',nm:'번개',t:250},{id:'ghost',nm:'유령',t:300},{id:'neon',nm:'네온',t:400},{id:'rbw',nm:'무지개',t:500},{id:'shiny',nm:'이로치',t:700},{id:'master',nm:'하이퍼볼',t:800},{id:'leg',nm:'전설',t:1000},{id:'galaxy',nm:'은하수',t:1500},{id:'crown',nm:'왕관',t:2000},{id:'star',nm:'트로피 성좌',t:1e9,aw:'시즌 1등 보상'},{id:'jpass',nm:'조롤패스',t:1e9,aw:'조롤패스 60단계'},{id:'jpassg',nm:'황금 조롤패스',t:1e9,aw:'조롤패스 프리미엄 30단계'},{id:'srare',nm:'초희귀',t:1e9,aw:'초희귀 챌린지 토큰 500개'}]).sort((a,b)=>a.t-b.t);
 const frLock=(f,tt)=>f.aw?!(SAVE.frOwn||[]).includes(f.id):tt<f.t;
 const okNick=n=>/^[가-힣a-zA-Z0-9_ ]{2,10}$/.test(n)&&n.trim().length>=2;
 function avaSrc(a){a=a||SAVE.ava;if(a&&a.t==='img'&&PIMG[a.i])return PIMG[a.i];if(a&&a.t==='por'&&owns(a.k))return formPor(a.k,a.f||0);const k=a&&a.t==='pk'&&owns(a.k)?a.k:SAVE.sel;return SPR[chOf(k).id];}
