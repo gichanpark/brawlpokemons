@@ -649,7 +649,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.22.26';
+const VER='1.22.27';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -4891,10 +4891,10 @@ async function openLotto(){if(!ACC.token){modal(`<h2>조롤 로또</h2><div styl
   modal(`<h2>조롤 로또</h2><div style="font-size:11px">불러오는 중...</div>`);let r;try{r=await rpc('pb_lotto_info',{p_token:ACC.token});}catch(e){}
   if(!r||!r.ok){modal(`<h2>조롤 로또</h2><div style="font-size:11px">불러오기 실패</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
   let pick=[];const L=r.last;
-  const lastHTML=L?`<div class="lt-sec"><b>${L.id}회 당첨 번호</b> <span class="lt-row">${(L.nums||[]).map(n=>lball(n)).join('')}</span><div style="font-size:11px;opacity:.85;margin-top:4px">총 <img class="ico" src="${ICO.coin}"> ${(L.pot||0).toLocaleString()} · 3개 ${L.res.c3}명${L.res.p3?` (${L.res.p3.toLocaleString()})`:''} · 2개 ${L.res.c2}명${L.res.p2?` (${L.res.p2.toLocaleString()})`:''} · 1개 ${L.res.c1}명${L.res.p1?` (${L.res.p1.toLocaleString()})`:''}${L.res.carry?` · 이월 ${L.res.carry.toLocaleString()}`:''}</div>
+  const lastHTML=L?`<div class="lt-sec"><b>${L.id}회 당첨 번호</b> <button class="btn b2 sm" id="ltRe" style="padding:2px 6px;font-size:10px">추첨 다시 보기</button> <span class="lt-row">${(L.nums||[]).map(n=>lball(n)).join('')}</span><div style="font-size:11px;opacity:.85;margin-top:4px">총 <img class="ico" src="${ICO.coin}"> ${(L.pot||0).toLocaleString()} · 3개 ${L.res.c3}명${L.res.p3?` (${L.res.p3.toLocaleString()})`:''} · 2개 ${L.res.c2}명${L.res.p2?` (${L.res.p2.toLocaleString()})`:''} · 1개 ${L.res.c1}명${L.res.p1?` (${L.res.p1.toLocaleString()})`:''}${L.res.carry?` · 이월 ${L.res.carry.toLocaleString()}`:''}</div>
     ${L.mine.length?`<div class="lt-my">${L.mine.map(t=>`<div class="lt-row">${t.n.map(n=>lball(n,{hit:(L.nums||[]).includes(n),dim:!(L.nums||[]).includes(n)})).join('')}<span>${t.h?t.h+'개 맞춤 · <img class="ico" src="'+ICO.coin+'"> '+(+t.p).toLocaleString()+' (우편함)':'꽝'}</span></div>`).join('')}</div>`:''}</div>`:'';
   const draw=()=>{
-    $('#mbox').innerHTML=`<h2>조롤 로또 <span class="cur">${r.id}회 · 매주 월요일 오전 10시 추첨</span></h2>
+    $('#mbox').innerHTML=`<h2>조롤 로또 <span class="cur">${r.id}회 · 매주 토요일 밤 9시 추첨</span></h2>
     <div class="lt-pot"><span>이번 주 상금</span><b><img class="ico" src="${ICO.coin}"> ${(+r.pot).toLocaleString()}</b><span>추첨까지 ${lLeft(r.at)} · 참여 ${r.n}장${r.carry?` · 이월 ${(+r.carry).toLocaleString()} 포함`:''}</span></div>
     <div style="font-size:11px;margin:6px 0 4px">1~20 중 번호 3개를 고르세요 (${pick.length}/3)</div>
     <div class="lt-grid">${Array.from({length:20},(_,i)=>lball(i+1,{k:1,on:pick.includes(i+1)})).join('')}</div>
@@ -4905,13 +4905,58 @@ async function openLotto(){if(!ACC.token){modal(`<h2>조롤 로또</h2><div styl
     <div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`;
     $('#mbox').classList.add('wide');
     document.querySelectorAll('.lt-grid .lball').forEach(el=>el.onclick=()=>{const n=+el.dataset.n;if(pick.includes(n))pick=pick.filter(x=>x!==n);else if(pick.length<3)pick.push(n);sfx('ui');draw();});
+    if($('#ltRe'))$('#ltRe').onclick=()=>{sfx('ui');lottoAnim(L,draw);};
     $('#ltAuto').onclick=()=>{pick=shuffle(Array.from({length:20},(_,i)=>i+1)).slice(0,3);sfx('ui');draw();};
     $('#ltBuy').onclick=async()=>{if(pick.length!==3)return;const E=$('#ltE');$('#ltBuy').disabled=true;E.textContent='구매 중...';await flushSaveNow();
       let q=null;try{q=await rpc('pb_lotto_buy',{p_token:ACC.token,p_nums:pick});}catch(e){}
       if(!q||!q.ok){E.textContent=!q?'서버 연결 실패':{funds:'금구슬이 부족해요 (서버 저장 기준)',limit:'이번 주는 10장까지만 살 수 있어요',bad_nums:'번호를 다시 골라 주세요'}[q.err]||'구매 실패';$('#ltBuy').disabled=false;return;}
       SAVE.coins-=LOTTO_PRICE;SAVE.rev=q.rev;saveLocal();refreshMenu();sfx('cube');
-      r.mine.push(pick.slice().sort((a,b)=>a-b));r.pot=+r.pot+LOTTO_PRICE;r.n++;pick=[];draw();toast('로또를 샀어요! 월요일 오전 10시에 추첨해요');};};
-  draw();}
+      r.mine.push(pick.slice().sort((a,b)=>a-b));r.pot=+r.pot+LOTTO_PRICE;r.n++;pick=[];draw();toast('로또를 샀어요! 토요일 밤 9시에 추첨해요');};};
+  let seen=0;try{seen=+localStorage.getItem('pb_lt_seen')||0;}catch(e){}
+  if(L&&L.nums&&L.id>seen){try{localStorage.setItem('pb_lt_seen',L.id);}catch(e){}lottoAnim(L,draw);}else draw();}
+/* 로또 추첨 연출: 도트 추첨기 (캔버스 160x112 → ×3, 공 20개가 섞이다가 당첨 공 3개가 차례로 나옴) */
+const LDIG=['111101101101111','010110010010111','111001111100111','111001111001111','101101111001001','111100111001111','111100111101111','111001001001001','111101111101111','111101111001111'];
+function lottoAnim(L,done){
+  const nums=(L.nums||[]).slice(0,3);
+  $('#mbox').innerHTML=`<h2>조롤 로또 <span class="cur">${L.id}회 추첨</span></h2>
+  <div style="display:flex;justify-content:center"><canvas id="ltCv" width="160" height="112" style="width:480px;max-width:100%;image-rendering:pixelated;background:#1e293b;border:3px solid #111"></canvas></div>
+  <div id="ltOut" style="min-height:44px;margin-top:6px;text-align:center"></div>
+  <div class="mrow"><button class="btn b2 sm" id="ltSkip">건너뛰기</button></div>`;
+  $('#mbox').classList.add('wide');
+  const cv=$('#ltCv'),c=cv.getContext('2d'),CX=80,CY=46,RR=36;
+  const shade=(h,f)=>{const n=parseInt(h.slice(1),16);let r=n>>16,g=n>>8&255,b=n&255;r=Math.max(0,Math.min(255,r*f|0));g=Math.max(0,Math.min(255,g*f|0));b=Math.max(0,Math.min(255,b*f|0));return `rgb(${r},${g},${b})`;};
+  const B=Array.from({length:20},(_,i)=>{const a=Math.random()*6.28,d=Math.random()*(RR-8);return{n:i+1,x:CX+Math.cos(a)*d,y:CY+Math.sin(a)*d,vx:0,vy:0,out:0};});
+  const disk=(x,y,r,col)=>{c.fillStyle=col;for(let j=-r;j<=r;j++){const w=Math.floor(Math.sqrt(r*r-j*j+r*.8));c.fillRect(Math.round(x)-w,Math.round(y)+j,w*2+1,1);}};
+  const digits=(n,x,y)=>{const t=String(n);let X=Math.round(x)-(t.length*4-1)/2|0;c.fillStyle='#111';for(const ch of t){const g=LDIG[+ch];for(let i=0;i<15;i++)if(g[i]==='1')c.fillRect(X+i%3,Math.round(y)+(i/3|0),1,1);X+=4;}};
+  const ball=(b,big)=>{const r=big?7:3,col=lbCol(b.n);disk(b.x,b.y,r+1,'#111');disk(b.x,b.y,r,col);c.fillStyle=shade(col,.7);c.fillRect(Math.round(b.x)-1,Math.round(b.y)+r-1,r,1);c.fillStyle='#fff';c.fillRect(Math.round(b.x)-r+2,Math.round(b.y)-r+1,2,1);if(big){disk(b.x,b.y,b.n>9?5:4,'#f8fafc');digits(b.n,b.x,b.y-2);}};
+  let t=0,phase=0,k=0,pt=0,stop=false,shown=[],last=performance.now();
+  const out=$('#ltOut');
+  const tray=i=>({x:CX-30+i*30,y:100});
+  const fin=()=>{stop=true;out.innerHTML=`<div class="lt-row" style="justify-content:center">${nums.map(n=>lball(n)).join('')}</div>`+(L.mine&&L.mine.length?`<div class="lt-my" style="text-align:left">${L.mine.map(t=>`<div class="lt-row">${t.n.map(n=>lball(n,{hit:nums.includes(n),dim:!nums.includes(n)})).join('')}<span>${t.h?t.h+'개 맞춤 · <img class="ico" src="'+ICO.coin+'"> '+(+t.p).toLocaleString()+' (우편함)':'꽝'}</span></div>`).join('')}</div>`:'');
+    const bt=$('#ltSkip');bt.textContent='확인';bt.onclick=()=>{sfx('ui');done();};
+    if(L.mine&&L.mine.some(t=>t.h))sfx('cube');};
+  $('#ltSkip').onclick=()=>{if(!stop){fin();draw0(1);}};
+  const draw0=all=>{c.fillStyle='#1e293b';c.fillRect(0,0,160,112);
+    /* 받침·관 */c.fillStyle='#111';c.fillRect(CX-6,CY+RR-2,13,20);c.fillStyle='#64748b';c.fillRect(CX-4,CY+RR-2,9,18);c.fillStyle='#94a3b8';c.fillRect(CX-4,CY+RR-2,2,18);
+    c.fillStyle='#111';c.fillRect(CX-48,93,97,15);c.fillStyle='#475569';c.fillRect(CX-46,95,93,11);c.fillStyle='#334155';c.fillRect(CX-46,103,93,3);
+    /* 유리 통 */disk(CX,CY,RR+2,'#111');disk(CX,CY,RR,'#24364d');
+    /* 회전 날개 */const a=t*(phase<2?7:2);c.fillStyle='#94a3b8';for(let q=0;q<2;q++){const aa=a+q*Math.PI;for(let d=-RR+6;d<=RR-6;d+=1)c.fillRect(Math.round(CX+Math.cos(aa)*d),Math.round(CY+Math.sin(aa)*d),1,1);}
+    for(const b of B)if(!b.out)ball(b);
+    /* 유리 반사 */c.fillStyle='rgba(255,255,255,.35)';for(let j=0;j<10;j++)c.fillRect(CX-RR+8+j,CY-RR+12-j,2,1);c.fillStyle='rgba(255,255,255,.18)';c.fillRect(CX+RR-10,CY+6,2,10);
+    const ks=all?nums.map(n=>B[n-1]):shown;
+    ks.forEach((b,i)=>{const p=all?tray(i):b;ball({n:b.n,x:p.x,y:p.y},1);});
+    if(all)ks.forEach((b,i)=>{b.out=1;});};
+  const loop=now=>{if(stop||!document.body.contains(cv))return;const dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;pt+=dt;
+    const pw=phase===0?140:60;
+    for(const b of B){if(b.out)continue;b.vy+=90*dt;if(Math.random()<dt*6){b.vx+=(Math.random()-.5)*pw;b.vy-=Math.random()*pw;}
+      b.x+=b.vx*dt;b.y+=b.vy*dt;const dx=b.x-CX,dy=b.y-CY,d=Math.hypot(dx,dy);if(d>RR-5){const nx=dx/d,ny=dy/d,v=b.vx*nx+b.vy*ny;if(v>0){b.vx-=1.8*v*nx;b.vy-=1.8*v*ny;}b.x=CX+nx*(RR-5);b.y=CY+ny*(RR-5);}
+      b.vx*=.995;b.vy*=.995;}
+    if(phase===0&&pt>1.6){phase=1;pt=0;}
+    if(phase===1&&pt>.9){const b=B[nums[k]-1];b.out=1;const s={n:b.n,x:CX,y:CY+RR-4,tx:tray(k).x,st:0};shown.push(s);sfx('ui');phase=2;pt=0;}
+    if(phase===2){const s=shown[k];if(s.st===0){s.y+=60*dt;if(s.y>=100){s.y=100;s.st=1;}}else{s.x+=(s.tx-s.x)*Math.min(1,dt*8);if(Math.abs(s.x-s.tx)<.5){s.x=s.tx;k++;sfx('cube');phase=k<nums.length?1:3;pt=0;}}}
+    if(phase===3&&pt>.6){draw0();fin();return;}
+    draw0();requestAnimationFrame(loop);};
+  requestAnimationFrame(loop);}
 function boxAnim(it,R){
   const ov=$('#shOv');ov.classList.add('on');
   const BC={'poke-ball':'#ef4444','great-ball':'#3b82f6','ultra-ball':'#facc15','master-ball':'#a855f7','premier-ball':'#f8fafc'}[it.ball]||'#fde047';
