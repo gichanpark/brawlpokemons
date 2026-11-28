@@ -647,7 +647,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.22.15';
+const VER='1.22.16';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -3484,7 +3484,7 @@ $('#bMulti').onclick=()=>{
   $('#joinRoom').onclick=()=>{const c=$('#codeIn').value.trim().toUpperCase();if(c.length===4)openRoom(c,false);};
 };
 $('#bSnd').onclick=()=>{const v=VOL();
-  modal(`<h2>설정 <span class="cur">v${VER}</span></h2><div class="amail" style="min-width:320px">
+  modal(`<h2>설정 <span class="cur">v${VER} · 기기 ${didFmt(DID)}</span></h2><div class="amail" style="min-width:320px">
     <div class="arow"><span style="width:70px">효과음</span><input type="range" id="vS" min="0" max="100" value="${v.s}" style="flex:1"><b id="vSn" style="width:36px;text-align:right">${v.s}</b></div>
     <div class="arow"><span style="width:70px">배경음악</span><input type="range" id="vM" min="0" max="100" value="${v.m}" style="flex:1"><b id="vMn" style="width:36px;text-align:right">${v.m}</b></div>
     <div style="font-size:11px;opacity:.75">0으로 내리면 꺼져요</div>
@@ -5181,6 +5181,7 @@ async function doAuth(kind){
   if(p.length<4)return loginErr('비밀번호는 4자 이상이에요');
   if(kind==='up'){if(nk.style.display==='none'){nk.style.display='';nk.focus();return loginErr('닉네임을 정하고 회원가입을 한 번 더 눌러 주세요');}
     if(!okNick(nick))return loginErr('닉네임은 한글·영문·숫자·_ 로 2~10자예요');}
+  if(await devCheck())return;
   loginErr(kind==='up'?'가입하는 중...':'로그인하는 중...');
   try{const r=await rpc(kind==='up'?'pb_signup':'pb_login',{p_user:u,p_pw:p});
     if(r.ok){$('#lgPw').value='';nk.value='';nk.style.display='none';applyAccount(r,kind==='up',kind==='up'?nick:null);sfx('found');return;}
@@ -5318,12 +5319,21 @@ setInterval(()=>{const b=$('#updBar');if(UPD.v&&!UPD.x&&b&&b.style.display!=='no
 let VERASK=0;function verCheck(lv){if(!lv||verNum(lv)<=verNum(VER)||VERASK)return;if(G&&!G.over){return;}VERASK=1;
   modal(`<h2>새 버전이 나왔어요!</h2><div style="font-size:12px;line-height:1.8">지금 버전 v${VER} → 새 버전 v${esc(lv)}<br>잠시 후 자동으로 새로고침돼요.</div><div class="mrow"><button class="btn sm" onclick="location.replace(location.pathname+'?v='+encodeURIComponent('${esc(lv)}'))">지금 새로고침</button></div>`);
   try{serverPush();}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(lv)),4000);}
-function banKick(r){if(window._banned)return;window._banned=1;try{if(G){G.over=true;}}catch(e){}
+/* ---------- 기기 번호(브라우저마다 무작위, localStorage+쿠키) · 기기 밴 ---------- */
+const DID=(()=>{let d=null;try{d=localStorage.getItem('pb_did');}catch(e){}if(!d){const m=document.cookie.match(/(?:^|; )pb_did=([A-Z0-9]{8})/);if(m)d=m[1];}
+  if(!/^[A-Z0-9]{8}$/.test(d||'')){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';d='';const r=new Uint8Array(8);try{crypto.getRandomValues(r);}catch(e){for(let i=0;i<8;i++)r[i]=Math.random()*256;}for(const v of r)d+=A[v%A.length];}
+  try{localStorage.setItem('pb_did',d);}catch(e){}try{document.cookie='pb_did='+d+';max-age=315360000;path=/;SameSite=Lax';}catch(e){}return d;})();
+const didFmt=d=>d.slice(0,4)+'-'+d.slice(4);
+function devBlock(msg){window._banned=1;try{if(G)G.over=true;}catch(e){}try{ACC.user=ACC.token=null;localStorage.removeItem('pb_token');}catch(e){}
+  modal(`<h2>이 기기는 이용이 정지됐어요</h2><div style="font-size:12px;margin-bottom:8px">기기 번호 <b>${didFmt(DID)}</b></div>${msg?`<div class="amail" style="white-space:pre-wrap;line-height:1.7"><b>관리자의 편지</b><br>${esc(msg)}</div>`:''}`);$('#modal').onclick=null;window.MLOCK=1;}
+async function devCheck(){try{const r=await rpc('pb_dev_check',{p_did:DID});if(r&&r.banned){devBlock(r.msg);return true;}}catch(e){}return false;}
+setTimeout(devCheck,1500);
+function banKick(r){if(r&&r.dev){devBlock(r.msg);return;}if(window._banned)return;window._banned=1;try{if(G){G.over=true;}}catch(e){}
   try{ACC.user=ACC.token=null;ACC.admin=false;localStorage.removeItem('pb_token');}catch(e){}
   try{showScr('login');}catch(e){}
   modal(`<h2>이용이 정지된 계정이에요</h2><div style="font-size:12px;margin-bottom:8px">${r.until?`정지 해제까지 <b>${banLeft(r.until)}</b> 남았어요`:'<b>영구 정지</b>'}</div>${r.msg?`<div class="amail" style="white-space:pre-wrap;line-height:1.7"><b>관리자의 편지</b><br>${esc(r.msg)}</div>`:''}<div class="mrow"><button class="btn sm" onclick="location.reload()">확인</button></div>`);
   $('#modal').onclick=null;}
-async function pingNow(){if(!ACC.token)return;let r;try{r=await rpc('pb_ping',{p_token:ACC.token,p_ver:VER});}catch(e){return;}if(!r)return;if(r.now){SRVOFF=r.now-Date.now();if(!SRVOK){SRVOK=1;try{refreshMenu();}catch(e){}}}
+async function pingNow(){if(!ACC.token)return;let r;try{r=await rpc('pb_ping',{p_token:ACC.token,p_ver:VER,p_did:DID});}catch(e){return;}if(!r)return;if(r.now){SRVOFF=r.now-Date.now();if(!SRVOK){SRVOK=1;try{refreshMenu();}catch(e){}}}
   if(!r.ok){if(r.banned)banKick(r);return;}
   verCheck(r.ver);
   const bd=$('#frBadge');if(bd){bd.textContent=r.freq;bd.style.display=r.freq?'':'none';}
@@ -5465,13 +5475,25 @@ async function adminUser(u){modal(`<h2>회원 정보 · ${esc(u)}</h2><div style
     ${sec('기본',`가입 ${d(r.created)} · 마지막 로그인 ${d(r.last)} · 마지막 접속 ${d(r.seen)}<br><img class="ico" src="${ICO.coin}"> ${sv.coins||0} · <img class="ico" src="${ICO.gemc}"> ${sv.gems||0} · 총 트로피 ${tot} · 대전 기록 ${r.games}판 (승 ${r.wins}) · 우편으로 받은 것 금구슬 ${r.mail.c} / 혜성조각 ${r.mail.g} (${r.mail.n}통)<br>조롤패스 Lv ${Math.floor((ps.xp||0)/PASS_XP)} (${ps.xp||0}xp)${ps.paid?' · 프리미엄':''} · 로또 ${r.lotto}장 · 저장 횟수(rev) ${sv.rev||0}${sv.slotBan&&(sv.slotBan===1||sv.slotBan>Date.now())?' · 슬롯 출입 금지':''}`)}
     ${sec(`포켓몬 ${own.length}마리`,`<div class="au-pk">${pks.map(c=>`<span class="au-p${own.includes(c.k)?'':' no'}"><img src="${POR[c.id]}"><b>${c.nm}</b><i>파워 ${lvs[c.k]||1} · 🏆${tro[c.k]||0}</i></span>`).join('')}</div>`)}
     ${sec(`스킨 ${skins.length}개 · 프레임 ${(sv.frOwn||[]).length}개`,(skins.join(', ')||'없음')+'<br>프레임: '+((sv.frOwn||[]).map(f=>(FRAMES.find(x=>x.id===f)||{nm:f}).nm).join(', ')||'없음')+' · 장착 '+((FRAMES.find(x=>x.id===sv.frm)||{nm:'기본'}).nm))}
+    ${sec('기기','<div id="auDev">불러오는 중...</div>')}
     ${sec(`가방`,inv.join(', ')||'비어 있음')}
     ${sec(`친구 ${r.friends.length}명`,r.friends.map(f=>`<a href="#" data-au="${esc(f.u)}" style="color:#93c5fd">${esc(f.n)}</a>${f.b?' (정지)':''}`).join(', ')||'없음')}
     ${sec('판돈 친선전 (최근 20)',r.duels.map(x=>`${d(x.at)} vs ${esc(x.o)} · ${x.c}/${x.g} · ${x.w===r.u?'승':x.w==null?'무효':'패'}`).join('<br>')||'없음')}
     ${sec('선물 (최근 20)',r.gifts.map(x=>`${d(x.at)} ${esc(x.a)} → ${esc(x.b)} · ${x.c}/${x.g}`).join('<br>')||'없음')}
     <div class="mrow"><button class="btn sm b2" id="auBk">돌아가기</button></div>`);
   $('#mbox').classList.add('wide');$('#auBk').onclick=()=>adminPanel(u);
-  document.querySelectorAll('[data-au]').forEach(a=>a.onclick=e=>{e.preventDefault();adminUser(a.dataset.au);});}
+  document.querySelectorAll('[data-au]').forEach(a=>a.onclick=e=>{e.preventDefault();adminUser(a.dataset.au);});auDevices(u);}
+async function auDevices(u){const el=$('#auDev');if(!el)return;let r;try{r=await rpc('pb_admin_devices',{p_token:ACC.token,p_user:u});}catch(e){}
+  if(!r||!r.ok){el.textContent='불러오기 실패';return;}if(!r.dev.length){el.textContent='기록 없음 (기기 기록은 v1.22.16부터 쌓여요)';return;}
+  const d=t=>t?new Date(t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit'}):'-';
+  el.innerHTML=r.dev.map((x,i)=>{const others=x.acc.filter(a=>a.u!==u);return `<div style="border-top:2px solid #111;padding:3px 0"><b>${didFmt(x.did)}</b> · 처음 ${d(x.first)} · 마지막 ${d(x.last)}${x.ban?' · <b style="color:#fca5a5">기기 정지됨</b>':''}
+    <br>이 기기의 다른 계정: ${others.length?others.map(a=>`<a href="#" data-au2="${esc(a.u)}" style="color:#93c5fd">${esc(a.u)}</a>${a.b?'(정지)':''}`).join(', '):'없음'}
+    <br>${x.ban?`<button class="btn sm b2" data-dun="${i}">기기 정지 해제</button>`:`<button class="btn sm" style="background:#dc2626;color:#fff" data-dbn="${i}">기기 정지</button>`}</div>`;}).join('');
+  el.querySelectorAll('[data-au2]').forEach(a=>a.onclick=e=>{e.preventDefault();adminUser(a.dataset.au2);});
+  el.querySelectorAll('[data-dun]').forEach(b=>b.onclick=async()=>{await rpc('pb_admin_dev_ban',{p_token:ACC.token,p_did:r.dev[+b.dataset.dun].did,p_on:false});auDevices(u);});
+  el.querySelectorAll('[data-dbn]').forEach(b=>b.onclick=async()=>{const x=r.dev[+b.dataset.dbn];if(!b.dataset.ok){b.dataset.ok=1;b.textContent='정말 정지? (이 기기의 모든 계정)';
+      b.insertAdjacentHTML('afterend',`<input class="minput sm2" id="dbMsg" maxlength="300" placeholder="정지 사유(선택)" style="width:200px;margin-left:4px">`);return;}
+    const q=await rpc('pb_admin_dev_ban',{p_token:ACC.token,p_did:x.did,p_on:true,p_msg:($('#dbMsg')||{}).value||''});if(q&&q.err==='admin_device'){toast('관리자 계정이 쓰는 기기는 정지할 수 없어요');return;}auDevices(u);});}
 async function flagList(){const el=$('#flList');el.innerHTML='<span style="font-size:11px">불러오는 중...</span>';let r;try{r=await rpc('pb_admin_flags',{p_token:ACC.token});}catch(e){}
   if(!r||!r.ok){el.innerHTML='<span style="font-size:11px">불러오기 실패</span>';return;}
   const KN={clone_reset:'복제 의심 → 초기화',clamp:'재화 급증 → 깎음',jump:'재화 급증',signup_limit:'가입 제한'},d=t=>new Date(t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit'});
