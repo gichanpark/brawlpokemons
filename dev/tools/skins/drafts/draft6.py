@@ -84,17 +84,6 @@ s.outline();out['samurai']=s.im
 # 5 흡혈귀 블래키 -------------------------------------------------
 s=S(D+'/umbreon.png',right=3)
 s.map(lambda x,y,c,l: rp(['#5f0a14','#9f1239','#dc2626','#f87171'],(l-.25)/.6) if c=='Y' else None)
-CB,CH,CR='#120e1a','#2a2236','#b0153a'
-# 등을 덮고 옆으로 늘어지는 망토 (아래로 갈수록 넓어짐) + 들쭉날쭉한 밑단
-cape={8:(9,12),9:(8,13),10:(8,14),11:(8,15),12:(8,16),13:(8,16),14:(8,17)}
-for y,(x0,x1) in cape.items():
-    for x in range(x0,x1+1):s.P(x,y,CH if y==8 or x==x1 else CB)
-    s.P(x0,y,CR)                                                      # 앞자락 붉은 안감
-for x in range(8,18):s.P(x,15,CB if x%2==0 else CR)               # 밑단
-for x in range(8,18,2):s.P(x,16,CB)
-# 드라큘라 세운 옷깃 (머리 뒤)
-for (x,y,c) in [(8,5,CB),(8,6,CR),(9,6,CB),(8,7,CR),(9,7,CB),(10,7,CB)]:s.P(x,y,c)
-s.P(7,9,'#fde047')                                                 # 금 브로치
 s.P(1,10,'#f8fafc');s.P(3,10,'#f8fafc')                            # 송곳니
 s.outline();out['vamp']=s.im
 # 6 해적 갑판장 누리레느 -------------------------------------------
