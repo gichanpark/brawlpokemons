@@ -97,7 +97,8 @@ h1{margin:4px 0 0;font-size:44px;font-weight:400;color:#fde047;text-shadow:3px 0
 .rk{display:flex;flex:none;min-height:38px;align-items:center;gap:7px;padding:3px 5px;cursor:pointer;border:2px solid transparent}.rk:hover{border-color:#fde047;background:#2a2140}.rk.me{background:#facc15;color:#111;border-color:#a16207}.rk.me .no{color:#111}.rk.me .tt{color:#111}.rk.hid{cursor:default}.rk.hid:hover{border-color:transparent;background:none}.rk.hid .nm{opacity:.55;letter-spacing:2px}.rk-hide{font-size:11px;color:#fde047;text-align:center;margin:2px 0 4px;animation:rkb 1s steps(2) infinite}@keyframes rkb{50%{color:#f97316}}.rk .no{width:18px;text-align:right;color:#c4b5fd}.rk.r1 .no{color:#fde047}.rk .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rk .tt{color:#fde047}
 .skrow{display:flex;align-items:center;gap:6px;margin:6px 0;font-size:11px;flex-wrap:wrap}.skrow>span{color:#c4b5fd}.skrow em{font-style:normal;opacity:.6;font-size:10px}.skb{font-family:inherit;font-size:11px;padding:4px 9px;background:#2a2140;color:#e5e7eb;border:2px solid #111;box-shadow:inset 0 -3px 0 #1a1430;cursor:pointer}.skb.on{background:#fde047;color:#111;box-shadow:inset 0 -3px 0 #a16207}.skb.shy.on{background:linear-gradient(90deg,#fde047,#f9a8d4,#7dd3fc);}.skb.lock{opacity:.55;cursor:default}.card .shyb{position:absolute;left:3px;bottom:22px;color:#fde047;font-size:12px;text-shadow:0 0 3px #111,1px 1px 0 #111}
 .rk .ava{--s:34px!important;border-width:3px!important;z-index:1}
-.rk .ava:not(.fr-rbw):not(.fr-wave):not(.fr-pixel):not(.fr-galaxy):not(.fr-master):after{display:none}
+.rk .ava:not(.fr-rbw):not(.fr-wave):not(.fr-pixel):not(.fr-galaxy):not(.fr-master):not(.fr-crown):not(.fr-jpassg):not(.fr-star):not(.fr-star2):not(.fr-star3):not(.fr-s1red):not(.fr-leg):not(.fr-srare):after{display:none}
+.rk .ava.fr-crown:after,.rk .ava.fr-jpassg:after{width:18px;height:11px}.rk .ava.fr-srare:after{width:11px;height:11px}.rk .ava.fr-leg:after{font-size:12px}
 .rk .ava.fr-leaf:before,.rk .ava.fr-shiny:before,.rk .ava.fr-star:before{display:none}
 .rk .ava.fr-rbw:before,.rk .ava.fr-wave:before,.rk .ava.fr-pixel:before,.rk .ava.fr-galaxy:before,.rk .ava.fr-master:before{inset:-3px!important}
 .rk .ava.fr-star{--fb:4px}
@@ -648,7 +649,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.22.20';
+const VER='1.22.21';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -5268,7 +5269,7 @@ setInterval(()=>{try{if(!document.hidden)seasonShow();}catch(e){}},30000);
 let rankT=0;
 async function loadRank(force){if(!force&&Date.now()-rankT<15000)return;rankT=Date.now();
   try{const r=await rpc('pb_rank',{p_token:ACC.token||null});if(!r||!r.ok)return;
-    $('#rkList').innerHTML=r.top.length?r.top.map((x,i)=>{const [src,ph]=otherAva(x.a,x.s);return `<div class="rk${x.me?' me':''}${i<3?' r'+(i+1):''}${x.n==null?' hid':''}" data-u="${esc(x.u||'')}"><span class="no">${i+1}</span><div class="ava fr-${/^[a-z]+$/.test(x.f||'')?x.f:'basic'}${ph?' ph':''}" style="--s:22px${abgS(x.a)}"><img src="${src}"></div><span class="nm">${x.o||x.me?'<i class="on" title="접속 중"></i>':'<i class="on off"></i>'}${x.n==null?'? ? ?':esc(x.n)}${x.me?' (나)':''}</span><span class="tt">${x.t}</span></div>`;}).join(''):'아직 기록이 없어요';
+    $('#rkList').innerHTML=r.top.length?r.top.map((x,i)=>{const [src,ph]=otherAva(x.a,x.s);return `<div class="rk${x.me?' me':''}${i<3?' r'+(i+1):''}${x.n==null?' hid':''}" data-u="${esc(x.u||'')}"><span class="no">${i+1}</span><div class="ava fr-${/^[a-z0-9]+$/.test(x.f||'')?x.f:'basic'}${ph?' ph':''}" style="--s:22px${abgS(x.a)}"><img src="${src}"></div><span class="nm">${x.o||x.me?'<i class="on" title="접속 중"></i>':'<i class="on off"></i>'}${x.n==null?'? ? ?':esc(x.n)}${x.me?' (나)':''}</span><span class="tt">${x.t}</span></div>`;}).join(''):'아직 기록이 없어요';
     $('#rkHide').style.display=r.hide?'':'none';if(r.frozen)$('#rkList').insertAdjacentHTML('afterbegin','<div class="rk-frozen">트로피 마켓 기간 - 마지막 랭킹 (11월 30일 23:59)</div>');
     document.querySelectorAll('#rkList .rk').forEach(el=>el.onclick=()=>{if(el.dataset.u)openPlayer(el.dataset.u);});
     $('#rkMine').textContent=r.admin?'관리자 계정은 랭킹에서 빠져요':r.my?`내 순위 ${r.my}위 · 트로피 ${r.mt}`:'';}catch(e){}}
@@ -5277,7 +5278,7 @@ setInterval(()=>{try{if(!document.hidden&&(!G||G.over)&&$('#lbRank')&&$('#lbRank
 async function openPlayer(u){modal(`<h2>트레이너 정보</h2><div style="font-size:11px">불러오는 중...</div>`);
   let r;try{r=await rpc('pb_profile',{p_token:ACC.token||null,p_user:u});}catch(e){}
   if(!r||!r.ok){modal(`<h2>트레이너 정보</h2><div style="font-size:11px">정보를 찾을 수 없어요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
-  const [src,ph]=otherAva(r.ava,r.sel),fr=/^[a-z]+$/.test(r.frm||'')?r.frm:'basic';
+  const [src,ph]=otherAva(r.ava,r.sel),fr=/^[a-z0-9]+$/.test(r.frm||'')?r.frm:'basic';
   const top=Object.entries(r.tro||{}).filter(([k,v])=>CH.find(c=>c.k===k)&&v>0).sort((a,b)=>b[1]-a[1]).slice(0,3);
   const fav=top.length?top:(r.sel&&CH.find(c=>c.k===r.sel)?[[r.sel,0]]:[]);
   const d=new Date(r.since),since=`${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}`;
@@ -5386,7 +5387,7 @@ function sponsorAsk(u,n){const L=NET.lastDuel||{c:0,g:0};
   giftOpen(u,n,{noItems:1,title:'후원하기',btn:'후원하기',note:`${esc(n)}님이 판돈으로 재화를 전부 잃었어요... 조금 후원해 줄까요?`,c:Math.min(SAVE.coins,Math.round((L.c||0)*.3)),g:Math.min(SAVE.gems||0,Math.round((L.g||0)*.3))});}
 async function openFriends(){modal(`<h2>친구</h2><div style="font-size:11px">불러오는 중...</div>`);let r;try{r=await rpc('pb_friend_list',{p_token:ACC.token});}catch(e){}
   if(!r||!r.ok){modal(`<h2>친구</h2><div style="font-size:11px">로그인이 필요해요</div><div class="mrow"><button class="btn sm" onclick="closeModal()">닫기</button></div>`);return;}
-  const av=x=>{const [src,ph]=otherAva(x.ava,x.sel);return `<div class="ava fr-${/^[a-z]+$/.test(x.frm||'')?x.frm:'basic'}${ph?' ph':''}" style="--s:30px${abgS(x.ava)}"><img src="${src}"></div>`;};
+  const av=x=>{const [src,ph]=otherAva(x.ava,x.sel);return `<div class="ava fr-${/^[a-z0-9]+$/.test(x.frm||'')?x.frm:'basic'}${ph?' ph':''}" style="--s:30px${abgS(x.ava)}"><img src="${src}"></div>`;};
   modal(`<h2>친구 <span class="cur">${r.fr.length}명 · 접속 중 ${r.fr.filter(x=>x.on).length}명</span></h2>
     ${r.in.length?`<div class="pf-sec">받은 친구 요청</div><div class="fr-list">${r.in.map(x=>`<div class="fr-row"><span class="nm"><b>${esc(x.n)}</b> @${esc(x.u)}</span><button class="upbtn" data-acc="${esc(x.u)}">수락</button><button class="upbtn" data-rej="${esc(x.u)}" style="background:#52525b">거절</button></div>`).join('')}</div>`:''}
     <div class="pf-sec">친구 목록</div><div class="fr-list">${r.fr.length?r.fr.map(x=>`<div class="fr-row">${av(x)}<span class="nm"><span class="pp-on" style="background:${x.on?'#22c55e':'#52525b'}"></span><b>${esc(x.n)}</b> @${esc(x.u)} · ★${x.t}</span><button class="upbtn" data-gift="${esc(x.u)}" data-n="${esc(x.n)}" style="background:#f59e0b;color:#111">선물</button>${x.on?`<button class="upbtn" data-inv="${esc(x.u)}" data-n="${esc(x.n)}" style="background:#dc2626;color:#fff">친선전 초대</button>`:''}<button class="upbtn" data-info="${esc(x.u)}" style="background:#3b82f6;color:#fff">정보</button></div>`).join(''):'<span style="font-size:11px;opacity:.7">아직 친구가 없어요. 랭킹에서 트레이너를 누르거나 아래에 아이디를 넣어 친구를 추가해 보세요</span>'}</div>
