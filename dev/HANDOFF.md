@@ -391,3 +391,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - 스킨(THEMES, pass:1 + ev:'초희귀 챌린지' → 일반 상자 드롭 제외): 마술사 후딘(alakazam_magic) · 산타 라프라스(lapras_santa) · 사이버 쥬피썬더(jolteon_cyber) · 흡혈귀 블래키(umbreon_vamp) · 해적 갑판장 누리레느(primarina_pirate). 사무라이 핫삼은 초안만(사용자: 제외).
 - 도트: dev/tools/skins/drafts/draft7.py(스프라이트, 원본 해상도·부위 바꾸기) + portraits7.py(40x40 초상화) — 원본 png는 drafts/src/. skins.js에는 spr ×4(오른쪽 여백만큼 왼쪽도 채워 가운데 맞춤), por.
 - SR_SHOP 'srbox' 1000토큰: srBoxPool() = 초희귀(gr 's') 포켓몬의 안 가진 스킨(이로치·테마) 전부, 이벤트 스킨 가중치 6 · 나머지 1 (전부 미보유일 때 이벤트 스킨 1종 9%, 5종 합 45%, 이로치 1종 1.5%). 다 모으면 버튼 '✓ 다 모음'. 포켓몬이 없어도 스킨은 받음(안내 문구).
+- v1.21.39: 해적 갑판장 누리레느 초상화를 사용자가 준 그림으로 교체 (drafts/src/primarina_pirate_por_user.png)
