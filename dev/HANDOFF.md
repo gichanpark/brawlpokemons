@@ -364,3 +364,6 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 
 ## v1.21.32
 - pb_ping이 `now`(서버 시각 ms)도 돌려줌 → 클라 `SRVOFF`/`srvNow()`. 구출 이벤트 종료(rescueOn/rescueLeft)는 서버 시각 기준(로그인 안 했거나 핑 전에는 기기 시각).
+
+## (서버) pb_ping 고장 수정 (11/28)
+- pb_ping 끝의 `select count(*) from pb_friend where b=me` 가 변수 b(pb_users)와 컬럼 b가 겹쳐 매번 에러 → 11/27 08:49 KST쯤부터 핑 전부 실패(접속 표시·초대·친구 요청 알림·정지 즉시 반영·서버 시각 안 됨). `pb_friend fq where fq.b=me` 로 수정. plpgsql 변수명 b 쓰는 함수에서 테이블 컬럼 b 쓸 때 별칭 필수.
