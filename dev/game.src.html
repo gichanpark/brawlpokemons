@@ -638,7 +638,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.22.6';
+const VER='1.22.7';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1416,7 +1416,7 @@ function buildBallMap(){const C=31,R=21,g=new Uint8Array(C*R),cy=10;
   g[cy*C+15]=0;g[(cy-1)*C+15]=0;g[(cy+1)*C+15]=0;
   const sp=[[[4.5,5.5],[4.5,10.5],[4.5,15.5]].map(([x,y])=>[x*T,y*T]),[[C-4.5,5.5],[C-4.5,10.5],[C-4.5,15.5]].map(([x,y])=>[x*T,y*T])];
   ensurePaths(g,C,R,[15,cy],[[4,5],[4,10],[4,15],[C-5,5],[C-5,10],[C-5,15],[1,cy],[C-2,cy]]);
-  return {nm:'브롤 볼 경기장',C,R,g,bhp:new Float32Array(C*R),sp,center:{x:15.5*T,y:(cy+.5)*T},mine:{x:15.5*T,y:(cy+.5)*T},ballG:1};}
+  return {nm:'조롤 볼 경기장',C,R,g,bhp:new Float32Array(C*R),sp,center:{x:15.5*T,y:(cy+.5)*T},mine:{x:15.5*T,y:(cy+.5)*T},ballG:1};}
 const BALLIMG=new Image();BALLIMG.onload=()=>{BALLIMG.ok=1};setTimeout(()=>{BALLIMG.src=ICO.ball;},0);
 const BALL_KR=9*T;
 /* TNT: 떨어지면 1초 동안 하얗게 깜빡이다 폭발 (마인크래프트처럼) */
@@ -1446,7 +1446,7 @@ B.vx=Math.cos(ang)*v;B.vy=Math.sin(ang)*v;B.x=e.x+Math.cos(ang)*(e.r+10);B.y=e.y
   if(pow>1){spark(B.x,B.y,['#fde047','#f97316','#fff'],18,280,.4,5,{sh:'plus'});ring(B.x,B.y,70,'#fde047');if(Math.hypot(P.x-B.x,P.y-B.y)<8*T)G.shake=Math.max(G.shake,.25);}
   else spark(B.x,B.y,['#fff','#ef4444'],8,160,.3,4,{sh:'plus'});
   parts(e.x,e.y+e.r*.6,6,'#d6d3d1',90,.35,4);ev('BK',Math.round(B.x),Math.round(B.y),pow>1?1:0);}
-/* 브롤볼 연출: 골 세리머니 · 킥오프 · 연장전 */
+/* 조롤볼 연출: 골 세리머니 · 킥오프 · 연장전 */
 function bbInfo(e){return e?{k:e.ch.k,fo:e.ch.ditto?0:(e.form||0),n:e===P?(SAVE.nick||'나'):(e.name||e.ch.nm),t:e.team}:null;}
 function goalFx(t,sc){const m=G.map,cy=m.R*T/2,gx=t===1?T*.5:m.C*T-T*.5,mine=t===P.team,own=sc&&sc.t!==t;
   G.gfx={t0:G.t,team:t,mine,sc,own};G.gflash=G.t;G.netT=[t===1?G.t:(G.netT||[-9,-9])[0],t===0?G.t:(G.netT||[-9,-9])[1]];
@@ -1525,7 +1525,7 @@ function drawBallField(){const m=G.map,cy=m.R*T/2,MW=m.C*T;
     // 골대 기둥
     const pc=mine?'#93c5fd':'#fca5a5';for(const py of [cy-2.5*T,cy+2.5*T]){ctx.fillStyle='#111';ctx.fillRect(ox-8,py-8,16,16);ctx.fillStyle='#fff';ctx.fillRect(ox-5,py-5,10,10);ctx.fillStyle=pc;ctx.fillRect(ox-5,py+1,10,4);}
     ctx.fillStyle='#111';ctx.fillRect(ox-3,cy-2.5*T,6,5*T);ctx.fillStyle='#f8fafc';ctx.fillRect(ox-1,cy-2.5*T,2,5*T);}}
-/* 브롤볼 HUD 연출 */
+/* 조롤볼 HUD 연출 */
 function drawBallHUD(tx,IMQ){const cx=Math.round(W/2),B=G.ball;
   if(B&&B.h===P&&P.alive&&G.goalT<=0&&!G.over){const pu=.75+.25*Math.sin(G.t*5);for(let i=0;i<6;i++){const w=6,al=(.34-i*.05)*pu;ctx.fillStyle=`rgba(96,165,250,${al})`;const o=i*w;ctx.fillRect(o,o,W-2*o,w);ctx.fillRect(o,H-o-w,W-2*o,w);ctx.fillRect(o,o+w,w,H-2*o-2*w);ctx.fillRect(W-o-w,o+w,w,H-2*o-2*w);}}
   // 마지막 10초 비프
@@ -3303,7 +3303,7 @@ const QPOOL=[
  {id:'gem',n:2,xp:60,t:n=>`젬 그랩 ${n}판 하기`},
  {id:'sd',n:2,xp:60,t:n=>`쇼다운 ${n}판 하기`},
  {id:'heist',n:2,xp:60,t:n=>`하이스트 ${n}판 하기`},
- {id:'ball',n:2,xp:60,t:n=>`브롤 볼 ${n}판 하기`},
+ {id:'ball',n:2,xp:60,t:n=>`조롤 볼 ${n}판 하기`},
  {id:'top1',n:1,xp:90,t:()=>`쇼다운 1등 하기`},
  {id:'mvp',n:1,xp:80,t:()=>`한 판에 3킬 이상 하기`}];
 const QBONUS=100;
@@ -3375,7 +3375,7 @@ const lv=k=>isTmp(k)?9:(SAVE.lv&&SAVE.lv[k])||1;
 const upCost=l=>l*100;
 const MODES={train:{nm:'훈련장',ds:'혼자 연습 · 보상 없음',ico:'trophy',col:'#0f766e',long:'훈련 인형을 상대로 공격과 필살기를 연습해요. 움직이는 인형, 공격하는 인형도 있어요. 초당 피해가 표시돼요.'},gem:{nm:'젬 그랩',ds:'3대3 · 보석 10개 들고 15초',ico:'gem',col:'#7e22ce',long:'광산에서 나오는 보석을 모으세요. 팀이 10개 이상을 들고 15초를 버티면 승리! 쓰러지면 들고 있던 보석을 떨어뜨려요.'},
  bounty:{nm:'바운티',ds:'3대3 · 별 50개 먼저 모으기',ico:'star',col:'#0e7490',long:'적을 쓰러뜨리면 그 적의 현상금(★)만큼 별을 얻어요. 처치할수록 내 현상금이 올라가요(최대 7). 쓰러지면 2로 돌아가요. 별 50개를 먼저 모은 팀 승리! (2분이 지나면 별이 많은 팀 승리)'},
- ball:{nm:'브롤 볼',ds:'3대3 · 골 2개 먼저 넣기',ico:'ball',col:'#15803d',long:'가운데 몬스터볼을 주워 상대 골대에 넣으세요! 공을 든 채 공격하면 조준한 방향으로 차요 (멀리 조준할수록 세게) · 필살기는 강슛. 공을 든 포켓몬이 쓰러지면 공을 떨어뜨려요. 2골 먼저 넣거나, 시간이 끝났을 때 더 많이 넣은 팀이 승리!'},
+ ball:{nm:'조롤 볼',ds:'3대3 · 골 2개 먼저 넣기',ico:'ball',col:'#15803d',long:'가운데 몬스터볼을 주워 상대 골대에 넣으세요! 공을 든 채 공격하면 조준한 방향으로 차요 (멀리 조준할수록 세게) · 필살기는 강슛. 공을 든 포켓몬이 쓰러지면 공을 떨어뜨려요. 2골 먼저 넣거나, 시간이 끝났을 때 더 많이 넣은 팀이 승리!'},
  heist:{nm:'하이스트',ds:'3대3 · 상대 금고 부수기',ico:'safe',col:'#b45309',long:'상대 금고를 먼저 부수면 승리! 우리 금고는 지키세요. 시간이 끝나면 금고 체력이 더 많이 남은 팀이 이겨요.'},
  sd:{nm:'쇼다운',ds:'10명 생존전 · 이상한사탕',ico:'skull',col:'#b91c1c',long:'최후의 1인이 되세요! 바위를 부수면 나오는 이상한사탕로 강해지고, 조여오는 독가스를 피하세요.'}};
 if(!SAVE.coins)SAVE.coins=0;if(!SAVE.gems)SAVE.gems=0;if(!SAVE.lv)SAVE.lv={};if(!SAVE.road)SAVE.road=0;if(!SAVE.name)SAVE.name='트레이너';
@@ -3464,7 +3464,7 @@ $('#bTrain').onclick=()=>{const m=SAVE.mode;SAVE.mode='train';startGame(pickRost
 document.body.appendChild($('#shOv'));$('#bRankMini').onclick=()=>{sfx('ui');modal(`<div class="lb-rank" style="position:static;display:flex;width:auto;min-width:300px;max-height:60vh">${$('#lbRank').innerHTML}</div><div class="mrow"><button class="btn b2 sm" onclick="closeModal()">닫기</button></div>`);document.querySelectorAll('.mbox .rk').forEach(el=>el.onclick=()=>{if(el.dataset.u){sfx('ui');openPlayer(el.dataset.u);}});};$('#bMail').onclick=()=>openMail();$('#bInv').onclick=()=>{sfx('ui');openInv();};$('#bNotice').onclick=()=>openNotice();$('#lbVer').textContent='v'+VER;
 document.querySelectorAll('img[data-ico]').forEach(im=>im.src=ICO[im.dataset.ico]);
 $('#bMulti').onclick=()=>{
-  modal(`<h2>친구랑 멀티</h2><b style="color:#fde047;font-size:11px">3대3 멀티 · 젬 그랩 / 바운티 / 하이스트 / 브롤 볼</b><div style="font-size:11px;opacity:.85;margin-bottom:10px">최대 6명 (3대3) · 빈 자리는 봇이 채워요 · 방장이 종목을 고르고 게임을 진행해요</div>
+  modal(`<h2>친구랑 멀티</h2><b style="color:#fde047;font-size:11px">3대3 멀티 · 젬 그랩 / 바운티 / 하이스트 / 조롤 볼</b><div style="font-size:11px;opacity:.85;margin-bottom:10px">최대 6명 (3대3) · 빈 자리는 봇이 채워요 · 방장이 종목을 고르고 게임을 진행해요</div>
   <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><button class="btn sm" id="mkRoom">방 만들기</button><span style="font-size:11px">또는 코드로 참가</span>
   <input class="minput" id="codeIn" maxlength="4" style="width:110px;text-transform:uppercase;letter-spacing:3px" placeholder="ABCD"><button class="btn b2 sm" id="joinRoom">참가</button></div>
   <div style="margin-top:14px;padding-top:10px;border-top:3px solid #3b2d63"><b style="color:#fde047;font-size:11px">친선전 · 1대1 내기 넉아웃</b><div style="font-size:11px;opacity:.85;margin:4px 0 8px">3판 2선승 · 부활 없음 · 금구슬·혜성조각을 걸고 이긴 사람이 판돈을 모두 가져가요 (참가는 위의 코드 입력으로)</div><button class="btn sm" id="mkKO" style="background:#dc2626;color:#fff">1대1 내기 방 만들기</button></div>
