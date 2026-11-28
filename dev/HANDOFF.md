@@ -211,7 +211,7 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 ## v1.20.25
 - 이벤트: 조롤 로또. 로비 왼쪽 노란 '이벤트' 버튼(#bEvent) → openLotto
   - DB: pb_lotto_round(draw_at, nums, carry, pot, drawn, res), pb_lotto_ticket(round_id, username, nums, hit, prize)
-  - pb_lotto_tick(): 추첨 시간 지난 회차 추첨(1~20 중 3개 랜덤) → 3개 60%/2개 30%/1개 10% 맞힌 사람끼리 나눔(우편 '조롤 로또'), 당첨자 없는 몫은 다음 회차 carry. 다음 회차 = 다음 월요일 10:00 KST(pb_lotto_next_draw). pb_ping·pb_lotto_info 에서 호출(lazy)
+  - pb_lotto_tick(): 추첨 시간 지난 회차 추첨(1~20 중 3개 랜덤) → 3개 60%/2개 30%/1개 10% 맞힌 사람끼리 나눔(우편 '조롤 로또'), 당첨자 없는 몫은 다음 회차 carry. 다음 회차 = 다음 토요일 21:00 KST(pb_lotto_next_draw, 11/28 변경 — 6회차는 12/5 21:00으로 미룸). pb_ping·pb_lotto_info 에서 호출(lazy)
   - pb_lotto_buy(token, nums[3]): 5000 금구슬 서버 차감+rev, 회차당 10장
 - 키 작은 화면(H<=470, .lowh)은 로비 로고 숨김
 
