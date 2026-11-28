@@ -374,3 +374,8 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - 클라: errLog(kind,d) — 같은 종류는 세션당 1번. kind: 'loop'(루프 try/catch 예외), 'onerror', 'reject', 'ghost'.
 - ghost 감지 ghostChk: 판 중 1초마다, 내 주변 7타일에 살아 있는 포켓몬 2마리 이상인데 render가 그린 엔티티 수(G.dbgN, render의 L 루프에서 셈)가 1 이하인 상태가 3초 연속이거나 좌표가 NaN이면 ghostSnap(엔티티별 alive/좌표/invisT/digT/stealth/bush/visibleTo/이미지 등) 전송. 판마다 1번.
 - 확인: `select * from pb_err order by at desc`
+
+## v1.21.34 포켓몬 안 보임 버그 수정
+- 원인(pb_err ghost 기록으로 확인): v1.21.28의 평타 돌진(atk ty:'dash')은 스펙에 kb가 없는데 moveEnt 돌진 접촉에서 `o.kbx=D.dx*D.s.kb*...` → NaN 넉백 → 좌표 NaN → 충돌 밀어내기로 다른 포켓몬·나에게 번짐 → 안 그려짐(맵·UI만 보임).
+- 수정: kb 있을 때만 넉백. 안전장치: moveEnt 시작에 kbx/kby NaN이면 0, 좌표 NaN이면 마지막 정상 좌표(e.gx/gy, 없으면 스폰)로 복구.
+- 검증: 가변 dt로 젬·하이스트·볼·바운티·쇼다운·녹아웃 수십 판 돌리며 x/y/kb/v 세터에 NaN 트랩 → 0건 (수정 전 하이스트 25판 중 4판 발생).

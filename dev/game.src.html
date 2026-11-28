@@ -616,7 +616,7 @@ const T=48, BSPD=2.6*T;
 const GRADE={r:{nm:'희귀',c:'#4ade80',o:0},s:{nm:'초희귀',c:'#60a5fa',o:1},e:{nm:'영웅',c:'#c084fc',o:2},m:{nm:'신화',c:'#f87171',o:3},l:{nm:'전설',c:'#facc15',o:4},sp:{nm:'스페셜',c:'#22d3ee',o:5},cr:{nm:'크로마틱',c:'#f472b6',o:6}};
 const LTD=g=>g==='sp'||g==='cr';
 const GRX=g=>g==='u'?{nm:'궁극',c:'#f43f5e'}:GRADE[g];
-const VER='1.21.33';
+const VER='1.21.34';
 const EL={poison:{nm:'독',c:['#a855f7','#f3e8ff','#6b21a8']},flying:{nm:'비행',c:['#7dd3fc','#f0f9ff','#0284c7']},ground:{nm:'땅',c:['#d6a46a','#fef3c7','#92400e']},elec:{nm:'전기',c:['#fde047','#fffbeb','#eab308']},fire:{nm:'불꽃',c:['#f97316','#fde047','#dc2626']},water:{nm:'물',c:['#38bdf8','#e0f2fe','#1d4ed8']},
  grass:{nm:'풀',c:['#84cc16','#d9f99d','#15803d']},fight:{nm:'격투',c:['#60a5fa','#dbeafe','#1e40af']},ghost:{nm:'고스트',c:['#a855f7','#e9d5ff','#3b0764']},
  normal:{nm:'노말',c:['#e7e5e4','#ffffff','#78716c']},dragon:{nm:'드래곤',c:['#818cf8','#e0e7ff','#f59e0b']},psychic:{nm:'에스퍼',c:['#f472b6','#fce7f3','#a21caf']},
@@ -1861,6 +1861,7 @@ function updateCam(dt){
   G.cam.y=hh*2>MH+2*T?MH/2:clamp(G.cam.y,hh-T,MH-hh+T);
 }
 function moveEnt(e,dt){
+  if(!isFinite(e.kbx))e.kbx=0;if(!isFinite(e.kby))e.kby=0;if(!isFinite(e.x)||!isFinite(e.y)){e.x=e.gx??e.sx??T*2;e.y=e.gy??e.sy??T*2;}else{e.gx=e.x;e.gy=e.y;}
   const ox=e.x,oy=e.y;
   if(e.carryT>0){const c=e.carryBy;e.carryT-=dt;if(c&&c.alive&&e.alive){const a=c.face||0;e.x=c.x+Math.cos(a)*(c.r+e.r*.6);e.y=c.y+Math.sin(a)*(c.r+e.r*.6);e.stun=Math.max(e.stun,.05);
       if(e.carryT<=0){e.carryT=0;e.carryBy=null;bumpFz(e);e.kbx=Math.cos(a)*T*13;e.kby=Math.sin(a)*T*13;damage(c,e,400,true);e.stun=Math.max(e.stun,.4);addText(e.x,e.y-110,'던지기!','#f9a8d4',1);if(c===P)G.shake=Math.max(G.shake,.25);}
@@ -1875,7 +1876,7 @@ function moveEnt(e,dt){
     const bx=e.x,by=e.y;collide(e);if(Math.hypot(e.x-bx,e.y-by)>st*.5)D.left=0;
     dashFx(e,D.s);
     for(const o of G.ents){if(!o.alive||!enemyOf(e,o)||D.hit.has(o))continue;
-      if(Math.hypot(o.x-e.x,o.y-e.y)<e.r+o.r+6){D.hit.add(o);if(D.s.shieldBreak){o.shield=0;o.reflT=0;o.ironT=0;}damage(e,o,D.s.dmg*(D.s.exec&&o.hp<o.maxHp*.5?D.s.exec:1),!D.atk);if(D.s.ls)heal(e,D.s.dmg*D.s.ls);if(D.s.stun&&!immune(o)&&o.alive)o.stun=Math.max(o.stun,D.s.stun);if(D.s.vulnC&&!immune(o)&&o.alive&&Math.random()<(D.s.vulnC.c??1)){o.vulnT=Math.max(o.vulnT||0,D.s.vulnC.t);addText(o.x,o.y-95,'방어 하락!','#fca5a5');};if(D.s.grab&&o.alive&&!immune(o)&&!o.safe&&!o.carryT){o.carryBy=e;o.carryT=D.s.grab;o.stun=Math.max(o.stun,D.s.grab);D.left=0;addText(o.x,o.y-110,'꽉 껴안기!','#f9a8d4',1);}else if(!immune(o)){bumpFz(o);o.kbx=D.dx*D.s.kb*T*6;o.kby=D.dy*D.s.kb*T*6;}hitFx(D.s,o.x,o.y-20,GT(e));P_({ring:1,x:o.x,y:o.y,rad:40,col:D.s.col,t:.3});if(D.s.stopHit)D.left=0;}}
+      if(Math.hypot(o.x-e.x,o.y-e.y)<e.r+o.r+6){D.hit.add(o);if(D.s.shieldBreak){o.shield=0;o.reflT=0;o.ironT=0;}damage(e,o,D.s.dmg*(D.s.exec&&o.hp<o.maxHp*.5?D.s.exec:1),!D.atk);if(D.s.ls)heal(e,D.s.dmg*D.s.ls);if(D.s.stun&&!immune(o)&&o.alive)o.stun=Math.max(o.stun,D.s.stun);if(D.s.vulnC&&!immune(o)&&o.alive&&Math.random()<(D.s.vulnC.c??1)){o.vulnT=Math.max(o.vulnT||0,D.s.vulnC.t);addText(o.x,o.y-95,'방어 하락!','#fca5a5');};if(D.s.grab&&o.alive&&!immune(o)&&!o.safe&&!o.carryT){o.carryBy=e;o.carryT=D.s.grab;o.stun=Math.max(o.stun,D.s.grab);D.left=0;addText(o.x,o.y-110,'꽉 껴안기!','#f9a8d4',1);}else if(!immune(o)&&D.s.kb){bumpFz(o);o.kbx=D.dx*D.s.kb*T*6;o.kby=D.dy*D.s.kb*T*6;}hitFx(D.s,o.x,o.y-20,GT(e));P_({ring:1,x:o.x,y:o.y,rad:40,col:D.s.col,t:.3});if(D.s.stopHit)D.left=0;}}
     if(D.left<=0){e.dash=null;if(D.s.endAoe){aoeHit(e,e.x,e.y,D.s.endAoe*T,D.s.endDmg,GSP.tuskq,true);G.shake=Math.max(G.shake,e===P?.3:.1);sfx('land',e.x,e.y);}}
   }else{
     let mx=e.mvx,my=e.mvy;if(e.stun>0)mx=my=0;if(mx||my){e.mvA=Math.atan2(my,mx);e.mvAt=G.t;}
