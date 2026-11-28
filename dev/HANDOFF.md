@@ -398,4 +398,4 @@ v1.14 패러독스 6마리(고대활성: 체력 50%↑ / 쿼크차지: 필살기
 - 서버 스냅샷: pb_season(id=1, top jsonb) + pb_season_snap() — 12/1 00:00 이후 첫 pb_ping/pb_season_top 호출 때 1~3등(pb_rank와 같은 조건) 저장, 한 번만. pb_season_top() 공개 RPC.
 - 로비 랭킹 위 #rkSeason: 12/1~12/8 동안 3등→2등→1등 번갈아(1등 6초, 나머지 3.5초), 누르면 프로필. seasonShow()/seasonStep().
 - 프레임: 2등 '은빛 트로피 성좌'(fr_star2) · 3등 '동빛 트로피 성좌'(fr_star3) — fr-star CSS·이미지를 은/동색으로 다시 칠해 복제(.fr-star2/.fr-star3, frsg2/3, frst2/3). 관리자 우편 아이템으로 보낼 수 있음.
-- 보상 지급(프레임+한정 포켓몬)은 아직 수동(관리자 우편). 한정 포켓몬 미정.
+- 보상 자동 지급: pb_season_snap 이 스냅샷 직후 1~3등에게 우편(fr_star/fr_star2/fr_star3 + pb_cfg `season1_pk` 포켓몬). **한정 포켓몬은 새로 만들기로 함(미정) — 만들면 pb_cfg 에 season1_pk 넣어야 우편에 포켓몬이 들어감.**
